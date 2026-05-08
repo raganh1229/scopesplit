@@ -1,0 +1,508 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Users (synced from Clerk via webhook) ──
+model User {
+  id                        String    @id @default(uuid())
+  clerkId                   String    @unique @map("clerk_id")
+  email                     String
+  phoneNumber               String?   @map("phone_number")
+  fullName                  String?   @map("full_name")
+  emailOptIn                String?   @map("email_opt_in")
+  emailOptInPromptDismissedAt DateTime? @map("email_opt_in_prompt_dismissed_at")
+  companyName               String?   @map("company_name")
+  stripeCustomerId          String?   @map("stripe_customer_id")
+  subscriptionTier          SubscriptionTier? @map("subscription_tier")
+  subscriptionStatus        SubscriptionStatus? @map("subscription_status")
+  pendingTierDowngrade      SubscriptionTier? @map("pending_tier_downgrade")
+  pendingTierEffectiveAt    DateTime? @map("pending_tier_effective_at")
+  hasUsedTrial              Boolean   @default(false) @map("has_used_trial")
+  trialEndsAt               DateTime? @map("trial_ends_at")
+  subscriptionEndsAt        DateTime? @map("subscription_ends_at")
+  comparisonsUsedThisPeriod Int       @default(0) @map("comparisons_used_this_period")
+  addonComparisonsThisPeriod Int      @default(0) @map("addon_comparisons_this_period")
+  llmEditsUsedThisPeriod    Int       @default(0) @map("llm_edits_used_this_period")
+  executiveSummariesUsedThisPeriod Int @default(0) @map("executive_summaries_used_this_period")
+  periodResetDate           DateTime? @map("period_reset_date")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+
+  comparisons                   Comparison[]
+  addonPurchases                AddonPurchase[]
+  cancellationFeedbackEntries   SubscriptionCancellationFeedback[]
+  comparisonNotes               ComparisonNote[]
+
+  @@map("users")
+}
+
+model AddonPurchase {
+  id                 String   @id @default(uuid())
+  userId             String   @map("user_id")
+  stripeSessionId    String   @unique @map("stripe_session_id")
+  addonKey           String   @map("addon_key")
+  comparisonsGranted Int      @map("comparisons_granted")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt], map: "idx_addon_purchases_user_created_at")
+  @@map("addon_purchases")
+}
+
+// ── Subscription cancellation feedback ──
+model SubscriptionCancellationFeedback {
+  id                   String            @id @default(uuid())
+  userId               String            @map("user_id")
+  stripeCustomerId     String?           @map("stripe_customer_id")
+  stripeSubscriptionId String?           @map("stripe_subscription_id")
+  subscriptionTier     SubscriptionTier? @map("subscription_tier")
+  feedbackText         String?           @map("feedback_text")
+  scheduledEndAt       DateTime?         @map("scheduled_end_at")
+  createdAt            DateTime          @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt], map: "idx_cancel_feedback_user_created_at")
+  @@index([stripeSubscriptionId], map: "idx_cancel_feedback_stripe_subscription_id")
+  @@map("subscription_cancellation_feedback")
+}
+
+// ── Comparisons ──
+model Comparison {
+  id                        String    @id @default(uuid())
+  userId                    String    @map("user_id")
+  name                      String?   @map("name")
+  insuredName               String?   @map("insured_name")
+  claimNumber               String?   @map("claim_number")
+  propertyAddress           String?   @map("property_address")
+  yourEstimateFilename      String    @map("your_estimate_filename")
+  yourEstimateStoragePath   String    @map("your_estimate_storage_path")
+  yourEstimateTotal         Decimal?  @map("your_estimate_total") @db.Decimal(12, 2)
+  adjusterEstimateFilename  String    @map("adjuster_estimate_filename")
+  adjusterEstimateStoragePath String  @map("adjuster_estimate_storage_path")
+  adjusterEstimateTotal     Decimal?  @map("adjuster_estimate_total") @db.Decimal(12, 2)
+  totalGap                  Decimal?  @map("total_gap") @db.Decimal(12, 2)
+  matchCount                Int       @default(0) @map("match_count")
+  modifiedCount             Int       @default(0) @map("modified_count")
+  missingCount              Int       @default(0) @map("missing_count")
+  addedCount                Int       @default(0) @map("added_count")
+  status                    ComparisonStatus @default(PROCESSING)
+  errorMessage              String?   @map("error_message")
+  pipelineVersion           String    @default("n1") @map("pipeline_version")
+  inngestRunId              String?   @map("inngest_run_id")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lineItems       LineItem[]
+  notes           ComparisonNote[]
+  versions        ComparisonVersion[]
+  processingState ComparisonProcessingState?
+
+  n3Zones                N3Zone[]
+  n3ZoneCorrespondences  N3ZoneCorrespondence[]
+  n3LineItems            N3LineItem[]
+  n3CandidateEdges       N3CandidateEdge[]
+  n3MatchComponents      N3MatchComponent[]
+  n3MatchDecisions       N3MatchDecision[]
+  n3LlmCalls             N3LlmCall[]
+  n3ExtractionWarnings   N3ExtractionWarning[]
+
+  @@map("comparisons")
+}
+
+// ── Comparison Processing State ──
+// Transient per-stage payload store for the multi-step Inngest pipeline
+// (N1 conversion). Each comparison has at most one row; the `stage` column
+// tracks which pipeline phase last completed and `payload` holds the JSON
+// output of that stage so the next step can read it without exceeding
+// Inngest's 4 MB step-output limit. Cleaned up after final persist.
+model ComparisonProcessingState {
+  id           String     @id @default(uuid())
+  comparisonId String     @unique @map("comparison_id")
+  stage        String     // 'extracted' | 'prematched' | 'paired'
+  payload      Json
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  comparison   Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+
+  @@map("comparison_processing_state")
+}
+
+// ── Line Items ──
+model LineItem {
+  id                 String      @id @default(uuid())
+  comparisonId       String      @map("comparison_id")
+  matchStatus        MatchStatus @map("match_status")
+  zoneYours          String?     @map("zone_yours")
+  zoneAdjuster       String?     @map("zone_adjuster")
+  zoneCanonical      String?     @map("zone_canonical")
+  zoneConfidence     Int?        @map("zone_confidence")
+  descriptionYours   String?     @map("description_yours")
+  descriptionAdjuster String?    @map("description_adjuster")
+  qtyYours           String?     @map("qty_yours")
+  qtyAdjuster        String?     @map("qty_adjuster")
+  unitYours          String?     @map("unit_yours")
+  unitAdjuster       String?     @map("unit_adjuster")
+  removeYours        Decimal?    @map("remove_yours") @db.Decimal(12, 2)
+  removeAdjuster     Decimal?    @map("remove_adjuster") @db.Decimal(12, 2)
+  replaceYours       Decimal?    @map("replace_yours") @db.Decimal(12, 2)
+  replaceAdjuster    Decimal?    @map("replace_adjuster") @db.Decimal(12, 2)
+  resetYours         Decimal?    @map("reset_yours") @db.Decimal(12, 2)
+  resetAdjuster      Decimal?    @map("reset_adjuster") @db.Decimal(12, 2)
+  taxYours           Decimal?    @map("tax_yours") @db.Decimal(12, 2)
+  taxAdjuster        Decimal?    @map("tax_adjuster") @db.Decimal(12, 2)
+  opYours            Decimal?    @map("op_yours") @db.Decimal(12, 2)
+  opAdjuster         Decimal?    @map("op_adjuster") @db.Decimal(12, 2)
+  totalYours         Decimal?    @map("total_yours") @db.Decimal(12, 2)
+  totalAdjuster      Decimal?    @map("total_adjuster") @db.Decimal(12, 2)
+  diffAmount         Decimal?    @map("diff_amount") @db.Decimal(12, 2)
+  category           String?
+  sortOrder          Int         @map("sort_order")
+  groupId            String?     @map("group_id")
+  createdAt          DateTime    @default(now()) @map("created_at")
+
+  comparison Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  notes      ComparisonNote[]
+
+  @@map("line_items")
+}
+
+// ── Comparison Versions (parallel edit layer — never mutates initial pipeline output) ──
+model ComparisonVersion {
+  id              String   @id @default(uuid())
+  comparisonId    String   @map("comparison_id")
+  versionNumber   Int      @map("version_number")
+  label           String   @default("Initial")
+  editPrompt      String?  @map("edit_prompt")
+  isActive        Boolean  @default(false) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  comparison Comparison             @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  lineItems  ComparisonVersionLineItem[]
+
+  @@unique([comparisonId, versionNumber], map: "uq_comparison_version_number")
+  @@index([comparisonId, isActive], map: "idx_comparison_version_active")
+  @@map("comparison_versions")
+}
+
+model ComparisonVersionLineItem {
+  id                   String      @id @default(uuid())
+  versionId            String      @map("version_id")
+  originalLineItemId   String?     @map("original_line_item_id")
+  matchStatus          MatchStatus @map("match_status")
+  zoneYours            String?     @map("zone_yours")
+  zoneAdjuster         String?     @map("zone_adjuster")
+  zoneCanonical        String?     @map("zone_canonical")
+  zoneConfidence       Int?        @map("zone_confidence")
+  descriptionYours     String?     @map("description_yours")
+  descriptionAdjuster  String?     @map("description_adjuster")
+  qtyYours             String?     @map("qty_yours")
+  qtyAdjuster          String?     @map("qty_adjuster")
+  unitYours            String?     @map("unit_yours")
+  unitAdjuster         String?     @map("unit_adjuster")
+  removeYours          Decimal?    @map("remove_yours") @db.Decimal(12, 2)
+  removeAdjuster       Decimal?    @map("remove_adjuster") @db.Decimal(12, 2)
+  replaceYours         Decimal?    @map("replace_yours") @db.Decimal(12, 2)
+  replaceAdjuster      Decimal?    @map("replace_adjuster") @db.Decimal(12, 2)
+  resetYours           Decimal?    @map("reset_yours") @db.Decimal(12, 2)
+  resetAdjuster        Decimal?    @map("reset_adjuster") @db.Decimal(12, 2)
+  taxYours             Decimal?    @map("tax_yours") @db.Decimal(12, 2)
+  taxAdjuster          Decimal?    @map("tax_adjuster") @db.Decimal(12, 2)
+  opYours              Decimal?    @map("op_yours") @db.Decimal(12, 2)
+  opAdjuster           Decimal?    @map("op_adjuster") @db.Decimal(12, 2)
+  totalYours           Decimal?    @map("total_yours") @db.Decimal(12, 2)
+  totalAdjuster        Decimal?    @map("total_adjuster") @db.Decimal(12, 2)
+  diffAmount           Decimal?    @map("diff_amount") @db.Decimal(12, 2)
+  category             String?
+  sortOrder            Int         @map("sort_order")
+
+  version ComparisonVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@index([versionId, sortOrder], map: "idx_version_line_items_sort")
+  @@map("comparison_version_line_items")
+}
+
+// ── Comparison Notes ──
+model ComparisonNote {
+  id           String   @id @default(uuid())
+  comparisonId String   @map("comparison_id")
+  lineItemId   String?  @map("line_item_id")
+  userId       String   @map("user_id")
+  content      String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  comparison Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  lineItem   LineItem?  @relation(fields: [lineItemId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([comparisonId, createdAt], map: "idx_comparison_notes_comparison_created")
+  @@map("comparison_notes")
+}
+
+// ── N3 Pipeline — intermediate processing tables ──────────────────────────────
+//
+// All tables reference `Comparison` with ON DELETE CASCADE (§B.4 GDPR).
+// Tables are `n3_*` prefixed during build — prefix is dropped in the N2→N3
+// cutover commit once N3 is validated (§A.3, §B.1).
+//
+// These tables hold INTERMEDIATE N3 state only. Final output is still
+// written to the existing `LineItem` table (denormalized output, §A.1).
+//
+// Schema decisions recorded in N3.md §A.5 and §A.6.
+
+// ── N3 Zones (detected from Phase 4, user-verified in Phase 5) ────────────────
+
+model N3Zone {
+  id                 String   @id @default(uuid())
+  comparisonId       String   @map("comparison_id")
+  source             String   // 'yours' | 'adjuster'
+  name               String
+  normalizedName     String   @map("normalized_name")
+  startPage          Int      @map("start_page")
+  endPage            Int      @map("end_page")
+  approxItems        Int      @map("approx_items")
+  verificationStatus String   @map("verification_status") // N3VerificationStatus
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  comparison           Comparison             @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  yourCorrespondences  N3ZoneCorrespondence[] @relation("YourZoneCorrespondences")
+  adjusterCorrespondences N3ZoneCorrespondence[] @relation("AdjusterZoneCorrespondences")
+  lineItems            N3LineItem[]
+  extractionWarnings   N3ExtractionWarning[]
+
+  @@index([comparisonId, source], map: "idx_n3_zones_comparison_source")
+  @@map("n3_zones")
+}
+
+// ── N3 Zone Correspondences (AI-proposed in Phase 6, user-verified in Phase 7) ─
+
+model N3ZoneCorrespondence {
+  id                   String   @id @default(uuid())
+  comparisonId         String   @map("comparison_id")
+  correspondenceType   String   @map("correspondence_type") // N3ZoneCorrespondenceType
+  verificationStatus   String   @map("verification_status") // N3VerificationStatus
+  confidence           Decimal  @db.Decimal(4, 3)           // 0.000–1.000
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  comparison     Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  yourZones      N3Zone[]   @relation("YourZoneCorrespondences")
+  adjusterZones  N3Zone[]   @relation("AdjusterZoneCorrespondences")
+
+  @@index([comparisonId], map: "idx_n3_zone_correspondences_comparison")
+  @@map("n3_zone_correspondences")
+}
+
+// ── N3 Line Items (extracted in Phase 8, normalized in Phase 9) ───────────────
+
+model N3LineItem {
+  id                      String   @id @default(uuid())
+  comparisonId            String   @map("comparison_id")
+  zoneId                  String?  @map("zone_id")
+  source                  String   // 'yours' | 'adjuster'
+  sourceLineNumber        Int      @map("source_line_number")
+  pageNumber              Int      @map("page_number")
+
+  rawDescription          String   @map("raw_description")
+  normalizedDescription   String   @map("normalized_description")
+  descriptionTokens       String[] @map("description_tokens")   // Postgres text[]
+
+  trade                   String?
+  action                  String?
+  material                String?
+  object                  String?
+  itemCode                String?  @map("item_code")
+
+  rawQuantity             String?  @map("raw_quantity")
+  normalizedQuantity      Decimal? @map("normalized_quantity") @db.Decimal(14, 4)
+  rawUnit                 String?  @map("raw_unit")
+  normalizedUnit          String?  @map("normalized_unit")
+
+  removeAmount            Decimal? @map("remove_amount")  @db.Decimal(12, 2)
+  replaceAmount           Decimal? @map("replace_amount") @db.Decimal(12, 2)
+  resetAmount             Decimal? @map("reset_amount")   @db.Decimal(12, 2)
+  taxAmount               Decimal? @map("tax_amount")     @db.Decimal(12, 2)
+  opAmount                Decimal? @map("op_amount")      @db.Decimal(12, 2)
+  totalAmount             Decimal? @map("total_amount")   @db.Decimal(12, 2)
+  unitPrice               Decimal? @map("unit_price")     @db.Decimal(12, 4)
+
+  specialFlags            String[] @map("special_flags")  // N3SpecialFlag[]
+  extractionConfidence    Decimal  @default(1) @map("extraction_confidence") @db.Decimal(4, 3)
+
+  createdAt               DateTime @default(now()) @map("created_at")
+
+  comparison            Comparison            @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  zone                  N3Zone?               @relation(fields: [zoneId], references: [id], onDelete: SetNull)
+  sourceEdges           N3CandidateEdge[]     @relation("SourceEdges")
+  targetEdges           N3CandidateEdge[]     @relation("TargetEdges")
+  extractionWarnings    N3ExtractionWarning[]
+
+  @@index([comparisonId, source], map: "idx_n3_line_items_comparison_source")
+  @@index([comparisonId, totalAmount], map: "idx_n3_line_items_comparison_total")
+  @@map("n3_line_items")
+}
+
+// ── N3 Candidate Edges (generated in Phase 12, scored in Phase 13) ────────────
+
+model N3CandidateEdge {
+  id               String   @id @default(uuid())
+  comparisonId     String   @map("comparison_id")
+  sourceItemId     String   @map("source_item_id")   // N3LineItem (yours side)
+  targetItemId     String   @map("target_item_id")   // N3LineItem (adjuster side)
+
+  retrievalSources String[] @map("retrieval_sources") // N3RetrievalSource[]
+  boostsJson       Json     @map("boosts_json")        // N3ZoneBoost[]
+  featuresJson     Json     @map("features_json")      // N3CandidateScoreFeatures
+
+  rawScore         Decimal  @map("raw_score")   @db.Decimal(6, 4)
+  finalScore       Decimal  @map("final_score") @db.Decimal(6, 4)
+  isRejected       Boolean  @default(false) @map("is_rejected")
+
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  comparison  Comparison      @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  sourceItem  N3LineItem      @relation("SourceEdges", fields: [sourceItemId], references: [id], onDelete: Cascade)
+  targetItem  N3LineItem      @relation("TargetEdges", fields: [targetItemId], references: [id], onDelete: Cascade)
+  components  N3MatchComponent[] @relation("ComponentEdges")
+  decisions   N3MatchDecision[]
+
+  @@unique([sourceItemId, targetItemId], map: "uq_n3_candidate_edge_pair")
+  @@index([comparisonId, finalScore], map: "idx_n3_candidate_edges_score")
+  @@index([comparisonId, isRejected], map: "idx_n3_candidate_edges_rejected")
+  @@map("n3_candidate_edges")
+}
+
+// ── N3 Match Components (sparse-graph CC, Phase 14) ───────────────────────────
+
+model N3MatchComponent {
+  id             String   @id @default(uuid())
+  comparisonId   String   @map("comparison_id")
+  sourceItemIds  String[] @map("source_item_ids")  // N3LineItem ids (yours)
+  targetItemIds  String[] @map("target_item_ids")  // N3LineItem ids (adjuster)
+  size           String   // 'small' | 'medium' | 'large'
+  isAmbiguous    Boolean  @default(false) @map("is_ambiguous")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  comparison Comparison        @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  edges      N3CandidateEdge[] @relation("ComponentEdges")
+  decisions  N3MatchDecision[]
+
+  @@index([comparisonId], map: "idx_n3_match_components_comparison")
+  @@map("n3_match_components")
+}
+
+// ── N3 Match Decisions (assignment Phase 15, group Phase 16, LLM Phase 17) ────
+
+model N3MatchDecision {
+  id              String   @id @default(uuid())
+  comparisonId    String   @map("comparison_id")
+  componentId     String?  @map("component_id")
+  topEdgeId       String?  @map("top_edge_id")
+  decisionType    String   @map("decision_type")    // N3MatchDecisionType
+  yourItemIds     String[] @map("your_item_ids")
+  adjusterItemIds String[] @map("adjuster_item_ids")
+  finalScore      Decimal  @map("final_score") @db.Decimal(6, 4)
+  decidedBy       String   @map("decided_by")       // N3DecisionSource
+  groupMatchScore Decimal? @map("group_match_score") @db.Decimal(6, 4)
+  llmReasoning    String?  @map("llm_reasoning")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  comparison Comparison       @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  component  N3MatchComponent? @relation(fields: [componentId], references: [id], onDelete: SetNull)
+  topEdge    N3CandidateEdge?  @relation(fields: [topEdgeId], references: [id], onDelete: SetNull)
+
+  @@index([comparisonId, decisionType], map: "idx_n3_match_decisions_type")
+  @@map("n3_match_decisions")
+}
+
+// ── N3 LLM Calls (telemetry, Phase 20) ───────────────────────────────────────
+
+model N3LlmCall {
+  id               String   @id @default(uuid())
+  comparisonId     String   @map("comparison_id")
+  phase            String   // e.g. 'zone_detection' | 'adjudication'
+  model            String   // e.g. 'claude-sonnet-4-6'
+  promptTokens     Int      @map("prompt_tokens")
+  completionTokens Int      @map("completion_tokens")
+  totalTokens      Int      @map("total_tokens")
+  estimatedCostUsd Decimal  @map("estimated_cost_usd") @db.Decimal(10, 6)
+  durationMs       Int      @map("duration_ms")
+  success          Boolean
+  errorMessage     String?  @map("error_message")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  comparison Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+
+  @@index([comparisonId, createdAt], map: "idx_n3_llm_calls_comparison_created")
+  @@map("n3_llm_calls")
+}
+
+// ── N3 Extraction Warnings (Phase 10) ────────────────────────────────────────
+
+model N3ExtractionWarning {
+  id          String   @id @default(uuid())
+  comparisonId String  @map("comparison_id")
+  source      String   // 'yours' | 'adjuster'
+  warningType String   @map("warning_type") // N3ExtractionWarningType
+  pageNumber  Int?     @map("page_number")
+  lineItemId  String?  @map("line_item_id")
+  zoneId      String?  @map("zone_id")
+  detail      String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  comparison Comparison  @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  lineItem   N3LineItem? @relation(fields: [lineItemId], references: [id], onDelete: Cascade)
+  zone       N3Zone?     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+
+  @@index([comparisonId, source], map: "idx_n3_extraction_warnings_comparison_source")
+  @@map("n3_extraction_warnings")
+}
+
+// ── Enums ──
+enum SubscriptionTier {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+
+  @@map("subscription_tier")
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  EXPIRED
+
+  @@map("subscription_status")
+}
+
+enum ComparisonStatus {
+  PROCESSING
+  AWAITING_ZONE_REVIEW
+  AWAITING_MATCH_REVIEW
+  COMPLETED
+  FAILED
+
+  @@map("comparison_status")
+}
+
+enum MatchStatus {
+  MATCH
+  MODIFIED
+  MISSING_FROM_ADJUSTER
+  ADDED_BY_ADJUSTER
+  GROUPED
+
+  @@map("match_status")
+}

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N2 Pipeline Algorithm Dashboard</title>
+<style>
+:root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--purple:#8b5cf6;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--cyan:#06b6d4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--blue);text-decoration:none}
+.layout{display:flex;min-height:100vh}
+nav{position:fixed;top:0;left:0;width:220px;height:100vh;background:var(--surface);border-right:1px solid var(--border);padding:1.5rem 0;overflow-y:auto;z-index:100}
+nav h2{padding:0 1rem;margin-bottom:1rem;font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+nav a{display:block;padding:.45rem 1.1rem;font-size:.82rem;color:var(--muted);border-left:3px solid transparent}
+nav a:hover{color:var(--text);background:var(--surface2);border-left-color:var(--blue);text-decoration:none}
+main{margin-left:220px;padding:2rem 2.5rem;max-width:1100px}
+section{margin-bottom:3.5rem}
+h1{font-size:1.8rem;margin-bottom:.4rem}
+h2{font-size:1.35rem;margin-bottom:1rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+h3{font-size:1rem;margin:1.2rem 0 .6rem;color:var(--cyan)}
+.badge{display:inline-block;padding:.1rem .45rem;border-radius:4px;font-size:.7rem;font-weight:600}
+.b-blue{background:rgba(59,130,246,.2);color:var(--blue)}
+.b-purple{background:rgba(139,92,246,.2);color:var(--purple)}
+.b-green{background:rgba(16,185,129,.2);color:var(--green)}
+.b-orange{background:rgba(245,158,11,.2);color:var(--orange)}
+.b-red{background:rgba(239,68,68,.2);color:var(--red)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;margin-bottom:.85rem}
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0}
+th{background:var(--surface2);text-align:left;padding:.5rem .6rem;border-bottom:2px solid var(--border);font-weight:600;white-space:nowrap}
+td{padding:.5rem .6rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.02)}
+details{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:.6rem}
+details summary{padding:.65rem .9rem;cursor:pointer;font-weight:600;font-size:.85rem}
+details summary:hover{background:var(--surface2)}
+details[open] summary{border-bottom:1px solid var(--border)}
+details .ct{padding:.9rem}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.8rem;overflow-x:auto;font-size:.75rem;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+code{font-family:'JetBrains Mono','Fira Code',monospace;font-size:.8rem}
+.hi{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:.9rem;margin:.75rem 0}
+.hi strong{color:var(--orange)}
+/* Flow */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;padding:.75rem 0}
+.fn{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:.85rem 1.2rem;width:400px;position:relative}
+.fn.hk{border-color:var(--blue)}.fn.op{border-color:var(--purple)}.fn.cd{border-color:var(--green)}.fn.if{border-color:var(--surface2)}
+.fn b{font-size:.9rem}.fn .s{font-size:.75rem;color:var(--muted);margin-top:.2rem}.fn .m{display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap}
+.fa{width:2px;height:24px;background:var(--border);position:relative}.fa::after{content:'▼';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);color:var(--border);font-size:9px}
+.fd{background:var(--surface);border:2px solid var(--orange);width:280px;padding:.6rem;text-align:center;border-radius:8px}
+.fd b{color:var(--orange);font-size:.82rem}
+.fb{display:flex;gap:1.5rem;align-items:flex-start;width:100%;justify-content:center;margin:.4rem 0}
+.fc{display:flex;flex-direction:column;align-items:center;gap:0;flex:1;max-width:400px}
+.fl{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:.4rem;letter-spacing:.04em}
+.s4{border:2px dashed var(--blue);border-radius:12px;padding:1.2rem;width:100%;max-width:880px;background:rgba(59,130,246,.03)}
+.s4>.bl{font-size:.72rem;color:var(--blue);font-weight:700;text-transform:uppercase;margin-bottom:.8rem}
+.lz{border:2px dashed var(--green);border-radius:10px;padding:.8rem;background:rgba(16,185,129,.03)}
+.lz>.bl{font-size:.68rem;color:var(--green);font-weight:700;text-transform:uppercase;margin-bottom:.6rem}
+.hm{display:flex;gap:.4rem;margin-bottom:.5rem;flex-wrap:wrap}
+@media(max-width:1024px){nav{display:none}main{margin-left:0;padding:1.2rem}.fb{flex-direction:column;align-items:center}.s4{max-width:100%}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+<h2>N2 Dashboard</h2>
+<a href="#overview">Overview</a>
+<a href="#flowchart">Algorithm Flowchart</a>
+<a href="#steps">Step Details</a>
+<a href="#state">State Management</a>
+<a href="#prompts">Prompts</a>
+<a href="#issues">Issues Registry</a>
+<a href="#costs">Cost &amp; Rate Limits</a>
+<a href="#schema">Schema &amp; Migrations</a>
+<a href="#scope">Constraints &amp; Scope</a>
+</nav>
+<main>
+
+<!-- ══════ OVERVIEW ══════ -->
+<section id="overview">
+<h1>N2 Pipeline Architecture Dashboard</h1>
+<div style="display:flex;gap:1.5rem;margin:.4rem 0 1.5rem;flex-wrap:wrap;font-size:.82rem;color:var(--muted)">
+  <span><strong>Status:</strong> Architecture agreed — pre-implementation</span>
+  <span><strong>Scope:</strong> Xactimate ↔ Xactimate only</span>
+  <span><strong>Fallback:</strong> N1 remains live until N2 validated</span>
+</div>
+<div class="card">
+<h3 style="margin-top:0">Goals (Priority Order)</h3>
+<table>
+<tr><th>#</th><th>Goal</th><th>Targets</th></tr>
+<tr><td>1</td><td><strong>Accuracy</strong></td><td>No silent hallucination. Item-count ±2%. Aggregate totals ±2%.</td></tr>
+<tr><td>2</td><td><strong>Capacity</strong></td><td>5,000 items/side. No HTTP 520s. No maxDuration breach.</td></tr>
+<tr><td>3</td><td><strong>Speed</strong></td><td>1K items &lt;5 min. 5K items &lt;15 min.</td></tr>
+</table>
+</div>
+<div class="card">
+<h3 style="margin-top:0">Core Design — Zone-First Architecture</h3>
+<p style="font-size:.85rem">Zone matching <strong>before</strong> item extraction. Each AI call scopes to ~20-50 items within one zone instead of 1,700+ across the full document. This eliminates continuation hallucination, removes the 64K output ceiling risk, removes the HTTP 520 risk, and dramatically improves matching accuracy.</p>
+<p style="font-size:.85rem;margin-top:.5rem"><strong>4 logical passes:</strong> Pass 1/2 (zone detection) → Pass 3 (zone matching) → Pass 4 (per-zone extraction + matching). Orchestrated via <strong>5 Inngest steps</strong> with independent retryability. Temperature 0 on all API calls.</p>
+</div>
+<div class="card">
+<h3 style="margin-top:0">N1 Empirical Constraints (Why N2 Exists)</h3>
+<ul style="font-size:.82rem;padding-left:1.2rem">
+<li><strong>HTTP 520 wall</strong> — Claude returns 520 (server error) after ~2 min of generation</li>
+<li><strong>64K output token ceiling</strong> — ~450-500 line item pairs max per call</li>
+<li><strong>Continuation hallucination</strong> — model fabricated ~400 items to reach self-reported total_count</li>
+<li><strong>Zone-name drift</strong> — paraphrasing zone names corrupts downstream matching</li>
+<li><strong>Cross-document matching at scale</strong> — 1,700 vs 1,700 items is too large for single-call accuracy</li>
+<li><strong>total_count field</strong> — primary driver of fabrication; eliminated entirely in N2</li>
+<li><strong>Chunk-based extraction works</strong> — page-chunked approach proven viable in N1 Phase 8</li>
+</ul>
+</div>
+</section>
+
+<!-- ══════ FLOWCHART ══════ -->
+<section id="flowchart">
+<h2>Algorithm Flowchart</h2>
+<p style="color:var(--muted);margin-bottom:1rem;font-size:.82rem">Color key: <span class="badge b-blue">Haiku 4.5</span> <span class="badge b-purple">Opus 4.6</span> <span class="badge b-green">Code-only</span> <span class="badge b-orange">Decision</span></p>
+
+<div class="flow">
+  <div class="fn if"><b>Step 1 — Store Run ID</b><div class="s">Inngest: "store-run-id" · Write inngestRunId to Comparison row</div><div class="m"><span class="badge b-green">&lt;1s</span><span class="badge b-green">Prisma write</span></div></div>
+  <div class="fa"></div>
+
+  <div class="fn hk"><b>Step 2 — Detect Zones (Pass 1 + 2)</b><div class="s">Inngest: "detect-zones" · Both estimates chunked &amp; processed in parallel</div><div class="m"><span class="badge b-blue">Haiku 4.5</span><span class="badge b-blue">~30-60s</span><span class="badge b-orange">~14-20 calls</span></div>
+  <div class="s" style="margin-top:.4rem;font-size:.72rem">
+  ▸ Chunk each PDF into ~10-page sub-PDFs (1-page overlap at boundaries)<br>
+  ▸ Chunk 1 detects format: Xactimate / Symbility / Unknown<br>
+  ▸ Each chunk → zone names, start pages, evidence items, approx_items<br>
+  ▸ Merge: sort by start page, derive end pages, aggregate approx_items, per-chunk offset calc<br>
+  ▸ Zero zones → synthesize "General" zone (flat-list PDF → Issue 6)<br>
+  ▸ Pre-dedup: collapse obvious within-estimate duplicates before Pass 3<br>
+  ▸ <strong>Writes:</strong> <code>zones_detected</code>
+  </div></div>
+  <div class="fa"></div>
+
+  <div class="fn op"><b>Step 3 — Match Zones (Pass 3)</b><div class="s">Inngest: "match-zones" · Single Opus call, text only — no PDFs sent</div><div class="m"><span class="badge b-purple">Opus 4.6</span><span class="badge b-purple">~5-15s</span><span class="badge b-purple">~$0.04</span></div>
+  <div class="s" style="margin-top:.4rem;font-size:.72rem">
+  ▸ Input: two zone lists (name + pages + approx_items per zone)<br>
+  ▸ Supports 1:many matching (e.g. "Master Suite" ↔ "Master Bed" + "Master Bath")<br>
+  ▸ Confidence 50-100 scale. Below 50 → unmatched<br>
+  ▸ 10 matching rules including same-name/diff-pages, abbreviation, 1:many<br>
+  ▸ Post-call: name lookup (exact → fuzzy) + coverage check → retry 2× → force-unmatched fallback<br>
+  ▸ <strong>Writes:</strong> <code>zones_matched</code> (carries forward offsets, format, routing)
+  </div></div>
+  <div class="fa"></div>
+
+  <!-- STEP 4 BOX -->
+  <div class="s4">
+  <div class="bl">Step 4 — Extract &amp; Match · Inngest: "extract-and-match" · Budget: 300s · Concurrency cap: 8</div>
+  <p style="font-size:.78rem;color:var(--muted);margin-bottom:.8rem">Fetch both PDFs once → load into PDFDocument (pdf-lib) → slice all zones from memory → process all zone pairs</p>
+
+  <div class="flow" style="padding:0">
+    <div class="fd"><b>For each zone pair: approx_items &gt; 200?</b></div>
+
+    <div class="fb">
+      <div class="fc">
+        <div class="fl" style="color:var(--blue)">≤ 200 items → Standard Flow</div>
+        <div class="fn hk" style="width:100%"><b>Pass 4A/4B — Extract + Match</b><div class="m"><span class="badge b-blue">Haiku 4.5</span><span class="badge b-blue">~5-30s/zone</span></div>
+        <div class="s" style="font-size:.7rem">▸ Two sub-PDFs sent as document blocks<br>▸ Extracts items + matches in one call (~20-50 items/side)<br>▸ Unmatched zones → extract only → all MISSING or ADDED<br>▸ 1:many zones: each sub-PDF sent as labeled block</div></div>
+      </div>
+
+      <div class="fc">
+        <div class="fl" style="color:var(--green)">&gt; 200 items → Large Zone Flow</div>
+        <div class="lz" style="width:100%">
+          <div class="bl">Large Zone Flow (Issues 6, 10, 25)</div>
+
+          <div class="fn hk" style="width:100%;margin-bottom:.4rem;padding:.6rem .8rem"><b>LZF-1: Chunked Extraction</b><div class="hm"><span class="badge b-blue">Haiku</span><span class="badge b-blue">~10-15s</span><span class="badge b-orange">~20 parallel</span></div><div class="s" style="font-size:.68rem">10-page sub-PDFs, 1-page overlap. Both sides parallel. Merge + dedup by item number. Column normalization to standard schema.</div></div>
+
+          <div class="fn cd" style="width:100%;margin-bottom:.4rem;padding:.6rem .8rem"><b>LZF-2: Deterministic Prematch</b><div class="hm"><span class="badge b-green">Code-only</span><span class="badge b-green">&lt;1s</span><span class="badge b-green">$0 cost</span></div><div class="s" style="font-size:.68rem">n2-deterministic-prematch.ts · Conf ≥ 0.90 · Jaccard + containment + abbreviation expansion + unit gate · 40-65% hit rate</div></div>
+
+          <div class="fd" style="width:100%;margin-bottom:.4rem;transform:none;border-radius:6px;padding:.4rem"><b style="font-size:.75rem">Unmatched E2 &gt; 500?</b></div>
+
+          <div class="fn hk" style="width:100%;margin-bottom:.4rem;padding:.6rem .8rem;border-style:dashed"><b>LZF-3a: Tier 1 Wide Sweep</b> <span style="font-size:.68rem;color:var(--orange)">(skip if E2 ≤ 500)</span><div class="hm"><span class="badge b-blue">Haiku</span><span class="badge b-blue">~15s</span><span class="badge b-orange">~4 parallel</span></div><div class="s" style="font-size:.68rem">E1 groups of ~300 vs FULL unmatched E2. High-confidence only. Cross-call dedup on E2 claims.</div></div>
+
+          <div class="fn hk" style="width:100%;margin-bottom:.4rem;padding:.6rem .8rem"><b>LZF-3b: Tier 2 Sequential</b><div class="hm"><span class="badge b-blue">Haiku</span><span class="badge b-blue">~40s</span><span class="badge b-orange">~4-6 sequential</span></div><div class="s" style="font-size:.68rem">Batches of ~150 E1 items vs shrinking E2 pool. Full matching prompt. Pool ≤ 500 at Tier 2 start.</div></div>
+
+          <div class="fn cd" style="width:100%;padding:.6rem .8rem"><b>LZF-4: Merge &amp; Classify</b><div class="hm"><span class="badge b-green">Code-only</span><span class="badge b-green">&lt;1s</span></div><div class="s" style="font-size:.68rem">Combine prematch + Tier 1 + Tier 2. Each pair carries resolutionSource. Leftover → MISSING/ADDED.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fa"></div>
+    <div class="fn cd" style="width:400px"><b>Post-Processing (all zones merged)</b><div class="m"><span class="badge b-green">Code-only</span></div><div class="s" style="font-size:.72rem">▸ <code>splitMispaired</code>: split MODIFIED pairs with zero description overlap → MISSING + ADDED<br>▸ Sort: zones by E1 start page · items by n<br>▸ Assign sequential sortOrder across full list<br>▸ <strong>Writes:</strong> <code>zones_extracted</code> (embeds zoneMeta from Pass 3)</div></div>
+  </div>
+  </div>
+
+  <div class="fa"></div>
+  <div class="fn if"><b>Step 5 — Persist Results</b><div class="s">Inngest: "persist-results" · Atomic write — never partial line_items</div><div class="m"><span class="badge b-green">&lt;5s</span><span class="badge b-green">Prisma createMany</span></div>
+  <div class="s" style="font-size:.72rem">▸ Read <code>zones_extracted</code> from ComparisonProcessingState<br>▸ Write all LineItems atomically · Update Comparison.status → complete<br>▸ Catch Prisma P2025/P2003 if comparison deleted mid-flight</div></div>
+  <div class="fa"></div>
+  <div style="background:var(--green);color:#000;font-weight:700;padding:.4rem 1.3rem;border-radius:20px;font-size:.82rem">DONE</div>
+</div>
+
+<div class="hi"><strong>Every step</strong> begins with a comparison-existence check. If deleted → step returns cleanly. No throw, no retry loop, no wasted API calls. (Issue 29)</div>
+</section>
+
+<!-- ══════ STEP DETAILS ══════ -->
+<section id="steps">
+<h2>Step Detail Reference</h2>
+
+<h3>Inngest Step Structure (5 steps, Issue 36)</h3>
+<table>
+<tr><th>Step</th><th>Inngest</th><th>Model</th><th>Input</th><th>~Output Tokens</th><th>Wall-clock</th><th>Failure Handling</th><th>State Written</th></tr>
+<tr><td><b>1</b></td><td><code>store-run-id</code></td><td>—</td><td>comparisonId</td><td>—</td><td>&lt;1s</td><td>Inngest auto-retry</td><td>inngestRunId on Comparison</td></tr>
+<tr><td><b>2</b></td><td><code>detect-zones</code></td><td>Haiku 4.5</td><td>~10-page sub-PDFs (vision)</td><td>50-120/chunk</td><td>30-60s</td><td>Per-chunk retry 3× → allSettled → hard fail if rejected</td><td><code>zones_detected</code></td></tr>
+<tr><td><b>3</b></td><td><code>match-zones</code></td><td>Opus 4.6</td><td>Text zone lists</td><td>500-1K</td><td>5-15s</td><td>Name lookup + coverage check → retry 2× → force-unmatched</td><td><code>zones_matched</code></td></tr>
+<tr><td><b>4</b></td><td><code>extract-and-match</code></td><td>Haiku 4.5</td><td>Sub-PDFs per zone</td><td>4K-12K/zone</td><td>60-180s</td><td>Per-zone retry 3× → allSettled → JSON clean + schema validate</td><td><code>zones_extracted</code></td></tr>
+<tr><td><b>5</b></td><td><code>persist-results</code></td><td>—</td><td>zones_extracted</td><td>—</td><td>&lt;5s</td><td>Catch P2025/P2003 for deleted comparisons</td><td>LineItems + status</td></tr>
+</table>
+
+<h3>Error Handling Pattern (Shared Across All Passes)</h3>
+<div class="card" style="font-size:.82rem">
+<p><strong>Every API call follows:</strong> JSON Clean → Parse → Schema Validate → Retry on failure</p>
+<ul style="padding-left:1.2rem;margin-top:.4rem">
+<li><strong>JSON Cleaning:</strong> Strip whitespace, markdown fences, extract outermost <code>{...}</code> block. New shared utility <code>lib/ai-response.ts</code> (N1 untouched).</li>
+<li><strong>Schema Validation:</strong> Structural checks per pass (required fields, types, non-empty strings). Invalid → retryable error.</li>
+<li><strong>Truncation Detection:</strong> Check <code>stop_reason === "max_tokens"</code> from SDK first (authoritative). Fallback: output doesn't end with <code>}</code> or <code>]</code>.</li>
+<li><strong>Retry:</strong> 3 attempts per chunk/zone with exponential backoff. Most real-world failures are transient.</li>
+<li><strong>Fan-out:</strong> <code>Promise.allSettled</code> so one failing chunk/zone doesn't cancel others. Hard fail if any rejected after retries.</li>
+</ul>
+</div>
+
+<h3>Key Technical Details</h3>
+<div class="card" style="font-size:.82rem">
+<p><strong>Chunking (Pass 1/2):</strong> ~10-page sub-PDFs with 1-page overlap. Overlap ensures zone headers at boundaries always visible. Page offset computed per-chunk at merge time: <code>offset = startInternalIndex - firstPagePrintedNumber</code>. Offset stored directly on each zone entry.</p>
+<p style="margin-top:.4rem"><strong>Pre-dedup (before Pass 3):</strong> Deterministic dedup collapses obvious within-estimate duplicates (e.g. "Common Lobby" + "1st Floor - Common Lobby") via substring/stem matching before Opus sees the list.</p>
+<p style="margin-top:.4rem"><strong>PDF memory:</strong> Both PDFs fetched once, held in memory. ~5-15 MB each. All sub-PDFs sliced from same PDFDocument — no re-fetches. Total ~50-80 MB for 28 zones. Well under Vercel 1024 MB default.</p>
+<p style="margin-top:.4rem"><strong>Concurrency:</strong> Cap of 8 parallel Haiku calls (Issue 21). OTPM is the binding constraint at 90K/min. Pass 1/2 and Pass 4 share the Haiku pool but never overlap. Opus has its own pool.</p>
+<p style="margin-top:.4rem"><strong>Deterministic Prematch (LZF Step 2):</strong> n2-deterministic-prematch.ts. Accepts pre-extracted JSON items (not raw PDF). Confidence threshold 0.90 (tightened from N1's 0.82). Tokenized description similarity (Jaccard + containment), 100+ abbreviation expansions, action-verb synonyms, plural normalization, unit mismatch hard gate. Greedy best-reciprocal matching. MATCH vs MODIFIED based on cost/qty comparison.</p>
+<p style="margin-top:.4rem"><strong>splitMispaired:</strong> Ported from N1. Scans MODIFIED pairs, tokenizes both descriptions, strips stopwords. Zero meaningful token overlap → split to MISSING + ADDED. Zero-cost safety net.</p>
+</div>
+</section>
+
+<!-- ══════ STATE ══════ -->
+<section id="state">
+<h2>State Management</h2>
+<div class="card" style="font-size:.82rem">
+<p><strong>ComparisonProcessingState</strong> — <code>@unique</code> on comparisonId. Each stage <strong>overwrites</strong> the previous. Downstream stages must carry forward everything they need.</p>
+</div>
+
+<h3>Stage: zones_detected (after Step 2)</h3>
+<pre><code>{
+  "e1Zones": [
+    { "name": "Kitchen", "startPage": 5, "endPage": 9, "approxItems": 35 },
+    { "name": "Master Suite", "startPage": 12, "endPage": 22, "approxItems": 180 }
+  ],
+  "e2Zones": [
+    { "name": "Kitchen", "startPage": 3, "endPage": 8, "approxItems": 30 },
+    { "name": "Master Bedroom", "startPage": 10, "endPage": 15, "approxItems": 85 },
+    { "name": "Master Bathroom", "startPage": 15, "endPage": 19, "approxItems": 70 }
+  ],
+  "e1Format": "xactimate",
+  "e2Format": "xactimate",
+  "routingDecision": "zoned-zoned",
+  "e1PageOffset": 2,
+  "e2PageOffset": 0
+}</code></pre>
+
+<h3>Stage: zones_matched (after Step 3)</h3>
+<pre><code>{
+  "matched": [
+    {
+      "e1Zones": [{ "zone": "Kitchen", "pages": [5, 9] }],
+      "e2Zones": [{ "zone": "Kitchen", "pages": [3, 8] }],
+      "canonical": "Kitchen", "isMerged": false, "confidence": 100
+    }
+  ],
+  "unmatchedE1": [],
+  "unmatchedE2": [],
+  "e1Format": "xactimate",   // carry-forward
+  "e2Format": "xactimate",   // carry-forward
+  "routingDecision": "zoned-zoned",  // carry-forward
+  "e1PageOffset": 2,         // carry-forward — needed by Step 4
+  "e2PageOffset": 0           // carry-forward
+}</code></pre>
+
+<h3>Stage: zones_extracted (after Step 4)</h3>
+<pre><code>{
+  "zoneResults": {
+    "Kitchen_p5": { "pairs": [...] },
+    "Master Suite_p12": { "pairs": [...] }
+  },
+  "zoneMeta": {
+    "Kitchen_p5": {
+      "canonical": "Kitchen",
+      "zoneYours": "Kitchen",
+      "zoneAdjuster": "Kitchen",
+      "confidence": 100,
+      "isMerged": false
+    }
+  },
+  "routingDecision": "zoned-zoned"
+}</code></pre>
+
+<h3>Carry-Forward Fields</h3>
+<table>
+<tr><th>Field</th><th>Computed In</th><th>Consumed By</th><th>Purpose</th></tr>
+<tr><td><code>e1PageOffset</code> / <code>e2PageOffset</code></td><td>Step 2</td><td>Step 4</td><td>Convert printed page → pdf-lib internal index for slicing</td></tr>
+<tr><td><code>routingDecision</code></td><td>Step 2</td><td>Steps 3-5</td><td>Select correct flow (zoned-zoned, flat-flat, etc.)</td></tr>
+<tr><td><code>e1Format</code> / <code>e2Format</code></td><td>Step 2</td><td>Step 3+</td><td>Future: format-specific prompt selection</td></tr>
+<tr><td><code>approxItems</code> per zone</td><td>Step 2</td><td>Step 3-4</td><td>LZF routing, Pass 3 confidence signal, token budgeting, post-extraction validation</td></tr>
+<tr><td><code>zoneMeta</code></td><td>Step 3 → embedded in Step 4</td><td>Step 5</td><td>Populate zoneYours, zoneAdjuster, zoneCanonical, zoneConfidence on LineItems</td></tr>
+</table>
+</section>
+
+<!-- ══════ PROMPTS ══════ -->
+<section id="prompts">
+<h2>Prompt Reference</h2>
+<p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">All prompts use <code>temperature: 0</code>. Click to expand full text.</p>
+
+<details><summary>Pass 1 — Zone Detection, Chunk 1 (Haiku 4.5) — includes format detection</summary><div class="ct">
+<p style="font-size:.82rem;margin-bottom:.5rem"><strong>SYSTEM:</strong> "You are analyzing a section of an insurance estimate PDF. Your only job is to identify the document format and locate all zone/section headers on these pages. Do not extract line items, costs, or any other data. Return only valid JSON."</p>
+<p style="font-size:.82rem;margin-bottom:.5rem"><strong>USER key instructions:</strong></p>
+<ul style="font-size:.8rem;padding-left:1.2rem">
+<li>Pages {startPage}–{endPage} with ORIGINAL PRINTED page numbers</li>
+<li>Task 1: Format detection → "xactimate" | "symbility" | "unknown"</li>
+<li>Task 2: Zone header identification with 9 rules:
+  <ul>
+  <li>Body only — skip ToC/recap/summary</li>
+  <li>Must be followed by line items (evidence requirement)</li>
+  <li>Return evidence_item for each zone (Layer 3 defense)</li>
+  <li>VERBATIM zone names — no abbreviation</li>
+  <li>If duplicate name, report only last occurrence</li>
+  <li>Use original printed page numbers</li>
+  <li>Empty zones array is valid</li>
+  <li>Count approx_items per zone and total approx_items_on_pages</li>
+  </ul>
+</li>
+</ul>
+<p style="font-size:.82rem;margin-top:.5rem"><strong>Response schema:</strong></p>
+<pre><code>{ "first_page_printed_number": int,
+  "format": "xactimate" | "symbility" | "unknown",
+  "approx_items_on_pages": int,
+  "zones": [{ "name": str, "start_page": int,
+              "evidence_item": str, "approx_items": int }] }</code></pre>
+</div></details>
+
+<details><summary>Pass 2 — Zone Detection, Chunks 2+ (Haiku 4.5) — no format detection</summary><div class="ct">
+<p style="font-size:.82rem">Identical to Pass 1 except: no format detection task, no format field in response. Same 9 rules. Same evidence requirement. Same JSON schema minus <code>format</code>.</p>
+<pre><code>{ "first_page_printed_number": int,
+  "approx_items_on_pages": int,
+  "zones": [{ "name": str, "start_page": int,
+              "evidence_item": str, "approx_items": int }] }</code></pre>
+</div></details>
+
+<details><summary>Pass 3 — Zone Matching (Opus 4.6) — single text-only call</summary><div class="ct">
+<p style="font-size:.82rem;margin-bottom:.5rem"><strong>SYSTEM:</strong> Expert at reconciling zone names across two insurance estimates. Accuracy critical — wrong zone match corrupts all line-item data. Return only valid JSON.</p>
+<p style="font-size:.82rem;margin-bottom:.5rem"><strong>10 Matching Rules:</strong></p>
+<ol style="font-size:.8rem;padding-left:1.2rem">
+<li><strong>Same name, separated pages = distinct zones</strong> — "Bathroom" p16-19 ≠ "Bathroom" p34-37</li>
+<li><strong>Watch for delineators</strong> — numbers, floors, directions, type qualifiers</li>
+<li><strong>Numbers are sacred</strong> — "Restroom 1" ≠ "Restroom 2"</li>
+<li><strong>Page span + item count similarity boost confidence</strong> — 3 pages vs 18 pages = suspect</li>
+<li><strong>Abbreviation vigilance</strong> — treat abbreviated forms as potential matches</li>
+<li><strong>Canonical = longest/most specific</strong> — "1st Floor - Common Lobby" beats "Common Lobby"</li>
+<li><strong>Within-estimate inconsistencies</strong> — "Common Lobby" + "1st Floor - Common Lobby" = same zone</li>
+<li><strong>Never force a match</strong> — unmatched is safer than wrong</li>
+<li><strong>±1-2 page = chunk boundary duplicate</strong> — use lower start page</li>
+<li><strong>1:many matches valid</strong> — "Master Suite" ↔ "Master Bed" + "Master Bath", isMerged: true</li>
+</ol>
+<p style="font-size:.82rem;margin-top:.5rem"><strong>Confidence scale:</strong> 100 (identical) → 95 (obvious variant) → 90 (clear synonym) → 80 (likely) → 50-79 (possible) → &lt;50 (don't match)</p>
+<pre><code>{ "matched": [{ "e1Zones": [{ "zone": str, "pages": [start, end] }],
+                "e2Zones": [{ "zone": str, "pages": [start, end] }],
+                "canonical": str, "isMerged": bool, "confidence": int }],
+  "unmatchedE1": [{ "zone": str, "pages": [start, end] }],
+  "unmatchedE2": [{ "zone": str, "pages": [start, end] }] }</code></pre>
+</div></details>
+
+<details><summary>Pass 4A — Extraction + Matching, Matched Zones (Haiku 4.5)</summary><div class="ct">
+<p style="font-size:.82rem;margin-bottom:.5rem"><strong>SYSTEM:</strong> Expert insurance estimate analyst. Extract and compare line items zone by zone. Return ONLY valid JSON.</p>
+<p style="font-size:.82rem;margin-bottom:.5rem"><strong>Two-step prompt:</strong></p>
+<p style="font-size:.82rem"><strong>Step 1 — Extract:</strong> Both documents attached for zone "{canonical}". Extract ONLY numbered line items (integer + period). Skip headers, summaries, subtotals, notes. Stop if different zone header encountered. Cost values exact from PDF. Multi-line descriptions → concatenate.</p>
+<p style="font-size:.82rem"><strong>Fields:</strong> <code>n</code> (item #), <code>d</code> (description), <code>q</code> (qty string), <code>u</code> (unit code), <code>rm</code> (remove), <code>rp</code> (replace), <code>rs</code> (reset), <code>tx</code> (tax), <code>op</code> (O&amp;P), <code>t</code> (total — rightmost cost)</p>
+<p style="font-size:.82rem;margin-top:.4rem"><strong>Step 2 — Match &amp; Classify:</strong> MATCH / MODIFIED / MISSING_FROM_ADJUSTER / ADDED_BY_ADJUSTER</p>
+<ul style="font-size:.8rem;padding-left:1.2rem">
+<li>R&amp;R = Remove &amp; Replace. SF/LF/EA/SY common units.</li>
+<li>"Detach &amp; reset" ≈ "R&amp;R" for fixtures</li>
+<li>Similar descriptions + diff costs = MODIFIED (pricing dispute), not unmatched</li>
+<li>Each item in exactly one pair. Never double-use an item number.</li>
+<li>Completely different work = NEVER pair, even if only remaining unmatched</li>
+</ul>
+<p style="font-size:.82rem;margin-top:.4rem"><strong>Pre-return verification:</strong> Every item actually in PDF. All costs exact. Every extracted item appears exactly once.</p>
+</div></details>
+
+<details><summary>Pass 4B — Extraction Only, Unmatched Zones (Haiku 4.5)</summary><div class="ct">
+<p style="font-size:.82rem">Single sub-PDF for a zone that exists in only one estimate. Same extraction rules as 4A Step 1. Same fields: n, d, q, u, rm, rp, rs, tx, op, t.</p>
+<p style="font-size:.82rem;margin-top:.4rem">Contractor-only → MISSING_FROM_ADJUSTER (e1 populated, e2: null). Adjuster-only → ADDED_BY_ADJUSTER (e1: null, e2 populated).</p>
+</div></details>
+
+<details><summary>Prompt Engineering Principles (apply to all passes)</summary><div class="ct">
+<ul style="font-size:.8rem;padding-left:1.2rem">
+<li><strong>Context framing:</strong> Every prompt explains what insurance estimates are and why two exist for the same property.</li>
+<li><strong>VERBATIM zone names:</strong> Character-for-character from the PDF. Floor prefixes mandatory. No abbreviation/paraphrasing.</li>
+<li><strong>Removed total_count:</strong> Primary hallucination driver in N1. Eliminated entirely.</li>
+<li><strong>Unmatched items are normal:</strong> Two estimates will almost never have same item count. Don't force matches.</li>
+<li><strong>Description similarity matching:</strong> "R&amp;R Base cabinets" ↔ "Remove &amp; replace lower cabinets"</li>
+<li><strong>Total cost as confirming signal:</strong> Similar descriptions + different costs → still same item, classify MODIFIED.</li>
+<li><strong>One-to-one rule:</strong> Each item number in exactly one pair.</li>
+<li><strong>Temperature: 0</strong> on all calls for deterministic output.</li>
+<li><strong>1-page overlap:</strong> Chunk boundaries include overlap for zone header visibility (code concern, not prompt).</li>
+</ul>
+</div></details>
+</section>
+
+<!-- ══════ ISSUES ══════ -->
+<section id="issues">
+<h2>Issues Registry (36 Total)</h2>
+<p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">All must be resolved before implementation. 34 resolved, 2 deferred.</p>
+
+<h3>Pass 1/2 — Zone Detection (Issues 1-6, 35)</h3>
+<table>
+<tr><th>#</th><th>Title</th><th>Status</th><th>Resolution Summary</th></tr>
+<tr><td>1</td><td>Printed vs internal page numbers</td><td class="status-resolved">🟢</td><td>Per-chunk offset: <code>offset = startInternalIndex - firstPagePrintedNumber</code>. Stored on each zone entry. Applied only at pdf-lib slicing time.</td></tr>
+<tr><td>2</td><td>ToC/summary false zone starts</td><td class="status-resolved">🟢</td><td>6 layers: (1) scope search to body, (2) structural definition, (3) evidence requirement, (4) last-occurrence hint, (5) merge keeps both + disambiguates by page, (6) Opus resolves with full context.</td></tr>
+<tr><td>3</td><td>Chunk with no zone headers</td><td class="status-resolved">🟢</td><td>Non-issue by design. Empty = "no new zones start here." Range derivation handles it naturally.</td></tr>
+<tr><td>4</td><td>Duplicate zone names within estimate</td><td class="status-resolved">🟢</td><td>Zone key = <code>{name, startPage}</code>. Disambiguated as "Bathroom (p16)" / "Bathroom (p34)". Opus matches each independently.</td></tr>
+<tr><td>5</td><td>Zone header at chunk boundary</td><td class="status-resolved">🟢</td><td>Merge does exact dedup on (name, startPage). ±1-2 page case → Opus Rule 9 handles it.</td></tr>
+<tr><td>6</td><td>Zero zones (flat-list PDF)</td><td class="status-resolved">🟢</td><td>Synthesize single "General" zone spanning entire doc. Triggers Large Zone Flow automatically (>200 items).</td></tr>
+<tr><td>35</td><td>Per-chunk vs global page offset</td><td class="status-resolved">🟢</td><td>Per-chunk offsets computed at merge time. <code>chunkOffset</code> and <code>endPageChunkOffset</code> stored on every zone entry. Self-correcting.</td></tr>
+</table>
+
+<h3>Pass 3 — Zone Matching (Issues 7-9, 27)</h3>
+<table>
+<tr><th>#</th><th>Title</th><th>Status</th><th>Resolution Summary</th></tr>
+<tr><td>7</td><td>1:many zone mappings</td><td class="status-resolved">🟢</td><td>Both sides of matched pair are arrays. Opus declares merge; Pass 4 receives all sub-PDFs. UI shows (!) icon + tooltip. DB stores <code>mergedFrom</code> JSON.</td></tr>
+<tr><td>8</td><td>Pass 3 output schema</td><td class="status-resolved">🟢</td><td>Schema locked: <code>matched[]</code> (e1Zones[], e2Zones[], canonical, isMerged, confidence) + <code>unmatchedE1[]</code> + <code>unmatchedE2[]</code>.</td></tr>
+<tr><td>9</td><td>Zone match confidence threshold</td><td class="status-resolved">🟢</td><td>Threshold = 50. ≥50 → matched. &lt;50 → unmatched. Scores internal only, not in UI.</td></tr>
+<tr><td>27</td><td>Pass 3 output validation</td><td class="status-resolved">🟢</td><td>Name lookup (exact → fuzzy). Coverage check (every input zone accounted for). Retry 2×. Fallback: force to unmatched, rescue valid counterparts.</td></tr>
+</table>
+
+<h3>Pass 4 — Extraction + Matching (Issues 10-14, 32, 34)</h3>
+<table>
+<tr><th>#</th><th>Title</th><th>Status</th><th>Resolution Summary</th></tr>
+<tr><td>10</td><td>Oversized zones — Large Zone Flow</td><td class="status-resolved">🟢</td><td>4-step algorithm: chunked extraction → deterministic prematch → tiered AI matching → merge. Handles ≤5K items. Also resolves Issues 6 &amp; 25.</td></tr>
+<tr><td>11</td><td>PDF fetch strategy</td><td class="status-resolved">🟢</td><td>Fetch each PDF once, hold in memory, slice all zones from same bytes. <code>Promise.all()</code> inside single <code>step.run()</code>.</td></tr>
+<tr><td>12</td><td>Pass 4 output schema</td><td class="status-resolved">🟢</td><td>Full field mapping locked. <code>d→description</code>, <code>q→qty</code>, <code>u→unit</code> (NEW columns), <code>rm/rp/rs/tx/op/t</code> → cost columns. <code>n</code> not stored.</td></tr>
+<tr><td>13</td><td>Items before first zone header</td><td class="status-resolved">🟢</td><td>Non-issue for Xactimate — software enforces zone assignment. Revisit for non-Xactimate.</td></tr>
+<tr><td>14</td><td>Item ordering across zones</td><td class="status-resolved">🟢</td><td>Sort: zones by E1 start page, items by <code>n</code>. Sequential sortOrder assigned in code. Deterministic.</td></tr>
+<tr><td>32</td><td>splitMispaired in N2</td><td class="status-resolved">🟢</td><td>Both prompt instruction ("never pair completely different work") AND code safety net (port from N1). Runs after all zones merged.</td></tr>
+<tr><td>34</td><td>Pass 4 JSON parse failure</td><td class="status-resolved">🟢</td><td>New shared <code>lib/ai-response.ts</code>. Clean → parse → validate → retry 3×. Truncation via <code>stop_reason</code> first, heuristic fallback.</td></tr>
+</table>
+
+<h3>Inngest / Infrastructure (Issues 15-17, 26, 29, 36)</h3>
+<table>
+<tr><th>#</th><th>Title</th><th>Status</th><th>Resolution Summary</th></tr>
+<tr><td>15</td><td>Dynamic fan-out inside step</td><td class="status-resolved">🟢</td><td><code>Promise.all()</code> inside single <code>step.run()</code> is correct pattern. Time governed by slowest call, not sum.</td></tr>
+<tr><td>16</td><td>Failure isolation per zone</td><td class="status-resolved">🟢</td><td>Collect all via allSettled → one atomic persist. Never partial line_items writes. Retry re-runs all cheap calls.</td></tr>
+<tr><td>17</td><td>ComparisonProcessingState schema</td><td class="status-resolved">🟢</td><td>No migration needed. <code>stage: String</code> + <code>payload: Json</code> already flexible. @unique overwrites. Carry-forward fields defined.</td></tr>
+<tr><td>26</td><td>Pass 1/2 chunk failure</td><td class="status-resolved">🟢</td><td>4 layers: (1) JSON cleaning, (2) schema validation, (3) per-chunk retry 3×, (4) allSettled + hard fail if any rejected.</td></tr>
+<tr><td>29</td><td>Deletion while pipeline running</td><td class="status-resolved">🟢</td><td>3 layers: (1) existence check at step start, (2) catch Prisma P2025/P2003, (3) store inngestRunId + call cancel API on delete.</td></tr>
+<tr><td>36</td><td>Inngest step structure</td><td class="status-resolved">🟢</td><td>5 steps: store-run-id → detect-zones → match-zones → extract-and-match → persist-results. Each independently retryable.</td></tr>
+</table>
+
+<h3>Code / Migration (Issues 18-20, 28, 30, 31, 33)</h3>
+<table>
+<tr><th>#</th><th>Title</th><th>Status</th><th>Resolution Summary</th></tr>
+<tr><td>18</td><td>Fate of pdf-vision-extract.ts</td><td class="status-resolved">🟢</td><td>Stays frozen. New N2 files alongside. Deleted in one clean commit when N2 ships.</td></tr>
+<tr><td>19</td><td>N1 baseline compatibility</td><td class="status-resolved">🟢</td><td>N1 baselines not acceptance tests for N2. N2 establishes own ground truth. N1 baselines only guard N1 during dev.</td></tr>
+<tr><td>20</td><td>Fate of deterministic-prematch.ts</td><td class="status-resolved">🟢</td><td>N1 file frozen. New <code>n2-deterministic-prematch.ts</code> created. Accepts JSON items, threshold 0.90, no PDF parsing, N2 schema aligned.</td></tr>
+<tr><td>28</td><td>N2 routing during development</td><td class="status-resolved">🟢</td><td>Separate Inngest function <code>comparison/process-v2</code>. <code>N2_ENABLED</code> env var. <code>pipelineVersion</code> written to DB before event. <code>isN2Eligible()</code> for phased rollout.</td></tr>
+<tr><td>30</td><td>pdf-lib dependency</td><td class="status-resolved">🟢</td><td>Only new npm dep. Pure JS — no native bindings (Vercel safe). <code>loadPdf()</code> + <code>slicePages()</code> utilities. Load once, slice many.</td></tr>
+<tr><td>31</td><td>category field in N2</td><td class="status-resolved">🟢</td><td>N2 does NOT extract category. Zone IS the grouping. Column stays in schema for N1 compat, always null in N2.</td></tr>
+<tr><td>33</td><td>ComparisonVersionLineItem mirror</td><td class="status-resolved">🟢</td><td>Must mirror LineItem in same migration. Update version copy code in same commit. Standing convention: never change these independently.</td></tr>
+</table>
+
+<h3>Cost / Rate Limits (Issues 21-22)</h3>
+<table>
+<tr><th>#</th><th>Title</th><th>Status</th><th>Resolution Summary</th></tr>
+<tr><td>21</td><td>API call count &amp; rate limits</td><td class="status-resolved">🟢</td><td>Concurrency cap: 8 parallel Haiku calls. OTPM (90K/min) is the governor. 429 → SDK auto-retries. Drop to 6 if frequent 429s.</td></tr>
+<tr><td>22</td><td>Cost per comparison</td><td class="status-resolved">🟢</td><td>Small: ~$0.25-0.35. Large (3K/side): ~$2.36 Haiku / ~$6.33 Sonnet. Worst-case (4K + LZF): ~$5.91 Haiku / ~$8.56 Sonnet. Opus always ~$0.04.</td></tr>
+</table>
+
+<h3>Format Support (Issues 23-25)</h3>
+<table>
+<tr><th>#</th><th>Title</th><th>Status</th><th>Resolution Summary</th></tr>
+<tr><td>23</td><td>Symbility-Symbility</td><td class="status-deferred">🔵 DEFERRED</td><td>Tackle after Xactimate-Xactimate validated. Need representative PDFs, layout analysis, separate prompt templates.</td></tr>
+<tr><td>24</td><td>Xactimate-Symbility cross-format</td><td class="status-deferred">🔵 DEFERRED</td><td>Hardest case. Needs normalized line item representation, cross-format prompts, granularity mismatch handling.</td></tr>
+<tr><td>25</td><td>Flat-list matching strategy</td><td class="status-resolved">🟢</td><td>Resolved by Large Zone Flow (Issue 10). Flat-list = single oversized zone → LZF handles it identically.</td></tr>
+</table>
+</section>
+
+<!-- ══════ COSTS ══════ -->
+<section id="costs">
+<h2>Cost &amp; Rate Limits</h2>
+
+<h3>Model Pricing (Claude 4.x)</h3>
+<table>
+<tr><th>Model</th><th>Used In</th><th>Input</th><th>Output</th></tr>
+<tr><td><strong>Haiku 4.5</strong></td><td>Pass 1/2, Pass 4, LZF</td><td>$1/MTok</td><td>$5/MTok</td></tr>
+<tr><td><strong>Sonnet 4.6</strong></td><td>Pass 4 fallback</td><td>$3/MTok</td><td>$15/MTok</td></tr>
+<tr><td><strong>Opus 4.6</strong></td><td>Pass 3 only</td><td>$5/MTok</td><td>$25/MTok</td></tr>
+</table>
+
+<h3>Cost Per Comparison Size</h3>
+<table>
+<tr><th>Scenario</th><th>Items</th><th>Zones</th><th>Haiku Total</th><th>Sonnet Total</th><th>Notes</th></tr>
+<tr><td><strong>Small residential</strong></td><td>200-300/side</td><td>5-8</td><td><strong>~$0.25-0.35</strong></td><td>—</td><td>Most common case</td></tr>
+<tr><td><strong>Large commercial</strong></td><td>3,000/side</td><td>~28</td><td><strong>~$2.36</strong></td><td>~$6.33</td><td>No LZF zones</td></tr>
+<tr><td><strong>Worst-case + LZF</strong></td><td>4,000/side</td><td>Mixed + 1 massive</td><td><strong>~$5.91</strong></td><td>~$8.56</td><td>Single massive zone triggers LZF</td></tr>
+</table>
+<p style="font-size:.82rem;color:var(--muted);margin-top:.4rem"><strong>Key:</strong> Pass 3 (Opus) always ~$0.04 regardless of size. Dominant cost = Pass 4 output tokens.</p>
+
+<h3>Worst-Case Cost Breakdown (4K items, LZF)</h3>
+<table>
+<tr><th>Pass</th><th>Tokens (in/out)</th><th>Cost</th></tr>
+<tr><td>Pass 1+2 — Haiku</td><td>410K / 5.5K</td><td>~$0.44</td></tr>
+<tr><td>Pass 3 — Opus</td><td>2K / 1K</td><td>~$0.04</td></tr>
+<tr><td>Pass 4 standard — Haiku</td><td>384K / 320K</td><td>~$1.98</td></tr>
+<tr><td>LZF Step 1 — Haiku (~26 calls)</td><td>820K / 260K</td><td>~$2.12</td></tr>
+<tr><td>LZF Step 3 — Haiku (~10 calls)</td><td>350K / 195K</td><td>~$1.33</td></tr>
+<tr><td><strong>Total (Haiku)</strong></td><td></td><td><strong>~$5.91</strong></td></tr>
+</table>
+
+<h3>Rate Limits — OTPM Ceiling</h3>
+<table>
+<tr><th>Metric</th><th>Tier 2 Haiku Limit</th><th>N2 Impact</th></tr>
+<tr><td>RPM</td><td>1,000</td><td>Never a concern</td></tr>
+<tr><td>ITPM</td><td>450,000</td><td>Never a concern</td></tr>
+<tr><td><strong>OTPM</strong></td><td><strong>90,000</strong></td><td><strong>Governor for Pass 4</strong></td></tr>
+</table>
+
+<h3>OTPM Impact by Size (batch of 8 parallel calls)</h3>
+<table>
+<tr><th></th><th>500/side</th><th>1K/side</th><th>3K/side</th></tr>
+<tr><td>Output tokens/batch</td><td>~32K</td><td>~44K</td><td>~96K</td></tr>
+<tr><td>% of 90K OTPM</td><td>~39%</td><td>~55%</td><td>~100%+</td></tr>
+</table>
+<p style="font-size:.82rem;color:var(--muted)">429 at 3K is expected and fine — SDK retries automatically. No data loss, just slightly longer.</p>
+</section>
+
+<!-- ══════ SCHEMA ══════ -->
+<section id="schema">
+<h2>Schema &amp; Migrations</h2>
+
+<h3>Required Migrations (deploy before N2 code)</h3>
+<table>
+<tr><th>Model</th><th>Column</th><th>Type</th><th>Why</th></tr>
+<tr><td>LineItem</td><td><code>unitYours</code></td><td>String?</td><td>Store extracted unit code (SF, LF, EA, etc.) — match validation signal</td></tr>
+<tr><td>LineItem</td><td><code>unitAdjuster</code></td><td>String?</td><td>Same for adjuster side</td></tr>
+<tr><td>ComparisonVersionLineItem</td><td><code>unitYours</code></td><td>String?</td><td>Must mirror LineItem — same migration, same commit (Issue 33)</td></tr>
+<tr><td>ComparisonVersionLineItem</td><td><code>unitAdjuster</code></td><td>String?</td><td>Same</td></tr>
+<tr><td>Comparison</td><td><code>pipelineVersion</code></td><td>String @default("n1")</td><td>N1/N2 routing. Deploy first — affects existing rows.</td></tr>
+<tr><td>Comparison</td><td><code>inngestRunId</code></td><td>String?</td><td>Store run ID for cancellation on deletion (Issue 29)</td></tr>
+</table>
+
+<h3>Dependencies</h3>
+<table>
+<tr><th>Package</th><th>Why</th><th>Notes</th></tr>
+<tr><td><code>pdf-lib</code></td><td>PDF page slicing for chunking</td><td>Only new npm dep. Pure JS — Vercel safe. <code>pdf-parse</code> stays (read-only text extraction).</td></tr>
+</table>
+
+<h3>Pass 4 → LineItem Field Mapping</h3>
+<table>
+<tr><th>Pass 4 Field</th><th>LineItem Column(s)</th><th>Notes</th></tr>
+<tr><td><code>d</code></td><td>descriptionYours / descriptionAdjuster</td><td>Split by e1/e2</td></tr>
+<tr><td><code>q</code></td><td>qtyYours / qtyAdjuster</td><td></td></tr>
+<tr><td><code>u</code></td><td>unitYours / unitAdjuster</td><td><strong>New columns</strong></td></tr>
+<tr><td><code>rm</code></td><td>removeYours / removeAdjuster</td><td></td></tr>
+<tr><td><code>rp</code></td><td>replaceYours / replaceAdjuster</td><td></td></tr>
+<tr><td><code>rs</code></td><td>resetYours / resetAdjuster</td><td></td></tr>
+<tr><td><code>tx</code></td><td>taxYours / taxAdjuster</td><td></td></tr>
+<tr><td><code>op</code></td><td>opYours / opAdjuster</td><td></td></tr>
+<tr><td><code>t</code></td><td>totalYours / totalAdjuster</td><td></td></tr>
+<tr><td><code>status</code></td><td>matchStatus</td><td>MATCH / MODIFIED / MISSING / ADDED</td></tr>
+<tr><td><code>n</code></td><td>—</td><td>Item number used for sorting only; not stored</td></tr>
+</table>
+
+<h3>Fields From Other Sources (Not Pass 4)</h3>
+<table>
+<tr><th>Column</th><th>Source</th></tr>
+<tr><td>zoneYours, zoneAdjuster, zoneCanonical</td><td>Pass 3 output (via zoneMeta in zones_extracted)</td></tr>
+<tr><td>zoneConfidence</td><td>Pass 3 confidence score</td></tr>
+<tr><td>diffAmount</td><td>Computed: totalAdjuster - totalYours</td></tr>
+<tr><td>sortOrder</td><td>Assigned in Step 5: zone order + item order</td></tr>
+<tr><td>groupId</td><td>Dead field — always null. Ignore in N2.</td></tr>
+<tr><td>category</td><td>Always null in N2. Zone IS the grouping.</td></tr>
+</table>
+</section>
+
+<!-- ══════ SCOPE ══════ -->
+<section id="scope">
+<h2>Constraints &amp; Scope</h2>
+
+<h3>Current Scope — V1</h3>
+<div class="card" style="font-size:.82rem">
+<ul style="padding-left:1.2rem">
+<li><strong>Xactimate ↔ Xactimate only.</strong> Symbility and cross-format deferred (Issues 23, 24).</li>
+<li><strong>N1 remains live</strong> as rollback until N2 fully validated in production.</li>
+<li><strong>N1 code is read-only</strong> during N2 development. No modifications.</li>
+<li><strong>N2_ENABLED=false</strong> in production by default. Gate via env var + isN2Eligible().</li>
+<li><strong>pipelineVersion</strong> persisted on Comparison before Inngest event fires.</li>
+</ul>
+</div>
+
+<h3>N2 Routing &amp; Retirement Plan (Issue 28)</h3>
+<div class="card" style="font-size:.82rem">
+<ol style="padding-left:1.2rem">
+<li><strong>Development:</strong> N2_ENABLED=true in staging. isN2Eligible() returns true for dev team only.</li>
+<li><strong>Phased rollout:</strong> Percentage rollout or n2Opt flag on User model.</li>
+<li><strong>Full rollout:</strong> isN2Eligible() always returns true.</li>
+<li><strong>Retirement commit:</strong> Remove routing branch → rename process-v2 to process → delete N1 files (pdf-vision-extract.ts, deterministic-prematch.ts, N1 Inngest fn) → remove N2_ENABLED → migrate/deprecate pipelineVersion.</li>
+</ol>
+</div>
+
+<h3>Open Questions (Still Unresolved)</h3>
+<table>
+<tr><th>#</th><th>Question</th><th>Notes</th></tr>
+<tr><td>1</td><td>Pass 4 model choice: stay Haiku or switch to Sonnet?</td><td>Start Haiku, validate accuracy on real zones. Potentially Sonnet for small, Haiku for large.</td></tr>
+<tr><td>2</td><td>Format detection vs user selection?</td><td>Deferred until core architecture works.</td></tr>
+<tr><td>3</td><td>5K verification: real PDFs or synthetic?</td><td>Real PDFs preferred but hard to source. May expand test PDFs.</td></tr>
+</table>
+
+<h3>What N2 Replaces</h3>
+<table>
+<tr><th>Current N1 Stage</th><th>Replaced By</th></tr>
+<tr><td>Stage A: Full PDF extraction with continuation</td><td>Pass 1/2 (zone detection) + Pass 4 (per-zone extraction)</td></tr>
+<tr><td>Stage B: Zone reconciliation + deterministic prematch</td><td>Pass 3 (Opus zone matching, text only)</td></tr>
+<tr><td>Stage C: Item pairing across all items</td><td>Pass 4 (per-zone extraction + matching combined)</td></tr>
+<tr><td>Stage D: Finalize + persist</td><td>Unchanged (Step 5)</td></tr>
+</table>
+<p style="font-size:.82rem;color:var(--muted);margin-top:.4rem"><strong>Continuation logic eliminated entirely.</strong> No zone has enough items to require continuation.</p>
+</section>
+
+<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
+  N2 Pipeline Architecture Dashboard · Generated from N2_SPEED_CAPACITY_ACCURACY.md · Not connected to application
+</div>
+
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+# ─── SECRETS — never commit ──────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.production.local
+.env.test.local
+*.pem
+*.key
+
+# ─── Node / npm / pnpm / yarn ────────────────────────────────────────────────
+node_modules/
+.npm
+.pnpm-store/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.log
+.yarn/install-state.gz
+yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ─── Next.js ─────────────────────────────────────────────────────────────────
+.next/
+out/
+.vercel
+next-env.d.ts
+
+# ─── Prisma generated client ─────────────────────────────────────────────────
+estimatch-app/app/generated/prisma/
+
+# ─── Build / dist / coverage ─────────────────────────────────────────────────
+build/
+dist/
+coverage/
+.nyc_output/
+
+# ─── Vitest / Jest / Playwright ──────────────────────────────────────────────
+.vitest/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ─── TypeScript ──────────────────────────────────────────────────────────────
+*.tsbuildinfo
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+logs/
+*.log
+lerna-debug.log*
+
+# ─── IDE / Editor ────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.windsurf/
+.cursor/
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ─── Local artifacts ─────────────────────────────────────────────────────────
+*.local
+tmp/
+temp/
+
+# ─── Tunneling / dev tools ───────────────────────────────────────────────────
+ngrok.yml
+.stripe-cli/

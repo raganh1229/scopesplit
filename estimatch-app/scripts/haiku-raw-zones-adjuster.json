@@ -1,0 +1,5688 @@
+{
+  "side": "adjuster",
+  "totalItems": 1116,
+  "uniqueZones": [
+    {
+      "zone": "Primary Master Suite",
+      "count": 60
+    },
+    {
+      "zone": "Laundry & Utility",
+      "count": 59
+    },
+    {
+      "zone": "Basement Finishing",
+      "count": 58
+    },
+    {
+      "zone": "Attic Storage",
+      "count": 57
+    },
+    {
+      "zone": "Garage Section",
+      "count": 56
+    },
+    {
+      "zone": "Bathroom Suite A",
+      "count": 54
+    },
+    {
+      "zone": "Living Room Main",
+      "count": 49
+    },
+    {
+      "zone": "Powder Room",
+      "count": 48
+    },
+    {
+      "zone": "Guest Bedroom North",
+      "count": 46
+    },
+    {
+      "zone": "Deck & Patio Area",
+      "count": 46
+    },
+    {
+      "zone": "Walk-in Closet",
+      "count": 45
+    },
+    {
+      "zone": "Home Office Studio",
+      "count": 44
+    },
+    {
+      "zone": "Library Reading Room",
+      "count": 44
+    },
+    {
+      "zone": "Basement Recreation",
+      "count": 44
+    },
+    {
+      "zone": "Family Entertainment Space",
+      "count": 43
+    },
+    {
+      "zone": "Foyer Entry",
+      "count": 41
+    },
+    {
+      "zone": "Workshop Area",
+      "count": 40
+    },
+    {
+      "zone": "Pool House",
+      "count": 38
+    },
+    {
+      "zone": "Master Bath Ensuite",
+      "count": 37
+    },
+    {
+      "zone": "Pantry Extension",
+      "count": 37
+    },
+    {
+      "zone": "Main Kitchen Area",
+      "count": 36
+    },
+    {
+      "zone": "Bathroom Suite B",
+      "count": 36
+    },
+    {
+      "zone": "Secondary Dining Zone",
+      "count": 33
+    },
+    {
+      "zone": "Garden Shed",
+      "count": 33
+    },
+    {
+      "zone": "Guest Bedroom South",
+      "count": 32
+    }
+  ],
+  "items": [
+    {
+      "n": 1,
+      "zone": "Foyer Entry",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 2,
+      "zone": "Foyer Entry",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 3,
+      "zone": "Foyer Entry",
+      "desc": "Double-basin sink installation"
+    },
+    {
+      "n": 4,
+      "zone": "Foyer Entry",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 5,
+      "zone": "Foyer Entry",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 6,
+      "zone": "Foyer Entry",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 7,
+      "zone": "Foyer Entry",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 8,
+      "zone": "Foyer Entry",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 9,
+      "zone": "Foyer Entry",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 10,
+      "zone": "Foyer Entry",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 11,
+      "zone": "Foyer Entry",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 12,
+      "zone": "Foyer Entry",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 13,
+      "zone": "Foyer Entry",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 14,
+      "zone": "Foyer Entry",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 15,
+      "zone": "Foyer Entry",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 16,
+      "zone": "Foyer Entry",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 17,
+      "zone": "Foyer Entry",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 18,
+      "zone": "Foyer Entry",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 19,
+      "zone": "Foyer Entry",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 20,
+      "zone": "Foyer Entry",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 21,
+      "zone": "Foyer Entry",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 22,
+      "zone": "Foyer Entry",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 23,
+      "zone": "Foyer Entry",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 24,
+      "zone": "Foyer Entry",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 25,
+      "zone": "Foyer Entry",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 26,
+      "zone": "Foyer Entry",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 27,
+      "zone": "Foyer Entry",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 28,
+      "zone": "Foyer Entry",
+      "desc": "Wall framing odor seal with shellac"
+    },
+    {
+      "n": 29,
+      "zone": "Foyer Entry",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 30,
+      "zone": "Foyer Entry",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 31,
+      "zone": "Foyer Entry",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 32,
+      "zone": "Foyer Entry",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 33,
+      "zone": "Foyer Entry",
+      "desc": "Protective masking for walls"
+    },
+    {
+      "n": 34,
+      "zone": "Foyer Entry",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 35,
+      "zone": "Foyer Entry",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 36,
+      "zone": "Foyer Entry",
+      "desc": "Ceiling paint application - dual coat"
+    },
+    {
+      "n": 37,
+      "zone": "Foyer Entry",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 38,
+      "zone": "Foyer Entry",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 39,
+      "zone": "Foyer Entry",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 40,
+      "zone": "Foyer Entry",
+      "desc": "Wall framing odor seal with shellac"
+    },
+    {
+      "n": 41,
+      "zone": "Foyer Entry",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 42,
+      "zone": "Primary Master Suite",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 43,
+      "zone": "Primary Master Suite",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 44,
+      "zone": "Primary Master Suite",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 45,
+      "zone": "Primary Master Suite",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 46,
+      "zone": "Primary Master Suite",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 47,
+      "zone": "Primary Master Suite",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 48,
+      "zone": "Primary Master Suite",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 49,
+      "zone": "Primary Master Suite",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 50,
+      "zone": "Primary Master Suite",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 51,
+      "zone": "Primary Master Suite",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 52,
+      "zone": "Primary Master Suite",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 53,
+      "zone": "Primary Master Suite",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 54,
+      "zone": "Primary Master Suite",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 55,
+      "zone": "Primary Master Suite",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 56,
+      "zone": "Primary Master Suite",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 57,
+      "zone": "Primary Master Suite",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 58,
+      "zone": "Primary Master Suite",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 59,
+      "zone": "Primary Master Suite",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 60,
+      "zone": "Primary Master Suite",
+      "desc": "Protective masking for walls"
+    },
+    {
+      "n": 61,
+      "zone": "Primary Master Suite",
+      "desc": "Mask wall - plastic, paper, tape"
+    },
+    {
+      "n": 62,
+      "zone": "Primary Master Suite",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 63,
+      "zone": "Primary Master Suite",
+      "desc": "Door hardware installation kit"
+    },
+    {
+      "n": 64,
+      "zone": "Primary Master Suite",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 65,
+      "zone": "Primary Master Suite",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 66,
+      "zone": "Primary Master Suite",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 67,
+      "zone": "Primary Master Suite",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 68,
+      "zone": "Primary Master Suite",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 69,
+      "zone": "Primary Master Suite",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 70,
+      "zone": "Primary Master Suite",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 71,
+      "zone": "Primary Master Suite",
+      "desc": "Concrete floor protective sealing"
+    },
+    {
+      "n": 72,
+      "zone": "Primary Master Suite",
+      "desc": "Temporary power installation"
+    },
+    {
+      "n": 73,
+      "zone": "Primary Master Suite",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 74,
+      "zone": "Primary Master Suite",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 75,
+      "zone": "Primary Master Suite",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 76,
+      "zone": "Primary Master Suite",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 77,
+      "zone": "Primary Master Suite",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 78,
+      "zone": "Primary Master Suite",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 79,
+      "zone": "Primary Master Suite",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 80,
+      "zone": "Primary Master Suite",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 81,
+      "zone": "Primary Master Suite",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 82,
+      "zone": "Primary Master Suite",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 83,
+      "zone": "Primary Master Suite",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 84,
+      "zone": "Primary Master Suite",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 85,
+      "zone": "Primary Master Suite",
+      "desc": "1/2 inch gypsum board installation"
+    },
+    {
+      "n": 86,
+      "zone": "Primary Master Suite",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 87,
+      "zone": "Primary Master Suite",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 88,
+      "zone": "Primary Master Suite",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 89,
+      "zone": "Primary Master Suite",
+      "desc": "Microwave installation over cooktop"
+    },
+    {
+      "n": 90,
+      "zone": "Primary Master Suite",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 91,
+      "zone": "Primary Master Suite",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 92,
+      "zone": "Primary Master Suite",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 93,
+      "zone": "Primary Master Suite",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 94,
+      "zone": "Primary Master Suite",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 95,
+      "zone": "Primary Master Suite",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 96,
+      "zone": "Primary Master Suite",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 97,
+      "zone": "Primary Master Suite",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 98,
+      "zone": "Primary Master Suite",
+      "desc": "Double-basin sink installation"
+    },
+    {
+      "n": 99,
+      "zone": "Primary Master Suite",
+      "desc": "Remove and replace tile mortar base"
+    },
+    {
+      "n": 100,
+      "zone": "Primary Master Suite",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 101,
+      "zone": "Primary Master Suite",
+      "desc": "1/2 inch gypsum board installation"
+    },
+    {
+      "n": 102,
+      "zone": "Guest Bedroom North",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 103,
+      "zone": "Guest Bedroom North",
+      "desc": "Ceramic tile wall installation"
+    },
+    {
+      "n": 104,
+      "zone": "Guest Bedroom North",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 105,
+      "zone": "Guest Bedroom North",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 106,
+      "zone": "Guest Bedroom North",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 107,
+      "zone": "Guest Bedroom North",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 108,
+      "zone": "Guest Bedroom North",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 109,
+      "zone": "Guest Bedroom North",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 110,
+      "zone": "Guest Bedroom North",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 111,
+      "zone": "Guest Bedroom North",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 112,
+      "zone": "Guest Bedroom North",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 113,
+      "zone": "Guest Bedroom North",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 114,
+      "zone": "Guest Bedroom North",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 115,
+      "zone": "Guest Bedroom North",
+      "desc": "Door hardware installation kit"
+    },
+    {
+      "n": 116,
+      "zone": "Guest Bedroom North",
+      "desc": "Decorative chandelier fixture install"
+    },
+    {
+      "n": 117,
+      "zone": "Guest Bedroom North",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 118,
+      "zone": "Guest Bedroom North",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 119,
+      "zone": "Guest Bedroom North",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 120,
+      "zone": "Guest Bedroom North",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 121,
+      "zone": "Guest Bedroom North",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 122,
+      "zone": "Guest Bedroom North",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 123,
+      "zone": "Guest Bedroom North",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 124,
+      "zone": "Guest Bedroom North",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 125,
+      "zone": "Guest Bedroom North",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 126,
+      "zone": "Guest Bedroom North",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 127,
+      "zone": "Guest Bedroom North",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 128,
+      "zone": "Guest Bedroom North",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 129,
+      "zone": "Guest Bedroom North",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 130,
+      "zone": "Guest Bedroom North",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 131,
+      "zone": "Guest Bedroom North",
+      "desc": "Crown molding painting dual coat"
+    },
+    {
+      "n": 132,
+      "zone": "Guest Bedroom North",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 133,
+      "zone": "Guest Bedroom North",
+      "desc": "Remove and replace ceramic tile floor"
+    },
+    {
+      "n": 134,
+      "zone": "Guest Bedroom North",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 135,
+      "zone": "Guest Bedroom North",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 136,
+      "zone": "Guest Bedroom North",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 137,
+      "zone": "Guest Bedroom North",
+      "desc": "Ceiling paint application - dual coat"
+    },
+    {
+      "n": 138,
+      "zone": "Guest Bedroom North",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 139,
+      "zone": "Guest Bedroom North",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 140,
+      "zone": "Guest Bedroom North",
+      "desc": "1/2 inch gypsum board installation"
+    },
+    {
+      "n": 141,
+      "zone": "Guest Bedroom North",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 142,
+      "zone": "Guest Bedroom North",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 143,
+      "zone": "Guest Bedroom North",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 144,
+      "zone": "Guest Bedroom North",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 145,
+      "zone": "Guest Bedroom North",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 146,
+      "zone": "Guest Bedroom North",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 147,
+      "zone": "Guest Bedroom North",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 148,
+      "zone": "Guest Bedroom South",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 149,
+      "zone": "Guest Bedroom South",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 150,
+      "zone": "Guest Bedroom South",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 151,
+      "zone": "Guest Bedroom South",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 152,
+      "zone": "Guest Bedroom South",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 153,
+      "zone": "Guest Bedroom South",
+      "desc": "Mask wall - plastic, paper, tape"
+    },
+    {
+      "n": 154,
+      "zone": "Guest Bedroom South",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 155,
+      "zone": "Guest Bedroom South",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 156,
+      "zone": "Guest Bedroom South",
+      "desc": "General labor hourly rate"
+    },
+    {
+      "n": 157,
+      "zone": "Guest Bedroom South",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 158,
+      "zone": "Guest Bedroom South",
+      "desc": "Crown molding painting dual coat"
+    },
+    {
+      "n": 159,
+      "zone": "Guest Bedroom South",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 160,
+      "zone": "Guest Bedroom South",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 161,
+      "zone": "Guest Bedroom South",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 162,
+      "zone": "Guest Bedroom South",
+      "desc": "General labor hourly rate"
+    },
+    {
+      "n": 163,
+      "zone": "Guest Bedroom South",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 164,
+      "zone": "Guest Bedroom South",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 165,
+      "zone": "Guest Bedroom South",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 166,
+      "zone": "Guest Bedroom South",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 167,
+      "zone": "Guest Bedroom South",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 168,
+      "zone": "Guest Bedroom South",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 169,
+      "zone": "Guest Bedroom South",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 170,
+      "zone": "Guest Bedroom South",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 171,
+      "zone": "Guest Bedroom South",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 172,
+      "zone": "Guest Bedroom South",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 173,
+      "zone": "Guest Bedroom South",
+      "desc": "1/2 inch gypsum board installation"
+    },
+    {
+      "n": 174,
+      "zone": "Guest Bedroom South",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 175,
+      "zone": "Guest Bedroom South",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 176,
+      "zone": "Guest Bedroom South",
+      "desc": "Ceramic tile wall installation"
+    },
+    {
+      "n": 177,
+      "zone": "Guest Bedroom South",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 178,
+      "zone": "Guest Bedroom South",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 179,
+      "zone": "Guest Bedroom South",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 180,
+      "zone": "Main Kitchen Area",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 181,
+      "zone": "Main Kitchen Area",
+      "desc": "Monthly temporary power consumption"
+    },
+    {
+      "n": 182,
+      "zone": "Main Kitchen Area",
+      "desc": "Double-basin sink installation"
+    },
+    {
+      "n": 183,
+      "zone": "Main Kitchen Area",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 184,
+      "zone": "Main Kitchen Area",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 185,
+      "zone": "Main Kitchen Area",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 186,
+      "zone": "Main Kitchen Area",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 187,
+      "zone": "Main Kitchen Area",
+      "desc": "Tile backsplash installation service"
+    },
+    {
+      "n": 188,
+      "zone": "Main Kitchen Area",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 189,
+      "zone": "Main Kitchen Area",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 190,
+      "zone": "Main Kitchen Area",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 191,
+      "zone": "Main Kitchen Area",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 192,
+      "zone": "Main Kitchen Area",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 193,
+      "zone": "Main Kitchen Area",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 194,
+      "zone": "Main Kitchen Area",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 195,
+      "zone": "Main Kitchen Area",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 196,
+      "zone": "Main Kitchen Area",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 197,
+      "zone": "Main Kitchen Area",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 198,
+      "zone": "Main Kitchen Area",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 199,
+      "zone": "Main Kitchen Area",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 200,
+      "zone": "Main Kitchen Area",
+      "desc": "Double-basin sink installation"
+    },
+    {
+      "n": 201,
+      "zone": "Main Kitchen Area",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 202,
+      "zone": "Main Kitchen Area",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 203,
+      "zone": "Main Kitchen Area",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 204,
+      "zone": "Main Kitchen Area",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 205,
+      "zone": "Main Kitchen Area",
+      "desc": "Thermal and moisture barrier install"
+    },
+    {
+      "n": 206,
+      "zone": "Main Kitchen Area",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 207,
+      "zone": "Main Kitchen Area",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 208,
+      "zone": "Main Kitchen Area",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 209,
+      "zone": "Main Kitchen Area",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 210,
+      "zone": "Main Kitchen Area",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 211,
+      "zone": "Main Kitchen Area",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 212,
+      "zone": "Main Kitchen Area",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 213,
+      "zone": "Main Kitchen Area",
+      "desc": "Remove and replace exterior double doors"
+    },
+    {
+      "n": 214,
+      "zone": "Main Kitchen Area",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 215,
+      "zone": "Main Kitchen Area",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 216,
+      "zone": "Secondary Dining Zone",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 217,
+      "zone": "Secondary Dining Zone",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 218,
+      "zone": "Secondary Dining Zone",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 219,
+      "zone": "Secondary Dining Zone",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 220,
+      "zone": "Secondary Dining Zone",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 221,
+      "zone": "Secondary Dining Zone",
+      "desc": "Seal structural lumber for odor control"
+    },
+    {
+      "n": 222,
+      "zone": "Secondary Dining Zone",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 223,
+      "zone": "Secondary Dining Zone",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 224,
+      "zone": "Secondary Dining Zone",
+      "desc": "Protective masking for walls"
+    },
+    {
+      "n": 225,
+      "zone": "Secondary Dining Zone",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 226,
+      "zone": "Secondary Dining Zone",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 227,
+      "zone": "Secondary Dining Zone",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 228,
+      "zone": "Secondary Dining Zone",
+      "desc": "Ceramic tile wall installation"
+    },
+    {
+      "n": 229,
+      "zone": "Secondary Dining Zone",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 230,
+      "zone": "Secondary Dining Zone",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 231,
+      "zone": "Secondary Dining Zone",
+      "desc": "Decorative chandelier fixture install"
+    },
+    {
+      "n": 232,
+      "zone": "Secondary Dining Zone",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 233,
+      "zone": "Secondary Dining Zone",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 234,
+      "zone": "Secondary Dining Zone",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 235,
+      "zone": "Secondary Dining Zone",
+      "desc": "4 inch fiberglass blanket insulation"
+    },
+    {
+      "n": 236,
+      "zone": "Secondary Dining Zone",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 237,
+      "zone": "Secondary Dining Zone",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 238,
+      "zone": "Secondary Dining Zone",
+      "desc": "4 inch fiberglass blanket insulation"
+    },
+    {
+      "n": 239,
+      "zone": "Secondary Dining Zone",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 240,
+      "zone": "Secondary Dining Zone",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 241,
+      "zone": "Secondary Dining Zone",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 242,
+      "zone": "Secondary Dining Zone",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 243,
+      "zone": "Secondary Dining Zone",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 244,
+      "zone": "Secondary Dining Zone",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 245,
+      "zone": "Secondary Dining Zone",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 246,
+      "zone": "Secondary Dining Zone",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 247,
+      "zone": "Secondary Dining Zone",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 248,
+      "zone": "Secondary Dining Zone",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 249,
+      "zone": "Living Room Main",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 250,
+      "zone": "Living Room Main",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 251,
+      "zone": "Living Room Main",
+      "desc": "Door hardware installation kit"
+    },
+    {
+      "n": 252,
+      "zone": "Living Room Main",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 253,
+      "zone": "Living Room Main",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 254,
+      "zone": "Living Room Main",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 255,
+      "zone": "Living Room Main",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 256,
+      "zone": "Living Room Main",
+      "desc": "Peephole removal and reinstallation"
+    },
+    {
+      "n": 257,
+      "zone": "Living Room Main",
+      "desc": "Temporary power installation"
+    },
+    {
+      "n": 258,
+      "zone": "Living Room Main",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 259,
+      "zone": "Living Room Main",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 260,
+      "zone": "Living Room Main",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 261,
+      "zone": "Living Room Main",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 262,
+      "zone": "Living Room Main",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 263,
+      "zone": "Living Room Main",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 264,
+      "zone": "Living Room Main",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 265,
+      "zone": "Living Room Main",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 266,
+      "zone": "Living Room Main",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 267,
+      "zone": "Living Room Main",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 268,
+      "zone": "Living Room Main",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 269,
+      "zone": "Living Room Main",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 270,
+      "zone": "Living Room Main",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 271,
+      "zone": "Living Room Main",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 272,
+      "zone": "Living Room Main",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 273,
+      "zone": "Living Room Main",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 274,
+      "zone": "Living Room Main",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 275,
+      "zone": "Living Room Main",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 276,
+      "zone": "Living Room Main",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 277,
+      "zone": "Living Room Main",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 278,
+      "zone": "Living Room Main",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 279,
+      "zone": "Living Room Main",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 280,
+      "zone": "Living Room Main",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 281,
+      "zone": "Living Room Main",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 282,
+      "zone": "Living Room Main",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 283,
+      "zone": "Living Room Main",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 284,
+      "zone": "Living Room Main",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 285,
+      "zone": "Living Room Main",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 286,
+      "zone": "Living Room Main",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 287,
+      "zone": "Living Room Main",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 288,
+      "zone": "Living Room Main",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 289,
+      "zone": "Living Room Main",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 290,
+      "zone": "Living Room Main",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 291,
+      "zone": "Living Room Main",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 292,
+      "zone": "Living Room Main",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 293,
+      "zone": "Living Room Main",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 294,
+      "zone": "Living Room Main",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 295,
+      "zone": "Living Room Main",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 296,
+      "zone": "Living Room Main",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 297,
+      "zone": "Living Room Main",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 298,
+      "zone": "Family Entertainment Space",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 299,
+      "zone": "Family Entertainment Space",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 300,
+      "zone": "Family Entertainment Space",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 301,
+      "zone": "Family Entertainment Space",
+      "desc": "Wall framing odor seal with shellac"
+    },
+    {
+      "n": 302,
+      "zone": "Family Entertainment Space",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 303,
+      "zone": "Family Entertainment Space",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 304,
+      "zone": "Family Entertainment Space",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 305,
+      "zone": "Family Entertainment Space",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 306,
+      "zone": "Family Entertainment Space",
+      "desc": "Remove and replace tile mortar base"
+    },
+    {
+      "n": 307,
+      "zone": "Family Entertainment Space",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 308,
+      "zone": "Family Entertainment Space",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 309,
+      "zone": "Family Entertainment Space",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 310,
+      "zone": "Family Entertainment Space",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 311,
+      "zone": "Family Entertainment Space",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 312,
+      "zone": "Family Entertainment Space",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 313,
+      "zone": "Family Entertainment Space",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 314,
+      "zone": "Family Entertainment Space",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 315,
+      "zone": "Family Entertainment Space",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 316,
+      "zone": "Family Entertainment Space",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 317,
+      "zone": "Family Entertainment Space",
+      "desc": "Ceramic tile wall installation"
+    },
+    {
+      "n": 318,
+      "zone": "Family Entertainment Space",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 319,
+      "zone": "Family Entertainment Space",
+      "desc": "Thermal and moisture barrier install"
+    },
+    {
+      "n": 320,
+      "zone": "Family Entertainment Space",
+      "desc": "Monthly temporary power consumption"
+    },
+    {
+      "n": 321,
+      "zone": "Family Entertainment Space",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 322,
+      "zone": "Family Entertainment Space",
+      "desc": "Peephole removal and reinstallation"
+    },
+    {
+      "n": 323,
+      "zone": "Family Entertainment Space",
+      "desc": "Project management and supervision"
+    },
+    {
+      "n": 324,
+      "zone": "Family Entertainment Space",
+      "desc": "Baseboard painting - dual coat"
+    },
+    {
+      "n": 325,
+      "zone": "Family Entertainment Space",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 326,
+      "zone": "Family Entertainment Space",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 327,
+      "zone": "Family Entertainment Space",
+      "desc": "Mask wall - plastic, paper, tape"
+    },
+    {
+      "n": 328,
+      "zone": "Family Entertainment Space",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 329,
+      "zone": "Family Entertainment Space",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 330,
+      "zone": "Family Entertainment Space",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 331,
+      "zone": "Family Entertainment Space",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 332,
+      "zone": "Family Entertainment Space",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 333,
+      "zone": "Family Entertainment Space",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 334,
+      "zone": "Family Entertainment Space",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 335,
+      "zone": "Family Entertainment Space",
+      "desc": "Kitchen wall-mounted cabinet units"
+    },
+    {
+      "n": 336,
+      "zone": "Family Entertainment Space",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 337,
+      "zone": "Family Entertainment Space",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 338,
+      "zone": "Family Entertainment Space",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 339,
+      "zone": "Family Entertainment Space",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 340,
+      "zone": "Family Entertainment Space",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 341,
+      "zone": "Home Office Studio",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 342,
+      "zone": "Home Office Studio",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 343,
+      "zone": "Home Office Studio",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 344,
+      "zone": "Home Office Studio",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 345,
+      "zone": "Home Office Studio",
+      "desc": "Thermal and moisture barrier install"
+    },
+    {
+      "n": 346,
+      "zone": "Home Office Studio",
+      "desc": "Tile grout protective sealer"
+    },
+    {
+      "n": 347,
+      "zone": "Home Office Studio",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 348,
+      "zone": "Home Office Studio",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 349,
+      "zone": "Home Office Studio",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 350,
+      "zone": "Home Office Studio",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 351,
+      "zone": "Home Office Studio",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 352,
+      "zone": "Home Office Studio",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 353,
+      "zone": "Home Office Studio",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 354,
+      "zone": "Home Office Studio",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 355,
+      "zone": "Home Office Studio",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 356,
+      "zone": "Home Office Studio",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 357,
+      "zone": "Home Office Studio",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 358,
+      "zone": "Home Office Studio",
+      "desc": "Wall painting - two application coats"
+    },
+    {
+      "n": 359,
+      "zone": "Home Office Studio",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 360,
+      "zone": "Home Office Studio",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 361,
+      "zone": "Home Office Studio",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 362,
+      "zone": "Home Office Studio",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 363,
+      "zone": "Home Office Studio",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 364,
+      "zone": "Home Office Studio",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 365,
+      "zone": "Home Office Studio",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 366,
+      "zone": "Home Office Studio",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 367,
+      "zone": "Home Office Studio",
+      "desc": "Protective masking for walls"
+    },
+    {
+      "n": 368,
+      "zone": "Home Office Studio",
+      "desc": "4 inch fiberglass blanket insulation"
+    },
+    {
+      "n": 369,
+      "zone": "Home Office Studio",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 370,
+      "zone": "Home Office Studio",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 371,
+      "zone": "Home Office Studio",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 372,
+      "zone": "Home Office Studio",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 373,
+      "zone": "Home Office Studio",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 374,
+      "zone": "Home Office Studio",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 375,
+      "zone": "Home Office Studio",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 376,
+      "zone": "Home Office Studio",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 377,
+      "zone": "Home Office Studio",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 378,
+      "zone": "Home Office Studio",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 379,
+      "zone": "Home Office Studio",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 380,
+      "zone": "Home Office Studio",
+      "desc": "General labor hourly rate"
+    },
+    {
+      "n": 381,
+      "zone": "Home Office Studio",
+      "desc": "Ceramic tile wall installation"
+    },
+    {
+      "n": 382,
+      "zone": "Home Office Studio",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 383,
+      "zone": "Home Office Studio",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 384,
+      "zone": "Home Office Studio",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 385,
+      "zone": "Library Reading Room",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 386,
+      "zone": "Library Reading Room",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 387,
+      "zone": "Library Reading Room",
+      "desc": "Double-basin sink installation"
+    },
+    {
+      "n": 388,
+      "zone": "Library Reading Room",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 389,
+      "zone": "Library Reading Room",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 390,
+      "zone": "Library Reading Room",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 391,
+      "zone": "Library Reading Room",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 392,
+      "zone": "Library Reading Room",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 393,
+      "zone": "Library Reading Room",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 394,
+      "zone": "Library Reading Room",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 395,
+      "zone": "Library Reading Room",
+      "desc": "Baseboard painting - dual coat"
+    },
+    {
+      "n": 396,
+      "zone": "Library Reading Room",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 397,
+      "zone": "Library Reading Room",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 398,
+      "zone": "Library Reading Room",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 399,
+      "zone": "Library Reading Room",
+      "desc": "Tile backsplash installation service"
+    },
+    {
+      "n": 400,
+      "zone": "Library Reading Room",
+      "desc": "Concrete floor protective sealing"
+    },
+    {
+      "n": 401,
+      "zone": "Library Reading Room",
+      "desc": "Peephole removal and reinstallation"
+    },
+    {
+      "n": 402,
+      "zone": "Library Reading Room",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 403,
+      "zone": "Library Reading Room",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 404,
+      "zone": "Library Reading Room",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 405,
+      "zone": "Library Reading Room",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 406,
+      "zone": "Library Reading Room",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 407,
+      "zone": "Library Reading Room",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 408,
+      "zone": "Library Reading Room",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 409,
+      "zone": "Library Reading Room",
+      "desc": "Baseboard painting - dual coat"
+    },
+    {
+      "n": 410,
+      "zone": "Library Reading Room",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 411,
+      "zone": "Library Reading Room",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 412,
+      "zone": "Library Reading Room",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 413,
+      "zone": "Library Reading Room",
+      "desc": "Baseboard painting - dual coat"
+    },
+    {
+      "n": 414,
+      "zone": "Library Reading Room",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 415,
+      "zone": "Library Reading Room",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 416,
+      "zone": "Library Reading Room",
+      "desc": "Mask wall - plastic, paper, tape"
+    },
+    {
+      "n": 417,
+      "zone": "Library Reading Room",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 418,
+      "zone": "Library Reading Room",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 419,
+      "zone": "Library Reading Room",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 420,
+      "zone": "Library Reading Room",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 421,
+      "zone": "Library Reading Room",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 422,
+      "zone": "Library Reading Room",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 423,
+      "zone": "Library Reading Room",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 424,
+      "zone": "Library Reading Room",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 425,
+      "zone": "Library Reading Room",
+      "desc": "Seal structural lumber for odor control"
+    },
+    {
+      "n": 426,
+      "zone": "Library Reading Room",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 427,
+      "zone": "Library Reading Room",
+      "desc": "Kitchen wall-mounted cabinet units"
+    },
+    {
+      "n": 428,
+      "zone": "Library Reading Room",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 429,
+      "zone": "Bathroom Suite A",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 430,
+      "zone": "Bathroom Suite A",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 431,
+      "zone": "Bathroom Suite A",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 432,
+      "zone": "Bathroom Suite A",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 433,
+      "zone": "Bathroom Suite A",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 434,
+      "zone": "Bathroom Suite A",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 435,
+      "zone": "Bathroom Suite A",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 436,
+      "zone": "Bathroom Suite A",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 437,
+      "zone": "Bathroom Suite A",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 438,
+      "zone": "Bathroom Suite A",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 439,
+      "zone": "Bathroom Suite A",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 440,
+      "zone": "Bathroom Suite A",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 441,
+      "zone": "Bathroom Suite A",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 442,
+      "zone": "Bathroom Suite A",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 443,
+      "zone": "Bathroom Suite A",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 444,
+      "zone": "Bathroom Suite A",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 445,
+      "zone": "Bathroom Suite A",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 446,
+      "zone": "Bathroom Suite A",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 447,
+      "zone": "Bathroom Suite A",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 448,
+      "zone": "Bathroom Suite A",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 449,
+      "zone": "Bathroom Suite A",
+      "desc": "Wall painting - two application coats"
+    },
+    {
+      "n": 450,
+      "zone": "Bathroom Suite A",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 451,
+      "zone": "Bathroom Suite A",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 452,
+      "zone": "Bathroom Suite A",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 453,
+      "zone": "Bathroom Suite A",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 454,
+      "zone": "Bathroom Suite A",
+      "desc": "Project management and supervision"
+    },
+    {
+      "n": 455,
+      "zone": "Bathroom Suite A",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 456,
+      "zone": "Bathroom Suite A",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 457,
+      "zone": "Bathroom Suite A",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 458,
+      "zone": "Bathroom Suite A",
+      "desc": "Project management and supervision"
+    },
+    {
+      "n": 459,
+      "zone": "Bathroom Suite A",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 460,
+      "zone": "Bathroom Suite A",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 461,
+      "zone": "Bathroom Suite A",
+      "desc": "General labor hourly rate"
+    },
+    {
+      "n": 462,
+      "zone": "Bathroom Suite A",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 463,
+      "zone": "Bathroom Suite A",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 464,
+      "zone": "Bathroom Suite A",
+      "desc": "Microwave installation over cooktop"
+    },
+    {
+      "n": 465,
+      "zone": "Bathroom Suite A",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 466,
+      "zone": "Bathroom Suite A",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 467,
+      "zone": "Bathroom Suite A",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 468,
+      "zone": "Bathroom Suite A",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 469,
+      "zone": "Bathroom Suite A",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 470,
+      "zone": "Bathroom Suite A",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 471,
+      "zone": "Bathroom Suite A",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 472,
+      "zone": "Bathroom Suite A",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 473,
+      "zone": "Bathroom Suite A",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 474,
+      "zone": "Bathroom Suite A",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 475,
+      "zone": "Bathroom Suite A",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 476,
+      "zone": "Bathroom Suite A",
+      "desc": "Monthly temporary facilities rental"
+    },
+    {
+      "n": 477,
+      "zone": "Bathroom Suite A",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 478,
+      "zone": "Bathroom Suite A",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 479,
+      "zone": "Bathroom Suite A",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 480,
+      "zone": "Bathroom Suite A",
+      "desc": "Baseboard trim - 2.25 inch profile"
+    },
+    {
+      "n": 481,
+      "zone": "Bathroom Suite A",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 482,
+      "zone": "Bathroom Suite A",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 483,
+      "zone": "Bathroom Suite B",
+      "desc": "Remove and replace ceramic tile floor"
+    },
+    {
+      "n": 484,
+      "zone": "Bathroom Suite B",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 485,
+      "zone": "Bathroom Suite B",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 486,
+      "zone": "Bathroom Suite B",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 487,
+      "zone": "Bathroom Suite B",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 488,
+      "zone": "Bathroom Suite B",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 489,
+      "zone": "Bathroom Suite B",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 490,
+      "zone": "Bathroom Suite B",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 491,
+      "zone": "Bathroom Suite B",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 492,
+      "zone": "Bathroom Suite B",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 493,
+      "zone": "Bathroom Suite B",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 494,
+      "zone": "Bathroom Suite B",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 495,
+      "zone": "Bathroom Suite B",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 496,
+      "zone": "Bathroom Suite B",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 497,
+      "zone": "Bathroom Suite B",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 498,
+      "zone": "Bathroom Suite B",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 499,
+      "zone": "Bathroom Suite B",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 500,
+      "zone": "Bathroom Suite B",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 501,
+      "zone": "Bathroom Suite B",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 502,
+      "zone": "Bathroom Suite B",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 503,
+      "zone": "Bathroom Suite B",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 504,
+      "zone": "Bathroom Suite B",
+      "desc": "Monthly temporary facilities rental"
+    },
+    {
+      "n": 505,
+      "zone": "Bathroom Suite B",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 506,
+      "zone": "Bathroom Suite B",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 507,
+      "zone": "Bathroom Suite B",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 508,
+      "zone": "Bathroom Suite B",
+      "desc": "Crown molding painting dual coat"
+    },
+    {
+      "n": 509,
+      "zone": "Bathroom Suite B",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 510,
+      "zone": "Bathroom Suite B",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 511,
+      "zone": "Bathroom Suite B",
+      "desc": "Tile grout protective sealer"
+    },
+    {
+      "n": 512,
+      "zone": "Bathroom Suite B",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 513,
+      "zone": "Bathroom Suite B",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 514,
+      "zone": "Bathroom Suite B",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 515,
+      "zone": "Bathroom Suite B",
+      "desc": "Baseboard trim - 2.25 inch profile"
+    },
+    {
+      "n": 516,
+      "zone": "Bathroom Suite B",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 517,
+      "zone": "Bathroom Suite B",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 518,
+      "zone": "Bathroom Suite B",
+      "desc": "General labor hourly rate"
+    },
+    {
+      "n": 519,
+      "zone": "Laundry & Utility",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 520,
+      "zone": "Laundry & Utility",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 521,
+      "zone": "Laundry & Utility",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 522,
+      "zone": "Laundry & Utility",
+      "desc": "Crown molding painting dual coat"
+    },
+    {
+      "n": 523,
+      "zone": "Laundry & Utility",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 524,
+      "zone": "Laundry & Utility",
+      "desc": "Temporary power installation"
+    },
+    {
+      "n": 525,
+      "zone": "Laundry & Utility",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 526,
+      "zone": "Laundry & Utility",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 527,
+      "zone": "Laundry & Utility",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 528,
+      "zone": "Laundry & Utility",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 529,
+      "zone": "Laundry & Utility",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 530,
+      "zone": "Laundry & Utility",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 531,
+      "zone": "Laundry & Utility",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 532,
+      "zone": "Laundry & Utility",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 533,
+      "zone": "Laundry & Utility",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 534,
+      "zone": "Laundry & Utility",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 535,
+      "zone": "Laundry & Utility",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 536,
+      "zone": "Laundry & Utility",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 537,
+      "zone": "Laundry & Utility",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 538,
+      "zone": "Laundry & Utility",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 539,
+      "zone": "Laundry & Utility",
+      "desc": "Protective masking for walls"
+    },
+    {
+      "n": 540,
+      "zone": "Laundry & Utility",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 541,
+      "zone": "Laundry & Utility",
+      "desc": "Wall framing odor seal with shellac"
+    },
+    {
+      "n": 542,
+      "zone": "Laundry & Utility",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 543,
+      "zone": "Laundry & Utility",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 544,
+      "zone": "Laundry & Utility",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 545,
+      "zone": "Laundry & Utility",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 546,
+      "zone": "Laundry & Utility",
+      "desc": "Peephole removal and reinstallation"
+    },
+    {
+      "n": 547,
+      "zone": "Laundry & Utility",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 548,
+      "zone": "Laundry & Utility",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 549,
+      "zone": "Laundry & Utility",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 550,
+      "zone": "Laundry & Utility",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 551,
+      "zone": "Laundry & Utility",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 552,
+      "zone": "Laundry & Utility",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 553,
+      "zone": "Laundry & Utility",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 554,
+      "zone": "Laundry & Utility",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 555,
+      "zone": "Laundry & Utility",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 556,
+      "zone": "Laundry & Utility",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 557,
+      "zone": "Laundry & Utility",
+      "desc": "General labor hourly rate"
+    },
+    {
+      "n": 558,
+      "zone": "Laundry & Utility",
+      "desc": "Tile grout protective sealer"
+    },
+    {
+      "n": 559,
+      "zone": "Laundry & Utility",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 560,
+      "zone": "Laundry & Utility",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 561,
+      "zone": "Laundry & Utility",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 562,
+      "zone": "Laundry & Utility",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 563,
+      "zone": "Laundry & Utility",
+      "desc": "Project management and supervision"
+    },
+    {
+      "n": 564,
+      "zone": "Laundry & Utility",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 565,
+      "zone": "Laundry & Utility",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 566,
+      "zone": "Laundry & Utility",
+      "desc": "1/2 inch gypsum board installation"
+    },
+    {
+      "n": 567,
+      "zone": "Laundry & Utility",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 568,
+      "zone": "Laundry & Utility",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 569,
+      "zone": "Laundry & Utility",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 570,
+      "zone": "Laundry & Utility",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 571,
+      "zone": "Laundry & Utility",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 572,
+      "zone": "Laundry & Utility",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 573,
+      "zone": "Laundry & Utility",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 574,
+      "zone": "Laundry & Utility",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 575,
+      "zone": "Laundry & Utility",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 576,
+      "zone": "Laundry & Utility",
+      "desc": "Baseboard trim - 2.25 inch profile"
+    },
+    {
+      "n": 577,
+      "zone": "Laundry & Utility",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 578,
+      "zone": "Garage Section",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 579,
+      "zone": "Garage Section",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 580,
+      "zone": "Garage Section",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 581,
+      "zone": "Garage Section",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 582,
+      "zone": "Garage Section",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 583,
+      "zone": "Garage Section",
+      "desc": "Mask wall - plastic, paper, tape"
+    },
+    {
+      "n": 584,
+      "zone": "Garage Section",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 585,
+      "zone": "Garage Section",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 586,
+      "zone": "Garage Section",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 587,
+      "zone": "Garage Section",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 588,
+      "zone": "Garage Section",
+      "desc": "Tile backsplash installation service"
+    },
+    {
+      "n": 589,
+      "zone": "Garage Section",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 590,
+      "zone": "Garage Section",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 591,
+      "zone": "Garage Section",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 592,
+      "zone": "Garage Section",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 593,
+      "zone": "Garage Section",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 594,
+      "zone": "Garage Section",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 595,
+      "zone": "Garage Section",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 596,
+      "zone": "Garage Section",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 597,
+      "zone": "Garage Section",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 598,
+      "zone": "Garage Section",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 599,
+      "zone": "Garage Section",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 600,
+      "zone": "Garage Section",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 601,
+      "zone": "Garage Section",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 602,
+      "zone": "Garage Section",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 603,
+      "zone": "Garage Section",
+      "desc": "Microwave installation over cooktop"
+    },
+    {
+      "n": 604,
+      "zone": "Garage Section",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 605,
+      "zone": "Garage Section",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 606,
+      "zone": "Garage Section",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 607,
+      "zone": "Garage Section",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 608,
+      "zone": "Garage Section",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 609,
+      "zone": "Garage Section",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 610,
+      "zone": "Garage Section",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 611,
+      "zone": "Garage Section",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 612,
+      "zone": "Garage Section",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 613,
+      "zone": "Garage Section",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 614,
+      "zone": "Garage Section",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 615,
+      "zone": "Garage Section",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 616,
+      "zone": "Garage Section",
+      "desc": "1/2 inch gypsum board installation"
+    },
+    {
+      "n": 617,
+      "zone": "Garage Section",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 618,
+      "zone": "Garage Section",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 619,
+      "zone": "Garage Section",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 620,
+      "zone": "Garage Section",
+      "desc": "Decorative chandelier fixture install"
+    },
+    {
+      "n": 621,
+      "zone": "Garage Section",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 622,
+      "zone": "Garage Section",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 623,
+      "zone": "Garage Section",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 624,
+      "zone": "Garage Section",
+      "desc": "Monthly temporary facilities rental"
+    },
+    {
+      "n": 625,
+      "zone": "Garage Section",
+      "desc": "General labor hourly rate"
+    },
+    {
+      "n": 626,
+      "zone": "Garage Section",
+      "desc": "Ceiling paint application - dual coat"
+    },
+    {
+      "n": 627,
+      "zone": "Garage Section",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 628,
+      "zone": "Garage Section",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 629,
+      "zone": "Garage Section",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 630,
+      "zone": "Garage Section",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 631,
+      "zone": "Garage Section",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 632,
+      "zone": "Garage Section",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 633,
+      "zone": "Garage Section",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 634,
+      "zone": "Basement Recreation",
+      "desc": "Tile grout protective sealer"
+    },
+    {
+      "n": 635,
+      "zone": "Basement Recreation",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 636,
+      "zone": "Basement Recreation",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 637,
+      "zone": "Basement Recreation",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 638,
+      "zone": "Basement Recreation",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 639,
+      "zone": "Basement Recreation",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 640,
+      "zone": "Basement Recreation",
+      "desc": "4 inch fiberglass blanket insulation"
+    },
+    {
+      "n": 641,
+      "zone": "Basement Recreation",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 642,
+      "zone": "Basement Recreation",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 643,
+      "zone": "Basement Recreation",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 644,
+      "zone": "Basement Recreation",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 645,
+      "zone": "Basement Recreation",
+      "desc": "Thermal and moisture barrier install"
+    },
+    {
+      "n": 646,
+      "zone": "Basement Recreation",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 647,
+      "zone": "Basement Recreation",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 648,
+      "zone": "Basement Recreation",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 649,
+      "zone": "Basement Recreation",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 650,
+      "zone": "Basement Recreation",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 651,
+      "zone": "Basement Recreation",
+      "desc": "Door hardware installation kit"
+    },
+    {
+      "n": 652,
+      "zone": "Basement Recreation",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 653,
+      "zone": "Basement Recreation",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 654,
+      "zone": "Basement Recreation",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 655,
+      "zone": "Basement Recreation",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 656,
+      "zone": "Basement Recreation",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 657,
+      "zone": "Basement Recreation",
+      "desc": "Decorative chandelier fixture install"
+    },
+    {
+      "n": 658,
+      "zone": "Basement Recreation",
+      "desc": "Ceramic tile wall installation"
+    },
+    {
+      "n": 659,
+      "zone": "Basement Recreation",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 660,
+      "zone": "Basement Recreation",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 661,
+      "zone": "Basement Recreation",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 662,
+      "zone": "Basement Recreation",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 663,
+      "zone": "Basement Recreation",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 664,
+      "zone": "Basement Recreation",
+      "desc": "Double-basin sink installation"
+    },
+    {
+      "n": 665,
+      "zone": "Basement Recreation",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 666,
+      "zone": "Basement Recreation",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 667,
+      "zone": "Basement Recreation",
+      "desc": "Remove and replace tile mortar base"
+    },
+    {
+      "n": 668,
+      "zone": "Basement Recreation",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 669,
+      "zone": "Basement Recreation",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 670,
+      "zone": "Basement Recreation",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 671,
+      "zone": "Basement Recreation",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 672,
+      "zone": "Basement Recreation",
+      "desc": "Ceiling paint application - dual coat"
+    },
+    {
+      "n": 673,
+      "zone": "Basement Recreation",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 674,
+      "zone": "Basement Recreation",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 675,
+      "zone": "Basement Recreation",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 676,
+      "zone": "Basement Recreation",
+      "desc": "Monthly temporary power consumption"
+    },
+    {
+      "n": 677,
+      "zone": "Basement Recreation",
+      "desc": "Microwave installation over cooktop"
+    },
+    {
+      "n": 678,
+      "zone": "Attic Storage",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 679,
+      "zone": "Attic Storage",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 680,
+      "zone": "Attic Storage",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 681,
+      "zone": "Attic Storage",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 682,
+      "zone": "Attic Storage",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 683,
+      "zone": "Attic Storage",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 684,
+      "zone": "Attic Storage",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 685,
+      "zone": "Attic Storage",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 686,
+      "zone": "Attic Storage",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 687,
+      "zone": "Attic Storage",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 688,
+      "zone": "Attic Storage",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 689,
+      "zone": "Attic Storage",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 690,
+      "zone": "Attic Storage",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 691,
+      "zone": "Attic Storage",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 692,
+      "zone": "Attic Storage",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 693,
+      "zone": "Attic Storage",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 694,
+      "zone": "Attic Storage",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 695,
+      "zone": "Attic Storage",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 696,
+      "zone": "Attic Storage",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 697,
+      "zone": "Attic Storage",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 698,
+      "zone": "Attic Storage",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 699,
+      "zone": "Attic Storage",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 700,
+      "zone": "Attic Storage",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 701,
+      "zone": "Attic Storage",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 702,
+      "zone": "Attic Storage",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 703,
+      "zone": "Attic Storage",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 704,
+      "zone": "Attic Storage",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 705,
+      "zone": "Attic Storage",
+      "desc": "Door hardware installation kit"
+    },
+    {
+      "n": 706,
+      "zone": "Attic Storage",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 707,
+      "zone": "Attic Storage",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 708,
+      "zone": "Attic Storage",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 709,
+      "zone": "Attic Storage",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 710,
+      "zone": "Attic Storage",
+      "desc": "Seal structural lumber for odor control"
+    },
+    {
+      "n": 711,
+      "zone": "Attic Storage",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 712,
+      "zone": "Attic Storage",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 713,
+      "zone": "Attic Storage",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 714,
+      "zone": "Attic Storage",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 715,
+      "zone": "Attic Storage",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 716,
+      "zone": "Attic Storage",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 717,
+      "zone": "Attic Storage",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 718,
+      "zone": "Attic Storage",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 719,
+      "zone": "Attic Storage",
+      "desc": "Texture drywall - heavy hand texture"
+    },
+    {
+      "n": 720,
+      "zone": "Attic Storage",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 721,
+      "zone": "Attic Storage",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 722,
+      "zone": "Attic Storage",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 723,
+      "zone": "Attic Storage",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 724,
+      "zone": "Attic Storage",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 725,
+      "zone": "Attic Storage",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 726,
+      "zone": "Attic Storage",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 727,
+      "zone": "Attic Storage",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 728,
+      "zone": "Attic Storage",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 729,
+      "zone": "Attic Storage",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 730,
+      "zone": "Attic Storage",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 731,
+      "zone": "Attic Storage",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 732,
+      "zone": "Attic Storage",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 733,
+      "zone": "Attic Storage",
+      "desc": "Garbage disposal unit installation"
+    },
+    {
+      "n": 734,
+      "zone": "Attic Storage",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 735,
+      "zone": "Deck & Patio Area",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 736,
+      "zone": "Deck & Patio Area",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 737,
+      "zone": "Deck & Patio Area",
+      "desc": "Paint crown molding - two coats"
+    },
+    {
+      "n": 738,
+      "zone": "Deck & Patio Area",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 739,
+      "zone": "Deck & Patio Area",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 740,
+      "zone": "Deck & Patio Area",
+      "desc": "Peephole removal and reinstallation"
+    },
+    {
+      "n": 741,
+      "zone": "Deck & Patio Area",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 742,
+      "zone": "Deck & Patio Area",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 743,
+      "zone": "Deck & Patio Area",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 744,
+      "zone": "Deck & Patio Area",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 745,
+      "zone": "Deck & Patio Area",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 746,
+      "zone": "Deck & Patio Area",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 747,
+      "zone": "Deck & Patio Area",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 748,
+      "zone": "Deck & Patio Area",
+      "desc": "Wall framing odor seal with shellac"
+    },
+    {
+      "n": 749,
+      "zone": "Deck & Patio Area",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 750,
+      "zone": "Deck & Patio Area",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 751,
+      "zone": "Deck & Patio Area",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 752,
+      "zone": "Deck & Patio Area",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 753,
+      "zone": "Deck & Patio Area",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 754,
+      "zone": "Deck & Patio Area",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 755,
+      "zone": "Deck & Patio Area",
+      "desc": "Kitchen wall-mounted cabinet units"
+    },
+    {
+      "n": 756,
+      "zone": "Deck & Patio Area",
+      "desc": "Kitchen wall-mounted cabinet units"
+    },
+    {
+      "n": 757,
+      "zone": "Deck & Patio Area",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 758,
+      "zone": "Deck & Patio Area",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 759,
+      "zone": "Deck & Patio Area",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 760,
+      "zone": "Deck & Patio Area",
+      "desc": "Ceiling sealing with polymer primer"
+    },
+    {
+      "n": 761,
+      "zone": "Deck & Patio Area",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 762,
+      "zone": "Deck & Patio Area",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 763,
+      "zone": "Deck & Patio Area",
+      "desc": "Microwave installation over cooktop"
+    },
+    {
+      "n": 764,
+      "zone": "Deck & Patio Area",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 765,
+      "zone": "Deck & Patio Area",
+      "desc": "Decorative chandelier fixture install"
+    },
+    {
+      "n": 766,
+      "zone": "Deck & Patio Area",
+      "desc": "Wall framing odor seal with shellac"
+    },
+    {
+      "n": 767,
+      "zone": "Deck & Patio Area",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 768,
+      "zone": "Deck & Patio Area",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 769,
+      "zone": "Deck & Patio Area",
+      "desc": "Tile backsplash installation service"
+    },
+    {
+      "n": 770,
+      "zone": "Deck & Patio Area",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 771,
+      "zone": "Deck & Patio Area",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 772,
+      "zone": "Deck & Patio Area",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 773,
+      "zone": "Deck & Patio Area",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 774,
+      "zone": "Deck & Patio Area",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 775,
+      "zone": "Deck & Patio Area",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 776,
+      "zone": "Deck & Patio Area",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 777,
+      "zone": "Deck & Patio Area",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 778,
+      "zone": "Deck & Patio Area",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 779,
+      "zone": "Deck & Patio Area",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 780,
+      "zone": "Deck & Patio Area",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 781,
+      "zone": "Garden Shed",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 782,
+      "zone": "Garden Shed",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 783,
+      "zone": "Garden Shed",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 784,
+      "zone": "Garden Shed",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 785,
+      "zone": "Garden Shed",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 786,
+      "zone": "Garden Shed",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 787,
+      "zone": "Garden Shed",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 788,
+      "zone": "Garden Shed",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 789,
+      "zone": "Garden Shed",
+      "desc": "Remove and replace ceramic tile floor"
+    },
+    {
+      "n": 790,
+      "zone": "Garden Shed",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 791,
+      "zone": "Garden Shed",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 792,
+      "zone": "Garden Shed",
+      "desc": "Ceiling sealing with polymer primer"
+    },
+    {
+      "n": 793,
+      "zone": "Garden Shed",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 794,
+      "zone": "Garden Shed",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 795,
+      "zone": "Garden Shed",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 796,
+      "zone": "Garden Shed",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 797,
+      "zone": "Garden Shed",
+      "desc": "Remove and replace ceramic tile floor"
+    },
+    {
+      "n": 798,
+      "zone": "Garden Shed",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 799,
+      "zone": "Garden Shed",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 800,
+      "zone": "Garden Shed",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 801,
+      "zone": "Garden Shed",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 802,
+      "zone": "Garden Shed",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 803,
+      "zone": "Garden Shed",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 804,
+      "zone": "Garden Shed",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 805,
+      "zone": "Garden Shed",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 806,
+      "zone": "Garden Shed",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 807,
+      "zone": "Garden Shed",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 808,
+      "zone": "Garden Shed",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 809,
+      "zone": "Garden Shed",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 810,
+      "zone": "Garden Shed",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 811,
+      "zone": "Garden Shed",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 812,
+      "zone": "Garden Shed",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 813,
+      "zone": "Garden Shed",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 814,
+      "zone": "Pool House",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 815,
+      "zone": "Pool House",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 816,
+      "zone": "Pool House",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 817,
+      "zone": "Pool House",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 818,
+      "zone": "Pool House",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 819,
+      "zone": "Pool House",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 820,
+      "zone": "Pool House",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 821,
+      "zone": "Pool House",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 822,
+      "zone": "Pool House",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 823,
+      "zone": "Pool House",
+      "desc": "Ceiling sealing with polymer primer"
+    },
+    {
+      "n": 824,
+      "zone": "Pool House",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 825,
+      "zone": "Pool House",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 826,
+      "zone": "Pool House",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 827,
+      "zone": "Pool House",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 828,
+      "zone": "Pool House",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 829,
+      "zone": "Pool House",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 830,
+      "zone": "Pool House",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 831,
+      "zone": "Pool House",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 832,
+      "zone": "Pool House",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 833,
+      "zone": "Pool House",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 834,
+      "zone": "Pool House",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 835,
+      "zone": "Pool House",
+      "desc": "Ceiling sealing with polymer primer"
+    },
+    {
+      "n": 836,
+      "zone": "Pool House",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 837,
+      "zone": "Pool House",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 838,
+      "zone": "Pool House",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 839,
+      "zone": "Pool House",
+      "desc": "Vinyl window blind installation"
+    },
+    {
+      "n": 840,
+      "zone": "Pool House",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 841,
+      "zone": "Pool House",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 842,
+      "zone": "Pool House",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 843,
+      "zone": "Pool House",
+      "desc": "Monthly temporary power consumption"
+    },
+    {
+      "n": 844,
+      "zone": "Pool House",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 845,
+      "zone": "Pool House",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 846,
+      "zone": "Pool House",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 847,
+      "zone": "Pool House",
+      "desc": "Temporary power installation"
+    },
+    {
+      "n": 848,
+      "zone": "Pool House",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 849,
+      "zone": "Pool House",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 850,
+      "zone": "Pool House",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 851,
+      "zone": "Pool House",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 852,
+      "zone": "Basement Finishing",
+      "desc": "Ceramic tile wall installation"
+    },
+    {
+      "n": 853,
+      "zone": "Basement Finishing",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 854,
+      "zone": "Basement Finishing",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 855,
+      "zone": "Basement Finishing",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 856,
+      "zone": "Basement Finishing",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 857,
+      "zone": "Basement Finishing",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 858,
+      "zone": "Basement Finishing",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 859,
+      "zone": "Basement Finishing",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 860,
+      "zone": "Basement Finishing",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 861,
+      "zone": "Basement Finishing",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 862,
+      "zone": "Basement Finishing",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 863,
+      "zone": "Basement Finishing",
+      "desc": "Wall framing odor seal with shellac"
+    },
+    {
+      "n": 864,
+      "zone": "Basement Finishing",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 865,
+      "zone": "Basement Finishing",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 866,
+      "zone": "Basement Finishing",
+      "desc": "5/8 inch gypsum wallboard installation"
+    },
+    {
+      "n": 867,
+      "zone": "Basement Finishing",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 868,
+      "zone": "Basement Finishing",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 869,
+      "zone": "Basement Finishing",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 870,
+      "zone": "Basement Finishing",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 871,
+      "zone": "Basement Finishing",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 872,
+      "zone": "Basement Finishing",
+      "desc": "Concrete floor protective sealing"
+    },
+    {
+      "n": 873,
+      "zone": "Basement Finishing",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 874,
+      "zone": "Basement Finishing",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 875,
+      "zone": "Basement Finishing",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 876,
+      "zone": "Basement Finishing",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 877,
+      "zone": "Basement Finishing",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 878,
+      "zone": "Basement Finishing",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 879,
+      "zone": "Basement Finishing",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 880,
+      "zone": "Basement Finishing",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 881,
+      "zone": "Basement Finishing",
+      "desc": "Baseboard trim - 2.25 inch profile"
+    },
+    {
+      "n": 882,
+      "zone": "Basement Finishing",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 883,
+      "zone": "Basement Finishing",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 884,
+      "zone": "Basement Finishing",
+      "desc": "Temporary power installation"
+    },
+    {
+      "n": 885,
+      "zone": "Basement Finishing",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 886,
+      "zone": "Basement Finishing",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 887,
+      "zone": "Basement Finishing",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 888,
+      "zone": "Basement Finishing",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 889,
+      "zone": "Basement Finishing",
+      "desc": "Project management and supervision"
+    },
+    {
+      "n": 890,
+      "zone": "Basement Finishing",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 891,
+      "zone": "Basement Finishing",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 892,
+      "zone": "Basement Finishing",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 893,
+      "zone": "Basement Finishing",
+      "desc": "R&R Tile floor covering"
+    },
+    {
+      "n": 894,
+      "zone": "Basement Finishing",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 895,
+      "zone": "Basement Finishing",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 896,
+      "zone": "Basement Finishing",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 897,
+      "zone": "Basement Finishing",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 898,
+      "zone": "Basement Finishing",
+      "desc": "Door primer and paint application"
+    },
+    {
+      "n": 899,
+      "zone": "Basement Finishing",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 900,
+      "zone": "Basement Finishing",
+      "desc": "Project management and supervision"
+    },
+    {
+      "n": 901,
+      "zone": "Basement Finishing",
+      "desc": "Thermal and moisture barrier install"
+    },
+    {
+      "n": 902,
+      "zone": "Basement Finishing",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 903,
+      "zone": "Basement Finishing",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 904,
+      "zone": "Basement Finishing",
+      "desc": "Mask wall - plastic, paper, tape"
+    },
+    {
+      "n": 905,
+      "zone": "Basement Finishing",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 906,
+      "zone": "Basement Finishing",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 907,
+      "zone": "Basement Finishing",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 908,
+      "zone": "Basement Finishing",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 909,
+      "zone": "Basement Finishing",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 910,
+      "zone": "Powder Room",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 911,
+      "zone": "Powder Room",
+      "desc": "Remove and replace exterior double doors"
+    },
+    {
+      "n": 912,
+      "zone": "Powder Room",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 913,
+      "zone": "Powder Room",
+      "desc": "4 inch fiberglass blanket insulation"
+    },
+    {
+      "n": 914,
+      "zone": "Powder Room",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 915,
+      "zone": "Powder Room",
+      "desc": "Monthly temporary facilities rental"
+    },
+    {
+      "n": 916,
+      "zone": "Powder Room",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 917,
+      "zone": "Powder Room",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 918,
+      "zone": "Powder Room",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 919,
+      "zone": "Powder Room",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 920,
+      "zone": "Powder Room",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 921,
+      "zone": "Powder Room",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 922,
+      "zone": "Powder Room",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 923,
+      "zone": "Powder Room",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 924,
+      "zone": "Powder Room",
+      "desc": "Seal grout on tile wall"
+    },
+    {
+      "n": 925,
+      "zone": "Powder Room",
+      "desc": "Install Dishwasher"
+    },
+    {
+      "n": 926,
+      "zone": "Powder Room",
+      "desc": "Protective masking for walls"
+    },
+    {
+      "n": 927,
+      "zone": "Powder Room",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 928,
+      "zone": "Powder Room",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 929,
+      "zone": "Powder Room",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 930,
+      "zone": "Powder Room",
+      "desc": "Baseboard painting - dual coat"
+    },
+    {
+      "n": 931,
+      "zone": "Powder Room",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 932,
+      "zone": "Powder Room",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 933,
+      "zone": "Powder Room",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 934,
+      "zone": "Powder Room",
+      "desc": "Install Garbage disposer"
+    },
+    {
+      "n": 935,
+      "zone": "Powder Room",
+      "desc": "Seal structural lumber for odor control"
+    },
+    {
+      "n": 936,
+      "zone": "Powder Room",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 937,
+      "zone": "Powder Room",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 938,
+      "zone": "Powder Room",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 939,
+      "zone": "Powder Room",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 940,
+      "zone": "Powder Room",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 941,
+      "zone": "Powder Room",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 942,
+      "zone": "Powder Room",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 943,
+      "zone": "Powder Room",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 944,
+      "zone": "Powder Room",
+      "desc": "Ceiling sealing with polymer primer"
+    },
+    {
+      "n": 945,
+      "zone": "Powder Room",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 946,
+      "zone": "Powder Room",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 947,
+      "zone": "Powder Room",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 948,
+      "zone": "Powder Room",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 949,
+      "zone": "Powder Room",
+      "desc": "Remove and replace ceramic tile floor"
+    },
+    {
+      "n": 950,
+      "zone": "Powder Room",
+      "desc": "Dumpster load - Approx. yards"
+    },
+    {
+      "n": 951,
+      "zone": "Powder Room",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 952,
+      "zone": "Powder Room",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 953,
+      "zone": "Powder Room",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 954,
+      "zone": "Powder Room",
+      "desc": "Fiberglass blanket insulation - 6 inch"
+    },
+    {
+      "n": 955,
+      "zone": "Powder Room",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 956,
+      "zone": "Powder Room",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 957,
+      "zone": "Powder Room",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 958,
+      "zone": "Master Bath Ensuite",
+      "desc": "Kitchen base cabinet units"
+    },
+    {
+      "n": 959,
+      "zone": "Master Bath Ensuite",
+      "desc": "Remove and replace ceramic tile floor"
+    },
+    {
+      "n": 960,
+      "zone": "Master Bath Ensuite",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 961,
+      "zone": "Master Bath Ensuite",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 962,
+      "zone": "Master Bath Ensuite",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 963,
+      "zone": "Master Bath Ensuite",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 964,
+      "zone": "Master Bath Ensuite",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 965,
+      "zone": "Master Bath Ensuite",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 966,
+      "zone": "Master Bath Ensuite",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 967,
+      "zone": "Master Bath Ensuite",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 968,
+      "zone": "Master Bath Ensuite",
+      "desc": "R&R Ext. double door"
+    },
+    {
+      "n": 969,
+      "zone": "Master Bath Ensuite",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 970,
+      "zone": "Master Bath Ensuite",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 971,
+      "zone": "Master Bath Ensuite",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 972,
+      "zone": "Master Bath Ensuite",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 973,
+      "zone": "Master Bath Ensuite",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 974,
+      "zone": "Master Bath Ensuite",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 975,
+      "zone": "Master Bath Ensuite",
+      "desc": "Mask wall - plastic, paper, tape"
+    },
+    {
+      "n": 976,
+      "zone": "Master Bath Ensuite",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 977,
+      "zone": "Master Bath Ensuite",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 978,
+      "zone": "Master Bath Ensuite",
+      "desc": "Microwave installation over cooktop"
+    },
+    {
+      "n": 979,
+      "zone": "Master Bath Ensuite",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 980,
+      "zone": "Master Bath Ensuite",
+      "desc": "Baseboard trim - 2.25 inch profile"
+    },
+    {
+      "n": 981,
+      "zone": "Master Bath Ensuite",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 982,
+      "zone": "Master Bath Ensuite",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 983,
+      "zone": "Master Bath Ensuite",
+      "desc": "4 inch fiberglass blanket insulation"
+    },
+    {
+      "n": 984,
+      "zone": "Master Bath Ensuite",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 985,
+      "zone": "Master Bath Ensuite",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 986,
+      "zone": "Master Bath Ensuite",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 987,
+      "zone": "Master Bath Ensuite",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 988,
+      "zone": "Master Bath Ensuite",
+      "desc": "Ceiling sealing with polymer primer"
+    },
+    {
+      "n": 989,
+      "zone": "Master Bath Ensuite",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 990,
+      "zone": "Master Bath Ensuite",
+      "desc": "R&R Temporary power - overhead hook"
+    },
+    {
+      "n": 991,
+      "zone": "Master Bath Ensuite",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 992,
+      "zone": "Master Bath Ensuite",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 993,
+      "zone": "Master Bath Ensuite",
+      "desc": "Temporary power installation"
+    },
+    {
+      "n": 994,
+      "zone": "Master Bath Ensuite",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 995,
+      "zone": "Walk-in Closet",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 996,
+      "zone": "Walk-in Closet",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 997,
+      "zone": "Walk-in Closet",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 998,
+      "zone": "Walk-in Closet",
+      "desc": "R&R Mortar bed for tile floors"
+    },
+    {
+      "n": 999,
+      "zone": "Walk-in Closet",
+      "desc": "Paint the walls - two coats"
+    },
+    {
+      "n": 1000,
+      "zone": "Walk-in Closet",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 1001,
+      "zone": "Walk-in Closet",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 1002,
+      "zone": "Walk-in Closet",
+      "desc": "Post-construction final cleanup"
+    },
+    {
+      "n": 1003,
+      "zone": "Walk-in Closet",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 1004,
+      "zone": "Walk-in Closet",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 1005,
+      "zone": "Walk-in Closet",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 1006,
+      "zone": "Walk-in Closet",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 1007,
+      "zone": "Walk-in Closet",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 1008,
+      "zone": "Walk-in Closet",
+      "desc": "Monthly temporary power consumption"
+    },
+    {
+      "n": 1009,
+      "zone": "Walk-in Closet",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 1010,
+      "zone": "Walk-in Closet",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 1011,
+      "zone": "Walk-in Closet",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 1012,
+      "zone": "Walk-in Closet",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 1013,
+      "zone": "Walk-in Closet",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 1014,
+      "zone": "Walk-in Closet",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 1015,
+      "zone": "Walk-in Closet",
+      "desc": "Paint door/window opening"
+    },
+    {
+      "n": 1016,
+      "zone": "Walk-in Closet",
+      "desc": "Baseboard painting - dual coat"
+    },
+    {
+      "n": 1017,
+      "zone": "Walk-in Closet",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 1018,
+      "zone": "Walk-in Closet",
+      "desc": "Temporary power usage (per month)"
+    },
+    {
+      "n": 1019,
+      "zone": "Walk-in Closet",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 1020,
+      "zone": "Walk-in Closet",
+      "desc": "Door and window trim painting"
+    },
+    {
+      "n": 1021,
+      "zone": "Walk-in Closet",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 1022,
+      "zone": "Walk-in Closet",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 1023,
+      "zone": "Walk-in Closet",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 1024,
+      "zone": "Walk-in Closet",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 1025,
+      "zone": "Walk-in Closet",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 1026,
+      "zone": "Walk-in Closet",
+      "desc": "Window blind - PVC"
+    },
+    {
+      "n": 1027,
+      "zone": "Walk-in Closet",
+      "desc": "Batt insulation - 4\" - R13"
+    },
+    {
+      "n": 1028,
+      "zone": "Walk-in Closet",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 1029,
+      "zone": "Walk-in Closet",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 1030,
+      "zone": "Walk-in Closet",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 1031,
+      "zone": "Walk-in Closet",
+      "desc": "Door hardware installation kit"
+    },
+    {
+      "n": 1032,
+      "zone": "Walk-in Closet",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 1033,
+      "zone": "Walk-in Closet",
+      "desc": "Final cleaning - construction"
+    },
+    {
+      "n": 1034,
+      "zone": "Walk-in Closet",
+      "desc": "Baseboard trim - 2.25 inch profile"
+    },
+    {
+      "n": 1035,
+      "zone": "Walk-in Closet",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 1036,
+      "zone": "Walk-in Closet",
+      "desc": "Ceiling paint application - dual coat"
+    },
+    {
+      "n": 1037,
+      "zone": "Walk-in Closet",
+      "desc": "General Laborer - per hour"
+    },
+    {
+      "n": 1038,
+      "zone": "Walk-in Closet",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 1039,
+      "zone": "Walk-in Closet",
+      "desc": "Ceramic/porcelain tile"
+    },
+    {
+      "n": 1040,
+      "zone": "Pantry Extension",
+      "desc": "Remove and replace ceramic tile floor"
+    },
+    {
+      "n": 1041,
+      "zone": "Pantry Extension",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 1042,
+      "zone": "Pantry Extension",
+      "desc": "Remove and replace crown molding"
+    },
+    {
+      "n": 1043,
+      "zone": "Pantry Extension",
+      "desc": "Cabinetry - upper (wall) units"
+    },
+    {
+      "n": 1044,
+      "zone": "Pantry Extension",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 1045,
+      "zone": "Pantry Extension",
+      "desc": "Grout sealer"
+    },
+    {
+      "n": 1046,
+      "zone": "Pantry Extension",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 1047,
+      "zone": "Pantry Extension",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 1048,
+      "zone": "Pantry Extension",
+      "desc": "Floor grout protective sealing"
+    },
+    {
+      "n": 1049,
+      "zone": "Pantry Extension",
+      "desc": "Dishwasher appliance installation"
+    },
+    {
+      "n": 1050,
+      "zone": "Pantry Extension",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 1051,
+      "zone": "Pantry Extension",
+      "desc": "Add-on for tile backsplash install"
+    },
+    {
+      "n": 1052,
+      "zone": "Pantry Extension",
+      "desc": "Seal stud wall for odor control"
+    },
+    {
+      "n": 1053,
+      "zone": "Pantry Extension",
+      "desc": "Recessed light fixture"
+    },
+    {
+      "n": 1054,
+      "zone": "Pantry Extension",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 1055,
+      "zone": "Pantry Extension",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 1056,
+      "zone": "Pantry Extension",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 1057,
+      "zone": "Pantry Extension",
+      "desc": "Peephole removal and reinstallation"
+    },
+    {
+      "n": 1058,
+      "zone": "Pantry Extension",
+      "desc": "Seal attic framing (shellac)"
+    },
+    {
+      "n": 1059,
+      "zone": "Pantry Extension",
+      "desc": "Kitchen wall-mounted cabinet units"
+    },
+    {
+      "n": 1060,
+      "zone": "Pantry Extension",
+      "desc": "Prime & paint door slab"
+    },
+    {
+      "n": 1061,
+      "zone": "Pantry Extension",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 1062,
+      "zone": "Pantry Extension",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 1063,
+      "zone": "Pantry Extension",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 1064,
+      "zone": "Pantry Extension",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 1065,
+      "zone": "Pantry Extension",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 1066,
+      "zone": "Pantry Extension",
+      "desc": "Baseboard - 2 1/4\""
+    },
+    {
+      "n": 1067,
+      "zone": "Pantry Extension",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 1068,
+      "zone": "Pantry Extension",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 1069,
+      "zone": "Pantry Extension",
+      "desc": "Hand-applied textured wall finish"
+    },
+    {
+      "n": 1070,
+      "zone": "Pantry Extension",
+      "desc": "R&R Crown molding"
+    },
+    {
+      "n": 1071,
+      "zone": "Pantry Extension",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 1072,
+      "zone": "Pantry Extension",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 1073,
+      "zone": "Pantry Extension",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 1074,
+      "zone": "Pantry Extension",
+      "desc": "Batt insulation - 6\" - R21"
+    },
+    {
+      "n": 1075,
+      "zone": "Pantry Extension",
+      "desc": "Thermal & moisture protection"
+    },
+    {
+      "n": 1076,
+      "zone": "Pantry Extension",
+      "desc": "Temporary toilet (per month)"
+    },
+    {
+      "n": 1077,
+      "zone": "Workshop Area",
+      "desc": "Recessed lighting unit installation"
+    },
+    {
+      "n": 1078,
+      "zone": "Workshop Area",
+      "desc": "Ceiling paint application - dual coat"
+    },
+    {
+      "n": 1079,
+      "zone": "Workshop Area",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 1080,
+      "zone": "Workshop Area",
+      "desc": "Built-in oven unit installation"
+    },
+    {
+      "n": 1081,
+      "zone": "Workshop Area",
+      "desc": "Contents handling and relocation"
+    },
+    {
+      "n": 1082,
+      "zone": "Workshop Area",
+      "desc": "Seal the ceiling w/PVA primer"
+    },
+    {
+      "n": 1083,
+      "zone": "Workshop Area",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 1084,
+      "zone": "Workshop Area",
+      "desc": "Decorative chandelier fixture install"
+    },
+    {
+      "n": 1085,
+      "zone": "Workshop Area",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 1086,
+      "zone": "Workshop Area",
+      "desc": "Seal the walls w/PVA primer"
+    },
+    {
+      "n": 1087,
+      "zone": "Workshop Area",
+      "desc": "Monthly temporary power consumption"
+    },
+    {
+      "n": 1088,
+      "zone": "Workshop Area",
+      "desc": "Install Refrigerator"
+    },
+    {
+      "n": 1089,
+      "zone": "Workshop Area",
+      "desc": "4 inch fiberglass blanket insulation"
+    },
+    {
+      "n": 1090,
+      "zone": "Workshop Area",
+      "desc": "Debris removal dumpster service"
+    },
+    {
+      "n": 1091,
+      "zone": "Workshop Area",
+      "desc": "Paint baseboard - two coats"
+    },
+    {
+      "n": 1092,
+      "zone": "Workshop Area",
+      "desc": "Concrete sealer - brush or spray"
+    },
+    {
+      "n": 1093,
+      "zone": "Workshop Area",
+      "desc": "Content manipulation - Loss area"
+    },
+    {
+      "n": 1094,
+      "zone": "Workshop Area",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 1095,
+      "zone": "Workshop Area",
+      "desc": "Cabinetry - lower (base) units"
+    },
+    {
+      "n": 1096,
+      "zone": "Workshop Area",
+      "desc": "Wall sealing with polymer-vinyl primer"
+    },
+    {
+      "n": 1097,
+      "zone": "Workshop Area",
+      "desc": "Chandelier"
+    },
+    {
+      "n": 1098,
+      "zone": "Workshop Area",
+      "desc": "Tile grout protective sealer"
+    },
+    {
+      "n": 1099,
+      "zone": "Workshop Area",
+      "desc": "5/8\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 1100,
+      "zone": "Workshop Area",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 1101,
+      "zone": "Workshop Area",
+      "desc": "Install Microwave - over range"
+    },
+    {
+      "n": 1102,
+      "zone": "Workshop Area",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 1103,
+      "zone": "Workshop Area",
+      "desc": "Crown molding painting dual coat"
+    },
+    {
+      "n": 1104,
+      "zone": "Workshop Area",
+      "desc": "Residential Supervision / Project Mgmt"
+    },
+    {
+      "n": 1105,
+      "zone": "Workshop Area",
+      "desc": "Countertop - Tile"
+    },
+    {
+      "n": 1106,
+      "zone": "Workshop Area",
+      "desc": "Install Sink - double basin"
+    },
+    {
+      "n": 1107,
+      "zone": "Workshop Area",
+      "desc": "Paint the ceiling - two coats"
+    },
+    {
+      "n": 1108,
+      "zone": "Workshop Area",
+      "desc": "Install Built-in oven"
+    },
+    {
+      "n": 1109,
+      "zone": "Workshop Area",
+      "desc": "Door lockset & deadbolt"
+    },
+    {
+      "n": 1110,
+      "zone": "Workshop Area",
+      "desc": "1/2\" drywall - hung, taped, ready"
+    },
+    {
+      "n": 1111,
+      "zone": "Workshop Area",
+      "desc": "Tile countertop installation"
+    },
+    {
+      "n": 1112,
+      "zone": "Workshop Area",
+      "desc": "Crown molding painting dual coat"
+    },
+    {
+      "n": 1113,
+      "zone": "Workshop Area",
+      "desc": "Wall painting - two application coats"
+    },
+    {
+      "n": 1114,
+      "zone": "Workshop Area",
+      "desc": "Door peep hole - Detach & reset"
+    },
+    {
+      "n": 1115,
+      "zone": "Workshop Area",
+      "desc": "Refrigerator appliance placement"
+    },
+    {
+      "n": 1116,
+      "zone": "Workshop Area",
+      "desc": "Door peep hole - Detach & reset"
+    }
+  ]
+}

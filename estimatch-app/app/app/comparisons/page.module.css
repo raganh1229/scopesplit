@@ -1,0 +1,137 @@
+.content { padding: 32px; max-width: 960px; margin: 0 auto; width: 100%; }
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.header h1 { font-size: 22px; font-weight: 600; }
+.newBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px; border-radius: 8px;
+  background: var(--btn-primary-bg); color: var(--btn-primary-text);
+  font-size: 13px; font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+.newBtn:hover { opacity: 0.88; }
+.newBtn svg {
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.table {
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 12px;
+  /* overflow: hidden removed — was clipping the row-actions dropdown on the
+     bottom row. Inner elements now round their own corners to keep the
+     container's rounded look. */
+}
+.tableHead {
+  display: grid; grid-template-columns: 2fr 1fr 100px 100px 48px;
+  padding: 12px 20px; border-bottom: 0.5px solid var(--border-light);
+  font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+.tableRow {
+  display: grid; grid-template-columns: 2fr 1fr 100px 100px 48px;
+  align-items: center;
+  border-bottom: 0.5px solid var(--border-light);
+  font-size: 14px; color: var(--text-primary);
+  transition: background 0.1s ease;
+}
+.tableRow:last-child {
+  border-bottom: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.tableRow:hover { background: var(--bg-surface); }
+.rowLink {
+  display: grid; grid-template-columns: subgrid; grid-column: 1 / 5;
+  padding: 14px 0 14px 20px;
+  cursor: pointer; color: inherit;
+}
+.colDate { color: var(--text-secondary); }
+.stateRow {
+  padding: 18px 20px;
+  border-bottom: 0.5px solid var(--border-light);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.stateRow:last-child {
+  border-bottom: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.statusBadge {
+  display: inline-block; padding: 2px 10px; border-radius: 10px;
+  font-size: 12px; font-weight: 600;
+}
+.statusGreen { background: var(--green-50); color: var(--green-600); }
+.statusAmber { background: var(--amber-50); color: var(--amber-600); }
+.statusGray { background: var(--bg-surface); color: var(--text-tertiary); }
+.colGap { font-weight: 600; }
+.gapDanger { color: var(--red-600); }
+.gapSuccess { color: var(--green-600); }
+
+.colActions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.moreBtn {
+  background: none; border: none; cursor: pointer;
+  width: 44px; height: 44px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  transition: background 0.1s ease, color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.moreBtn:hover { background: var(--border-light); color: var(--text-primary); }
+.moreBtn:disabled { opacity: 0.4; cursor: default; }
+
+.miniSpinner {
+  display: block; width: 14px; height: 14px;
+  border: 2px solid var(--border-light); border-top-color: var(--text-tertiary);
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.dropMenu {
+  position: absolute; top: 100%; right: 0; z-index: 50;
+  min-width: 160px; padding: 4px 0;
+  background: var(--bg-primary); border: 0.5px solid var(--border-default);
+  border-radius: 8px; box-shadow: 0 4px 16px var(--drop-shadow);
+}
+.dropItem, .dropItemDanger {
+  display: block; width: 100%; padding: 12px 16px;
+  font-size: 14px; text-align: left; min-height: 44px;
+  background: none; border: none; cursor: pointer;
+  transition: background 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.dropItem { color: var(--text-primary); }
+.dropItem:hover { background: var(--bg-surface); }
+.dropItemDanger { color: var(--error-text); }
+.dropItemDanger:hover { background: var(--error-hover-bg); }
+.dropConfirmText {
+  display: block; padding: 8px 14px 4px;
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .content { padding: 20px 16px; }
+  .tableHead { display: none; }
+  .tableRow {
+    display: flex; flex-wrap: wrap; align-items: center;
+    padding: 0;
+  }
+  .rowLink {
+    display: flex; flex-direction: column; gap: 4px;
+    flex: 1; min-width: 0; padding: 14px 0 14px 16px;
+  }
+  .colActions { padding-right: 4px; }
+  .colDate { font-size: 12px; }
+  .dropMenu { min-width: 180px; right: -4px; }
+}

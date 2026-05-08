@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/internal/cleanup-unverified-users",
+      "schedule": "0 4 * * *"
+    }
+  ]
+}

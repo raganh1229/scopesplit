@@ -1,0 +1,241 @@
+﻿
+=== COUNTS ===
+Yours items (Haiku): 202
+Adjuster items (Haiku): 234
+Sonnet 1 zone groups: 16
+Sonnet 2 pairs: 162
+
+Matched pairs: 111
+Yours-only (MISSING_FROM_ADJUSTER): 8
+Adjuster-only (ADDED_BY_ADJUSTER): 43
+Total accounted: 273 (yours: 119, adj: 154)
+
+Yours items NOT in any pair: [14, 22, 24, 26, 27, 28, 36, 37, 38, 39, 41, 43, 44, 45, 46, 47, 50, 52, 53, 54, 56, 58, 59, 63, 100, 102, 103, 110, 111, 112, 114, 115, 117, 118, 121, 122, 123, 124, 125, 128, 130, 131, 132, 136, 137, 140, 142, 143, 144, 145, 146, 147, 148, 150, 151, 152, 153, 154, 155, 159, 160, 163, 165, 167, 169, 170, 171, 173, 174, 175, 176, 177, 178, 182, 183, 190, 191, 192, 194, 195, 197, 198, 202] (83)
+Adjuster items NOT in any pair: [10, 20, 22, 24, 25, 26, 33, 34, 35, 36, 39, 56, 58, 59, 66, 67, 68, 69, 70, 73, 75, 76, 77, 79, 81, 82, 87, 124, 125, 126, 128, 129, 131, 132, 137, 139, 140, 141, 143, 144, 145, 146, 147, 148, 152, 153, 160, 161, 162, 163, 164, 167, 169, 170, 171, 175, 176, 179, 182, 184, 185, 186, 187, 188, 189, 191, 192, 193, 194, 195, 196, 200, 201, 204, 207, 210, 211, 212, 214, 215, 217, 218, 226] (83)
+Duplicate yours line numbers: []
+Duplicate adjuster line numbers: [5, 5, 5]
+
+=== SONNET 1 ZONE RECONCILIATION ===
+  General / Administrative [90%] yours=[General / Administrative] adj=[General]
+  Roof System [90%] yours=[Roof System] adj=[Roofing]
+  Exterior Envelope [100%] yours=[Exterior Envelope] adj=[Exterior Envelope]
+  1st Floor - Common Lobby [100%] yours=[1st Floor - Common Lobby] adj=[1st Floor - Common Lobby]
+  1st Floor - Retail Space A [100%] yours=[1st Floor - Retail Space A] adj=[1st Floor - Retail Space A]
+  1st Floor - Retail Space B [100%] yours=[1st Floor - Retail Space B] adj=[ΓÇö]
+  1st Floor - Storage/Janitor [100%] yours=[ΓÇö] adj=[1st Floor - Storage/Janitor]
+  1st Floor - Restroom 1 (Men's) [95%] yours=[1st Floor - Restroom 1 (Men's)] adj=[1st Floor - Men's Restroom 1]
+  1st Floor - Women's Restroom 1 [100%] yours=[ΓÇö] adj=[1st Floor - Women's Restroom 1]
+  2nd Floor - Office Suite 201 [100%] yours=[2nd Floor - Office Suite 201] adj=[2nd Floor - Office Suite 201]
+  2nd Floor - Office Suite 202 [100%] yours=[2nd Floor - Office Suite 202] adj=[2nd Floor - Office Suite 202]
+  2nd Floor - Conference Room [100%] yours=[2nd Floor - Conference Room] adj=[2nd Floor - Conference Room]
+  2nd Floor - Restroom 2 (Women's) [95%] yours=[2nd Floor - Restroom 2 (Women's)] adj=[2nd Floor - Women's Restroom 2]
+  Elevator / Stairwell [100%] yours=[Elevator / Stairwell] adj=[Elevator / Stairwell]
+  Site Work / Parking [100%] yours=[ΓÇö] adj=[Site Work / Parking]
+  ADA Compliance [100%] yours=[ΓÇö] adj=[ADA Compliance]
+
+=== CROSS-ZONE PAIRS (items paired across different canonical zones) ===
+  y64 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a42 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Demo ceiling drywall - storm" Γåö "Demo ceiling drywall - storm damage"
+  y65 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a43 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Ceiling drywall - 5/8" - hung/taped" Γåö "Ceiling drywall - 5/8" - hung/taped"
+  y66 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a44 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Ceiling primer - PVA" Γåö "Ceiling primer - PVA - single coat"
+  y67 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a45 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Knockdown texture - ceiling" Γåö "Knockdown texture - ceiling"
+  y68 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a46 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Paint ceiling - flat latex - 2 coat" Γåö "Paint ceiling - flat latex - 2 coat"
+  y69 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a47 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "LED recessed downlight - 6"" Γåö "LED recessed downlight - 6""
+  y70 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a48 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Remove drywall - walls - damaged" Γåö "Remove wall drywall - water/storm"
+  y71 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a49 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Shellac seal - wall studs - odor" Γåö "Shellac seal - wall studs - odor"
+  y72 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a50 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Batt insulation - R13 - 3.5" kraft" Γåö "Batt insulation - R13 - 3.5" kraft"
+  y73 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a51 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Drywall - 1/2" - walls - complete" Γåö "Drywall - 1/2" - walls - complete"
+  y74 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a52 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Wall primer - PVA - one coat" Γåö "Wall primer - PVA - one coat"
+  y75 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a53 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Knockdown texture - walls" Γåö "Knockdown texture - walls"
+  y76 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a54 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Paint walls - satin - 2 coat" Γåö "Paint walls - satin - 2 coat"
+  y77 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a55 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Porcelain tile floor - 12x24 - R&R" Γåö "Ceramic tile floor - 12x12 - R&R"
+  y79 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a57 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Baseboard - 3-1/4" - MDF primed" Γåö "Baseboard - 2-1/4" - primed MDF"
+  y81 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a104 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Interior door - solid core - pre-hung" Γåö "Hollow core interior door - pre-hung"
+  y82 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a60 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Paint door slab - 2 coat/side" Γåö "Paint door - 2 coat per side"
+  y83 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a61 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Door hardware - lever - commercial" Γåö "Door lever - commercial grade"
+  y84 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a62 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "HVAC register - clean - per vent" Γåö "HVAC duct cleaning - per register"
+  y85 (1st Floor - Retail Space B ΓåÆ 1st Floor - Retail Space B) Γåö a64 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby): "Final clean - Retail Space B" Γåö "Construction clean - Common Lobby"
+  y86 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a88 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Tear out ceiling drywall" Γåö "Remove damaged ceiling drywall"
+  y87 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a89 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Install 5/8" ceiling drywall" Γåö "Install 5/8" ceiling drywall - fin"
+  y88 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a90 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Prime ceiling - PVA - 1 coat" Γåö "Prime ceiling - PVA"
+  y89 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a91 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Orange peel texture - ceiling" Γåö "Light hand texture - ceiling"
+  y90 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a92 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Flat ceiling paint - two coats" Γåö "Paint - ceiling - flat - 2 coat"
+  y91 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a93 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Recessed light - 6" IC rated" Γåö "6" LED can light - new install"
+  y92 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a94 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Remove drywall - walls - damaged" Γåö "Odor seal - shellac - framing"
+  y94 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a95 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "R13 kraft faced batt - walls" Γåö "Insulation R-13 kraft batt walls"
+  y95 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a96 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Hang & finish 1/2" wall drywall" Γåö "1/2" wall drywall - tape & fin"
+  y96 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a97 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Prime walls - PVA" Γåö "PVA wall primer - single coat"
+  y97 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a98 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Wall texture - knockdown style" Γåö "Skip trowel texture - walls"
+  y98 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a99 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Interior wall paint - eggshell" Γåö "Wall paint - satin finish - 2 coat"
+  y101 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a102 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Baseboard - 3-1/4" - MDF primed" Γåö "Baseboard - 2-1/4" - primed MDF"
+  y104 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a105 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Paint door slab - 2 coat/side" Γåö "Paint door - 2 coat per side"
+  y105 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a106 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Door hardware - lever - commercial" Γåö "Door lever - commercial grade"
+  y106 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a107 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "HVAC register - clean - per vent" Γåö "HVAC duct cleaning - per register"
+  y107 (1st Floor - Common Lobby ΓåÆ 1st Floor - Common Lobby) Γåö a109 (1st Floor - Storage/Janitor ΓåÆ 1st Floor - Storage/Janitor): "Final clean - Common Lobby" Γåö "Construction clean - Storage/Janitor"
+  y116 (1st Floor - Restroom 1 (Men's) ΓåÆ 1st Floor - Restroom 1 (Men's)) Γåö a118 (1st Floor - Women's Restroom 1 ΓåÆ 1st Floor - Women's Restroom 1): "Sink - wall mount - commercial" Γåö "Wall-mount sink - commercial"
+
+=== MULTI-USE ADJUSTER LINE NUMBERS ===
+  a5 used 4 times: "Permits and fees - all trades combined"
+
+=== FULL PAIR LISTING ===
+  PAIR  y1: "30 CY roll-off dumpster - debris" [General / Administrative]  Γåö  a1: "Dumpster - 20 CY - debris haul" [General]
+  MISSING  y2: "Additional 20 CY dumpster" [General / Administrative]  Γåö  a:null
+  PAIR  y3: "Project manager / superintendent" [General / Administrative]  Γåö  a2: "Supervision / Project Management - per hr" [General]
+  PAIR  y4: "Skilled demolition labor - hourly" [General / Administrative]  Γåö  a3: "Demolition technician - hourly" [General]
+  PAIR  y5: "General cleanup labor - hourly" [General / Administrative]  Γåö  a4: "Cleaning tech - general - per hour" [General]
+  PAIR  y6: "Building permit - commercial" [General / Administrative]  Γåö  a5: "Permits and fees - all trades combined" [General]
+  PAIR  y7: "Electrical permit" [General / Administrative]  Γåö  a5: "Permits and fees - all trades combined" [General]
+  PAIR  y8: "Plumbing permit" [General / Administrative]  Γåö  a5: "Permits and fees - all trades combined" [General]
+  PAIR  y9: "Mechanical/HVAC permit" [General / Administrative]  Γåö  a5: "Permits and fees - all trades combined" [General]
+  PAIR  y10: "Temporary power hookup - R&R" [General / Administrative]  Γåö  a6: "R&R Temporary electrical service" [General]
+  PAIR  y11: "Temp power usage - monthly" [General / Administrative]  Γåö  a7: "Temp power - per month" [General]
+  PAIR  y12: "Portable toilet - ADA - monthly" [General / Administrative]  Γåö  a8: "Portable sanitation - ADA - monthly" [General]
+  PAIR  y13: "Construction fencing - 6ft chain link" [General / Administrative]  Γåö  a9: "Perimeter fencing - temporary" [General]
+  MISSING  y15: "Fire watch - hot work - per day" [General / Administrative]  Γåö  a:null
+  MISSING  y16: "Emergency board-up - windows/doors" [General / Administrative]  Γåö  a:null
+  PAIR  y17: "Emergency tarp - roof sections" [General / Administrative]  Γåö  a11: "Emergency tarping - roof" [General]
+  PAIR  y18: "Engineering inspection - structural" [General / Administrative]  Γåö  a12: "Structural engineer assessment" [General]
+  PAIR  y19: "Tear off existing roofing - per SQ" [Roof System]  Γåö  a17: "Remove existing roof - per square" [Roofing]
+  PAIR  y20: "Synthetic underlayment - full deck" [Roof System]  Γåö  a18: "#30 felt underlayment - full deck" [Roofing]
+  PAIR  y21: "Architectural shingle - 30yr - premium" [Roof System]  Γåö  a19: "Dimensional shingle - 25yr - standard" [Roofing]
+  PAIR  y23: "Ice & water shield - eave - 36"" [Roof System]  Γåö  a21: "Ice/water shield - eave only - 3ft" [Roofing]
+  PAIR  y25: "Roof decking - 1/2" CDX plywood - R&R" [Roof System]  Γåö  a23: "Roof sheathing - 1/2" CDX - replace" [Roofing]
+  MISSING  y29: "Crane rental - full day" [Roof System]  Γåö  a:null
+  PAIR  y30: "Remove damaged stucco - walls" [Exterior Envelope]  Γåö  a27: "Remove storm-damaged stucco" [Exterior Envelope]
+  PAIR  y31: "Stucco - 3 coat system - walls" [Exterior Envelope]  Γåö  a28: "3-coat stucco system - walls" [Exterior Envelope]
+  PAIR  y32: "Exterior paint - 2 coats - elastomeric" [Exterior Envelope]  Γåö  a29: "Elastomeric exterior coating - 2 coat" [Exterior Envelope]
+  PAIR  y33: "Storefront window - R&R - commercial" [Exterior Envelope]  Γåö  a30: "Commercial storefront glazing - R&R" [Exterior Envelope]
+  PAIR  y34: "Commercial entry door - aluminum/glass" [Exterior Envelope]  Γåö  a31: "Aluminum entry door system - R&R" [Exterior Envelope]
+  PAIR  y35: "ADA automatic door opener - R&R" [Exterior Envelope]  Γåö  a32: "ADA door operator - electric - R&R" [Exterior Envelope]
+  PAIR  y40: "Exterior caulk - all openings - silicone" [Exterior Envelope]  Γåö  a40: "Exterior caulk - backer rod & sealant" [Exterior Envelope]
+  ADDED  y:null  Γåö  a13: "Moisture testing - commercial - per visit" [General]
+  ADDED  y:null  Γåö  a14: "Air quality monitoring - per test" [General]
+  ADDED  y:null  Γåö  a15: "Asbestos test - pre-demolition" [General]
+  ADDED  y:null  Γåö  a16: "Lead paint test - pre-demolition" [General]
+  ADDED  y:null  Γåö  a37: "Window sealant - commercial grade" [Exterior Envelope]
+  ADDED  y:null  Γåö  a38: "Exterior soffit repair - aluminum" [Exterior Envelope]
+  PAIR  y42: "Remove damaged ceiling drywall" [1st Floor - Retail Space A]  Γåö  a65: "Tear out ceiling drywall - water" [1st Floor - Retail Space A]
+  PAIR  y48: "Remove drywall - walls - damaged" [1st Floor - Retail Space A]  Γåö  a71: "Remove wall drywall - water/storm" [1st Floor - Retail Space A]
+  PAIR  y49: "Seal wall framing - shellac odor" [1st Floor - Retail Space A]  Γåö  a72: "Seal framing - shellac - walls" [1st Floor - Retail Space A]
+  PAIR  y51: "1/2" drywall walls - hung/taped/fin" [1st Floor - Retail Space A]  Γåö  a74: "1/2" drywall walls - complete fin" [1st Floor - Retail Space A]
+  PAIR  y55: "Porcelain tile floor - 12x24 - R&R" [1st Floor - Retail Space A]  Γåö  a78: "Ceramic tile floor - 12x12 - R&R" [1st Floor - Retail Space A]
+  PAIR  y57: "Baseboard - 3-1/4" - MDF primed" [1st Floor - Retail Space A]  Γåö  a80: "Baseboard - 2-1/4" - primed MDF" [1st Floor - Retail Space A]
+  PAIR  y60: "Paint door slab - 2 coat/side" [1st Floor - Retail Space A]  Γåö  a83: "Paint door - 2 coat per side" [1st Floor - Retail Space A]
+  PAIR  y61: "Door hardware - lever - commercial" [1st Floor - Retail Space A]  Γåö  a84: "Door lever - commercial grade" [1st Floor - Retail Space A]
+  PAIR  y62: "HVAC register - clean - per vent" [1st Floor - Retail Space A]  Γåö  a85: "HVAC duct cleaning - per register" [1st Floor - Retail Space A]
+  ADDED  y:null  Γåö  a86: "Smoke detector - replace" [1st Floor - Retail Space A]
+  PAIR  y64: "Demo ceiling drywall - storm" [1st Floor - Retail Space B]  Γåö  a42: "Demo ceiling drywall - storm damage" [1st Floor - Common Lobby]
+  PAIR  y65: "Ceiling drywall - 5/8" - hung/taped" [1st Floor - Retail Space B]  Γåö  a43: "Ceiling drywall - 5/8" - hung/taped" [1st Floor - Common Lobby]
+  PAIR  y66: "Ceiling primer - PVA" [1st Floor - Retail Space B]  Γåö  a44: "Ceiling primer - PVA - single coat" [1st Floor - Common Lobby]
+  PAIR  y67: "Knockdown texture - ceiling" [1st Floor - Retail Space B]  Γåö  a45: "Knockdown texture - ceiling" [1st Floor - Common Lobby]
+  PAIR  y68: "Paint ceiling - flat latex - 2 coat" [1st Floor - Retail Space B]  Γåö  a46: "Paint ceiling - flat latex - 2 coat" [1st Floor - Common Lobby]
+  PAIR  y69: "LED recessed downlight - 6"" [1st Floor - Retail Space B]  Γåö  a47: "LED recessed downlight - 6"" [1st Floor - Common Lobby]
+  PAIR  y70: "Remove drywall - walls - damaged" [1st Floor - Retail Space B]  Γåö  a48: "Remove wall drywall - water/storm" [1st Floor - Common Lobby]
+  PAIR  y71: "Shellac seal - wall studs - odor" [1st Floor - Retail Space B]  Γåö  a49: "Shellac seal - wall studs - odor" [1st Floor - Common Lobby]
+  PAIR  y72: "Batt insulation - R13 - 3.5" kraft" [1st Floor - Retail Space B]  Γåö  a50: "Batt insulation - R13 - 3.5" kraft" [1st Floor - Common Lobby]
+  PAIR  y73: "Drywall - 1/2" - walls - complete" [1st Floor - Retail Space B]  Γåö  a51: "Drywall - 1/2" - walls - complete" [1st Floor - Common Lobby]
+  PAIR  y74: "Wall primer - PVA - one coat" [1st Floor - Retail Space B]  Γåö  a52: "Wall primer - PVA - one coat" [1st Floor - Common Lobby]
+  PAIR  y75: "Knockdown texture - walls" [1st Floor - Retail Space B]  Γåö  a53: "Knockdown texture - walls" [1st Floor - Common Lobby]
+  PAIR  y76: "Paint walls - satin - 2 coat" [1st Floor - Retail Space B]  Γåö  a54: "Paint walls - satin - 2 coat" [1st Floor - Common Lobby]
+  PAIR  y77: "Porcelain tile floor - 12x24 - R&R" [1st Floor - Retail Space B]  Γåö  a55: "Ceramic tile floor - 12x12 - R&R" [1st Floor - Common Lobby]
+  MISSING  y78: "Floor grout sealer" [1st Floor - Retail Space B]  Γåö  a:null
+  PAIR  y79: "Baseboard - 3-1/4" - MDF primed" [1st Floor - Retail Space B]  Γåö  a57: "Baseboard - 2-1/4" - primed MDF" [1st Floor - Common Lobby]
+  MISSING  y80: "Paint baseboard - semi-gloss - 2 coat" [1st Floor - Retail Space B]  Γåö  a:null
+  PAIR  y81: "Interior door - solid core - pre-hung" [1st Floor - Retail Space B]  Γåö  a104: "Hollow core interior door - pre-hung" [1st Floor - Storage/Janitor]
+  PAIR  y82: "Paint door slab - 2 coat/side" [1st Floor - Retail Space B]  Γåö  a60: "Paint door - 2 coat per side" [1st Floor - Common Lobby]
+  PAIR  y83: "Door hardware - lever - commercial" [1st Floor - Retail Space B]  Γåö  a61: "Door lever - commercial grade" [1st Floor - Common Lobby]
+  PAIR  y84: "HVAC register - clean - per vent" [1st Floor - Retail Space B]  Γåö  a62: "HVAC duct cleaning - per register" [1st Floor - Common Lobby]
+  PAIR  y85: "Final clean - Retail Space B" [1st Floor - Retail Space B]  Γåö  a64: "Construction clean - Common Lobby" [1st Floor - Common Lobby]
+  ADDED  y:null  Γåö  a41: "Debris haul - ceiling drywall" [1st Floor - Common Lobby]
+  ADDED  y:null  Γåö  a63: "Smoke detector - replace" [1st Floor - Common Lobby]
+  PAIR  y86: "Tear out ceiling drywall" [1st Floor - Common Lobby]  Γåö  a88: "Remove damaged ceiling drywall" [1st Floor - Storage/Janitor]
+  PAIR  y87: "Install 5/8" ceiling drywall" [1st Floor - Common Lobby]  Γåö  a89: "Install 5/8" ceiling drywall - fin" [1st Floor - Storage/Janitor]
+  PAIR  y88: "Prime ceiling - PVA - 1 coat" [1st Floor - Common Lobby]  Γåö  a90: "Prime ceiling - PVA" [1st Floor - Storage/Janitor]
+  PAIR  y89: "Orange peel texture - ceiling" [1st Floor - Common Lobby]  Γåö  a91: "Light hand texture - ceiling" [1st Floor - Storage/Janitor]
+  PAIR  y90: "Flat ceiling paint - two coats" [1st Floor - Common Lobby]  Γåö  a92: "Paint - ceiling - flat - 2 coat" [1st Floor - Storage/Janitor]
+  PAIR  y91: "Recessed light - 6" IC rated" [1st Floor - Common Lobby]  Γåö  a93: "6" LED can light - new install" [1st Floor - Storage/Janitor]
+  PAIR  y92: "Remove drywall - walls - damaged" [1st Floor - Common Lobby]  Γåö  a94: "Odor seal - shellac - framing" [1st Floor - Storage/Janitor]
+  MISSING  y93: "Stud wall seal - shellac" [1st Floor - Common Lobby]  Γåö  a:null
+  PAIR  y94: "R13 kraft faced batt - walls" [1st Floor - Common Lobby]  Γåö  a95: "Insulation R-13 kraft batt walls" [1st Floor - Storage/Janitor]
+  PAIR  y95: "Hang & finish 1/2" wall drywall" [1st Floor - Common Lobby]  Γåö  a96: "1/2" wall drywall - tape & fin" [1st Floor - Storage/Janitor]
+  PAIR  y96: "Prime walls - PVA" [1st Floor - Common Lobby]  Γåö  a97: "PVA wall primer - single coat" [1st Floor - Storage/Janitor]
+  PAIR  y97: "Wall texture - knockdown style" [1st Floor - Common Lobby]  Γåö  a98: "Skip trowel texture - walls" [1st Floor - Storage/Janitor]
+  PAIR  y98: "Interior wall paint - eggshell" [1st Floor - Common Lobby]  Γåö  a99: "Wall paint - satin finish - 2 coat" [1st Floor - Storage/Janitor]
+  MISSING  y99: "Porcelain tile floor - 12x24 - R&R" [1st Floor - Common Lobby]  Γåö  a:null
+  PAIR  y101: "Baseboard - 3-1/4" - MDF primed" [1st Floor - Common Lobby]  Γåö  a102: "Baseboard - 2-1/4" - primed MDF" [1st Floor - Storage/Janitor]
+  PAIR  y104: "Paint door slab - 2 coat/side" [1st Floor - Common Lobby]  Γåö  a105: "Paint door - 2 coat per side" [1st Floor - Storage/Janitor]
+  PAIR  y105: "Door hardware - lever - commercial" [1st Floor - Common Lobby]  Γåö  a106: "Door lever - commercial grade" [1st Floor - Storage/Janitor]
+  PAIR  y106: "HVAC register - clean - per vent" [1st Floor - Common Lobby]  Γåö  a107: "HVAC duct cleaning - per register" [1st Floor - Storage/Janitor]
+  PAIR  y107: "Final clean - Common Lobby" [1st Floor - Common Lobby]  Γåö  a109: "Construction clean - Storage/Janitor" [1st Floor - Storage/Janitor]
+  ADDED  y:null  Γåö  a100: "Carpet cushion - 6 lb standard" [1st Floor - Storage/Janitor]
+  ADDED  y:null  Γåö  a101: "Commercial carpet - loop - standard" [1st Floor - Storage/Janitor]
+  ADDED  y:null  Γåö  a103: "Paint baseboard - 2 coat semi-gloss" [1st Floor - Storage/Janitor]
+  ADDED  y:null  Γåö  a108: "Smoke detector - replace" [1st Floor - Storage/Janitor]
+  PAIR  y108: "Remove ceiling drywall - moisture damage" [1st Floor - Restroom 1 (Men's)]  Γåö  a122: "Tear out ceiling drywall - bath" [1st Floor - Men's Restroom 1]
+  PAIR  y109: "Moisture-resistant drywall - ceiling - 5/8"" [1st Floor - Restroom 1 (Men's)]  Γåö  a123: "Standard 5/8" drywall - ceiling" [1st Floor - Men's Restroom 1]
+  PAIR  y113: "Exhaust fan - 110 CFM - quiet - R&R" [1st Floor - Restroom 1 (Men's)]  Γåö  a127: "Bath exhaust fan - 80 CFM - R&R" [1st Floor - Men's Restroom 1]
+  PAIR  y116: "Sink - wall mount - commercial" [1st Floor - Restroom 1 (Men's)]  Γåö  a118: "Wall-mount sink - commercial" [1st Floor - Women's Restroom 1]
+  PAIR  y119: "Final clean - Restroom 1 (Men's)" [1st Floor - Restroom 1 (Men's)]  Γåö  a135: "Bathroom cleaning - Men's Restroom 1" [1st Floor - Men's Restroom 1]
+  ADDED  y:null  Γåö  a110: "Tear out ceiling drywall - bath" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a111: "Standard 5/8" drywall - ceiling" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a112: "Paint - ceiling - semi-gloss - 2 coat" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a113: "Ceramic floor tile - 12x12 - standard" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a114: "Penetrating grout sealer - floor" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a115: "Bath exhaust fan - 80 CFM - R&R" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a116: "Light bar - vanity - 4 bulb - standard" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a117: "Toilet - floor mount - commercial" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a119: "Commercial bath accessories" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a120: "ADA grab bar set - stainless" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a121: "Bathroom cleaning - Women's Restroom 1" [1st Floor - Women's Restroom 1]
+  ADDED  y:null  Γåö  a130: "Wall-mount sink - commercial" [1st Floor - Men's Restroom 1]
+  ADDED  y:null  Γåö  a133: "Paper towel dispenser - commercial" [1st Floor - Men's Restroom 1]
+  ADDED  y:null  Γåö  a134: "Soap dispenser - wall mount" [1st Floor - Men's Restroom 1]
+  PAIR  y120: "Remove damaged ceiling drywall" [2nd Floor - Office Suite 201]  Γåö  a159: "Tear out ceiling drywall - water" [2nd Floor - Office Suite 201]
+  PAIR  y126: "Remove drywall - walls - damaged" [2nd Floor - Office Suite 201]  Γåö  a165: "Remove wall drywall - water/storm" [2nd Floor - Office Suite 201]
+  PAIR  y127: "Seal wall framing - shellac odor" [2nd Floor - Office Suite 201]  Γåö  a166: "Seal framing - shellac - walls" [2nd Floor - Office Suite 201]
+  PAIR  y129: "1/2" drywall walls - hung/taped/fin" [2nd Floor - Office Suite 201]  Γåö  a168: "1/2" drywall walls - complete fin" [2nd Floor - Office Suite 201]
+  PAIR  y133: "Carpet pad - 8 lb rebond" [2nd Floor - Office Suite 201]  Γåö  a172: "Carpet cushion - 6 lb standard" [2nd Floor - Office Suite 201]
+  PAIR  y134: "Commercial carpet - loop - high grade" [2nd Floor - Office Suite 201]  Γåö  a173: "Commercial carpet - loop - standard" [2nd Floor - Office Suite 201]
+  PAIR  y135: "Baseboard - 3-1/4" - MDF primed" [2nd Floor - Office Suite 201]  Γåö  a174: "Baseboard - 2-1/4" - primed MDF" [2nd Floor - Office Suite 201]
+  PAIR  y138: "Paint door slab - 2 coat/side" [2nd Floor - Office Suite 201]  Γåö  a177: "Paint door - 2 coat per side" [2nd Floor - Office Suite 201]
+  PAIR  y139: "Door hardware - lever - commercial" [2nd Floor - Office Suite 201]  Γåö  a178: "Door lever - commercial grade" [2nd Floor - Office Suite 201]
+  PAIR  y141: "HVAC register - clean - per vent" [2nd Floor - Office Suite 201]  Γåö  a180: "HVAC duct cleaning - per register" [2nd Floor - Office Suite 201]
+  ADDED  y:null  Γåö  a181: "Smoke detector - replace" [2nd Floor - Office Suite 201]
+  ADDED  y:null  Γåö  a183: "Debris haul - ceiling drywall" [2nd Floor - Office Suite 202]
+  PAIR  y149: "Remove drywall - walls - damaged" [2nd Floor - Office Suite 202]  Γåö  a190: "Remove wall drywall - water/storm" [2nd Floor - Office Suite 202]
+  PAIR  y156: "Carpet pad - 8 lb rebond" [2nd Floor - Office Suite 202]  Γåö  a197: "Carpet cushion - 6 lb standard" [2nd Floor - Office Suite 202]
+  PAIR  y157: "Commercial carpet - loop - high grade" [2nd Floor - Office Suite 202]  Γåö  a198: "Commercial carpet - loop - standard" [2nd Floor - Office Suite 202]
+  PAIR  y158: "Baseboard - 3-1/4" - MDF primed" [2nd Floor - Office Suite 202]  Γåö  a199: "Baseboard - 2-1/4" - primed MDF" [2nd Floor - Office Suite 202]
+  PAIR  y161: "Paint door slab - 2 coat/side" [2nd Floor - Office Suite 202]  Γåö  a202: "Paint door - 2 coat per side" [2nd Floor - Office Suite 202]
+  PAIR  y162: "Door hardware - lever - commercial" [2nd Floor - Office Suite 202]  Γåö  a203: "Door lever - commercial grade" [2nd Floor - Office Suite 202]
+  PAIR  y164: "HVAC register - clean - per vent" [2nd Floor - Office Suite 202]  Γåö  a205: "HVAC duct cleaning - per register" [2nd Floor - Office Suite 202]
+  ADDED  y:null  Γåö  a206: "Smoke detector - replace" [2nd Floor - Office Suite 202]
+  PAIR  y166: "Ceiling drywall removal - damaged" [2nd Floor - Conference Room]  Γåö  a136: "Remove damaged ceiling drywall" [2nd Floor - Conference Room]
+  PAIR  y168: "PVA primer seal - ceiling" [2nd Floor - Conference Room]  Γåö  a138: "Prime ceiling - PVA" [2nd Floor - Conference Room]
+  PAIR  y172: "Remove drywall - walls - damaged" [2nd Floor - Conference Room]  Γåö  a142: "Remove wall drywall - water/storm" [2nd Floor - Conference Room]
+  PAIR  y179: "Carpet pad - 8 lb rebond" [2nd Floor - Conference Room]  Γåö  a149: "Carpet cushion - 6 lb standard" [2nd Floor - Conference Room]
+  PAIR  y180: "Commercial carpet - loop - high grade" [2nd Floor - Conference Room]  Γåö  a150: "Commercial carpet - loop - standard" [2nd Floor - Conference Room]
+  PAIR  y181: "Baseboard - 3-1/4" - MDF primed" [2nd Floor - Conference Room]  Γåö  a151: "Baseboard - 2-1/4" - primed MDF" [2nd Floor - Conference Room]
+  PAIR  y184: "Paint door slab - 2 coat/side" [2nd Floor - Conference Room]  Γåö  a154: "Paint door - 2 coat per side" [2nd Floor - Conference Room]
+  PAIR  y185: "Door hardware - lever - commercial" [2nd Floor - Conference Room]  Γåö  a155: "Door lever - commercial grade" [2nd Floor - Conference Room]
+  PAIR  y186: "HVAC register - clean - per vent" [2nd Floor - Conference Room]  Γåö  a156: "HVAC duct cleaning - per register" [2nd Floor - Conference Room]
+  PAIR  y187: "Final clean - Conference Room" [2nd Floor - Conference Room]  Γåö  a158: "Construction clean - Conference Room" [2nd Floor - Conference Room]
+  ADDED  y:null  Γåö  a157: "Smoke detector - replace" [2nd Floor - Conference Room]
+  PAIR  y188: "Remove ceiling drywall - moisture damage" [2nd Floor - Restroom 2 (Women's)]  Γåö  a208: "Tear out ceiling drywall - bath" [2nd Floor - Women's Restroom 2]
+  PAIR  y189: "Moisture-resistant drywall - ceiling - 5/8"" [2nd Floor - Restroom 2 (Women's)]  Γåö  a209: "Standard 5/8" drywall - ceiling" [2nd Floor - Women's Restroom 2]
+  PAIR  y193: "Exhaust fan - 110 CFM - quiet - R&R" [2nd Floor - Restroom 2 (Women's)]  Γåö  a213: "Bath exhaust fan - 80 CFM - R&R" [2nd Floor - Women's Restroom 2]
+  PAIR  y196: "Sink - wall mount - commercial" [2nd Floor - Restroom 2 (Women's)]  Γåö  a216: "Wall-mount sink - commercial" [2nd Floor - Women's Restroom 2]
+  PAIR  y199: "Final clean - Restroom 2 (Women's)" [2nd Floor - Restroom 2 (Women's)]  Γåö  a221: "Bathroom cleaning - Women's Restroom 2" [2nd Floor - Women's Restroom 2]
+  ADDED  y:null  Γåö  a219: "Paper towel dispenser - commercial" [2nd Floor - Women's Restroom 2]
+  ADDED  y:null  Γåö  a220: "Soap dispenser - wall mount" [2nd Floor - Women's Restroom 2]
+  PAIR  y200: "Elevator cab interior - refinish" [Elevator / Stairwell]  Γåö  a222: "Elevator interior - refinish panels" [Elevator / Stairwell]
+  PAIR  y201: "Stairwell paint - walls & ceiling" [Elevator / Stairwell]  Γåö  a224: "Stairwell wall & ceiling paint - 2 coat" [Elevator / Stairwell]
+  ADDED  y:null  Γåö  a223: "Elevator landing door - SS - R&R" [Elevator / Stairwell]
+  ADDED  y:null  Γåö  a225: "Rubber stair tread - commercial - R&R" [Elevator / Stairwell]
+  ADDED  y:null  Γåö  a227: "Parking surface - seal coat" [Site Work / Parking]
+  ADDED  y:null  Γåö  a228: "Lot re-striping - complete" [Site Work / Parking]
+  ADDED  y:null  Γåö  a229: "Concrete walk replacement" [Site Work / Parking]
+  ADDED  y:null  Γåö  a230: "Sod installation - per SF" [Site Work / Parking]
+  ADDED  y:null  Γåö  a231: "Chain link fence - 6ft - R&R" [Site Work / Parking]
+  ADDED  y:null  Γåö  a232: "ADA access ramp - concrete - R&R" [ADA Compliance]
+  ADDED  y:null  Γåö  a233: "ADA/Braille signage - per location" [ADA Compliance]
+  ADDED  y:null  Γåö  a234: "Interior ADA auto-operator - per door" [ADA Compliance]

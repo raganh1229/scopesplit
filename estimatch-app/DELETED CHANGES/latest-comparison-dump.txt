@@ -1,0 +1,258 @@
+=== LATEST COMPARISON ===
+ID: 78f8ae0c-91c3-465b-8222-8dd697399c75
+Status: COMPLETED
+Your file: Contractor_Estimate_Set10.pdf
+Adjuster file: Adjuster_Estimate_Set10.pdf
+Created: Sun Apr 19 2026 15:53:40 GMT-0400 (Eastern Daylight Time)
+Total yours: 254006.33
+Total adjuster: 205910.68
+Gap: 48095.65
+
+Line items: 237
+
+=== STATUS BREAKDOWN ===
+  MISSING_FROM_ADJUSTER: 29
+  MODIFIED: 89
+  MATCH: 58
+  ADDED_BY_ADJUSTER: 61
+
+=== LINE ITEMS ===
+Row  Sort  Status                   Zone (Y)          Desc (Yours)                                      Desc (Adj)                                        Total Y     Total A     Diff
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1    0     MISSING_FROM_ADJUSTER    2nd floor - off   Odor seal - shellac - framing                     ---                                               574.64      ---         ---
+2    0     MODIFIED                 __UNZONED__       roll-off dumpster - debris                        Dumpster - - debris haul                          3768.00     2437.51     1330.49
+3    0     MODIFIED                 exterior envelo   Stucco - 3 coat system - walls                    3-coat stucco system - walls                      9362.15     7685.27     1676.88
+4    1     MISSING_FROM_ADJUSTER    2nd floor - off   Insulation R-13 kraft batt walls                  ---                                               266.64      ---         ---
+5    1     MODIFIED                 exterior envelo   Exterior paint - 2 coats - elastomeric            Elastomeric exterior coating - 2 coat             2037.75     1713.24     324.51
+6    1     MISSING_FROM_ADJUSTER    __UNZONED__       Additional dumpster                               ---                                               1260.00     ---         ---
+7    2     MISSING_FROM_ADJUSTER    2nd floor - off   1/2" wall drywall - tape & fin                    ---                                               1415.04     ---         ---
+8    2     MODIFIED                 __UNZONED__       Project manager / superintendent                  Supervision / Project Management - per            30912.00    20607.84    10304.16
+9    2     MODIFIED                 exterior envelo   Awning - commercial fabric - R&REA                Fabric awning - commercial grade - R&REA          3542.35     3053.75     488.60
+10   3     MODIFIED                 __UNZONED__       Skilled demolition labor - hourly                 Demolition technician - hourly                    9240.00     6240.00     3000.00
+11   3     MODIFIED                 exterior envelo   Parking lot light pole - R&REA                    Parking lot pole light - LED - R&REA              6779.33     5679.83     1099.50
+12   3     MISSING_FROM_ADJUSTER    2nd floor - off   PVA wall primer - single coat                     ---                                               343.20      ---         ---
+13   4     MATCH                    exterior envelo   Pressure wash - full building                     Exterior pressure wash - full building            777.60      777.60      0.00
+14   4     MISSING_FROM_ADJUSTER    2nd floor - off   Skip trowel texture - walls                       ---                                               778.36      ---         ---
+15   4     MODIFIED                 __UNZONED__       General cleanup labor - hourly                    Cleaning tech - general - per hour                5713.20     4455.36     1257.84
+16   5     MATCH                    __UNZONED__       Building permit - commercial EAOPEN ITEM          Permits and fees - all trades combined EAOPEN I   0.00        0.00        0.00
+17   5     MISSING_FROM_ADJUSTER    2nd floor - off   Wall paint - satin finish - 2 coat                ---                                               617.32      ---         ---
+18   5     MODIFIED                 exterior envelo   Remove damaged ceiling drywall                    Remove damaged ceiling drywall                    634.80      117.30      517.50
+19   6     MISSING_FROM_ADJUSTER    __UNZONED__       Electrical permit EAOPEN ITEM                     ---                                               0.00        ---         ---
+20   6     MODIFIED                 2nd floor - off   Carpet pad - 8 lb rebond                          Carpet cushion - 6 lb standard                    315.36      246.78      68.58
+21   6     MATCH                    exterior envelo   PVA primer - ceiling - one coat                   Ceiling PVA primer - 1 coat                       358.80      358.80      0.00
+22   7     MODIFIED                 2nd floor - off   Commercial carpet - loop - high grade             Commercial carpet - loop - standard               1542.56     1382.67     159.89
+23   7     MATCH                    exterior envelo   Heavy hand texture - ceiling                      Heavy hand texture - ceiling                      695.89      695.89      0.00
+24   7     MISSING_FROM_ADJUSTER    __UNZONED__       Plumbing permit EAOPEN ITEM                       ---                                               0.00        ---         ---
+25   8     MODIFIED                 2nd floor - off   Baseboard - 3-1/4" - MDF primed                   Baseboard - 2-1/4" - primed MDFLF                 329.87      280.84      49.03
+26   8     MISSING_FROM_ADJUSTER    __UNZONED__       Mechanical/HVAC permit EAOPEN ITEM                ---                                               0.00        ---         ---
+27   8     MODIFIED                 exterior envelo   Ceiling paint - flat - 2 coats                    Paint ceiling - flat latex - 2 coat               583.28      323.34      259.94
+28   9     MATCH                    2nd floor - off   Paint baseboard - semi-gloss - 2 coat             Paint baseboard - 2 coat semi-gloss               128.38      128.38      0.00
+29   9     MATCH                    __UNZONED__       Temporary power hookup - R&REA                    R&R Temporary electrical service                  762.26      762.26      0.00
+30   9     MATCH                    exterior envelo   Seal wall framing - shellac odor                  Seal framing - shellac - walls                    979.50      979.50      0.00
+31   10    MATCH                    __UNZONED__       Temp power usage - monthly                        Temp power - per month                            1731.02     1731.02     0.00
+32   10    MATCH                    exterior envelo   R-13 batt insulation - walls - kraft              R-13 batt insulation - walls                      454.50      454.50      0.00
+33   10    MODIFIED                 2nd floor - off   Interior door - solid core - pre-hung             Hollow core interior door - pre-hung              440.95      365.52      75.43
+34   11    MODIFIED                 2nd floor - off   Paint door slab - 2 coat/side                     Paint door - 2 coat per side                      99.00       82.87       16.13
+35   11    MODIFIED                 exterior envelo   PVA primer - walls - one coat                     Wall primer - PVA - one coat                      585.00      296.40      288.60
+36   11    MATCH                    __UNZONED__       Portable toilet - ADA - monthly                   Portable sanitation - ADA - monthly               1350.00     1350.00     0.00
+37   12    MODIFIED                 2nd floor - off   Door hardware - lever - commercial                Door lever - commercial grade                     110.84      84.76       26.08
+38   12    MATCH                    exterior envelo   Heavy hand texture - walls                        Heavy hand texture - walls                        1134.60     1134.60     0.00
+39   12    MATCH                    __UNZONED__       Construction fencing - 6ft chain link             Perimeter fencing - temporary                     1890.00     1890.00     0.00
+40   13    MODIFIED                 2nd floor - off   HVAC register - clean - per vent                  HVAC duct cleaning - per register                 264.00      162.00      102.00
+41   13    MATCH                    __UNZONED__       Job site storage container - monthly              Storage container - monthly                       1170.00     1170.00     0.00
+42   13    MATCH                    exterior envelo   Wall paint - eggshell - 2 coats                   Wall paint - eggshell - 2 coats                   951.60      951.60      0.00
+43   14    MISSING_FROM_ADJUSTER    __UNZONED__       Fire watch - hot work - per day DA                ---                                               5400.00     ---         ---
+44   14    MODIFIED                 exterior envelo   Floor grout sealer                                Floor grout sealer - penetrating                  684.25      378.35      305.90
+45   14    ADDED_BY_ADJUSTER        ---               ---                                               Smoke detector - replace                          ---         116.71      ---
+46   15    MISSING_FROM_ADJUSTER    __UNZONED__       Emergency board-up - windows/doors                ---                                               684.00      ---         ---
+47   15    MATCH                    2nd floor - off   Final clean - Conference Room                     Construction clean - Conference Room              116.82      116.82      0.00
+48   15    MODIFIED                 exterior envelo   Paint baseboard - semi-gloss - 2 coat             Paint baseboard - 2 coat semi-gloss               162.37      98.18       64.19
+49   16    MATCH                    __UNZONED__       Emergency tarp - roof sections                    Emergency tarping - roof                          777.00      777.00      0.00
+50   16    MODIFIED                 exterior envelo   Paint door slab - 2 coat/side                     Paint door - 2 coat per side                      99.00       82.87       16.13
+51   16    ADDED_BY_ADJUSTER        ---               ---                                               Tear out ceiling drywall - water                  ---         296.70      ---
+52   17    MODIFIED                 exterior envelo   Door hardware - lever - commercial                Door lever - commercial grade                     110.84      84.76       26.08
+53   17    ADDED_BY_ADJUSTER        ---               ---                                               5/8" drywall ceiling - tape & finish              ---         721.32      ---
+54   17    MODIFIED                 __UNZONED__       Engineering inspection - structural               Structural engineer assessment                    3000.00     2160.00     840.00
+55   18    ADDED_BY_ADJUSTER        ---               ---                                               Recessed can light - 6" LEDEA                     ---         843.00      ---
+56   18    ADDED_BY_ADJUSTER        ---               ---                                               Moisture testing - commercial - per visit         ---         1350.00     ---
+57   18    MODIFIED                 exterior envelo   Demo ceiling drywall - storm                      Demo ceiling drywall - storm damage               489.90      351.90      138.00
+58   19    MODIFIED                 exterior envelo   Ceiling drywall - 5/8" - hung/taped               Ceiling drywall - 5/8" - hung/taped               1191.03     821.30      369.73
+59   19    ADDED_BY_ADJUSTER        ---               ---                                               Air quality monitoring - per test                 ---         1260.00     ---
+60   19    ADDED_BY_ADJUSTER        ---               ---                                               Remove wall drywall - water/storm                 ---         503.70      ---
+61   20    ADDED_BY_ADJUSTER        ---               ---                                               Asbestos test - pre-demolition                    ---         1200.00     ---
+62   20    MODIFIED                 exterior envelo   Knockdown texture - ceiling                       Knockdown texture - ceiling                       584.69      419.99      164.70
+63   20    ADDED_BY_ADJUSTER        ---               ---                                               1/2" drywall walls - complete fin                 ---         1173.84     ---
+64   21    ADDED_BY_ADJUSTER        ---               ---                                               Carpet cushion - 6 lb standard                    ---         178.23      ---
+65   21    MODIFIED                 exterior envelo   Paint ceiling - flat latex - 2 coat               Ceiling paint - flat - 2 coats                    450.14      583.28      -133.14
+66   21    ADDED_BY_ADJUSTER        ---               ---                                               Lead paint test - pre-demolition                  ---         720.00      ---
+67   22    MODIFIED                 exterior envelo   LED recessed downlight - 6"                       LED recessed downlight - 6"                       946.10      505.80      440.30
+68   22    ADDED_BY_ADJUSTER        ---               ---                                               Commercial carpet - loop - standard               ---         1007.71     ---
+69   22    MODIFIED                 __UNZONED__       Tear off existing roofing - per SQSQ              Remove existing roof - per square                 10530.00    9750.00     780.00
+70   23    ADDED_BY_ADJUSTER        ---               ---                                               Baseboard - 2-1/4" - primed MDFLF                 ---         231.28      ---
+71   23    MODIFIED                 __UNZONED__       Synthetic underlayment - full deck                #30 felt underlayment - full deck                 4393.68     3326.81     1066.87
+72   23    MODIFIED                 exterior envelo   Shellac seal - wall studs - odor                  Shellac seal - wall studs - odor                  757.48      496.28      261.20
+73   24    MODIFIED                 __UNZONED__       Architectural shingle - 30yr - premium            Dimensional shingle - 25yr - standard             32630.63    19359.23    13271.40
+74   24    MODIFIED                 exterior envelo   Batt insulation - R13 - 3.5" kraft                Batt insulation - R13 - 3.5" kraft                351.48      230.28      121.20
+75   24    ADDED_BY_ADJUSTER        ---               ---                                               Hollow core interior door - pre-hung              ---         365.52      ---
+76   25    MODIFIED                 exterior envelo   Drywall - 1/2" - walls - complete                 Drywall - 1/2" - walls - complete                 1865.28     1222.08     643.20
+77   25    MODIFIED                 __UNZONED__       Ridge cap shingles - hip & ridge                  Ridge cap - hip and ridge shingles                609.92      564.04      45.88
+78   25    ADDED_BY_ADJUSTER        ---               ---                                               HVAC duct cleaning - per register                 ---         108.00      ---
+79   26    ADDED_BY_ADJUSTER        ---               ---                                               Smoke detector - replace                          ---         116.71      ---
+80   26    MODIFIED                 exterior envelo   Wall primer - PVA - one coat                      PVA primer - walls                                452.40      585.00      -132.60
+81   26    MODIFIED                 __UNZONED__       Ice & water shield - eave - 36"                   Ice/water shield - eave only - 3ft                1084.09     1056.15     27.94
+82   27    MODIFIED                 __UNZONED__       Drip edge - aluminum - eave & rake                Drip edge - T-style aluminum - eave & rake        1155.39     1112.08     43.31
+83   27    ADDED_BY_ADJUSTER        ---               ---                                               Construction clean - Office Suite                 ---         85.14       ---
+84   27    MODIFIED                 exterior envelo   Knockdown texture - walls                         Knockdown texture - walls                         955.26      625.86      329.40
+85   28    ADDED_BY_ADJUSTER        ---               ---                                               Debris haul - ceiling drywall                     ---         33.30       ---
+86   28    MODIFIED                 __UNZONED__       Roof decking - 1/2" CDX plywood - R&RSH           Roof sheathing - 1/2" CDX - replace SH            890.91      1187.02     -296.11
+87   28    MODIFIED                 exterior envelo   Paint walls - satin - 2 coat                      Paint walls - satin - 2 coat                      813.74      533.14      280.60
+88   29    MODIFIED                 __UNZONED__       Commercial gutter - 6" half-round                 6" half-round gutter - commercial - R&RLF         3365.65     3101.94     263.71
+89   29    MODIFIED                 exterior envelo   Floor grout sealer                                Floor grout sealer - penetrating                  523.25      684.25      -161.00
+90   29    ADDED_BY_ADJUSTER        ---               ---                                               Ceiling primer - PVA - single coat                ---         144.30      ---
+91   30    ADDED_BY_ADJUSTER        ---               ---                                               Remove wall drywall - water/storm                 ---         441.60      ---
+92   30    MODIFIED                 exterior envelo   Paint baseboard - semi-gloss - 2 coat             Paint baseboard - 2 coat semi-gloss               135.94      162.37      -26.43
+93   30    MODIFIED                 __UNZONED__       Downspout - 3x4 commercial - R&RLF                Commercial downspout - 3x4 - R&RLF                826.11      743.72      82.39
+94   31    MODIFIED                 exterior envelo   Paint door slab - 2 coat/side                     Paint door - 2 coat per side                      99.00       82.87       16.13
+95   31    MODIFIED                 __UNZONED__       Skylight - commercial - 4x4 - R&REA               Commercial skylight - 4x4 - R&REA                 1832.18     1587.93     244.25
+96   31    ADDED_BY_ADJUSTER        ---               ---                                               Carpet cushion - 6 lb standard                    ---         155.38      ---
+97   32    ADDED_BY_ADJUSTER        ---               ---                                               Commercial carpet - loop - standard               ---         867.10      ---
+98   32    MISSING_FROM_ADJUSTER    __UNZONED__       Crane rental - full day DA                        ---                                               2220.00     ---         ---
+99   32    MODIFIED                 exterior envelo   Door hardware - lever - commercial                Door lever - commercial grade                     110.84      84.76       26.08
+100  33    MODIFIED                 exterior envelo   Tear out ceiling drywall                          Tear out ceiling drywall - water                  351.90      634.80      -282.90
+101  33    ADDED_BY_ADJUSTER        ---               ---                                               Baseboard - 2-1/4" - primed MDFLF                 ---         206.50      ---
+102  33    MODIFIED                 exterior envelo   Remove damaged stucco - walls                     Remove storm-damaged stucco                       1566.00     1296.00     270.00
+103  34    MODIFIED                 exterior envelo   Install 5/8" ceiling drywall                      Install 5/8" ceiling drywall - fin                855.52      273.77      581.75
+104  34    MODIFIED                 exterior envelo   Storefront window - R&R - commercial              Commercial storefront glazing - R&REA             3223.85     2716.30     507.55
+105  34    ADDED_BY_ADJUSTER        ---               ---                                               Hollow core interior door - pre-hung              ---         365.52      ---
+106  35    MODIFIED                 exterior envelo   Commercial entry door - aluminum/glass            Aluminum entry door system - R&REA                7114.76     6101.21     1013.55
+107  35    MODIFIED                 exterior envelo   Flat ceiling paint - two coats                    Paint - ceiling - flat - 2 coat                   323.34      107.78      215.56
+108  35    ADDED_BY_ADJUSTER        ---               ---                                               HVAC duct cleaning - per register                 ---         162.00      ---
+109  36    MODIFIED                 exterior envelo   ADA automatic door opener - R&REA                 ADA door operator - electric - R&REA              1553.75     1367.30     186.45
+110  36    ADDED_BY_ADJUSTER        ---               ---                                               Smoke detector - replace                          ---         116.71      ---
+111  36    MODIFIED                 exterior envelo   Floor grout sealer                                Penetrating grout sealer - floor                  378.35      80.50       297.85
+112  37    MODIFIED                 exterior envelo   Exterior signage - channel letter - R&REA         Channel letter signage - LED - R&REA              1056.55     932.25      124.30
+113  37    MODIFIED                 exterior envelo   Paint baseboard - semi-gloss - 2 coat             Paint baseboard - 2 coat semi-gloss               98.18       56.64       41.54
+114  37    ADDED_BY_ADJUSTER        ---               ---                                               Construction clean - Office Suite                 ---         73.26       ---
+115  38    MATCH                    2nd floor - off   Remove ceiling drywall - moisture damage          Tear out ceiling drywall - bath                   80.04       80.04       0.00
+116  38    MODIFIED                 exterior envelo   Exterior caulk - all openings - silicone          Exterior caulk - backer rod & sealant             540.00      780.00      -240.00
+117  38    MODIFIED                 exterior envelo   Paint door slab - 2 coat/side                     Paint door - 2 coat per side                      99.00       82.87       16.13
+118  39    MODIFIED                 exterior envelo   Door hardware - lever - commercial                Door lever - commercial grade                     110.84      84.76       26.08
+119  39    MODIFIED                 2nd floor - off   Moisture-resistant drywall - ceiling - 5/8"       Standard 5/8" drywall - ceiling                   222.89      194.59      28.30
+120  39    MODIFIED                 exterior envelo   Loading dock door - roll-up - R&REA               Loading dock door - sectional - R&REA             2896.37     2511.08     385.29
+121  40    MATCH                    2nd floor - off   Ceramic floor tile - 12x12 - R&RSF                Ceramic floor tile - 12x12 - standard             926.10      926.10      0.00
+122  40    MODIFIED                 exterior envelo   Paint ceiling - semi-gloss - 2 coat               Paint - ceiling - semi-gloss - 2 coat             67.34       77.17       -9.83
+123  40    ADDED_BY_ADJUSTER        ---               ---                                               Window sealant - commercial grade                 ---         244.77      ---
+124  41    ADDED_BY_ADJUSTER        ---               ---                                               Exterior soffit repair - aluminum                 ---         771.20      ---
+125  41    MODIFIED                 2nd floor - off   Exhaust fan - 110 CFM - quiet - R&REA             Bath exhaust fan - 80 CFM - R&REA                 254.28      189.08      65.20
+126  41    MODIFIED                 exterior envelo   Ceramic floor tile - 12x12 - R&RSF                Ceramic tile floor - 12x12 - R&RSF                754.60      4124.25     -3369.65
+127  42    MODIFIED                 2nd floor - off   Vanity light bar - 4 light - R&REA                Light bar - vanity - 4 bulb - standard            189.08      146.05      43.03
+128  42    MATCH                    exterior envelo   Floor grout sealer                                Penetrating grout sealer - floor                  70.84       70.84       0.00
+129  42    MATCH                    exterior envelo   5/8" drywall ceiling - complete finish            5/8" drywall ceiling - tape & finish              1543.30     1543.30     0.00
+130  43    MODIFIED                 exterior envelo   Recessed can light - 6" LED - new                 Recessed can light - 6" LEDEA                     756.88      843.00      -86.12
+131  43    ADDED_BY_ADJUSTER        ---               ---                                               Paper towel dispenser - commercial                ---         163.00      ---
+132  43    MATCH                    exterior envelo   Toilet - commercial - floor mount                 Toilet - floor mount - commercial                 554.20      554.20      0.00
+133  44    ADDED_BY_ADJUSTER        ---               ---                                               Soap dispenser - wall mount                       ---         110.84      ---
+134  44    MATCH                    exterior envelo   Remove drywall - walls - damaged                  Remove wall drywall - water/storm                 1035.00     1035.00     0.00
+135  44    MATCH                    exterior envelo   Sink - wall mount - commercial                    Wall-mount sink - commercial                      371.64      371.64      0.00
+136  45    MATCH                    exterior envelo   1/2" drywall walls - hung/taped/fin               1/2" drywall walls - complete fin                 2412.00     2412.00     0.00
+137  45    MODIFIED                 2nd floor - off   Final clean - Restroom 2 (Women's)                Bathroom cleaning - Women's Restroom              31.32       31.32       0.00
+138  45    MODIFIED                 exterior envelo   Bath accessories - commercial set                 Commercial bath accessories                       241.24      189.08      52.16
+139  46    MATCH                    exterior envelo   ADA grab bars - stainless - set                   ADA grab bar set - stainless                      371.64      371.64      0.00
+140  46    MODIFIED                 exterior envelo   Porcelain tile floor - 12x24 - R&RSF              Ceramic tile floor - 12x12 - R&RSF                9384.00     7458.75     1925.25
+141  46    MODIFIED                 2nd floor - off   Elevator cab interior - refinish                  Elevator interior - refinish panels               3715.16     2933.03     782.13
+142  47    MATCH                    2nd floor - off   PVA primer - ceiling - one coat                   Ceiling PVA primer - 1 coat                       167.70      167.70      0.00
+143  47    ADDED_BY_ADJUSTER        ---               ---                                               Elevator landing door - SS - R&REA                ---         2565.15     ---
+144  47    MODIFIED                 exterior envelo   Baseboard - 3-1/4" - MDF primed                   Baseboard - 2-1/4" - primed MDFLF                 417.19      355.18      62.01
+145  48    MATCH                    2nd floor - off   Heavy hand texture - ceiling                      Heavy hand texture - ceiling                      325.25      325.25      0.00
+146  48    ADDED_BY_ADJUSTER        ---               ---                                               Rubber stair tread - commercial - R&REA           ---         2418.53     ---
+147  48    MODIFIED                 exterior envelo   Interior door - solid core - pre-hung             Hollow core interior door - pre-hung              440.95      365.52      75.43
+148  49    MATCH                    2nd floor - off   Ceiling paint - flat - 2 coats                    Ceiling paint - flat - 2 coats                    272.62      272.62      0.00
+149  49    ADDED_BY_ADJUSTER        ---               ---                                               Parking surface - seal coat                       ---         1716.00     ---
+150  49    MODIFIED                 exterior envelo   HVAC register - clean - per vent                  HVAC duct cleaning - per register                 198.00      108.00      90.00
+151  50    ADDED_BY_ADJUSTER        ---               ---                                               Lot re-striping - complete                        ---         2160.00     ---
+152  50    MATCH                    2nd floor - off   Seal wall framing - shellac odor                  Seal framing - shellac - walls                    476.69      476.69      0.00
+153  50    MATCH                    exterior envelo   Final clean - Retail Space ASF                    Construction clean - Retail Space ASF             182.16      182.16      0.00
+154  51    MATCH                    2nd floor - off   R-13 batt insulation - walls - kraft              R-13 batt insulation - walls                      220.58      220.58      0.00
+155  51    ADDED_BY_ADJUSTER        ---               ---                                               Smoke detector - replace                          ---         116.71      ---
+156  52    MISSING_FROM_ADJUSTER    exterior envelo   Ceiling primer - PVASF                            ---                                               276.90      ---         ---
+157  52    MATCH                    2nd floor - off   PVA primer - walls - one coat                     PVA primer - walls                                284.70      284.70      0.00
+158  53    MATCH                    2nd floor - off   Heavy hand texture - walls                        Heavy hand texture - walls                        552.17      552.17      0.00
+159  53    MISSING_FROM_ADJUSTER    exterior envelo   Remove drywall - walls - damaged                  ---                                               800.40      ---         ---
+160  54    MISSING_FROM_ADJUSTER    exterior envelo   Porcelain tile floor - 12x24 - R&RSF              ---                                               7176.00     ---         ---
+161  54    MATCH                    2nd floor - off   Wall paint - eggshell - 2 coats                   Wall paint - eggshell - 2 coats                   463.11      463.11      0.00
+162  55    MATCH                    2nd floor - off   Paint baseboard - semi-gloss - 2 coat             Paint baseboard - 2 coat semi-gloss               105.73      105.73      0.00
+163  55    MISSING_FROM_ADJUSTER    exterior envelo   Baseboard - 3-1/4" - MDF primed                   ---                                               349.27      ---         ---
+164  56    MODIFIED                 2nd floor - off   Paint door slab - 2 coat/side                     Paint door - 2 coat per side                      99.00       82.87       16.13
+165  56    MISSING_FROM_ADJUSTER    exterior envelo   Interior door - solid core - pre-hung             ---                                               440.95      ---         ---
+166  57    MODIFIED                 2nd floor - off   Door hardware - lever - commercial                Door lever - commercial grade                     110.84      84.76       26.08
+167  57    MISSING_FROM_ADJUSTER    exterior envelo   HVAC register - clean - per vent                  ---                                               264.00      ---         ---
+168  58    MATCH                    2nd floor - off   Closet shelf and rod - per LFLF                   Closet rod and shelf - per LFLF                   182.41      182.41      0.00
+169  58    MISSING_FROM_ADJUSTER    exterior envelo   Final clean - Retail Space BSF                    ---                                               140.58      ---         ---
+170  59    MATCH                    exterior envelo   Prime ceiling - PVA - 1 coat                      Ceiling primer - PVA - single coat                198.90      198.90      0.00
+171  59    MATCH                    2nd floor - off   Demo ceiling drywall - storm                      Demo ceiling drywall - storm damage               255.30      255.30      0.00
+172  60    MODIFIED                 2nd floor - off   Ceiling drywall - 5/8" - hung/taped               Ceiling drywall - 5/8" - hung/taped               620.67      595.85      24.82
+173  60    MISSING_FROM_ADJUSTER    exterior envelo   Orange peel texture - ceiling                     ---                                               261.32      ---         ---
+174  61    MISSING_FROM_ADJUSTER    exterior envelo   Recessed light - 6" IC rated                      ---                                               1135.32     ---         ---
+175  61    MATCH                    2nd floor - off   Knockdown texture - ceiling                       Knockdown texture - ceiling                       304.70      304.70      0.00
+176  62    MATCH                    2nd floor - off   Paint ceiling - flat latex - 2 coat               Paint ceiling - flat latex - 2 coat               234.58      234.58      0.00
+177  62    MATCH                    exterior envelo   Remove drywall - walls - damaged                  Remove wall drywall - water/storm                 524.40      524.40      0.00
+178  63    MODIFIED                 2nd floor - off   LED recessed downlight - 6"                       LED recessed downlight - 6"                       946.10      505.80      440.30
+179  63    MISSING_FROM_ADJUSTER    exterior envelo   Stud wall seal - shellac                          ---                                               496.28      ---         ---
+180  64    MATCH                    2nd floor - off   Shellac seal - wall studs - odor                  Shellac seal - wall studs - odor                  417.92      417.92      0.00
+181  64    MISSING_FROM_ADJUSTER    exterior envelo   R13 kraft faced batt - walls                      ---                                               230.28      ---         ---
+182  65    MISSING_FROM_ADJUSTER    exterior envelo   Hang & finish 1/2" wall drywall                   ---                                               1222.08     ---         ---
+183  65    MATCH                    2nd floor - off   Batt insulation - R13 - 3.5" kraft                Batt insulation - R13 - 3.5" kraft                193.92      193.92      0.00
+184  66    MATCH                    2nd floor - off   Drywall - 1/2" - walls - complete                 Drywall - 1/2" - walls - complete                 1029.12     1029.12     0.00
+185  66    MISSING_FROM_ADJUSTER    exterior envelo   Prime walls - PVASF                               ---                                               296.40      ---         ---
+186  67    MATCH                    2nd floor - off   Wall primer - PVA - one coat                      Wall primer - PVA - one coat                      249.60      249.60      0.00
+187  67    MISSING_FROM_ADJUSTER    exterior envelo   Wall texture - knockdown style                    ---                                               574.86      ---         ---
+188  68    MATCH                    2nd floor - off   Knockdown texture - walls                         Knockdown texture - walls                         527.04      527.04      0.00
+189  68    MISSING_FROM_ADJUSTER    exterior envelo   Interior wall paint - eggshell                    ---                                               482.14      ---         ---
+190  69    MISSING_FROM_ADJUSTER    exterior envelo   Porcelain tile floor - 12x24 - R&RSF              ---                                               5188.80     ---         ---
+191  69    MATCH                    2nd floor - off   Paint walls - satin - 2 coat                      Paint walls - satin - 2 coat                      448.96      448.96      0.00
+192  70    MODIFIED                 exterior envelo   Baseboard - 3-1/4" - MDF primed                   Baseboard - 2-1/4" - primed MDFLF                 252.25      214.76      37.49
+193  70    MATCH                    2nd floor - off   Paint baseboard - semi-gloss - 2 coat             Paint baseboard - 2 coat semi-gloss               94.40       94.40       0.00
+194  71    MODIFIED                 2nd floor - off   Paint door slab - 2 coat/side                     Paint door - 2 coat per side                      99.00       82.87       16.13
+195  71    MODIFIED                 exterior envelo   Interior door - solid core - pre-hung             Hollow core interior door - pre-hung              440.95      365.52      75.43
+196  72    MODIFIED                 exterior envelo   HVAC register - clean - per vent                  HVAC duct cleaning - per register                 198.00      162.00      36.00
+197  72    MODIFIED                 2nd floor - off   Door hardware - lever - commercial                Door lever - commercial grade                     110.84      84.76       26.08
+198  73    MATCH                    exterior envelo   Final clean - Common Lobby                        Construction clean - Common Lobby                 100.98      100.98      0.00
+199  73    MATCH                    2nd floor - off   Closet shelf and rod - per LFLF                   Closet rod and shelf - per LFLF                   182.41      182.41      0.00
+200  74    MATCH                    2nd floor - off   Paint ceiling - semi-gloss - 2 coat               Paint - ceiling - semi-gloss - 2 coat             81.37       81.37       0.00
+201  74    ADDED_BY_ADJUSTER        ---               ---                                               Debris haul - ceiling drywall                     ---         45.90       ---
+202  75    MATCH                    2nd floor - off   Floor grout sealer                                Penetrating grout sealer - floor                  86.94       86.94       0.00
+203  75    ADDED_BY_ADJUSTER        ---               ---                                               Smoke detector - replace                          ---         116.71      ---
+204  76    MATCH                    2nd floor - off   Toilet - commercial - floor mount                 Toilet - floor mount - commercial                 1108.40     1108.40     0.00
+205  76    ADDED_BY_ADJUSTER        ---               ---                                               Prime ceiling - PVASF                             ---         66.30       ---
+206  77    ADDED_BY_ADJUSTER        ---               ---                                               Light hand texture - ceiling                      ---         87.11       ---
+207  77    MATCH                    2nd floor - off   Sink - wall mount - commercial                    Wall-mount sink - commercial                      743.28      743.28      0.00
+208  78    ADDED_BY_ADJUSTER        ---               ---                                               6" LED can light - new install                    ---         674.40      ---
+209  78    MODIFIED                 2nd floor - off   Bath accessories - commercial set                 Commercial bath accessories                       241.24      189.08      52.16
+210  79    ADDED_BY_ADJUSTER        ---               ---                                               Odor seal - shellac - framing                     ---         248.14      ---
+211  79    MATCH                    2nd floor - off   ADA grab bars - stainless - set                   ADA grab bar set - stainless                      371.64      371.64      0.00
+212  80    ADDED_BY_ADJUSTER        ---               ---                                               Insulation R-13 kraft batt walls                  ---         115.14      ---
+213  80    MATCH                    2nd floor - off   Stairwell paint - walls & ceiling                 Stairwell wall & ceiling paint - 2 coat           818.18      818.18      0.00
+214  81    MATCH                    2nd floor - off   Emergency lighting & exit signs                   Emergency egress lighting & exit signs            1221.46     1221.46     0.00
+215  81    ADDED_BY_ADJUSTER        ---               ---                                               1/2" wall drywall - tape & fin                    ---         611.04      ---
+216  82    ADDED_BY_ADJUSTER        ---               ---                                               PVA wall primer - single coat                     ---         148.20      ---
+217  83    ADDED_BY_ADJUSTER        ---               ---                                               Skip trowel texture - walls                       ---         336.11      ---
+218  84    ADDED_BY_ADJUSTER        ---               ---                                               Wall paint - satin finish - 2 coat                ---         266.57      ---
+219  85    ADDED_BY_ADJUSTER        ---               ---                                               Carpet cushion - 6 lb standard                    ---         71.29       ---
+220  86    ADDED_BY_ADJUSTER        ---               ---                                               Commercial carpet - loop - standard               ---         398.40      ---
+221  87    ADDED_BY_ADJUSTER        ---               ---                                               Baseboard - 2-1/4" - primed MDFLF                 ---         123.90      ---
+222  88    ADDED_BY_ADJUSTER        ---               ---                                               Hollow core interior door - pre-hung              ---         365.52      ---
+223  89    ADDED_BY_ADJUSTER        ---               ---                                               HVAC duct cleaning - per register                 ---         162.00      ---
+224  90    ADDED_BY_ADJUSTER        ---               ---                                               Smoke detector - replace                          ---         116.71      ---
+225  91    ADDED_BY_ADJUSTER        ---               ---                                               Construction clean - Storage/Janitor              ---         33.66       ---
+226  92    MATCH                    exterior envelo   Remove ceiling drywall - moisture damage          Tear out ceiling drywall - bath                   66.24       66.24       0.00
+227  93    MODIFIED                 exterior envelo   Moisture-resistant drywall - ceiling - 5/8"       Standard 5/8" drywall - ceiling                   184.46      161.04      23.42
+228  94    MODIFIED                 exterior envelo   Exhaust fan - 110 CFM - quiet - R&REA             Bath exhaust fan - 80 CFM - R&REA                 254.28      189.08      65.20
+229  95    MODIFIED                 exterior envelo   Vanity light bar - 4 light - R&REA                Light bar - vanity - 4 bulb - standard            189.08      146.05      43.03
+230  96    MODIFIED                 exterior envelo   Final clean - Restroom 1 (Men's)                  Bathroom cleaning - Men's Restroom                25.92       25.92       0.00
+231  97    ADDED_BY_ADJUSTER        ---               ---                                               Tear out ceiling drywall - bath                   ---         75.90       ---
+232  98    ADDED_BY_ADJUSTER        ---               ---                                               Standard 5/8" drywall - ceiling                   ---         184.53      ---
+233  99    ADDED_BY_ADJUSTER        ---               ---                                               Ceramic floor tile - 12x12 - standard             ---         857.50      ---
+234  100   ADDED_BY_ADJUSTER        ---               ---                                               Bath exhaust fan - 80 CFM - R&REA                 ---         189.08      ---
+235  101   ADDED_BY_ADJUSTER        ---               ---                                               Light bar - vanity - 4 bulb - standard            ---         146.05      ---
+236  102   ADDED_BY_ADJUSTER        ---               ---                                               Bathroom cleaning - Women's Restroom              ---         29.70       ---
+237  103   ADDED_BY_ADJUSTER        ---               ---                                               Paint - ceiling - semi-gloss - 2 coat             ---         67.34       ---

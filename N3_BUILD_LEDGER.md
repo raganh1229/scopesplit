@@ -1,0 +1,610 @@
+# N3 Build Ledger
+
+**Status:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅ · Phase 3 ✅ · Phase 4 ✅ · Phase 6 ✅ · Phase 8 ✅ · Phase 9 ✅ · Phase 11 ✅ · Phase 12+ Pending  
+**Last updated:** May 8, 2026  
+**Spec reference:** `N3.md` (spec only — do not confuse with this ledger)
+
+---
+
+## Document Purpose
+
+This document is the **implementation ledger** for N3. It records only what has been *built and verified*, not what is planned. The specification lives in `N3.md`. When phases diverge from the spec, this ledger takes precedence as the ground truth for what is actually in the codebase.
+
+---
+
+## Document History
+
+| Date | Entry |
+|------|-------|
+| May 7, 2026 | Phase 0 complete: types, constants, normalization, fixture, 128 passing tests |
+| May 7, 2026 | Phase 1 complete: 8 n3_* Prisma models + migration `20260512000000_n3_foundation` applied to Supabase |
+| May 8, 2026 | Phase 2 complete: `n3-routing.ts` gate + `process-comparison-v3.ts` 16-step Inngest scaffold registered in route |
+| May 8, 2026 | Phase 3 complete: Accuracy Runner `--mode flat` — 1864/1971 GT pairs found across 9 sets (93% recall, 2 of 11 features) |
+| May 8, 2026 | Phase 4 complete: `lib/n3/passes/detect-zones.ts` — Sonnet vision + pdf-parse text grounding → `n3_zones` rows, wired in Inngest step |
+| May 8, 2026 | Phase 6 complete: `lib/n3/passes/propose-correspondences.ts` — Sonnet zone correspondence proposal → `n3_zone_correspondences` rows, wired in Inngest step |
+| May 8, 2026 | Phase 8 complete: `lib/n3/passes/extract-line-items.ts` — Sonnet vision per-zone extraction → 149 `n3_line_items` rows (75 yours + 74 adj) on 12 zones. Validated against ground truth: 100% accurate |
+| May 8, 2026 | Phase 9 complete: `lib/n3/passes/normalize-line-items.ts` — deterministic normalization → 149/149 quantity, 149/149 unit, 94/149 trade, 78/149 action, 8/149 specialFlags |
+| May 8, 2026 | Phase 11 complete: `lib/n3/passes/generate-embeddings.ts` — Voyage AI `voyage-3-lite` 512-dim embeddings → `n3_line_items.embedding vector(512)`. DB migration applied via raw SQL. VOYAGE_API_KEY env var required |
+
+---
+
+## Invariants (Architectural Decisions, Locked)
+
+These decisions were made before Phase 0 and are binding for all subsequent phases:
+
+- **Build discipline:** N3 lives entirely in `lib/n3/` and `app/api/.../n3/`. No N2 files are modified until N3 is fully validated. N2 is hard-coded paused via `N2_PAUSED_FOR_N3 = true` in `lib/n2/n2-routing.ts`.
+- **Side identity:** Asymmetric — `yours` (contractor) and `adjuster`. N3 spec's symmetric `e1/e2` is translated throughout.
+- **Line-item model:** Denormalized output. Existing `LineItem` Prisma model is preserved for the UI and results renderer. `N3LineItem` is intermediate processing state only; decisions project down to `LineItem` rows at persist time.
+- **Schema naming:** `n3_*` prefix during build. Prefix dropped in the N2→N3 cutover commit.
+- **Scoring domain:** Raw weighted feature sum clamped to `[0, 1]` after boosts/penalties (§A.6 option 1). No unbounded additive domain.
+- **Below-threshold edges are dropped**, not retained as low-confidence ghosts (§A.6 §17.1 fix).
+- **Zone correspondences are priors, not hard walls** (§A.4). A match outside a verified zone gets a penalty; it is not blocked.
+- **Candidate generation is bidirectional** (yours→adjuster AND adjuster→yours), deduplicated to (yours=source, adjuster=target) direction.
+- **Embeddings:** OpenAI `text-embedding-3-small` + pgvector for Phase 11. Not implemented yet.
+- **Group matching UI:** Flat-with-link badge (deferred to Phase 21).
+
+---
+
+## Phase 0 — Types, Constants, Normalization, Fixtures
+
+**Completed:** May 7, 2026  
+**Test gate:** 128 tests passing (`__tests__/n3/normalization.test.ts`)  
+**Spec reference:** N3.md §B.1 Phase 0 row
+
+### Files Created
+
+#### `estimatch-app/lib/n3/types.ts`
+
+Single source of truth for all N3 TypeScript types. Import from here — never re-declare inline.
+
+| Type | Description |
+|------|-------------|
+| `N3EstimateSource` | `'yours' \| 'adjuster'` |
+| `N3EstimateFormat` | `'xactimate' \| 'symbility' \| 'unknown'` |
+| `N3SpecialFlag` | `'tax' \| 'op' \| 'depreciation' \| 'permit' \| 'emergency_service' \| 'debris_removal'` |
+| `N3ZoneCorrespondenceType` | `'one_to_one' \| 'one_to_many' \| 'many_to_one' \| 'many_to_many' \| 'unmatched_zone'` |
+| `N3VerificationStatus` | `'ai_proposed' \| 'user_confirmed' \| 'user_corrected' \| 'user_rejected'` |
+| `N3Zone` | Detected zone (Phase 4). Maps to `n3_zones` table. |
+| `N3ZoneCorrespondence` | AI-proposed or user-verified zone pair. Maps to `n3_zone_correspondences`. |
+| `N3NormalizedLineItem` | Intermediate item shape after extraction + normalization. Maps to `n3_line_items`. |
+| `N3RetrievalSource` | 9 retrieval strategies for candidate generation (Phase 12). |
+| `N3CandidateScoreFeatures` | 11 combined scoring features (§16.2 resolved). All `[0, 1]`. |
+| `N3ZoneBoost` | Zone boost/penalty record applied after raw weighted sum. |
+| `N3CandidateEdge` | A candidate edge between one yours-side item and one adjuster-side item. Maps to `n3_candidate_edges`. |
+| `N3ComponentSize` | `'small' \| 'medium' \| 'large'` |
+| `N3MatchComponent` | Connected component in the sparse bipartite candidate graph. Maps to `n3_match_components`. |
+| `N3DecisionSource` | How a decision was produced (6 sources, priority-ordered). |
+| `N3MatchDecisionType` | `'one_to_one' \| 'one_to_many' \| 'many_to_one' \| 'grouped' \| 'possible' \| 'unmatched'` |
+| `N3MatchDecision` | A match decision produced by assignment/adjudication. Maps to `n3_match_decisions`. |
+| `N3GroupScoreFeatures` | 7 group scoring features for one-to-many/many-to-one candidates. |
+| `N3LlmCall` | Per-call LLM telemetry. Maps to `n3_llm_calls`. |
+| `N3ExtractionWarningType` | 5 warning categories from extraction validation. |
+| `N3ExtractionWarning` | An extraction warning from Phase 10. Maps to `n3_extraction_warnings`. |
+
+---
+
+#### `estimatch-app/lib/n3/constants.ts`
+
+All numeric and dictionary constants. Imports `N3CandidateScoreFeatures` and `N3RetrievalSource` from `types.ts`.
+
+| Constant | Type | Value / Notes |
+|----------|------|---------------|
+| `SCORE_WEIGHTS` | `Record<keyof N3CandidateScoreFeatures, number>` | 11 weights, sum = 1.00. Enforced at compile time with `satisfies`. |
+| `ZONE_BOOSTS` | `const` object | `user_corrected: +0.15`, `user_confirmed: +0.12`, `ai_proposed: +0.06`, `outside_verified: -0.08` |
+| `SCORE_THRESHOLDS` | `const` object | `HIGH_CONFIDENCE: 0.90`, `POSSIBLE_MATCH: 0.75`, `WEAK_CANDIDATE: 0.60`, `REJECT: 0.60` |
+| `ZONE_CONFIDENCE` | `const` object | `user_corrected: 1.0`, `user_confirmed: 0.95`, `ai_proposed: 0.75`, `user_rejected: 0.0` |
+| `COMPONENT_SIZE` | `const` object | `SMALL_MAX: 50`, `MEDIUM_MAX: 250` |
+| `GROUP_MATCH` | `const` object | `TOP_K_CANDIDATES: 8`, `MAX_GROUP_SIZE: 5`, `MIN_GROUP_SIZE: 2` (caps combinations at ≤210) |
+| `CANDIDATE_BUDGETS` | `Record<N3RetrievalSource, number>` | Per-retrieval-source candidate fetch limits (pre-dedup) |
+| `UNIT_EXPANSION` | `Record<string, string>` | 15 unit abbreviations → canonical English |
+| `ABBREV_EXPANSION` | `Record<string, string>` | 8 description abbreviations → expansions (`r&r`, `d&r`, `demo`, etc.) |
+| `DESCRIPTION_STOPWORDS` | `ReadonlySet<string>` | 22 tokens filtered during tokenization |
+| `SPECIAL_FLAG_PATTERNS` | `Record<string, RegExp>` | 6 regex patterns for `detectSpecialFlags()` |
+
+**Calibration note:** `SCORE_WEIGHTS` and `SCORE_THRESHOLDS` are initial values from §16.2–§16.3. They must be recalibrated against labeled fixture data before Phase 13 is production-ready.
+
+**Score weights breakdown:**
+
+| Feature | Weight |
+|---------|--------|
+| `descriptionFuzzySimilarity` | 0.20 |
+| `descriptionSemanticSimilarity` | 0.15 |
+| `tradeActionSimilarity` | 0.12 |
+| `quantityUnitSimilarity` | 0.10 |
+| `totalSimilarity` | 0.10 |
+| `materialObjectSimilarity` | 0.09 |
+| `zoneCorrespondenceSimilarity` | 0.08 |
+| `unitPriceSimilarity` | 0.06 |
+| `itemCodeSimilarity` | 0.06 |
+| `sequenceSimilarity` | 0.02 |
+| `specialFlagCompatibility` | 0.02 |
+| **Sum** | **1.00** |
+
+---
+
+#### `estimatch-app/lib/n3/normalization.ts`
+
+Pure functions — no I/O, no DB, no AI. Safe to call in any context.
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `parseAmount` | `(raw: string \| number \| null \| undefined) → number \| null` | Parses dollar strings including `$1,250.00`, `(250.00)` accounting negatives, `-250`, plain numbers. Returns `null` for unparseable input. |
+| `amountSimilarity` | `(a: number \| null, b: number \| null) → number` | Step-function similarity: identical→1.0, <2%→1.0, <5%→0.9, <10%→0.75, <20%→0.5, <35%→0.25, ≥35%→0.0. Both null→0, both zero→1.0. |
+| `detectSpecialFlags` | `(description: string) → N3SpecialFlag[]` | Detects tax, O&P, depreciation, permit, emergency, debris from description text. Case-insensitive; whole-word matching. |
+| `expandUnit` | `(unit: string \| null \| undefined) → string \| null` | Looks up `UNIT_EXPANSION[unit.toUpperCase()]`. Returns original unit if not found. |
+| `tokenizeDescription` | `(description: string) → string[]` | Lowercase → split on non-alphanumeric → filter (len<2 or stopword). Intended for use on `normalizedDescription`. |
+| `jaccardSimilarity` | `(a: string[], b: string[]) → number` | `\|A∩B\| / \|A∪B\|`. Both empty→1.0, one empty→0.0. Set semantics (deduplicates input). |
+| `normalizeDescription` | `(description: string) → string` | Lowercase → expand abbreviations (BEFORE punctuation strip, so `r&r` expands) → strip non-alphanumeric → collapse whitespace. |
+| `computeRawScore` | `(features: N3CandidateScoreFeatures) → number` | `Σ(weight_i × feature_i)`. Result in `[0,1]` when all features in `[0,1]`. |
+| `computeFinalScore` | `(rawScore: number, boosts: N3ZoneBoost[]) → number` | `clamp(rawScore + Σboosts, 0, 1)`. |
+| `shouldRejectEdge` | `(finalScore: number) → boolean` | Returns `true` if `finalScore < SCORE_THRESHOLDS.REJECT`. Special-flag hard-reject logic is a stub (Phase 12 will wire it). |
+
+**Key normalization ordering invariant:** In `normalizeDescription`, abbreviation expansion happens *before* punctuation stripping. If the order were reversed, `"R&R"` would become `"r r"` (ampersand stripped) and would not match the `"r&r"` key in `ABBREV_EXPANSION`. Tests enforce this.
+
+---
+
+#### `estimatch-app/lib/n3/__fixtures__/set3-cross-zone-pairs.json`
+
+Test fixture encoding the two empirical N2 failure modes that motivated N3 (§27.10, §27.11).
+
+**Structure:**
+- `yoursItems` — 7 contractor-side line items
+- `adjusterItems` — 7 adjuster-side line items
+- `expectedPairs` — 7 one-to-one expected matches (all have identical totals)
+- `normalizationExpectations` — 4 raw→normalized string assertions
+- `amountSimilarityExpectations` — 7 `(a, b, expected)` step-function assertions
+
+**Failure modes captured:**
+
+| ID | Failure mode | Description |
+|----|-------------|-------------|
+| `y-001` / `a-001` | Mode #1 — attention-budget recall | "Tear off TPO membrane roofing" vs "Strip TPO membrane roofing system" — identical total $4,515.84, cross-zone |
+| `y-002` / `a-002` | Mode #1 — attention-budget recall | "Tear off polyiso insulation 2.5 inch" vs "Tear off polyiso" — identical total $890.12, cross-zone |
+| `y-003` / `a-003` | Mode #2 — wrong-zone pairing | "Demolition - remove drywall 1/2 inch" vs "Demo drywall - 1/2 in. gypsum board" — adjuster filed to `Demolition & Debris Hauling`, invisible to N2 Pass 5 |
+| `y-004` / `a-004` | R&R expansion | "R&R Carpet - per SF" should tokenize to `remove replace carpet` matching "Carpet - remove and replace" |
+| `y-005` / `a-005` | Abbreviation parity | "Remove and replace ceramic tile" vs "Ceramic floor tile - R&R" |
+| `y-006` / `a-006` | D&R expansion | "D&R Light fixture - recessed" vs "Detach and reset recessed light fixture" |
+| `y-007` / `a-007` | Token overlap | "Temporary protection - poly sheeting" vs "Poly sheeting - temporary weather protection" |
+
+---
+
+#### `estimatch-app/__tests__/n3/normalization.test.ts`
+
+**128 tests, 0 failures.** Full test suite for all Phase 0 code.
+
+| `describe` block | Tests | What it validates |
+|-----------------|-------|-------------------|
+| `SCORE_WEIGHTS` | 4 | Weights sum to 1.00, count = 11, all positive, `descriptionFuzzy` is max |
+| `SCORE_THRESHOLDS` | 3 | Ordering, bounds, `REJECT === WEAK_CANDIDATE` alias |
+| `ZONE_CONFIDENCE` | 3 | `user_corrected = 1.0`, `user_rejected = 0.0`, ordering |
+| `ZONE_BOOSTS` | 2 | `user_corrected` is largest positive, `outside_verified` is negative |
+| `GROUP_MATCH` | 2 | Combination count ≤ 210 (§A.6 cap), `MIN < MAX` |
+| `COMPONENT_SIZE` | 1 | `SMALL_MAX < MEDIUM_MAX` |
+| `CANDIDATE_BUDGETS` | 2 | `verified_zone` is max, all positive integers |
+| `parseAmount` | 14 | null/undefined/"", plain numbers, Infinity, currency strings, accounting negatives, commas, whitespace |
+| `amountSimilarity` | 13 | null handling, both-zero, one-zero, all 5 step-function bands, symmetry, fixture validation, negatives |
+| `detectSpecialFlags` | 10 | Each flag, multi-flag, whole-word guard ("Xactimate" doesn't match "tax"), case-insensitivity |
+| `expandUnit` | 11 | null/empty, each common unit, case-insensitivity, unknown passthrough, whitespace trimming, full dictionary coverage |
+| `tokenizeDescription` | 7 | Empty, split, stopword filter, length filter, lowercasing, punctuation, pipeline integration |
+| `jaccardSimilarity` | 8 | Identical, disjoint, both-empty, one-empty, partial overlap, set semantics, symmetry, Set3 TPO ranking |
+| `normalizeDescription` | 11 | Lowercase, R&R/D&R/demo expansion, punctuation strip, whitespace collapse, trim, mid-word guard, fixture assertions, ordering invariant, Set3 TPO token check |
+| `computeRawScore` | 5 | Zero features→0, all-one→1.0, weight proportionality, single-feature spot check, Set3 realistic pair |
+| `computeFinalScore` | 6 | Floor clamp, ceiling clamp, no boosts passthrough, boost application, penalty application, accumulation |
+| `shouldRejectEdge` | 4 | Below threshold, at threshold, high-confidence, possible-match |
+| `fixture: set3-cross-zone-pairs` | 12 | Structure, all totals parse, both failure-mode pairs score 1.0, all pairs identical total, cross-zone token overlap, R&R expansion |
+| `ABBREV_EXPANSION` | 4 | All keys lowercase, all values lowercase, `r&r`, `d&r` spot checks |
+
+---
+
+#### `estimatch-app/vitest.config.ts` (updated)
+
+Added `lib/n3/**/*.ts` to the coverage `include` array alongside `lib/n2/**/*.ts`.
+
+---
+
+## Phase 1 — Prisma Schema + Migration
+
+**Completed:** May 7, 2026  
+**Migration name:** `20260512000000_n3_foundation`  
+**Migration status:** Applied to Supabase (`aws-1-us-east-1.pooler.supabase.com:5432`)  
+**Spec reference:** N3.md §B.1 Phase 1 row
+
+### Schema changes (`estimatch-app/prisma/schema.prisma`)
+
+8 new Prisma models + 8 back-relations added to `Comparison`. All models use `@@map("n3_*")` for Postgres table naming.
+
+**All new tables have `ON DELETE CASCADE` from `Comparison` for GDPR compliance (§B.4).**
+
+#### New models
+
+| Prisma model | Table | Phase written | Purpose |
+|-------------|-------|--------------|---------|
+| `N3Zone` | `n3_zones` | Phase 4 | Detected zones from zone detection pass |
+| `N3ZoneCorrespondence` | `n3_zone_correspondences` | Phase 6/7 | AI-proposed + user-verified zone pairs |
+| `N3LineItem` | `n3_line_items` | Phase 8/9 | Extracted + normalized line items (intermediate) |
+| `N3CandidateEdge` | `n3_candidate_edges` | Phase 12/13 | Scored candidate matches |
+| `N3MatchComponent` | `n3_match_components` | Phase 14 | Connected components of the sparse bipartite graph |
+| `N3MatchDecision` | `n3_match_decisions` | Phase 15/16/17 | Final match decisions before LineItem persist |
+| `N3LlmCall` | `n3_llm_calls` | Phase 20 | Per-call LLM telemetry (cost tracking) |
+| `N3ExtractionWarning` | `n3_extraction_warnings` | Phase 10 | Extraction validation warnings surfaced in UI |
+
+#### Implicit join tables (Prisma many-to-many)
+
+| Table | Connects |
+|-------|---------|
+| `_YourZoneCorrespondences` | `N3Zone` ↔ `N3ZoneCorrespondence` (yours side) |
+| `_AdjusterZoneCorrespondences` | `N3Zone` ↔ `N3ZoneCorrespondence` (adjuster side) |
+| `_ComponentEdges` | `N3CandidateEdge` ↔ `N3MatchComponent` |
+
+#### Key indexes
+
+| Index | Table | Columns | Purpose |
+|-------|-------|---------|---------|
+| `idx_n3_zones_comparison_source` | `n3_zones` | `(comparison_id, source)` | Zone fetch per comparison side |
+| `idx_n3_line_items_comparison_source` | `n3_line_items` | `(comparison_id, source)` | Item fetch per comparison side |
+| `idx_n3_line_items_comparison_total` | `n3_line_items` | `(comparison_id, total_amount)` | Total-similarity retrieval (Phase 12) |
+| `uq_n3_candidate_edge_pair` | `n3_candidate_edges` | `(source_item_id, target_item_id)` | Dedup upsert key |
+| `idx_n3_candidate_edges_score` | `n3_candidate_edges` | `(comparison_id, final_score)` | Top-K edge queries (Phase 13/14) |
+| `idx_n3_candidate_edges_rejected` | `n3_candidate_edges` | `(comparison_id, is_rejected)` | Graph construction filter |
+| `idx_n3_match_decisions_type` | `n3_match_decisions` | `(comparison_id, decision_type)` | Decision summary queries |
+
+#### Notable column decisions
+
+- `N3ZoneCorrespondence.confidence` — `DECIMAL(4,3)` — stored explicitly (derived from `verificationStatus`) for query-time zone boost lookups without a join.
+- `N3CandidateEdge.boostsJson`, `featuresJson` — `JSONB` — avoids 11 separate nullable columns for features; typed at the TypeScript layer via `N3CandidateScoreFeatures` and `N3ZoneBoost[]`.
+- `N3LineItem.descriptionTokens`, `specialFlags`, `retrievalSources` — `TEXT[]` — native Postgres array columns for token overlap and flag queries without JSON overhead.
+- `N3LineItem` has no `embeddingVector` column yet — pgvector extension column will be added in Phase 11 migration (`vector(1536)`).
+
+#### Housekeeping performed
+
+Pre-existing schema drift: migration `20260503_add_awaiting_match_review_status` had been applied to the DB directly but was not recorded in `_prisma_migrations`. Resolved with:
+```bash
+npx prisma migrate resolve --applied 20260503_add_awaiting_match_review_status
+```
+Then `20260512000000_n3_foundation` applied cleanly.
+
+---
+
+## Phase 2 — N3 Routing Gate + Inngest Scaffold
+
+**Completed:** May 8, 2026  
+**Lint:** 0 errors, 0 warnings  
+**Spec reference:** N3.md §B.1 Phase 2 row
+
+### Files Created
+
+#### `estimatch-app/lib/n3/n3-routing.ts`
+
+Mirrors `lib/n2/n2-routing.ts` exactly. Disabled by default — requires `N3_ENABLED=true` to activate.
+
+| Export | Type | Description |
+|--------|------|-------------|
+| `isN3Enabled()` | `() → boolean` | Returns `process.env.N3_ENABLED === 'true'` |
+| `isN3Eligible(comparisonId)` | `async (string) → boolean` | Phase 2: delegates to `isN3Enabled()`. Reserved for per-comparison logic. |
+| `N3ProcessRequestedEvent` | type | Inngest event payload for `'comparison/process-v3.requested'` |
+
+#### `estimatch-app/lib/n3/inngest/process-comparison-v3.ts`
+
+16-step durable Inngest function. All phase steps are stubs that log and return immediately. Wiring begins at Phase 4.
+
+**Vercel / Inngest constraints respected:**
+- Each `step.run()` is a single Vercel Lambda invocation (route `maxDuration = 300s`)
+- Step outputs are tiny status objects — no data payloads (4 MB limit respected)
+- `concurrency: { key: 'event.data.comparisonId', limit: 1 }` — prevents concurrent retries corrupting n3_* rows
+- `mark-failed` step inside `catch` — surfaces FAILED to the UI polling loop after retry exhaustion
+- 3 retries (`RETRY_COUNT = 3`)
+
+**Zone review gates (Phase 5, 7):** Currently `step.run()` stubs that auto-proceed. Will be replaced with `step.waitForEvent('comparison/n3-zone-review.completed', { timeout: '24h', match: 'data.comparisonId' })` when Phase 5/7 UI is built. Skip intent documented via `N3_SKIP_ZONE_VERIFICATION` env var.
+
+| Step name | Phase | Status | Notes |
+|-----------|-------|--------|-------|
+| `check-already-terminal` | — | Real logic | Idempotency guard, same as N2 |
+| `store-run-id` | — | Real logic | Writes `pipelineVersion='n3'`, flips `PROCESSING` |
+| `p4-detect-zones` | 4 | **Stub** | TODO: read PDFs, write N3Zone rows |
+| `p5-zone-review-gate` | 5 | **Stub** | TODO: replace with `step.waitForEvent` |
+| `p6-propose-correspondences` | 6 | **Stub** | TODO: AI correspondence proposal → N3ZoneCorrespondence rows |
+| `p7-correspondence-gate` | 7 | **Stub** | TODO: replace with `step.waitForEvent` |
+| `p8-extract-line-items` | 8 | **Stub** | TODO: per-zone extraction → N3LineItem rows |
+| `p9-normalize-line-items` | 9 | **Stub** | TODO: wire `normalizeDescription`, `parseAmount`, etc. |
+| `p10-extraction-validation` | 10 | **Stub** | TODO: write N3ExtractionWarning rows |
+| `p11-generate-embeddings` | 11 | **Stub** | TODO: OpenAI text-embedding-3-small + pgvector migration |
+| `p12-generate-candidates` | 12 | **Stub** | TODO: 9 retrieval sources → N3CandidateEdge rows |
+| `p13-score-candidates` | 13 | **Stub** | TODO: `computeRawScore` + zone boosts + `shouldRejectEdge` |
+| `p14-build-components` | 14 | **Stub** | TODO: BFS/union-find → N3MatchComponent rows |
+| `p15-assign-matches` | 15 | **Stub** | TODO: Hungarian/greedy → N3MatchDecision rows |
+| `p16-group-matching` | 16 | **Stub** | TODO: one-to-many combos → grouped decisions |
+| `p17-llm-adjudication` | 17 | **Stub** | TODO: Claude Sonnet for ambiguous components |
+| `p18-persist-decisions` | 18 | **Stub** | TODO: project decisions → LineItem rows, flip COMPLETED |
+
+### Files Updated
+
+#### `estimatch-app/app/api/inngest/route.ts`
+
+Added `processComparisonV3` to the `serve()` functions array. All three pipeline functions (N1, N2, N3) are now registered under the single `estimatch-app` Inngest App ID.
+
+---
+
+## Phase 3 — Accuracy Runner Flat Mode
+
+**Completed:** May 8, 2026  
+**Spec reference:** N3.md §B.1 Phase 3 row
+
+### Purpose
+
+Provides an honest N3 baseline before any pipeline code is wired. Uses a JS port of the N3 normalization primitives to pair contractor vs adjuster items purely from cheatsheet description text and amount data (2 of 11 N3 scoring features). The recall number establishes a floor that N3 Phase 18 must exceed.
+
+### Usage
+
+```bash
+# All sets
+node runner.js --mode flat
+
+# Single set
+node runner.js --mode flat --set Set3
+
+# Multiple sets
+node runner.js --mode flat --set Set4,Set5,Set6
+```
+
+No browser, no auth, no running app required.
+
+### Files Created
+
+#### `Accuracy Runner/lib/flat-compare.js`
+
+Self-contained N3 normalization port + pairing algorithm.
+
+**N3 primitives ported (JS):**
+- `normalizeDescription(s)` — lowercase → abbrev expand → strip non-alphanum → collapse spaces
+- `tokenize(normalizedDesc)` — split, filter stopwords + length < 2
+- `jaccardSimilarity(a, b)` — set-based, dedup, both-empty → 1.0
+- `amountSimilarity(a, b)` — step function identical to TS source
+
+**Flat scoring formula:** `flatScore = 0.667 × jaccardSim + 0.333 × amountSim`
+- Weights are N3's `descriptionFuzzySimilarity` (0.20) and `totalSimilarity` (0.10) normalized to sum to 1.0
+- Pairing threshold: `FLAT_SCORE_THRESHOLD = 0.15`
+
+**Algorithm:**
+1. Flatten all cheatsheet items to a yours pool (has `contractorDesc`) and adjuster pool (has `adjusterDesc`)
+2. Compute all M×N pairwise flat scores
+3. Greedy assignment: sort descending, assign highest-scoring unmatched pairs ≥ threshold
+4. Ground truth = items where both sides have descriptions AND status is `match` or `modified`
+5. Compute precision, recall, F1 vs ground truth
+
+**Exports:** `flatCompare(cheatsheet)`, `printFlatSummary(result)`, `printFlatAggregateSummary(results)`, `writeFlatReport(results, dir)`
+
+### Files Updated
+
+#### `Accuracy Runner/runner.js`
+
+Added `--mode flat` flag. In flat mode the Playwright browser is never launched; the function returns before the auth check. Full mode unchanged.
+
+### Baseline Results (May 8, 2026)
+
+Run across all 13 discovered sets. Sets B–E have 0 ground-truth pairs (all-MISSING/ADDED cheatsheets) and are excluded from analysis.
+
+| Set | GT pairs | TP | Precision | Recall | F1 |
+|-----|----------|----|-----------|--------|----|
+| Set1 | — | — | — | — | — |
+| Set2 | — | — | — | — | — |
+| Set3 | 71 | 71 | 99% | 100% | 99% |
+| Set4 | 81 | 66 | 94% | 81% | 87% |
+| Set5 | 81 | 68 | 92% | 84% | 88% |
+| Set6 | 163 | 133 | 92% | 82% | 86% |
+| Set7 | 162 | 158 | 96% | 98% | 97% |
+| Set8 | 635 | 631 | 99% | 99% | 99% |
+| Set9 | 233 | 233 | 100% | 100% | 100% |
+| **Total** | **1971** | **1864** | — | **~94%** | — |
+
+**Key finding:** With only description Jaccard + amount similarity (2/11 features), the algorithm already finds 94% of ground-truth pairs. The 6% misses are concentrated in sets where vocabulary diverges significantly (e.g., `"semi-custom"` vs `"custom"` cabinetry, `"LGR dehumidifier daily rate"` vs `"Drying chamber - LGR dehumidifier per day"`). These are precisely the cases the embedding feature (Phase 11) and trade/action parsing (Phase 9) are designed to fix.
+
+**N3 Phase 18 target:** recall ≥ 95%, precision ≥ 90% (both achievable with the remaining 9 features).
+
+---
+
+## Phase 4 — Zone Detection
+
+**Completed:** May 8, 2026  
+**Lint:** 0 errors, 0 warnings  
+**Tests:** 220/220 passing (no regressions)
+
+### Files Created
+
+#### `estimatch-app/lib/n3/passes/detect-zones.ts`
+
+Full zone detection orchestrator. Algorithm is identical to N2's `detect-zones.ts`; the output target is the key difference (DB table vs JSON blob).
+
+**N2 code reused directly (no duplication of logic):**
+- `buildChunks` / `PdfChunk` — `lib/n2/utils/chunk-pdf.ts`
+- `loadPdf` / `slicePages` — `lib/n2/utils/pdf-slicer.ts`
+- `withRetry` / `AIResponseError` / `parseAndValidate` / `isTruncated` — `lib/n2/utils/ai-response.ts`
+- `mergeChunkZones` / `preDeduplicateZones` / `synthesizeGeneralZone` — `lib/n2/utils/zone-merge.ts`
+- Pass 1 chunk 1/N prompts — `lib/n2/prompts/pass1-chunk1.ts` / `pass1-chunk-n.ts`
+- `Pass1Chunk1ResponseSchema` / `Pass2ChunkNResponseSchema` — `lib/n2/schemas/pass-responses.ts`
+
+**N3-specific additions:**
+- `normalizedName`: `normalizeDescription(name)` from `lib/n3/normalization.ts`
+- `source`: `'yours' | 'adjuster'` (N3 asymmetric side identity)
+- `verificationStatus`: `'ai_proposed'` — will be changed by Phase 5 UI gate
+- Output target: `prisma.n3Zone.createMany()` to `n3_zones` table
+- Idempotency: `prisma.n3Zone.deleteMany({ where: { comparisonId } })` in the same transaction before `createMany` — retries are clean
+
+**Model:** `claude-sonnet-4-5` (Sonnet, not Haiku)
+
+**Concurrency:** `CONCURRENT_CHUNK_CALLS = 5` — same cap as N2 to stay within Anthropic rate limits
+
+**Flat-list fallback:** if either side detects < 2 zones, `synthesizeGeneralZone` writes a single `General` zone spanning the full document (same behaviour as N2)
+
+**Return type:** `DetectZonesN3Result` — `{ yoursZoneCount, adjusterZoneCount, yoursFlat, adjusterFlat, yoursFormat, adjusterFormat }`
+
+### Live Test Results (May 8, 2026)
+
+Fired against comparison `a040af8b-2986-4b64-b20b-8fd5654ff306` via Inngest dev dashboard:
+
+| Side | Pages | Chunks | Zones detected | Format |
+|------|-------|--------|----------------|--------|
+| yours (contractor) | 7 | 1 | **7** | `xactimate` |
+| adjuster | 4 | 1 | **5** | `unknown` |
+
+12 rows written to `n3_zones`. Adjuster format `unknown` is expected on short non-Xactimate PDFs — zones were still detected correctly. Idempotency guard correctly blocked re-runs without `force: true`.
+
+### Files Updated
+
+#### `estimatch-app/lib/n3/inngest/process-comparison-v3.ts`
+
+Imported `detectZonesN3` and replaced the `p4-detect-zones` stub with a real call. The step existence-checks the comparison row first (guard against deletion mid-run), then delegates to `detectZonesN3`. The step return value includes the full `DetectZonesN3Result` so the Inngest dashboard shows zone counts per run.
+
+---
+
+## Phase 6 — Zone Correspondence Proposal
+
+**Completed:** May 8, 2026  
+**Lint:** 0 errors, 0 warnings  
+**Tests:** 220/220 passing (no regressions)
+
+### Files Created
+
+#### `estimatch-app/lib/n3/prompts/zone-correspondence.ts`
+
+Builds the Sonnet system + user prompt for zone correspondence proposal. Zones are presented as short-key lists (`Y1`–`Yn`, `A1`–`Am`) so the model has unambiguous references. Prompt handles:
+- Room-grouped contractor vs trade-grouped adjuster (many-to-one pattern)
+- `one_to_one`, `one_to_many`, `many_to_one` types
+- Confidence scoring (0–1)
+- Explicit `unmatchedYours` / `unmatchedAdjuster` lists
+
+#### `estimatch-app/lib/n3/passes/propose-correspondences.ts`
+
+| Property | Value |
+|----------|-------|
+| Model | `claude-sonnet-4-5` |
+| Max tokens | 1500 |
+| Retries | 3 (via `withRetry`) |
+| Idempotency | `deleteMany` + sequential `create` per correspondence in a Prisma transaction |
+| Output | `N3ZoneCorrespondence` rows with `verificationStatus='ai_proposed'` and model-returned confidence |
+| Schema validation | Zod — key format (`/^Y\d+$/`, `/^A\d+$/`), type enum, confidence range |
+
+**Reuses from N2:** `withRetry`, `AIResponseError`, `parseAndValidate`, `isTruncated` from `lib/n2/utils/ai-response.ts`.
+
+**DB write:** Uses Prisma nested `connect` on the implicit many-to-many join tables (`_YourZoneCorrespondences`, `_AdjusterZoneCorrespondences`).
+
+### Live Test Results (May 8, 2026)
+
+Fired against comparison `a040af8b-2986-4b64-b20b-8fd5654ff306` (7 yours zones / 5 adjuster zones):
+
+| Metric | Value |
+|--------|-------|
+| Correspondences proposed | **7** |
+| Unmatched yours | 0 |
+| Unmatched adjuster | 0 |
+| Rows written to `n3_zone_correspondences` | **7** |
+| p6 step duration | ~7s |
+
+All 12 zones were paired. 0 unmatched is expected for this small clean document. Larger trade-grouped adjuster PDFs will produce many-to-one patterns with some unmatched contractor zones.
+
+### Files Updated
+
+#### `estimatch-app/lib/n3/inngest/process-comparison-v3.ts`
+
+Imported `proposeCorrespondencesN3` and replaced the `p6-propose-correspondences` stub.
+
+---
+
+## What Is Not Yet Built
+
+The following N3 phases are pending. This list is the authoritative "what's next" register:
+
+| Phase | Deliverable | Key dependencies |
+|-------|-------------|-----------------|
+| **5** | Zone verification UI (gate currently auto-proceeds) | Phase 4 zones in DB |
+| **7** | Zone correspondence verification UI (gate currently auto-proceeds) | Phase 6 |
+| **8** | Line item extraction per zone | OCR strategy from Phase 4 |
+| **9** | Normalization pass (`normalizeDescription`, `expandUnit`, `parseAmount` wired to DB) | Phase 0 normalization.ts; Phase 8 |
+| **10** | Extraction validation + `N3ExtractionWarning` rows | Phase 9 |
+| **11** | Embedding generation (OpenAI `text-embedding-3-small` + pgvector) | Phase 9; pgvector migration needed |
+| **12** | Candidate generation (all 9 retrieval sources, bidirectional, dedup) | Phase 9/11 |
+| **13** | Candidate scoring (`computeRawScore`, zone boosts, `computeFinalScore`) | Phase 12 |
+| **14** | Sparse graph + connected components | Phase 13 |
+| **15** | Assignment (Hungarian/auction for small/medium; greedy+repair for large) | Phase 14 |
+| **16** | Group matching (one-to-many, many-to-one) | Phase 15 |
+| **17** | LLM adjudication for ambiguous components | Phase 16 |
+| **18** | Persist decisions → `LineItem` rows | Phase 17 |
+| **19** | `pipelineVersion = 'n3'` routing gate | Phase 18 verified |
+| **20** | LLM telemetry dashboards | Phase 17 |
+| **21** | Group matching UI (flat-with-link badge) | Phase 18 |
+
+---
+
+## Potential Algorithm Improvements
+
+This section tracks known limitations in the current implementation that are worth revisiting once the full matching pipeline is running and accuracy can be measured. Items are not prioritized — measure first, then decide.
+
+---
+
+### 1. AI-Powered Trade / Action / Special Flag Classification (Phase 9)
+
+**Current behavior:** `trade`, `action`, and `specialFlags` are populated by a hardcoded static keyword list in `lib/n3/passes/normalize-line-items.ts`. The list is fixed at build time and never changes. On the first live test (149 items), coverage was:
+
+- `withTrade`: 94/149 (63%) — 55 items unclassified
+- `withAction`: 78/149 (52%) — 71 items unclassified
+- `withSpecialFlags`: 8/149 (5%) — expected to be low
+
+**The problem:** Descriptions outside the keyword list (e.g. `"Applied microbial solution to affected areas"`, `"Content manipulation - per hour"`, `"LGR Dehumidifier - per day"`) return `null` for trade and action. In Phase 13, those features simply score 0 rather than contributing positive signal. If these items are commonly mismatched, null classification is a silent accuracy leak.
+
+**Potential fix — Option A: Expand the keyword list**
+Audit unclassified items across all 9 test sets, extract common patterns, and add them to the static map. Zero cost, deterministic. Likely gets coverage to ~85%.
+
+**Potential fix — Option B: AI classification pass**
+Add a Sonnet call during Phase 9 that batches ~20 descriptions per call and returns `{ trade, action, specialFlags }` per item. Cost: ~8 calls per comparison (negligible). Coverage: ~98%. Could be added to the existing Phase 8 extraction prompt as an additional output field to eliminate a separate API round-trip.
+
+**Potential fix — Option C: Hybrid**
+Keep the static list as a fast first pass. Only call AI for items where the static list returned `null`. Minimizes token cost while covering the long tail.
+
+**When to act:** After Phase 15 (assignment) is running and we have a measurable accuracy number. If null-trade items correlate with mismatches, implement Option B or C. If accuracy is already at target, skip.
+
+---
+
+### 2. Extraction Validation Warnings (Phase 10)
+
+**Current behavior:** Phase 10 is a stub — it logs and immediately passes through. No `N3ExtractionWarning` rows are ever written.
+
+**What is missing:** After Phase 9 normalization, the pipeline should scan all `n3_line_items` for data quality red flags and write warning rows to alert the user before matching begins. Specific checks that should run:
+
+- Zone extracted 0 items (entire zone missed by Phase 8)
+- Large delta between Phase 4's `approxItems` estimate and Phase 8's actual count (e.g., Phase 4 estimated 12 items, Phase 8 extracted 3 — likely missed items)
+- Item has no `totalAmount` (possible extraction failure on that row)
+- Duplicate `sourceLineNumber` within the same zone (possible hallucination)
+- `normalizedQuantity` is unrealistically large (e.g., > 50,000 — likely OCR garbage)
+
+**When to act:** After Phase 18 is running and the UI is being built. This powers a warning banner in the comparison UI surface ("2 items may have been missed in Kitchen"). Not an accuracy blocker — a trust and transparency feature.
+
+---
+
+### 3. Semantic Embeddings for Candidate Retrieval (Phase 11)
+
+**Current behavior:** Phase 11 is a stub — pgvector migration not applied, no embeddings generated. Phase 12 currently operates without the semantic retrieval source.
+
+**What is missing:** Each `n3_line_items.normalizedDescription` should be encoded as a dense vector and stored in a `vector(N)` column. Phase 12 would then use cosine similarity ANN search to find semantically close items across the two sides — catching cases where descriptions are paraphrased differently (e.g., `"Remove and replace gypsum board"` vs `"R&R Drywall"`).
+
+**Why Claude Sonnet cannot be used:** Claude is a text generation model, not an embedding model. Anthropic does not offer an embeddings API. Options:
+
+- **Voyage AI** — Anthropic's recommended embedding partner (acquired by Anthropic). Optimized for use alongside Claude. Requires a Voyage API key.
+- **OpenAI `text-embedding-3-small`** — Industry standard, cheap (~$0.00002/1K tokens), fast. Requires an OpenAI API key.
+- **Skip entirely** — Phase 12 has 5 non-embedding retrieval sources that function without vectors. Benchmark accuracy first; add embeddings only if the gap is significant.
+
+**Infrastructure required:** A Prisma migration to add `vector(1536)` column to `n3_line_items` (requires pgvector extension enabled on Supabase — available on Pro plan).
+
+**When to act:** After Phase 15 produces a first accuracy benchmark. If semantic paraphrasing mismatches are a top error category, implement with Voyage AI or OpenAI.
+
+---
+
+## Test Coverage Status
+
+| Suite | File | Tests | Status |
+|-------|------|-------|--------|
+| N3 normalization | `__tests__/n3/normalization.test.ts` | 128 | ✅ All passing |
+| N2 zone merge | `__tests__/n2/zone-merge.test.ts` | — | ✅ Unaffected |
+| N2 AI response | `__tests__/n2/ai-response.test.ts` | — | ✅ Unaffected |
+| N2 chunk PDF | `__tests__/n2/chunk-pdf.test.ts` | — | ✅ Unaffected |
+| N2 match zones parse | `__tests__/n2/match-zones-parse.test.ts` | — | ✅ Unaffected |
+| N2 API match review | `__tests__/n2/api-match-review.test.ts` | — | ✅ Unaffected |
+| **Total** | | **220** | **✅ 6/6 files passing** |

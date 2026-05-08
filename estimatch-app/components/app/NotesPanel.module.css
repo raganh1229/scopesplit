@@ -1,0 +1,468 @@
+/* ============================================
+   NOTES PANEL — Slide-out drawer
+   ============================================ */
+
+/* Backdrop overlay */
+.backdrop {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.backdropOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Drawer container */
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  z-index: 910;
+  width: 400px; max-width: 100vw;
+  background: var(--bg-primary);
+  border-left: 0.5px solid var(--border-default);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.drawerOpen {
+  transform: translateX(0);
+}
+
+/* Header */
+.drawerHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 0.5px solid var(--border-default);
+  flex-shrink: 0;
+}
+.drawerTitle {
+  font-size: 16px; font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.noteCount {
+  font-size: 12px; font-weight: 500;
+  color: var(--text-tertiary);
+  background: var(--bg-surface);
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+.closeBtn {
+  background: none; border: none; cursor: pointer;
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  transition: background 0.1s ease, color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.closeBtn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+/* Thread area */
+.thread {
+  flex: 1; overflow-y: auto;
+  padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.errorBanner {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 0.5px solid var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-text);
+  font-size: 12px;
+}
+
+.emptyState {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center;
+  flex: 1; gap: 8px;
+  color: var(--text-tertiary);
+  font-size: 13px; text-align: center;
+  padding: 40px 20px;
+}
+.emptyIcon {
+  width: 40px; height: 40px;
+  color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+/* Note card */
+.noteCard {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  position: relative;
+}
+.noteCardGeneral {
+  border-left: 3px solid var(--text-tertiary);
+}
+.noteCardLineItem {
+  border-left: 3px solid var(--btn-primary-bg);
+}
+
+.noteCardLineItemInteractive {
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.noteCardLineItemInteractive:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  border-color: var(--border-default);
+}
+
+.noteCardLineItemInteractive:hover .lineItemContext {
+  background: color-mix(in srgb, var(--btn-primary-bg) 10%, var(--bg-surface));
+  border-color: color-mix(in srgb, var(--btn-primary-bg) 35%, var(--border-light));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--btn-primary-bg) 28%, transparent);
+}
+
+.noteCardLineItemInteractive:active {
+  transform: translateY(0);
+}
+
+/* Line item context block */
+.lineItemContext {
+  display: flex; align-items: flex-start; gap: 6px;
+  margin-bottom: 8px;
+  padding: 6px 8px 8px;
+  margin: -2px -4px 8px;
+  border-radius: 8px;
+  border-bottom: 0.5px solid var(--border-light);
+  transition: background-color 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.lineItemContextIcon {
+  flex-shrink: 0;
+  width: 14px; height: 14px;
+  color: var(--btn-primary-bg);
+  margin-top: 1px;
+}
+.lineItemContextText {
+  font-size: 11px; font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.lineItemNum {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9px; font-weight: 700;
+  color: var(--btn-primary-bg);
+  background: color-mix(in srgb, var(--btn-primary-bg) 12%, transparent);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-right: 5px;
+  letter-spacing: 0.2px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+.lineItemContextZone {
+  font-size: 10px; font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* General badge */
+.generalBadge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.3px;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+.generalBadgeIcon {
+  width: 12px; height: 12px;
+}
+
+/* Note content */
+.noteContent {
+  font-size: 13px; line-height: 1.55;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* Note footer */
+.noteFooter {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 8px;
+}
+.noteTimestamp {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.noteActions {
+  display: flex; gap: 2px;
+}
+.noteActionBtn {
+  background: none; border: none; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  transition: background 0.1s ease, color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.noteActionBtn:hover {
+  background: var(--border-light);
+  color: var(--text-primary);
+}
+.noteActionBtnDanger:hover {
+  background: var(--error-hover-bg);
+  color: var(--error-text);
+}
+
+/* Edit mode */
+.editTextarea {
+  width: 100%; min-height: 60px;
+  padding: 8px 10px;
+  font-size: 13px; line-height: 1.5;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+}
+.editTextarea:focus {
+  border-color: var(--btn-primary-bg);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+.editActions {
+  display: flex; gap: 6px; margin-top: 6px;
+  justify-content: flex-end;
+}
+.editSaveBtn, .editCancelBtn {
+  padding: 4px 12px; border-radius: 6px;
+  font-size: 12px; font-weight: 500;
+  cursor: pointer; border: none;
+  transition: background 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.editSaveBtn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.editSaveBtn:hover {
+  opacity: 0.9;
+}
+.editSaveBtn:disabled {
+  opacity: 0.5; cursor: default;
+}
+.editCancelBtn {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 0.5px solid var(--border-default);
+}
+.editCancelBtn:hover {
+  background: var(--border-light);
+}
+
+/* Composer area */
+.composer {
+  flex-shrink: 0;
+  padding: 12px 20px 16px;
+  border-top: 0.5px solid var(--border-default);
+  background: var(--bg-primary);
+}
+.composerLabel {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.3px;
+  color: var(--text-tertiary);
+  margin: 0 0 9px;
+}
+.composerContext {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  border: 0.5px solid var(--border-light);
+  font-size: 11px; color: var(--text-secondary);
+  max-width: calc(100% - 46px);
+  margin-bottom: 6px;
+}
+.composerContextDesc {
+  flex: 1; overflow: hidden;
+  white-space: nowrap; text-overflow: ellipsis;
+}
+.composerContextClear {
+  background: none; border: none; cursor: pointer;
+  width: 20px; height: 20px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.composerContextClear:hover {
+  color: var(--text-primary);
+  background: var(--border-light);
+}
+.composerRow {
+  display: flex; gap: 8px; align-items: flex-end;
+}
+.composerInput {
+  flex: 1; min-height: 38px; max-height: 120px;
+  padding: 8px 12px;
+  font-size: 13px; line-height: 1.45;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-default);
+  border-radius: 10px;
+  resize: none;
+  outline: none;
+}
+.composerInputWithContext {
+  border-radius: 10px;
+  border-top: 0.5px solid var(--border-default);
+}
+.composerInput:focus {
+  border-color: var(--btn-primary-bg);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+}
+.composerSendBtn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none; cursor: pointer;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.composerSendBtn:hover {
+  opacity: 0.9;
+}
+.composerSendBtn:disabled {
+  opacity: 0.4; cursor: default;
+}
+
+/* Toolbar trigger button (used in comparison page toolbar) */
+.triggerBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.1s ease, border-color 0.1s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.triggerBtn:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-light);
+}
+.triggerBtnIcon {
+  width: 16px; height: 16px;
+}
+.triggerBadge {
+  font-size: 11px; font-weight: 600;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-radius: 10px;
+  padding: 1px 6px;
+  min-width: 18px; text-align: center;
+  line-height: 1.4;
+}
+
+/* Row note icon (used inline in the table) */
+.rowNoteBtn {
+  background: none; border: none; cursor: pointer;
+  width: 22px; height: 22px; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  vertical-align: middle;
+  margin-left: 4px;
+  transition: color 0.1s ease, background 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.rowNoteBtn:hover {
+  color: var(--btn-primary-bg);
+  background: var(--bg-surface);
+}
+.rowNoteBtnHasNotes {
+  color: var(--btn-primary-bg);
+}
+
+/* Mobile card note button */
+.cardNoteBtn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 10px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 11px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.cardNoteBtn:hover {
+  background: var(--border-light);
+}
+.cardNoteBtnIcon {
+  width: 14px; height: 14px;
+}
+.cardNoteBtnBadge {
+  font-size: 10px; font-weight: 600;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-radius: 8px;
+  padding: 0 5px;
+  min-width: 14px; text-align: center;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .drawer {
+    width: 100vw;
+    border-left: none;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    top: 48px;
+  }
+  .drawerHeader {
+    padding: 14px 16px;
+  }
+  .thread {
+    padding: 12px 16px;
+  }
+  .composer {
+    padding: 10px 16px 20px;
+    /* Extra bottom padding for mobile safe area */
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+/* ============================================
+   PRINT: hide notes
+   ============================================ */
+@media print {
+  .backdrop, .drawer, .triggerBtn, .rowNoteBtn, .cardNoteBtn {
+    display: none !important;
+  }
+}

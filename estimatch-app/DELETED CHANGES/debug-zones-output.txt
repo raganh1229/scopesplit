@@ -1,0 +1,397 @@
+
+================================================================================
+PDF A (Yours): Adjuster_Estimate_Set8.pdf
+Total raw lines: 141
+================================================================================
+
+--- RAW TEXT (first 200 lines) ---
+  L   3: Empire Estimators, LLC
+  L   4: Building Consultants and Estimators
+  L   5: New York, NY
+  L   6: Client:Carlos & Elena Ruiz
+  L   7: Property:3711 Bayshore Blvd
+  L   8: Tampa, FL 33611
+  L   9: Operator:ADJ_RIVERA
+  L  10: Estimator:Empire Estimators, LLC
+  L  11: Type of Estimate:Tropical Storm / Water
+  L  12: Date Entered:8/29/2025
+  L  13: Price List:FLHI8X_AUG25
+  L  14: Labor Efficiency:Restoration/Service/Remodel
+  L  15: Estimate:TAMPA_STORM_ADJ
+  L  16: TAMPA_STORM_ADJ8/29/2025Page: 1
+  L  18: Empire Estimators, LLC
+  L  19: Building Consultants and Estimators
+  L  20: New York, NY
+  L  21: TAMPA_STORM_ADJ8/29/2025Page: 2
+  L  22: General
+  L  23: General
+  L  24: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  25: ADMIN
+  L  26: 1. Dumpster load - 20 CY - 4 ton1.00EA676.000.0069.97135.20881.17
+  L  27: 2. Supervision / Project Management - ho100.00HR0.0078.060.001561.209367.20
+  L  28: 3. Cleaning Technician - general - per h16.00HR0.0046.410.00148.51891.07
+  L  29: PROTECTION
+  L  30: 4. Floor protection - poly and tape - 10350.00SF0.000.4114.8228.64186.96
+  L  31: PERMITS
+  L  32: 5. Permits and fees - combined1.00EA0.000.000.000.00OPEN ITEM
+  L  33: Totals: General84.791873.5511326.40
+  L  34: TAMPA_STORM_ADJ8/29/2025Page: 2
+  L  36: Empire Estimators, LLC
+  L  37: Building Consultants and Estimators
+  L  38: New York, NY
+  L  39: TAMPA_STORM_ADJ8/29/2025Page: 3
+  L  40: Master Bedroom
+  L  41: Master BedroomHeight: 8'
+  L  42: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  43: DEMOLITION
+  L  44: 6. Haul off ceiling drywall debris210.00SF0.000.150.006.3037.80
+  L  45: 7. Demo ceiling drywall - storm damage210.00SF1.150.000.0048.30289.80
+  L  46: CEILINGS
+  L  47: 8. Ceiling drywall - 5/8" - hang tape fi210.00SF0.002.7510.58117.60705.68
+  L  48: 9. Orange peel texture - ceiling210.00SF0.000.841.7735.70214.17
+  L  49: 10. Paint ceiling - flat white - 2 coats210.00SF0.001.044.0744.58267.47
+  L  50: WALLS
+  L  51: 11. Drywall - 1/2" - walls - complete295.00SF0.002.6413.95158.62951.77
+  L  52: 12. Wall paint - flat latex - two coats295.00SF0.000.945.3356.88339.63
+  L  53: FLOORING
+  L  54: 13. Carpet cushion - 6 lb standard188.00SF0.000.729.1127.42164.63
+  L  55: 14. Carpet - textured loop - standard gr210.00SF0.003.4544.27147.42948.42
+  L  56: DETECTORS
+  L  57: 15. Smoke detector - hardwired - replace1.00EA0.0089.509.2717.90116.67
+  L  58: Totals: Master Bedroom98.35660.724036.04
+  L  59: TAMPA_STORM_ADJ8/29/2025Page: 3
+  L  61: Empire Estimators, LLC
+  L  62: Building Consultants and Estimators
+  L  63: New York, NY
+  L  64: TAMPA_STORM_ADJ8/29/2025Page: 4
+  L  65: Living Area
+  L  66: Living AreaHeight: 9'
+  L  67: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  68: CEILINGS
+  L  69: 16. Remove damaged ceiling drywall - 5/8325.00SF1.150.000.0074.75448.50
+  L  70: 17. Drywall debris removal and haul325.00SF0.000.150.009.7558.50
+  L  71: 18. Install 5/8" ceiling drywall - compl325.00SF0.002.7516.38182.001092.13
+  L  72: 19. Ceiling primer - PVA - single coat325.00SF0.000.641.5141.92251.43
+  L  73: 20. Knockdown texture - ceiling325.00SF0.001.244.0381.50489.03
+  L  74: 21. Ceiling paint - flat - two coats325.00SF0.001.046.3069.00414.00
+  L  75: 22. Recessed LED downlight - 6" - new3.00EA0.00138.118.8882.86505.19
+  L  76: WALLS
+  L  77: 23. Shellac seal - wall studs - odor blo475.00SF0.001.0710.31103.82622.88
+  L  78: 24. 1/2" wall drywall - hung taped finis475.00SF0.002.6422.46255.401532.46
+  L  79: 25. Wall paint - satin finish - two coat475.00SF0.001.1510.56111.44658.69
+  L  80: FLOORING
+  L  81: 26. Carpet - plush - standard grade290.00SF0.003.7227.63220.821326.27
+  L  82: TRIMWORK
+  L  83: 27. Colonial baseboard - 2-1/4" - primed68.00LF0.003.384.9346.56276.61
+  L  84: 28. Baseboard paint - semi-gloss - 2 coa68.00LF0.001.550.7321.32127.05
+  L  85: Totals: Living Area113.721301.147802.74
+  L  86: TAMPA_STORM_ADJ8/29/2025Page: 4
+  L  88: Empire Estimators, LLC
+  L  89: Building Consultants and Estimators
+  L  90: New York, NY
+  L  91: TAMPA_STORM_ADJ8/29/2025Page: 5
+  L  92: Kitchen
+  L  93: KitchenHeight: 8'
+  L  94: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  95: CEILINGS
+  L  96: 29. Demo ceiling drywall - water stained118.00SF1.150.000.0027.14162.84
+  L  97: 30. 1/2" ceiling drywall - smooth finish118.00SF0.002.645.5963.42380.31
+  L  98: 31. Ceiling paint - semi-gloss - two coa118.00SF0.001.152.3127.50163.01
+  L  99: 32. Suspended ceiling grid - 2x4 lay-in58.00SF0.002.032.5223.80142.68
+  L 100: WALLS
+  L 101: 33. Wall stud seal - shellac - odor cont240.00SF0.001.075.2152.42314.53
+  L 102: 34. Drywall - 1/2" - walls - complete240.00SF0.002.6411.35128.96773.91
+  L 103: 35. Paint walls - satin - 2 coats240.00SF0.001.155.2956.28333.29
+  L 104: FLOORING
+  L 105: 36. Porcelain floor tile - 12x12 - R&R118.00SF3.1414.5056.61445.222672.57
+  L 106: CABINETS/COUNTERS
+  L 107: 37. Lower cabinets - standard grade - LF14.00LF0.00196.46167.67552.483470.61
+  L 108: 38. Post-form laminate countertop - per 14.00LF0.0042.0012.61118.72712.73
+  L 109: CLEANING
+  L 110: 39. Kitchen final clean - construction118.00SF0.000.330.007.7946.73
+  L 111: Totals: Kitchen269.161503.739173.21
+  L 112: TAMPA_STORM_ADJ8/29/2025Page: 5
+  L 114: Empire Estimators, LLC
+  L 115: Building Consultants and Estimators
+  L 116: New York, NY
+  L 117: TAMPA_STORM_ADJ8/29/2025Page: 6
+  L 118: Hall Bath
+  L 119: Hall BathHeight: 8'
+  L 120: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L 121: CEILINGS
+  L 122: 40. Tear out ceiling drywall - bath42.00SF1.150.000.009.6657.96
+  L 123: 41. Standard 5/8" drywall - ceiling42.00SF0.002.752.1223.32139.87
+  L 124: 42. Paint - ceiling - semi-gloss - 2 coa42.00SF0.001.150.829.6657.98
+  L 125: FIXTURES
+  L 126: 43. Bath exhaust fan - 80 CFM - R&R1.00EA0.00145.0015.0229.00189.02
+  L 127: CLEANING
+  L 128: 44. Bathroom cleaning - final42.00SF0.000.450.003.7822.68
+  L 129: Totals: Hall Bath17.9675.42467.51
+  L 130: TAMPA_STORM_ADJ8/29/2025Page: 6
+  L 132: Empire Estimators, LLC
+  L 133: Building Consultants and Estimators
+  L 134: New York, NY
+  L 135: TAMPA_STORM_ADJ8/29/2025Page: 7
+  L 136: Exterior / Windows
+  L 137: Exterior / Windows
+  L 138: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L 139: WINDOWS
+  L 140: 45. R&R Vinyl window - double hung - std2.00EA35.00295.0014.16132.00806.16
+  L 141: 46. Window trim - exterior - PVC casing2.00EA0.0045.001.9318.00109.93
+  L 142: 47. Exterior caulk - windows - silicone8.00EA0.004.500.777.2844.05
+  L 143: FASCIA
+  L 144: 48. Fascia board - 1x6 PVC - R&R24.00LF0.006.503.3431.56190.34
+  L 145: 49. Paint fascia - exterior - 2 coats24.00LF0.002.100.8610.1861.38
+  L 146: CLEANING
+  L 147: 50. Pressure wash - exterior walls800.00SF0.000.180.0028.80172.80
+  L 148: Totals: Exterior / Windows21.06227.821384.66
+  L 149: TAMPA_STORM_ADJ8/29/2025Page: 7
+
+--- ZONE ASSIGNMENTS ---
+Zones detected: general, master bedroom, living, kitchen, hall bath, fascia
+
+  Zone: "general" (5 scope lines)
+    L  26: Dumpster load - - 4 ton
+    L  27: Supervision / Project Management - ho
+    L  28: Cleaning Technician - general - per h
+    L  30: Floor protection - poly and tape
+    L  32: Permits and fees - combined EAOPEN ITEM
+
+  Zone: "master bedroom" (10 scope lines)
+    L  44: Haul off ceiling drywall debris
+    L  45: Demo ceiling drywall - storm damage
+    L  47: Ceiling drywall - 5/8" - hang tape fi
+    L  48: Orange peel texture - ceiling
+    L  49: Paint ceiling - flat white - 2 coats
+    L  51: Drywall - 1/2" - walls - complete
+    L  52: Wall paint - flat latex - two coats
+    L  54: Carpet cushion - 6 lb standard
+    L  55: Carpet - textured loop - standard gr
+    L  57: Smoke detector - hardwired - replace
+
+  Zone: "living" (13 scope lines)
+    L  69: Remove damaged ceiling drywall - 5/
+    L  70: Drywall debris removal and haul
+    L  71: Install 5/8" ceiling drywall - compl
+    L  72: Ceiling primer - PVA - single coat
+    L  73: Knockdown texture - ceiling
+    L  74: Ceiling paint - flat - two coats
+    L  75: Recessed LED downlight - 6" - new
+    L  77: Shellac seal - wall studs - odor blo
+    L  78: 1/2" wall drywall - hung taped finis
+    L  79: Wall paint - satin finish - two coat
+    L  81: Carpet - plush - standard grade
+    L  83: Colonial baseboard - 2-1/4" - primed
+    L  84: Baseboard paint - semi-gloss - 2 coa
+
+  Zone: "kitchen" (11 scope lines)
+    L  96: Demo ceiling drywall - water stained
+    L  97: 1/2" ceiling drywall - smooth finish
+    L  98: Ceiling paint - semi-gloss - two coa
+    L  99: Suspended ceiling grid - 2x4 lay-in
+    L 101: Wall stud seal - shellac - odor cont
+    L 102: Drywall - 1/2" - walls - complete
+    L 103: Paint walls - satin - 2 coats
+    L 105: Porcelain floor tile - 12x12 - R&RSF
+    L 107: Lower cabinets - standard grade - LFLF
+    L 108: Post-form laminate countertop - per
+    L 110: Kitchen final clean - construction
+
+  Zone: "hall bath" (8 scope lines)
+    L 122: Tear out ceiling drywall - bath
+    L 123: Standard 5/8" drywall - ceiling
+    L 124: Paint - ceiling - semi-gloss - 2 coa
+    L 126: Bath exhaust fan - 80 CFM - R&REA
+    L 128: Bathroom cleaning - final
+    L 140: R&R Vinyl window - double hung - std
+    L 141: Window trim - exterior - PVC casing
+    L 142: Exterior caulk - windows - silicone
+
+  Zone: "fascia" (3 scope lines)
+    L 144: Fascia board - 1x6 PVC - R&RLF
+    L 145: Paint fascia - exterior - 2 coats
+    L 147: Pressure wash - exterior walls
+
+================================================================================
+PDF B (Adjuster): Contractor_Estimate_Set8.pdf
+Total raw lines: 121
+================================================================================
+
+--- RAW TEXT (first 200 lines) ---
+  L   3: Empire Estimators, LLC
+  L   4: Building Consultants and Estimators
+  L   5: New York, NY
+  L   6: Client:Carlos & Elena Ruiz
+  L   7: Property:3711 Bayshore Blvd
+  L   8: Tampa, FL 33611
+  L   9: Operator:DEFAULT
+  L  10: Estimator:Empire Estimators, LLC
+  L  11: Type of Estimate:Tropical Storm / Water
+  L  12: Date Entered:8/15/2025
+  L  13: Price List:FLHI8X_AUG25
+  L  14: Labor Efficiency:Restoration/Service/Remodel
+  L  15: Estimate:TAMPA_STORM_CTR
+  L  16: TAMPA_STORM_CTR8/15/2025Page: 1
+  L  18: Empire Estimators, LLC
+  L  19: Building Consultants and Estimators
+  L  20: New York, NY
+  L  21: TAMPA_STORM_CTR8/15/2025Page: 2
+  L  22: General Items
+  L  23: General Items
+  L  24: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  25: DEBRIS / ADMIN
+  L  26: 1. 20 CY dumpster - debris removal1.00EA676.000.0069.97135.20881.17
+  L  27: 2. Project manager / supervisor - per hr100.00HR0.0085.000.001700.0010200.00
+  L  28: 3. General cleanup labor - hourly20.00HR0.0047.610.00190.441142.64
+  L  29: SITE PROTECTION
+  L  30: 4. Floor protection - plastic sheeting400.00SF0.000.4116.9332.72213.65
+  L  31: 5. Temporary power hookup - R&R1.00EA67.99567.230.00127.04762.26
+  L  32: PERMITS
+  L  33: 6. Permits and fees1.00EA0.000.000.000.00OPEN ITEM
+  L  34: Totals: General Items86.902185.4013199.72
+  L  35: TAMPA_STORM_CTR8/15/2025Page: 2
+  L  37: Empire Estimators, LLC
+  L  38: Building Consultants and Estimators
+  L  39: New York, NY
+  L  40: TAMPA_STORM_CTR8/15/2025Page: 3
+  L  41: Living Area
+  L  42: Living AreaHeight: 9'
+  L  43: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  44: CEILINGS
+  L  45: 7. Remove water-damaged ceiling drywall325.00SF1.150.000.0074.75448.50
+  L  46: 8. 5/8" drywall - ceiling - tape & finis325.00SF0.002.7516.38182.001092.13
+  L  47: 9. PVA primer - ceiling - one coat325.00SF0.000.641.5141.92251.43
+  L  48: 10. Heavy hand texture - ceiling325.00SF0.001.244.0381.50489.03
+  L  49: 11. Ceiling paint - flat latex - two coa325.00SF0.001.046.3069.00414.00
+  L  50: 12. Recessed can light - 6" - LED - new4.00EA0.00155.0013.28124.00746.28
+  L  51: WALLS
+  L  52: 13. Seal wall framing - shellac - odor475.00SF0.001.0710.31103.82622.88
+  L  53: 14. 1/2" drywall - walls - hung/taped/fi475.00SF0.002.6422.46255.401532.46
+  L  54: 15. Wall paint - eggshell - two coats475.00SF0.001.049.21100.70604.21
+  L  55: FLOORING
+  L  56: 16. Carpet - plush - high grade290.00SF0.004.1530.84246.541480.89
+  L  57: TRIMWORK
+  L  58: 17. Baseboard - 3-1/4" - primed MDF68.00LF0.003.975.8054.72324.52
+  L  59: 18. Paint baseboard - semi-gloss - 2 coa68.00LF0.001.550.7321.32127.05
+  L  60: Totals: Living Area120.851355.678133.38
+  L  61: TAMPA_STORM_CTR8/15/2025Page: 3
+  L  63: Empire Estimators, LLC
+  L  64: Building Consultants and Estimators
+  L  65: New York, NY
+  L  66: TAMPA_STORM_CTR8/15/2025Page: 4
+  L  67: Master Bedroom
+  L  68: Master BedroomHeight: 8'
+  L  69: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  70: CEILINGS
+  L  71: 19. Tear out ceiling drywall - damaged210.00SF1.150.000.0048.30289.80
+  L  72: 20. Drywall ceiling - 5/8" - complete210.00SF0.002.7510.58117.60705.68
+  L  73: 21. Knockdown texture - ceiling210.00SF0.001.352.8457.34344.09
+  L  74: 22. Paint ceiling - flat - 2 coats210.00SF0.001.044.0744.58267.47
+  L  75: WALLS
+  L  76: 23. 1/2" drywall - walls - complete295.00SF0.002.6413.95158.62951.77
+  L  77: 24. Wall paint - satin - two coats295.00SF0.001.156.5668.94414.11
+  L  78: FLOORING
+  L  79: 25. Carpet pad - 8 lb rebond188.00SF0.000.9211.6335.06210.42
+  L  80: 26. Carpet - textured loop - standard210.00SF0.003.4544.27147.42948.42
+  L  81: FIXTURES
+  L  82: 27. Ceiling fan w/ light - detach & rese1.00EA0.00211.4221.8942.28275.59
+  L  83: Totals: Master Bedroom115.79720.144407.35
+  L  84: TAMPA_STORM_CTR8/15/2025Page: 4
+  L  86: Empire Estimators, LLC
+  L  87: Building Consultants and Estimators
+  L  88: New York, NY
+  L  89: TAMPA_STORM_CTR8/15/2025Page: 5
+  L  90: Kitchen
+  L  91: KitchenHeight: 8'
+  L  92: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L  93: CEILINGS
+  L  94: 28. Remove ceiling drywall - water damag118.00SF1.150.000.0027.14162.84
+  L  95: 29. 5/8" drywall - ceiling - smooth fini118.00SF0.002.755.9666.08396.54
+  L  96: 30. Paint ceiling - semi-gloss - 2 coats118.00SF0.001.152.3127.50163.01
+  L  97: WALLS
+  L  98: 31. Seal wall framing - odor block240.00SF0.001.075.2152.42314.53
+  L  99: 32. 1/2" drywall - walls - finished240.00SF0.002.6411.35128.96773.91
+  L 100: 33. Wall paint - eggshell - 2 coats240.00SF0.001.044.6550.88305.25
+  L 101: FLOORING
+  L 102: 34. Ceramic tile floor - 12x12 - R&R118.00SF3.1411.1543.91345.082080.73
+  L 103: CABINETS
+  L 104: 35. Base cabinets - custom grade - per L14.00LF0.00310.00264.51872.205476.71
+  L 105: 36. Granite countertop - 3cm - level 232.00SF0.0068.5047.03443.522682.55
+  L 106: CLEANING
+  L 107: 37. Final clean - kitchen118.00SF0.000.450.0010.6263.72
+  L 108: Totals: Kitchen384.932024.4012419.79
+  L 109: TAMPA_STORM_CTR8/15/2025Page: 5
+  L 111: Empire Estimators, LLC
+  L 112: Building Consultants and Estimators
+  L 113: New York, NY
+  L 114: TAMPA_STORM_CTR8/15/2025Page: 6
+  L 115: Hall Bath
+  L 116: Hall BathHeight: 8'
+  L 117: DESCRIPTIONQTYREMOVEREPLACETAXO&PTOTAL
+  L 118: CEILINGS
+  L 119: 38. Remove ceiling drywall - moisture42.00SF1.150.000.009.6657.96
+  L 120: 39. Moisture-resistant drywall - ceiling42.00SF0.003.152.8426.04158.94
+  L 121: 40. Paint ceiling - semi-gloss - 2 coat42.00SF0.001.150.829.6657.98
+  L 122: FIXTURES
+  L 123: 41. Exhaust fan - 110 CFM - quiet - R&R1.00EA0.00195.0020.2039.00254.20
+  L 124: 42. Medicine cabinet - recessed - R&R1.00EA0.00210.0021.7642.00273.76
+  L 125: CLEANING
+  L 126: 43. Bath final clean42.00SF0.000.450.003.7822.68
+  L 127: Totals: Hall Bath45.62130.14825.52
+  L 128: TAMPA_STORM_CTR8/15/2025Page: 6
+
+--- ZONE ASSIGNMENTS ---
+Zones detected: general, living, master bedroom, kitchen, hall bath
+
+  Zone: "general" (6 scope lines)
+    L  26: dumpster - debris removal
+    L  27: Project manager / supervisor - per
+    L  28: General cleanup labor - hourly
+    L  30: Floor protection - plastic sheeting
+    L  31: Temporary power hookup - R&REA
+    L  33: Permits and fees EAOPEN ITEM
+
+  Zone: "living" (12 scope lines)
+    L  45: Remove water-damaged ceiling drywall
+    L  46: 5/8" drywall - ceiling - tape & finis
+    L  47: PVA primer - ceiling - one coat
+    L  48: Heavy hand texture - ceiling
+    L  49: Ceiling paint - flat latex - two coa
+    L  50: Recessed can light - 6" - LED - new
+    L  52: Seal wall framing - shellac - odor
+    L  53: 1/2" drywall - walls - hung/taped/fi
+    L  54: Wall paint - eggshell - two coats
+    L  56: Carpet - plush - high grade
+    L  58: Baseboard - 3-1/4" - primed MDFLF
+    L  59: Paint baseboard - semi-gloss - 2 coa
+
+  Zone: "master bedroom" (9 scope lines)
+    L  71: Tear out ceiling drywall - damaged
+    L  72: Drywall ceiling - 5/8" - complete
+    L  73: Knockdown texture - ceiling
+    L  74: Paint ceiling - flat - 2 coats
+    L  76: 1/2" drywall - walls - complete
+    L  77: Wall paint - satin - two coats
+    L  79: Carpet pad - 8 lb rebond
+    L  80: Carpet - textured loop - standard
+    L  82: Ceiling fan w/ light - detach & rese
+
+  Zone: "kitchen" (10 scope lines)
+    L  94: Remove ceiling drywall - water damag
+    L  95: 5/8" drywall - ceiling - smooth fini
+    L  96: Paint ceiling - semi-gloss - 2 coats
+    L  98: Seal wall framing - odor block
+    L  99: 1/2" drywall - walls - finished
+    L 100: Wall paint - eggshell - 2 coats
+    L 102: Ceramic tile floor - 12x12 - R&RSF
+    L 104: Base cabinets - custom grade - per LLF
+    L 105: Granite countertop - 3cm - level
+    L 107: Final clean - kitchen
+
+  Zone: "hall bath" (6 scope lines)
+    L 119: Remove ceiling drywall - moisture
+    L 120: Moisture-resistant drywall - ceiling
+    L 121: Paint ceiling - semi-gloss - 2 coat
+    L 123: Exhaust fan - 110 CFM - quiet - R&REA
+    L 124: Medicine cabinet - recessed - R&REA
+    L 126: Bath final clean

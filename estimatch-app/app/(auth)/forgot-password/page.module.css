@@ -1,0 +1,15 @@
+.center { text-align: center; }
+.sentIcon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--green-50);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.sentIcon svg {
+  width: 28px; height: 28px;
+  stroke: var(--green-600); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.backLink { margin-top: 20px; font-size: 14px; }
+.backLink a { color: var(--blue-600); font-weight: 500; }
+.backLink a:hover { text-decoration: underline; }

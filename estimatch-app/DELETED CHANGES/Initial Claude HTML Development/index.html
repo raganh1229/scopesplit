@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EstiMatch &#8212; Xactimate Estimate Comparison Tool</title>
+<link rel="stylesheet" href="card-components.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-stack);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; }
+
+  /* ============================================
+     TOP NAV
+     ============================================ */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border-light);
+  }
+  .topnav-inner {
+    max-width: 1120px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+  }
+  .topnav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 18px; font-weight: 700; color: var(--text-primary);
+  }
+  .topnav-logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--blue-600);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .topnav-logo-icon svg { width: 18px; height: 18px; }
+  .topnav-links {
+    display: flex; align-items: center; gap: 28px;
+  }
+  .topnav-link {
+    font-size: 14px; font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.15s ease;
+  }
+  .topnav-link:hover { color: var(--text-primary); }
+  .topnav-cta {
+    padding: 8px 20px; border-radius: 8px;
+    background: var(--text-primary); color: #fff;
+    font-size: 14px; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .topnav-cta:hover { opacity: 0.88; }
+  .topnav-hamburger {
+    display: none; background: none; border: none;
+    cursor: pointer; padding: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .topnav-hamburger svg {
+    width: 22px; height: 22px;
+    stroke: var(--text-primary); fill: none;
+    stroke-width: 1.8; stroke-linecap: round;
+  }
+
+  /* Mobile nav drawer */
+  .mobile-nav-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.3); z-index: 200;
+  }
+  .mobile-nav-overlay.open { display: block; }
+  .mobile-nav-drawer {
+    position: fixed; top: 0; right: -280px; bottom: 0;
+    width: 280px; background: var(--bg-primary); z-index: 201;
+    padding: 20px; display: flex; flex-direction: column; gap: 4px;
+    transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+  }
+  .mobile-nav-drawer.open { right: 0; }
+  .mobile-nav-close {
+    align-self: flex-end; background: none; border: none;
+    cursor: pointer; padding: 4px; margin-bottom: 8px;
+  }
+  .mobile-nav-close svg {
+    width: 22px; height: 22px;
+    stroke: var(--text-primary); fill: none;
+    stroke-width: 1.8; stroke-linecap: round;
+  }
+  .mobile-nav-link {
+    display: block; padding: 14px 12px; border-radius: 8px;
+    font-size: 16px; font-weight: 500; color: var(--text-primary);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-nav-link:active { background: var(--bg-surface); }
+  .mobile-nav-cta {
+    display: block; text-align: center;
+    padding: 14px; border-radius: 8px;
+    background: var(--text-primary); color: #fff;
+    font-size: 16px; font-weight: 600;
+    margin-top: 8px;
+  }
+
+  /* ============================================
+     HERO
+     ============================================ */
+  .hero {
+    max-width: 1120px; margin: 0 auto;
+    padding: 80px 24px 60px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block; font-size: 13px; font-weight: 600;
+    padding: 5px 14px; border-radius: 20px;
+    background: var(--blue-50); color: var(--blue-600);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 48px; font-weight: 700; line-height: 1.12;
+    letter-spacing: -0.5px;
+    max-width: 720px; margin: 0 auto 18px;
+  }
+  .hero-sub {
+    font-size: 18px; line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 580px; margin: 0 auto 36px;
+  }
+  .hero-actions {
+    display: flex; gap: 12px;
+    justify-content: center; flex-wrap: wrap;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 10px;
+    background: var(--text-primary); color: #fff;
+    font-size: 16px; font-weight: 600;
+    font-family: var(--font-stack);
+    border: none; cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary svg {
+    width: 18px; height: 18px; stroke: currentColor;
+    fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 10px;
+    background: var(--bg-primary); color: var(--text-primary);
+    font-size: 16px; font-weight: 600;
+    font-family: var(--font-stack);
+    border: 0.5px solid var(--border-default);
+    cursor: pointer; transition: background 0.15s ease;
+  }
+  .btn-secondary:hover { background: var(--bg-surface); }
+  .hero-note {
+    font-size: 13px; color: var(--text-tertiary);
+    margin-top: 14px;
+  }
+
+  /* Hero mockup placeholder */
+  .hero-mockup {
+    max-width: 960px; margin: 48px auto 0;
+    border-radius: 12px;
+    border: 0.5px solid var(--border-default);
+    background: var(--bg-primary);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.08);
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-tertiary); font-size: 14px;
+  }
+  .hero-mockup-bar {
+    height: 36px; background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-light);
+    display: flex; align-items: center; padding: 0 14px; gap: 6px;
+  }
+  .hero-mockup-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--border-default);
+  }
+  .hero-mockup-body {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    color: var(--text-tertiary); font-size: 14px; font-style: italic;
+  }
+
+  /* ============================================
+     HOW IT WORKS
+     ============================================ */
+  .section {
+    max-width: 1120px; margin: 0 auto;
+    padding: 80px 24px;
+  }
+  .section-label {
+    display: inline-block; font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--blue-600); margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: 32px; font-weight: 700; line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .section-desc {
+    font-size: 16px; color: var(--text-secondary);
+    line-height: 1.6; max-width: 560px; margin-bottom: 48px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .step-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-default);
+    border-radius: 12px; padding: 28px;
+  }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--blue-50); color: var(--blue-600);
+    font-size: 15px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .step-card h3 {
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .step-card p {
+    font-size: 14px; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  /* ============================================
+     FEATURES
+     ============================================ */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-default);
+    border-radius: 12px; padding: 28px;
+  }
+  .feature-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .feature-icon svg {
+    width: 22px; height: 22px;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    fill: none;
+  }
+  .feature-icon--green { background: var(--green-50); }
+  .feature-icon--green svg { stroke: var(--green-600); }
+  .feature-icon--red { background: var(--red-50); }
+  .feature-icon--red svg { stroke: var(--red-600); }
+  .feature-icon--blue { background: var(--blue-50); }
+  .feature-icon--blue svg { stroke: var(--blue-600); }
+  .feature-icon--amber { background: var(--amber-50); }
+  .feature-icon--amber svg { stroke: var(--amber-600); }
+  .feature-card h3 {
+    font-size: 16px; font-weight: 600; margin-bottom: 6px;
+  }
+  .feature-card p {
+    font-size: 14px; color: var(--text-secondary); line-height: 1.55;
+  }
+
+  /* ============================================
+     PRICING
+     ============================================ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .pricing-card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-default);
+    border-radius: 12px; padding: 28px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .pricing-card--featured {
+    border-color: var(--blue-400);
+    box-shadow: 0 0 0 1px var(--blue-400);
+  }
+  .pricing-popular {
+    position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+    padding: 3px 14px; border-radius: 10px;
+    background: var(--blue-600); color: #fff;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .pricing-tier {
+    font-size: 15px; font-weight: 600;
+    color: var(--text-secondary); margin-bottom: 8px;
+  }
+  .pricing-price {
+    font-size: 40px; font-weight: 700;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .pricing-price span { font-size: 16px; font-weight: 500; color: var(--text-secondary); }
+  .pricing-limit {
+    font-size: 14px; color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+  .pricing-features {
+    list-style: none; padding: 0; margin: 0 0 24px;
+    display: flex; flex-direction: column; gap: 10px;
+    flex: 1;
+  }
+  .pricing-features li {
+    font-size: 14px; color: var(--text-primary);
+    display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.4;
+  }
+  .pricing-features li::before {
+    content: '';
+    width: 18px; height: 18px; flex-shrink: 0;
+    background: var(--green-50); border-radius: 50%;
+    margin-top: 1px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5 L7 11 L12 5' fill='none' stroke='%23639922' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: center;
+  }
+  .pricing-btn {
+    width: 100%; padding: 12px; border-radius: 8px;
+    font-family: var(--font-stack); font-size: 15px; font-weight: 600;
+    border: 0.5px solid var(--border-default);
+    background: var(--bg-primary); color: var(--text-primary);
+    cursor: pointer; transition: background 0.15s ease;
+  }
+  .pricing-btn:hover { background: var(--bg-surface); }
+  .pricing-btn--featured {
+    background: var(--text-primary); color: #fff;
+    border-color: var(--text-primary);
+  }
+  .pricing-btn--featured:hover { opacity: 0.88; background: var(--text-primary); }
+
+  /* ============================================
+     SOCIAL PROOF / STATS
+     ============================================ */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px; text-align: center;
+    max-width: 700px; margin: 0 auto;
+    padding: 48px 0;
+  }
+  .stat-num {
+    font-size: 36px; font-weight: 700;
+    color: var(--text-primary); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 14px; color: var(--text-secondary);
+  }
+
+  /* ============================================
+     CTA BANNER
+     ============================================ */
+  .cta-banner {
+    max-width: 1120px; margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+  .cta-banner-inner {
+    background: #2C2C2C; border-radius: 16px;
+    padding: 56px 40px; text-align: center; color: #fff;
+  }
+  .cta-banner-inner h2 {
+    font-size: 28px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .cta-banner-inner p {
+    font-size: 16px; color: rgba(255,255,255,0.65);
+    margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto;
+  }
+  .btn-white {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 10px;
+    background: #fff; color: #1a1a1a;
+    font-size: 16px; font-weight: 600;
+    font-family: var(--font-stack);
+    border: none; cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .btn-white:hover { opacity: 0.9; }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  .site-footer {
+    border-top: 0.5px solid var(--border-light);
+    background: var(--bg-primary);
+  }
+  .footer-inner {
+    max-width: 1120px; margin: 0 auto;
+    padding: 40px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 600; color: var(--text-primary);
+  }
+  .footer-logo-icon {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--blue-600);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .footer-logo-icon svg { width: 14px; height: 14px; }
+  .footer-links {
+    display: flex; gap: 24px;
+  }
+  .footer-link {
+    font-size: 13px; color: var(--text-secondary);
+    transition: color 0.15s ease;
+  }
+  .footer-link:hover { color: var(--text-primary); }
+  .footer-copy {
+    font-size: 13px; color: var(--text-tertiary);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 768px) {
+    .topnav-links { display: none; }
+    .topnav-hamburger { display: block; }
+
+    .hero { padding: 48px 20px 40px; }
+    .hero h1 { font-size: 32px; }
+    .hero-sub { font-size: 16px; }
+    .hero-actions { flex-direction: column; align-items: center; }
+    .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; }
+    .hero-mockup { margin-top: 32px; }
+
+    .section { padding: 48px 20px; }
+    .section-title { font-size: 24px; }
+
+    .steps { grid-template-columns: 1fr; }
+    .features { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 380px; }
+    .stats { grid-template-columns: 1fr; gap: 20px; }
+
+    .cta-banner { padding: 0 20px 48px; }
+    .cta-banner-inner { padding: 40px 24px; }
+    .cta-banner-inner h2 { font-size: 22px; }
+
+    .footer-inner {
+      flex-direction: column; gap: 16px; text-align: center;
+    }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .hero h1 { font-size: 40px; }
+    .steps { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .features { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     TOP NAV
+     ============================================ -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="topnav-logo" href="index.html">
+      <div class="topnav-logo-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+      </div>
+      EstiMatch
+    </a>
+    <div class="topnav-links">
+      <a class="topnav-link" href="index.html">Home</a>
+      <a class="topnav-link" href="faq.html">FAQ</a>
+      <a class="topnav-link" href="contact.html">Contact</a>
+      <a class="topnav-link" href="login.html">Log in</a>
+      <a class="topnav-cta" href="signup.html">Sign Up Free</a>
+    </div>
+    <button class="topnav-hamburger" id="navHamburger">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <button class="mobile-nav-close" id="mobileNavClose">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <a class="mobile-nav-link" href="index.html">Home</a>
+  <a class="mobile-nav-link" href="faq.html">FAQ</a>
+  <a class="mobile-nav-link" href="contact.html">Contact</a>
+  <a class="mobile-nav-link" href="login.html">Log in</a>
+  <a class="mobile-nav-cta" href="signup.html">Sign Up Free</a>
+</div>
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<section class="hero">
+  <div class="hero-badge">Built for Xactimate estimates</div>
+  <h1>Stop losing money on insurance supplements</h1>
+  <p class="hero-sub">Upload two Xactimate PDFs and get a detailed, line-by-line comparison in minutes instead of hours. Find every discrepancy the adjuster missed.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="signup.html">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Start free trial
+    </a>
+    <a class="btn-secondary" href="#how-it-works">See how it works</a>
+  </div>
+  <p class="hero-note">7-day free trial &middot; No credit card required to browse</p>
+
+  <!-- Product mockup placeholder -->
+  <div class="hero-mockup">
+    <div style="display:flex;flex-direction:column;width:100%;height:100%;">
+      <div class="hero-mockup-bar">
+        <div class="hero-mockup-dot"></div>
+        <div class="hero-mockup-dot"></div>
+        <div class="hero-mockup-dot"></div>
+      </div>
+      <div class="hero-mockup-body">
+        Comparison table preview
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     STATS BAR
+     ============================================ -->
+<div class="section" style="padding-top:0; padding-bottom:0;">
+  <div class="stats">
+    <div>
+      <div class="stat-num">3 min</div>
+      <div class="stat-label">Average comparison time</div>
+    </div>
+    <div>
+      <div class="stat-num">$12K</div>
+      <div class="stat-label">Avg supplement recovered</div>
+    </div>
+    <div>
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Xactimate compatible</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     HOW IT WORKS
+     ============================================ -->
+<section class="section" id="how-it-works">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">Three steps. Zero guesswork.</h2>
+  <p class="section-desc">Upload your estimates and let our AI do the tedious line-by-line comparison work for you.</p>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h3>Upload both estimates</h3>
+      <p>Drop in your Xactimate PDF and the adjuster's PDF. We support every standard Xactimate export format.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h3>AI matches line items</h3>
+      <p>Our engine fuzzy-matches items across estimates, even when descriptions and zone names differ slightly.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h3>Review the comparison</h3>
+      <p>See every match, modification, and missing item in a clear side-by-side view. Download a PDF report to support your supplement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FEATURES
+     ============================================ -->
+<section class="section" style="padding-top:0;">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything you need to win supplements</h2>
+  <p class="section-desc">Built specifically for roofing and restoration contractors who work insurance claims.</p>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon feature-icon--green">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3>Smart line-item matching</h3>
+      <p>AI-powered fuzzy matching pairs items even when the adjuster uses different descriptions or zone names.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon feature-icon--red">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h3>Missing item detection</h3>
+      <p>Instantly see which line items the adjuster left out entirely so you can include them in your supplement.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon feature-icon--amber">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <h3>Gap analysis dashboard</h3>
+      <p>See total dollar gaps by zone, category, and overall. Know exactly where the biggest discrepancies are.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon feature-icon--blue">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <h3>PDF report export</h3>
+      <p>Download a professional comparison report to attach to your supplement or share with the adjuster.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     PRICING
+     ============================================ -->
+<section class="section" id="pricing">
+  <div style="text-align:center;">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title" style="max-width:none;">Simple, transparent pricing</h2>
+    <p class="section-desc" style="margin-left:auto; margin-right:auto; margin-bottom:40px;">Every plan includes a 7-day free trial. Cancel anytime.</p>
+  </div>
+  <div class="pricing-grid">
+    <!-- Starter -->
+    <div class="pricing-card">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-price">$49<span>/mo</span></div>
+      <div class="pricing-limit">15 comparisons per month</div>
+      <ul class="pricing-features">
+        <li>AI-powered line-item matching</li>
+        <li>Side-by-side comparison table</li>
+        <li>Gap analysis dashboard</li>
+        <li>PDF report export</li>
+        <li>Mobile and desktop access</li>
+      </ul>
+      <a class="pricing-btn" href="signup.html">Start free trial</a>
+    </div>
+    <!-- Professional -->
+    <div class="pricing-card pricing-card--featured">
+      <div class="pricing-popular">Most Popular</div>
+      <div class="pricing-tier">Professional</div>
+      <div class="pricing-price">$99<span>/mo</span></div>
+      <div class="pricing-limit">50 comparisons per month</div>
+      <ul class="pricing-features">
+        <li>Everything in Starter</li>
+        <li>Priority support</li>
+        <li>Higher comparison volume</li>
+        <li>PDF report export</li>
+        <li>Mobile and desktop access</li>
+      </ul>
+      <a class="pricing-btn pricing-btn--featured" href="signup.html">Start free trial</a>
+    </div>
+    <!-- Enterprise -->
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-price">$199<span>/mo</span></div>
+      <div class="pricing-limit">150 comparisons per month</div>
+      <ul class="pricing-features">
+        <li>Everything in Professional</li>
+        <li>Maximum volume</li>
+        <li>Priority support</li>
+        <li>PDF report export</li>
+        <li>Mobile and desktop access</li>
+      </ul>
+      <a class="pricing-btn" href="signup.html">Start free trial</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     CTA BANNER
+     ============================================ -->
+<div class="cta-banner">
+  <div class="cta-banner-inner">
+    <h2>Ready to stop leaving money on the table?</h2>
+    <p>Join contractors who are recovering thousands more on every supplement with EstiMatch.</p>
+    <a class="btn-white" href="signup.html">
+      Start your free trial
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="footer-logo-icon">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+      </div>
+      EstiMatch
+    </div>
+    <div class="footer-links">
+      <a class="footer-link" href="index.html">Home</a>
+      <a class="footer-link" href="faq.html">FAQ</a>
+      <a class="footer-link" href="contact.html">Contact</a>
+      <a class="footer-link" href="login.html">Log in</a>
+      <a class="footer-link" href="signup.html">Sign up</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 EstiMatch. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById('navHamburger');
+  var overlay = document.getElementById('mobileNavOverlay');
+  var drawer = document.getElementById('mobileNavDrawer');
+  var close = document.getElementById('mobileNavClose');
+  function open () { overlay.classList.add('open'); drawer.classList.add('open'); }
+  function shut () { overlay.classList.remove('open'); drawer.classList.remove('open'); }
+  btn.addEventListener('click', open);
+  overlay.addEventListener('click', shut);
+  close.addEventListener('click', shut);
+})();
+</script>
+</body>
+</html>

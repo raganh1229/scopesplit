@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something Went Wrong &#8212; EstiMatch</title>
+<link rel="stylesheet" href="card-components.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-stack);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+
+  .error-wrapper {
+    width: 100%; max-width: 480px;
+    padding: 24px; text-align: center;
+  }
+
+  /* Illustration: hard hat with question mark */
+  .error-illustration {
+    width: 120px; height: 120px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  .error-hat {
+    width: 100px; height: 60px;
+    background: var(--amber-100);
+    border-radius: 50px 50px 8px 8px;
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    border: 3px solid var(--amber-200);
+  }
+  .error-hat::before {
+    content: '';
+    position: absolute; bottom: -8px; left: -10px; right: -10px;
+    height: 14px; border-radius: 4px;
+    background: var(--amber-200);
+  }
+  .error-hat::after {
+    content: '';
+    position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--amber-200);
+  }
+  .error-question {
+    position: absolute; top: 8px; right: 8px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-default);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700;
+    color: var(--amber-600);
+  }
+
+  .error-wrapper h1 {
+    font-size: 24px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .error-wrapper p {
+    font-size: 15px; color: var(--text-secondary);
+    line-height: 1.55; margin-bottom: 28px;
+  }
+  .error-code {
+    display: inline-block; font-size: 13px; font-weight: 600;
+    color: var(--text-tertiary);
+    background: var(--bg-surface);
+    padding: 4px 12px; border-radius: 6px;
+    margin-bottom: 20px;
+  }
+
+  .error-actions {
+    display: flex; gap: 10px;
+    justify-content: center; flex-wrap: wrap;
+  }
+  .error-btn {
+    padding: 11px 24px; border-radius: 8px;
+    font-family: var(--font-stack); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s ease;
+    text-decoration: none; display: inline-block;
+  }
+  .error-btn--primary {
+    background: var(--text-primary); color: #fff;
+    border: none;
+  }
+  .error-btn--primary:hover { opacity: 0.88; }
+  .error-btn--secondary {
+    background: var(--bg-primary); color: var(--text-primary);
+    border: 0.5px solid var(--border-default);
+  }
+  .error-btn--secondary:hover { background: var(--bg-surface); }
+
+  .error-footer {
+    margin-top: 32px; font-size: 13px; color: var(--text-tertiary);
+  }
+  .error-footer a {
+    color: var(--blue-600); text-decoration: none;
+  }
+  .error-footer a:hover { text-decoration: underline; }
+
+  /* Toggle between generic error and 404 for demo */
+  .variant-toggle {
+    position: fixed; top: 16px; right: 16px;
+    display: flex; gap: 4px;
+    background: var(--bg-surface); border-radius: 8px; padding: 3px;
+    border: 0.5px solid var(--border-default);
+  }
+  .variant-btn {
+    padding: 6px 14px; border-radius: 6px;
+    font-family: var(--font-stack); font-size: 12px; font-weight: 500;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-secondary);
+  }
+  .variant-btn.active {
+    background: var(--bg-primary); color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  @media (max-width: 480px) {
+    .error-wrapper h1 { font-size: 20px; }
+    .error-actions { flex-direction: column; align-items: center; }
+    .error-btn { width: 100%; max-width: 260px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Demo: toggle error variant -->
+<div class="variant-toggle">
+  <button class="variant-btn active" id="btnGeneric">Generic Error</button>
+  <button class="variant-btn" id="btn404">404 Not Found</button>
+</div>
+
+<div class="error-wrapper">
+  <div class="error-illustration">
+    <div class="error-hat"></div>
+    <div class="error-question">?</div>
+  </div>
+
+  <div class="error-code" id="errorCode">Error 500</div>
+
+  <h1 id="errorTitle">Well, that wasn't in the estimate</h1>
+  <p id="errorDesc">Something went wrong on our end. We're looking into it.</p>
+
+  <div class="error-actions">
+    <a class="error-btn error-btn--primary" href="index.html" id="goHomeBtn">Go home</a>
+    <button class="error-btn error-btn--secondary" id="tryAgainBtn" onclick="location.reload()">Try again</button>
+  </div>
+
+  <div class="error-footer">
+    If this keeps happening, <a href="contact.html">contact support</a>.
+  </div>
+</div>
+
+<script>
+(function () {
+  var btnGeneric = document.getElementById('btnGeneric');
+  var btn404 = document.getElementById('btn404');
+
+  btnGeneric.addEventListener('click', function () {
+    btnGeneric.classList.add('active');
+    btn404.classList.remove('active');
+    document.getElementById('errorCode').textContent = 'Error 500';
+    document.getElementById('errorTitle').textContent = "Well, that wasn't in the estimate";
+    document.getElementById('errorDesc').textContent = "Something went wrong on our end. We're looking into it.";
+  });
+
+  btn404.addEventListener('click', function () {
+    btn404.classList.add('active');
+    btnGeneric.classList.remove('active');
+    document.getElementById('errorCode').textContent = 'Error 404';
+    document.getElementById('errorTitle').textContent = "Page not found";
+    document.getElementById('errorDesc').textContent = "The page you're looking for doesn't exist or has been moved.";
+  });
+})();
+</script>
+</body>
+</html>

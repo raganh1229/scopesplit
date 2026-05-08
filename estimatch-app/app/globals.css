@@ -1,0 +1,296 @@
+/* ============================================
+   SCOPESPLIT — GLOBAL DESIGN TOKENS & BASE
+   ============================================ */
+@font-face {
+  font-family: 'Gilroy Local';
+  src:
+    local('Gilroy ExtraBold'),
+    local('Gilroy-ExtraBold'),
+    local('Gilroy Extra Bold');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter Local';
+  src:
+    local('Inter Regular'),
+    local('Inter-Regular'),
+    local('Inter');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Backgrounds */
+  --bg-primary: #FFFFFF;
+  --bg-surface: #F7F7F5;
+  --bg-page: #F5F5F0;
+
+  /* Text */
+  --text-primary: #1a1a1a;
+  --text-secondary: #888780;
+  --text-tertiary: #B4B2A9;
+
+  /* Borders */
+  --border-default: rgba(0, 0, 0, 0.12);
+  --border-light: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.06);
+
+  /* Semantic — Red */
+  --red-50: #FCEBEB;
+  --red-100: #F7C1C1;
+  --red-200: #F09595;
+  --red-400: #E24B4A;
+  --red-600: #A32D2D;
+  --red-800: #791F1F;
+  --red-900: #501313;
+
+  /* Semantic — Green */
+  --green-50: #EAF3DE;
+  --green-100: #C0DD97;
+  --green-200: #97C459;
+  --green-400: #639922;
+  --green-600: #3B6D11;
+  --green-800: #27500A;
+  --green-900: #173404;
+
+  /* Semantic — Blue */
+  --blue-50: #E6F1FB;
+  --blue-100: #B5D4F4;
+  --blue-200: #85B7EB;
+  --blue-400: #378ADD;
+  --blue-600: #185FA5;
+  --blue-800: #0C447C;
+  --blue-900: #042C53;
+
+  /* Semantic — Purple */
+  --purple-50: #EEEDFE;
+  --purple-100: #CECBF6;
+  --purple-200: #AFA9EC;
+  --purple-400: #7F77DD;
+  --purple-600: #534AB7;
+  --purple-800: #3C3489;
+  --purple-900: #26215C;
+
+  /* Semantic — Teal */
+  --teal-50: #E1F5EE;
+  --teal-100: #9FE1CB;
+  --teal-200: #5DCAA5;
+  --teal-400: #1D9E75;
+  --teal-600: #0F6E56;
+  --teal-800: #085041;
+  --teal-900: #04342C;
+
+  /* Semantic — Amber */
+  --amber-50: #FAEEDA;
+  --amber-100: #FAC775;
+  --amber-200: #EF9F27;
+  --amber-400: #BA7517;
+  --amber-600: #854F0B;
+  --amber-800: #633806;
+  --amber-900: #412402;
+
+  /* Status indicators */
+  --status-match: #639922;
+  --status-modified: #BA7517;
+  --status-missing: #E24B4A;
+  --status-added: #378ADD;
+
+  /* Pill active backgrounds */
+  --pill-match-bg: #EAF3DE;
+  --pill-modified-bg: #FFF8E8;
+  --pill-missing-bg: #FCEBEB;
+  --pill-added-bg: #E6F1FB;
+  --pill-modified-text: #7A4D0B;
+
+  /* Diff indicators */
+  --diff-positive: #A32D2D;
+  --diff-negative: #3B6D11;
+
+  /* Misc */
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --bg-hover-zone: #f5f5f5;
+  --zone-track: #F1EFE8;
+  --error-bg: #fef3f2;
+  --error-border: #fecdca;
+  --error-text: #b42318;
+  --error-hover-bg: #fef3f2;
+  --success-bg: #ecfdf3;
+  --success-border: #abefc6;
+  --success-text: #067647;
+  --trial-bg: #FAEEDA;
+  --trial-border: #F0DFC0;
+  --trial-text: #854F0B;
+  --drop-shadow: rgba(0, 0, 0, 0.1);
+  --mobile-topbar-bg: rgba(255, 255, 255, 0.92);
+  --confidence-med-bg: #FEF6E8;
+  --confidence-med-text: #93590E;
+  --btn-primary-bg: #1a1a1a;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #333333;
+
+  /* Layout */
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 10px;
+
+  /* Typography */
+  --font-stack: 'Inter Local', 'Inter', 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Gilroy Local', 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+/* ============================================
+   DARK THEME OVERRIDES
+   ============================================ */
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary: #252525;
+  --bg-surface: #1E1E1E;
+  --bg-page: #171717;
+
+  /* Text */
+  --text-primary: #E5E3DE;
+  --text-secondary: #9C9A93;
+  --text-tertiary: #6B6963;
+
+  /* Borders */
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Semantic — Red (dark mode) */
+  --red-50: #2D1B1B;
+  --red-100: #3D2222;
+  --red-200: #5C2F2F;
+  --red-400: #E55C5B;
+  --red-600: #E8706F;
+  --red-800: #F09595;
+  --red-900: #F7C1C1;
+
+  /* Semantic — Green (dark mode) */
+  --green-50: #1C2616;
+  --green-100: #263318;
+  --green-200: #385222;
+  --green-400: #7DB83A;
+  --green-600: #8FCC44;
+  --green-800: #A6DD6B;
+  --green-900: #C0DD97;
+
+  /* Semantic — Blue (dark mode) */
+  --blue-50: #1A2332;
+  --blue-100: #1E2D42;
+  --blue-200: #254060;
+  --blue-400: #5AA0E6;
+  --blue-600: #6DB5F0;
+  --blue-800: #85B7EB;
+  --blue-900: #B5D4F4;
+
+  /* Semantic — Purple (dark mode) */
+  --purple-50: #211F32;
+  --purple-100: #2A2740;
+  --purple-200: #3D3860;
+  --purple-400: #9A93E6;
+  --purple-600: #AFA9EC;
+  --purple-800: #CECBF6;
+  --purple-900: #EEEDFE;
+
+  /* Semantic — Teal (dark mode) */
+  --teal-50: #172A24;
+  --teal-100: #1B3530;
+  --teal-200: #25504A;
+  --teal-400: #2BBF8E;
+  --teal-600: #5DCAA5;
+  --teal-800: #9FE1CB;
+  --teal-900: #E1F5EE;
+
+  /* Semantic — Amber (dark mode) */
+  --amber-50: #2A2116;
+  --amber-100: #3A2E18;
+  --amber-200: #5C4520;
+  --amber-400: #D4912A;
+  --amber-600: #E8A83C;
+  --amber-800: #FAC775;
+  --amber-900: #FAEEDA;
+
+  /* Status indicators (dark mode) */
+  --status-match: #7DB83A;
+  --status-modified: #D4912A;
+  --status-missing: #E55C5B;
+  --status-added: #5AA0E6;
+
+  /* Pill active backgrounds (dark mode) */
+  --pill-match-bg: #1C2616;
+  --pill-modified-bg: #332810;
+  --pill-missing-bg: #2D1B1B;
+  --pill-added-bg: #1A2332;
+  --pill-modified-text: #D4912A;
+
+  /* Diff indicators (dark mode) */
+  --diff-positive: #E8706F;
+  --diff-negative: #8FCC44;
+
+  /* Misc (dark mode) */
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-hover-zone: #2A2A28;
+  --zone-track: #333330;
+  --error-bg: #2D1B1B;
+  --error-border: #5C2F2F;
+  --error-text: #E8706F;
+  --error-hover-bg: #3D2222;
+  --success-bg: #1C2616;
+  --success-border: #385222;
+  --success-text: #8FCC44;
+  --trial-bg: #2A2116;
+  --trial-border: #3A2E18;
+  --trial-text: #E8A83C;
+  --drop-shadow: rgba(0, 0, 0, 0.4);
+  --mobile-topbar-bg: rgba(23, 23, 23, 0.92);
+  --confidence-med-bg: #2A2116;
+  --confidence-med-text: #D4912A;
+  --btn-primary-bg: #E5E3DE;
+  --btn-primary-text: #171717;
+  --btn-primary-hover: #D5D3CE;
+}
+
+/* ---- Base Reset ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-stack);
+  font-weight: 350;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+}
+
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; }
+button { font-family: var(--font-stack); }
+
+/* ============================================
+   PRINT — global chrome removal
+   ============================================ */
+@media print {
+  @page { size: landscape; margin: 0.5in; }
+
+  /* Hide sidebar nav */
+  nav { display: none !important; }
+
+  /* White page background */
+  body { background: #fff !important; }
+
+  /* Row status background colors — hardcoded so they work in
+     both light and dark mode and override inline style props */
+  tr[data-status="match"]    { background: #dcfce7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  tr[data-status="modified"] { background: #fef9c3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  tr[data-status="missing"]  { background: #fee2e2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  tr[data-status="added"]    { background: #dbeafe !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

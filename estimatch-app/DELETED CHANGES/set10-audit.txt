@@ -1,0 +1,145 @@
+SET 10 (aka Set 8 files) — DEEP AUDIT
+======================================
+Files: Adjuster_Estimate_Set8.pdf (uploaded as "Yours"), Contractor_Estimate_Set8.pdf (uploaded as "Adjuster")
+NOTE: Files were SWAPPED at upload — "Yours" = Adjuster estimate, "Adjuster" = Contractor estimate
+
+CHEAT SHEET EXPECTED:
+  - 43 contractor items across 5 zones
+  - 50 adjuster items across 6 zones
+  - 37 paired items (25 exact match + 12 discrepancies)
+  - 3 contractor-only
+  - 10 adjuster-only (4 inserted + 6 in Exterior/Windows zone)
+
+OUR PIPELINE RESULTS:
+  - 55 line items total
+  - MATCH: 15, MODIFIED: 23, MISSING: 12, ADDED: 5
+  - Paired: 38 (vs 37 expected)
+  - Missing: 12 (vs 10 expected)
+  - Added: 5 (vs 3 expected)
+
+PREMATCH RESULTS (separate run):
+  - 8 auto-matched (4 MATCH, 4 MODIFIED)
+  - Remaining 171 lines sent to Claude AI
+
+========================================================================
+ISSUE #1: CROSS-ZONE MISPAIRING (CRITICAL)
+========================================================================
+The compact prompt sends only lineNumber|description|qty to Claude — NO ZONE INFO.
+Living Area and Master Bedroom both have similar items (ceiling drywall, wall paint,
+texture, carpet). Without zone context, Claude cross-pairs them incorrectly.
+
+Cheat sheet shows zones are in DIFFERENT ORDER between estimates:
+  Contractor: General → Living Area → Master Bedroom → Kitchen → Hall Bath
+  Adjuster:   General → Master Bedroom → Living Area → Kitchen → Hall Bath
+
+Cross-zone mispairs found:
+
+Row 9:  Y="Remove damaged ceiling drywall" ($448.50 = Adj Living)
+        A="Tear out ceiling drywall" ($289.80 = Ctr Master)
+        → Should be: Adj Living $449 ↔ Ctr Living $449 (EXACT MATCH)
+        → Should be: Adj Master $290 ↔ Ctr Master $290 (desc only diff)
+
+Row 13: Y="Demo ceiling drywall - storm damage" ($289.80 = Adj Master)
+        A="Remove water-damaged ceiling drywall" ($448.50 = Ctr Living)
+        → REVERSE of Row 9 cross-match
+
+Row 15: Y="Ceiling drywall 5/8" ($705.68 = Adj Master)
+        A="5/8" drywall ceiling" ($1,092.13 = Ctr Living)
+        → Should be: Adj Living $1,092 ↔ Ctr Living $1,092 (EXACT)
+        → Should be: Adj Master $706 ↔ Ctr Master $706 (EXACT)
+
+Row 24: Y="Install 5/8" ceiling drywall" ($1,092.13 = Adj Living)
+        A="Drywall ceiling 5/8"" ($705.68 = Ctr Master)
+        → REVERSE of Row 15 cross-match
+
+Row 17: Y="Orange peel texture" ($214.17 = Adj Master)
+        A="Heavy hand texture" ($489.03 = Ctr Living)
+        → Should be: Adj Living $489 ↔ Ctr Living $489 (texture type diff, SAME $)
+        → Should be: Adj Master $344 ↔ Ctr Master $214 (knockdown vs orange peel)
+
+Row 12: Y="Knockdown texture ceiling" ($489.03 = Adj Living)
+        A="Knockdown texture ceiling" ($344.09 = Ctr Master)
+        → REVERSE of Row 17 cross-match
+
+Row 20: Y="Wall paint flat latex" ($339.63 = Adj Master)
+        A="Wall paint eggshell" ($604.21 = Ctr Living)
+        → Should be: Adj Living $604 ↔ Ctr Living ($305) (eggshell vs satin)
+        → Should be: Adj Master $340 ↔ Ctr Master $414 (flat vs satin)
+
+Row 14: Y="Wall paint satin" ($658.69 = Adj Living)
+        A="Wall paint satin two coats" ($414.11 = Ctr Master)
+        → REVERSE of Row 20 cross-match
+
+Row 21: Y="Carpet cushion 6 lb" ($164.63 = Adj Master)
+        A="Carpet pad 8 lb" ($210.42 = Ctr Living)
+        → Should be: Adj Living $210 ↔ Ctr Living $325 (8lb, different size)
+        → Should be: Adj Master $165 ↔ Ctr Master $277 (6lb)
+
+Row 30: Y="Carpet plush standard" ($1,326.27 = Adj Living)
+        A="Carpet plush high" ($1,480.89 = Ctr Living)
+        → This one might be correct — same zone!
+
+Row 31: Y="Colonial baseboard 2-1/4"" ($276.61 = Adj Living)
+        A="Baseboard 3-1/4"" ($324.52 = Ctr Living)
+        → This one might be correct — same zone!
+
+TOTAL CROSS-ZONE MISPAIRS: ~8 items (4 swapped pairs)
+RESULT: Inflates MODIFIED count, creates wrong cost differences
+
+========================================================================
+ISSUE #2: 2 ITEMS UNMATCHED THAT SHOULD BE PAIRED
+========================================================================
+Row 25: MISSING "Ceiling primer PVA" ($251.43 = Adj Living)
+Row 18: ADDED "PVA primer ceiling one coat" ($251.43 = Ctr Living)
+→ These are the SAME item, same $. Should be MATCH.
+
+Row 26: MISSING "Ceiling paint flat two coats" ($414.00 = Adj Living)
+Row 19: ADDED "Ceiling paint flat latex two coats" ($414.00 = Ctr Living)
+→ These are the SAME item, same $. Should be MATCH.
+
+These items were likely left over after their correct counterparts were
+cross-zone matched with wrong Master Bedroom items.
+
+========================================================================
+ITEMS CORRECTLY CLASSIFIED
+========================================================================
+✅ Contractor-only (ADDED_BY_ADJUSTER):
+   Row 10: Temporary power hookup ($762.26) — correct
+   Row 48: Medicine cabinet ($273.76) — correct  
+   Row 55: Ceiling fan ($275.59) — correct
+
+✅ Adjuster-only (MISSING_FROM_ADJUSTER):
+   Row 11: Haul off ceiling drywall debris ($37.80) — correct
+   Row 22: Smoke detector hardwired ($116.67) — correct
+   Row 23: Drywall debris removal ($58.50) — correct
+   Row 36: Suspended ceiling grid ($142.68) — correct
+   Row 49: R&R Vinyl window ($806.16) — correct (Exterior zone)
+   Row 50: Window trim PVC ($109.93) — correct
+   Row 51: Exterior caulk ($44.05) — correct
+   Row 52: Fascia board PVC ($190.34) — correct
+   Row 53: Paint fascia ($61.38) — correct
+   Row 54: Pressure wash exterior ($172.80) — correct
+
+✅ Kitchen zone items (Rows 33-42): All correctly paired, correct MATCH/MODIFIED
+✅ Hall Bath zone items (Rows 43-47): All correctly paired
+✅ Prematch items (8 items): All correctly matched within zones
+
+========================================================================
+ROOT CAUSE
+========================================================================
+The compact prompt format (lineNumber|description|qty) has NO ZONE INFORMATION.
+When two zones have structurally similar items (ceiling drywall, wall paint, texture,
+carpet — common in bedrooms/living areas), Claude cross-pairs them.
+
+The prematch's zone-aware matching correctly handles this, but only resolves ~8 items
+for this set. The remaining 171 lines go to Claude without zone context.
+
+========================================================================
+RECOMMENDED FIX
+========================================================================
+Add zone name to the compact prompt:
+  Current:  lineNumber|description|qty unit
+  Proposed: lineNumber|zone|description|qty unit
+
+This lets Claude match within zones, preventing cross-zone errors.
+Cost: ~1-2 extra tokens per line. Benefit: eliminates the #1 source of errors.

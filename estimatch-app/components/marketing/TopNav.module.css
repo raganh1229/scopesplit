@@ -1,0 +1,135 @@
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--border-light);
+}
+.topnavInner {
+  max-width: 1120px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px;
+}
+.topnavLogo {
+  display: flex;
+  align-items: center;
+}
+.topnavLogoImg {
+  width: auto;
+  height: 37px;
+  display: block;
+}
+.topnavLinks {
+  display: flex; align-items: center; gap: 18px;
+}
+.topnavLink {
+  font-size: 13px; font-weight: 600;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.topnavLink:hover { color: var(--text-primary); border-color: var(--border-default); }
+.topnavLink.active {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+.topnavCta {
+  padding: 9px 18px; border-radius: 8px;
+  background: var(--text-primary); color: #fff;
+  font-size: 13px; font-weight: 700;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.topnavCta:hover { opacity: 0.9; transform: translateY(-1px); }
+.topnavHamburger {
+  display: none; background: none; border: none;
+  cursor: pointer; padding: 6px;
+  border-radius: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+.topnavHamburger:hover { background: var(--bg-surface); }
+.topnavHamburger svg {
+  width: 22px; height: 22px;
+  stroke: var(--text-primary); fill: none;
+  stroke-width: 1.8; stroke-linecap: round;
+}
+
+/* Mobile drawer */
+.mobileNavOverlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.3); z-index: 200;
+}
+.mobileNavOverlay.open { display: block; }
+.mobileNavDrawer {
+  position: fixed; top: 0; right: -280px; bottom: 0;
+  width: 280px; background: var(--bg-primary); z-index: 201;
+  padding: 20px; display: flex; flex-direction: column; gap: 8px;
+  transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: -8px 0 28px rgba(0,0,0,0.14);
+}
+.mobileNavDrawer.open { right: 0; }
+.mobileNavClose {
+  align-self: flex-end; background: none; border: none;
+  cursor: pointer; padding: 4px; margin-bottom: 8px;
+}
+.mobileNavClose svg {
+  width: 22px; height: 22px;
+  stroke: var(--text-primary); fill: none;
+  stroke-width: 1.8; stroke-linecap: round;
+}
+.mobileNavLink {
+  display: block; padding: 14px 12px; border-radius: 8px;
+  font-size: 16px; font-weight: 500; color: var(--text-primary);
+  -webkit-tap-highlight-color: transparent;
+}
+.mobileNavLink:active,
+.mobileNavLink:hover { background: var(--bg-surface); }
+.mobileNavCta {
+  display: block; text-align: center;
+  padding: 14px; border-radius: 8px;
+  background: var(--text-primary); color: #fff;
+  font-size: 16px; font-weight: 600; margin-top: 8px;
+}
+
+.userArea { position: relative; }
+.userAvatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--blue-600); color: #fff;
+  font-size: 13px; font-weight: 700;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.15s ease;
+}
+.userAvatar:hover { opacity: 0.85; }
+.userDropdown {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-width: 180px; overflow: hidden;
+  z-index: 200;
+}
+.userDropdownName {
+  padding: 12px 16px 8px;
+  font-size: 13px; font-weight: 600; color: var(--text-primary);
+  border-bottom: 0.5px solid var(--border-light);
+}
+.userDropdownItem {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  background: none; border: none; cursor: pointer;
+  transition: background 0.12s ease;
+  text-align: left;
+}
+.userDropdownItem:hover { background: var(--bg-surface); color: var(--text-primary); }
+.userDropdownItem svg {
+  width: 16px; height: 16px; flex-shrink: 0;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+@media (max-width: 768px) {
+  .topnavLinks { display: none; }
+  .topnavHamburger { display: block; }
+}

@@ -1,0 +1,221 @@
+{
+  "description": "Set3 cross-zone pair fixture for N3 Phase 0 tests",
+  "version": "1.0.0",
+  "source": "Hand-crafted from Set3 cheatsheet; captures empirical N2 failure modes §27.10 and §27.11",
+  "notes": [
+    "Failure mode #1 (§27.10): LLM attention-budget misses — pairs with identical totals that Opus never proposed in Pass 5.",
+    "Failure mode #2 (§27.11): Pass 3 wrong-pairing — demolition items filed to wrong zone, invisible to Pass 5.",
+    "These fixtures are the Phase 12 'recall guarantee' test inputs: every expected pair below MUST appear in the candidate set."
+  ],
+  "yoursItems": [
+    {
+      "id": "y-001",
+      "zoneId": "z-lobby",
+      "zoneName": "Lobby & Reception",
+      "rawDescription": "Tear off TPO membrane roofing",
+      "rawQuantity": "1.00",
+      "rawUnit": "SQ",
+      "totalAmount": 4515.84
+    },
+    {
+      "id": "y-002",
+      "zoneId": "z-lobby",
+      "zoneName": "Lobby & Reception",
+      "rawDescription": "Tear off polyiso insulation 2.5 inch",
+      "rawQuantity": "1.00",
+      "rawUnit": "SQ",
+      "totalAmount": 890.12
+    },
+    {
+      "id": "y-003",
+      "zoneId": "z-exam",
+      "zoneName": "Exam Rooms",
+      "rawDescription": "Demolition - remove drywall 1/2 inch",
+      "rawQuantity": "540.00",
+      "rawUnit": "SF",
+      "totalAmount": 432.00
+    },
+    {
+      "id": "y-004",
+      "zoneId": "z-exam",
+      "zoneName": "Exam Rooms",
+      "rawDescription": "R&R Carpet - per SF",
+      "rawQuantity": "540.00",
+      "rawUnit": "SF",
+      "totalAmount": 1944.00
+    },
+    {
+      "id": "y-005",
+      "zoneId": "z-records",
+      "zoneName": "Records / Storage",
+      "rawDescription": "Remove and replace ceramic tile flooring",
+      "rawQuantity": "180.00",
+      "rawUnit": "SF",
+      "totalAmount": 720.00
+    },
+    {
+      "id": "y-006",
+      "zoneId": "z-general",
+      "zoneName": "General Site Conditions",
+      "rawDescription": "D&R Light fixture - recessed",
+      "rawQuantity": "12.00",
+      "rawUnit": "EA",
+      "totalAmount": 480.00
+    },
+    {
+      "id": "y-007",
+      "zoneId": "z-general",
+      "zoneName": "General Site Conditions",
+      "rawDescription": "Temporary protection - poly sheeting",
+      "rawQuantity": "1200.00",
+      "rawUnit": "SF",
+      "totalAmount": 300.00
+    }
+  ],
+  "adjusterItems": [
+    {
+      "id": "a-001",
+      "zoneId": "z-adj-demo",
+      "zoneName": "Demolition & Debris Hauling",
+      "rawDescription": "Strip TPO membrane roofing system",
+      "rawQuantity": "1.00",
+      "rawUnit": "SQ",
+      "totalAmount": 4515.84,
+      "notes": "Identical total to y-001 — Failure mode #1 test case"
+    },
+    {
+      "id": "a-002",
+      "zoneId": "z-adj-demo",
+      "zoneName": "Demolition & Debris Hauling",
+      "rawDescription": "Tear off polyiso",
+      "rawQuantity": "1.00",
+      "rawUnit": "SQ",
+      "totalAmount": 890.12,
+      "notes": "Identical total to y-002 — Failure mode #1 test case"
+    },
+    {
+      "id": "a-003",
+      "zoneId": "z-adj-demo",
+      "zoneName": "Demolition & Debris Hauling",
+      "rawDescription": "Demo drywall - 1/2 in. gypsum board",
+      "rawQuantity": "540.00",
+      "rawUnit": "SF",
+      "totalAmount": 432.00,
+      "notes": "Filed in Demolition zone but matches Exam Rooms item — Failure mode #2 test case"
+    },
+    {
+      "id": "a-004",
+      "zoneId": "z-adj-carpentry",
+      "zoneName": "Carpentry & Misc",
+      "rawDescription": "Carpet - remove and replace",
+      "rawQuantity": "540.00",
+      "rawUnit": "SF",
+      "totalAmount": 1944.00
+    },
+    {
+      "id": "a-005",
+      "zoneId": "z-adj-carpentry",
+      "zoneName": "Carpentry & Misc",
+      "rawDescription": "Ceramic floor tile - R&R",
+      "rawQuantity": "180.00",
+      "rawUnit": "SF",
+      "totalAmount": 720.00
+    },
+    {
+      "id": "a-006",
+      "zoneId": "z-adj-general",
+      "zoneName": "General & Site",
+      "rawDescription": "Detach and reset recessed light fixture",
+      "rawQuantity": "12.00",
+      "rawUnit": "EA",
+      "totalAmount": 480.00
+    },
+    {
+      "id": "a-007",
+      "zoneId": "z-adj-general",
+      "zoneName": "General & Site",
+      "rawDescription": "Poly sheeting - temporary weather protection",
+      "rawQuantity": "1200.00",
+      "rawUnit": "SF",
+      "totalAmount": 300.00
+    }
+  ],
+  "expectedPairs": [
+    {
+      "yourId": "y-001",
+      "adjusterId": "a-001",
+      "type": "one_to_one",
+      "crossZone": true,
+      "note": "Identical total; synonymous description. Must be in candidates regardless of zone correspondence."
+    },
+    {
+      "yourId": "y-002",
+      "adjusterId": "a-002",
+      "type": "one_to_one",
+      "crossZone": true,
+      "note": "Identical total; synonymous description. Must be in candidates regardless of zone correspondence."
+    },
+    {
+      "yourId": "y-003",
+      "adjusterId": "a-003",
+      "type": "one_to_one",
+      "crossZone": true,
+      "note": "Identical total; similar description. Failure mode #2: N2 Pass 3 filed a-003 to wrong zone."
+    },
+    {
+      "yourId": "y-004",
+      "adjusterId": "a-004",
+      "type": "one_to_one",
+      "crossZone": false,
+      "note": "Cross-zone but matched via Jaccard (carpet) + identical total."
+    },
+    {
+      "yourId": "y-005",
+      "adjusterId": "a-005",
+      "type": "one_to_one",
+      "crossZone": false,
+      "note": "R&R expansion test: both normalize to 'remove and replace ceramic tile'."
+    },
+    {
+      "yourId": "y-006",
+      "adjusterId": "a-006",
+      "type": "one_to_one",
+      "crossZone": false,
+      "note": "D&R expansion: yours normalizes 'd&r' to 'detach and reset'; adjuster already says 'detach and reset'."
+    },
+    {
+      "yourId": "y-007",
+      "adjusterId": "a-007",
+      "type": "one_to_one",
+      "crossZone": false,
+      "note": "High token overlap: poly sheeting / temporary protection."
+    }
+  ],
+  "normalizationExpectations": [
+    {
+      "rawDescription": "R&R Carpet - per SF",
+      "expectedNormalized": "remove and replace carpet per sf"
+    },
+    {
+      "rawDescription": "D&R Light fixture - recessed",
+      "expectedNormalized": "detach and reset light fixture recessed"
+    },
+    {
+      "rawDescription": "Tear off polyiso insulation 2.5 inch",
+      "expectedNormalized": "tear off polyiso insulation 2 5 inch"
+    },
+    {
+      "rawDescription": "Remove and replace ceramic tile flooring",
+      "expectedNormalized": "remove and replace ceramic tile flooring"
+    }
+  ],
+  "amountSimilarityExpectations": [
+    { "a": 4515.84, "b": 4515.84, "expected": 1.0, "note": "Identical totals" },
+    { "a": 1000.00, "b": 1010.00, "expected": 1.0, "note": "~1% difference → ratio < 0.02 → 1.0" },
+    { "a": 1000.00, "b": 1040.00, "expected": 0.9, "note": "~3.9% difference → ratio < 0.05 → 0.9" },
+    { "a": 1000.00, "b": 1080.00, "expected": 0.75, "note": "8% difference → ratio < 0.10" },
+    { "a": 1000.00, "b": 1150.00, "expected": 0.5, "note": "15% difference → ratio < 0.20" },
+    { "a": 1000.00, "b": 1300.00, "expected": 0.25, "note": "30% difference → ratio < 0.35" },
+    { "a": 1000.00, "b": 2000.00, "expected": 0.0, "note": "100% difference → ratio >= 0.35" }
+  ]
+}

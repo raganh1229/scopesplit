@@ -1,0 +1,70 @@
+.pageBackground {
+  background: linear-gradient(180deg, #F5F5F0 0%, #FFFFFF 100%);
+}
+
+.contactPage {
+  max-width: 600px; margin: 0 auto; padding: 64px 24px 80px;
+}
+.contactPage h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.subtitle { font-size: 16px; color: var(--text-secondary); text-align: center; line-height: 1.6; margin-bottom: 36px; }
+
+.contactForm {
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 14px; padding: 30px;
+  box-shadow: 0 10px 28px rgba(16, 25, 40, 0.08);
+}
+.formGroup { margin-bottom: 18px; }
+.formGroup:last-of-type { margin-bottom: 24px; }
+.formLabel { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.formInput {
+  width: 100%; padding: 11px 14px;
+  border: 0.5px solid var(--border-default);
+  border-radius: 10px; font-family: var(--font-stack);
+  font-size: 15px; color: var(--text-primary);
+  background: var(--bg-page);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.formInput:focus {
+  outline: none; border-color: var(--blue-400);
+  box-shadow: 0 0 0 3px rgba(55,138,221,0.1);
+}
+.formInput::placeholder { color: var(--text-tertiary); }
+.textarea { resize: vertical; min-height: 130px; line-height: 1.5; }
+.formSubmit {
+  width: 100%; padding: 12px; border-radius: 10px;
+  background: var(--text-primary); color: #fff;
+  font-family: var(--font-stack); font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer; transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.formSubmit:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.contactSuccess { text-align: center; padding: 40px 20px; }
+.successIcon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--green-50);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.successIcon svg {
+  width: 28px; height: 28px;
+  stroke: var(--green-600); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.contactSuccess h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+.contactSuccess p { font-size: 14px; color: var(--text-secondary); line-height: 1.55; margin-bottom: 20px; }
+.contactSuccess a { color: var(--blue-600); font-weight: 500; font-size: 14px; }
+.contactSuccess a:hover { text-decoration: underline; }
+
+.contactAlt {
+  text-align: center; margin-top: 24px;
+  font-size: 14px; color: var(--text-secondary);
+}
+.contactAlt a { color: var(--blue-600); font-weight: 500; }
+.contactAlt a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .contactPage { padding: 40px 20px 48px; }
+  .contactPage h1 { font-size: 26px; }
+  .contactForm { padding: 22px; }
+}

@@ -1,0 +1,339 @@
+.settingsHeader {
+  padding: 24px 32px 0;
+  border-bottom: 0.5px solid var(--border-light);
+}
+.settingsHeader h1 { font-size: 22px; font-weight: 600; margin-bottom: 20px; }
+
+.settingsBody { display: flex; flex: 1; min-height: 0; }
+
+.tabs {
+  width: 220px; flex-shrink: 0;
+  border-right: 0.5px solid var(--border-light);
+  padding: 16px 12px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.tab {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  font-size: 14px; color: var(--text-secondary);
+  cursor: pointer; border: none; background: none;
+  text-align: left; width: 100%;
+  transition: background 0.1s ease;
+}
+.tab:hover { background: var(--bg-surface); }
+.tabActive { background: var(--bg-surface); color: var(--text-primary); font-weight: 500; }
+
+.panel { flex: 1; padding: 28px 36px; overflow-y: auto; max-height: calc(100vh - 70px); }
+.panel h2 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+.desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
+.billingError { font-size: 13px; color: var(--error-text); margin-bottom: 16px; }
+
+.group { margin-bottom: 28px; }
+.groupTitle {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text-tertiary);
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 0.5px solid var(--border-light);
+}
+.row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 0.5px solid var(--border-light);
+  gap: 16px; flex-wrap: wrap;
+}
+.rowLabel { font-size: 14px; font-weight: 500; }
+.rowDesc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.input {
+  padding: 8px 12px; border: 0.5px solid var(--border-default);
+  border-radius: 6px; font-size: 14px;
+  color: var(--text-primary); background: var(--bg-page);
+  width: 240px; max-width: 100%;
+}
+.input:focus { outline: none; border-color: var(--blue-400); box-shadow: 0 0 0 3px rgba(55,138,221,0.1); }
+.btn {
+  padding: 7px 16px; border-radius: 6px;
+  border: 0.5px solid var(--border-default);
+  background: var(--bg-primary); color: var(--text-primary);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn:hover { background: var(--bg-surface); }
+.btn:disabled {
+  background: var(--bg-surface);
+  color: var(--text-tertiary);
+  border-color: var(--border-light);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btnDanger {
+  display: inline-block; padding: 7px 16px; border-radius: 6px;
+  border: 0.5px solid var(--red-200);
+  background: var(--red-50); color: var(--red-600);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.15s ease; text-align: center;
+}
+.btnDanger:hover { opacity: 0.85; }
+.usageVal { font-size: 14px; font-weight: 600; }
+.limitNotice {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--error-text);
+}
+
+.dangerZone {
+  background: var(--red-50); border: 0.5px solid var(--red-200);
+  border-radius: 10px; padding: 20px;
+}
+.dangerZone h3 { font-size: 14px; font-weight: 600; color: var(--red-600); margin-bottom: 4px; }
+.dangerZone p { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+
+.planCard {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px; border-radius: 10px;
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+}
+.planCard h3 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+.planCard p { font-size: 13px; color: var(--text-secondary); }
+.planBadge {
+  font-size: 11px; font-weight: 700; padding: 2px 8px;
+  border-radius: 10px; background: var(--green-50);
+  color: var(--green-600); margin-left: 6px;
+}
+.planBadgeExpiring {
+  background: var(--amber-50);
+  color: var(--amber-600);
+}
+.expiringNotice {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.downgradeNotice {
+  margin-top: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 0.5px solid var(--amber-200);
+  background: var(--amber-50);
+}
+
+.downgradeArrow {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--amber-600);
+  margin-top: 1px;
+}
+
+.downgradeRoute {
+  margin: 0;
+  font-size: 12px !important;
+  font-weight: 600;
+  color: var(--text-primary) !important;
+}
+
+.downgradeCopy {
+  margin: 2px 0 0;
+  font-size: 12px !important;
+  color: var(--text-secondary) !important;
+}
+
+.downgradeActions {
+  margin-top: 8px;
+}
+
+.promptOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.promptCard {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.promptCard h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.promptCard p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.resultLine {
+  margin-top: 10px !important;
+  color: var(--text-primary) !important;
+}
+
+.passwordForm {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.promptActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.planPickerList {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.planPickerItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0.5px solid var(--border-default);
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--bg-page);
+}
+
+.planPickerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.planPickerName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.planPickerCopy {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.themeOptions { display: flex; gap: 12px; }
+.themeCard {
+  width: 120px; border-radius: 10px; cursor: pointer;
+  border: 2px solid var(--border-light);
+  overflow: hidden; transition: border-color 0.15s ease;
+  background: none; padding: 0;
+}
+.themeSelected { border-color: var(--blue-400); }
+.themePreviewLight {
+  height: 72px; background: #F5F5F0;
+  display: flex; align-items: center; justify-content: center;
+}
+.themePreviewDark {
+  height: 72px; background: #171717;
+  display: flex; align-items: center; justify-content: center;
+}
+.themePreviewSvg { width: 100%; height: 100%; }
+.themeLabel { padding: 8px; font-size: 12px; font-weight: 500; text-align: center; color: var(--text-secondary); }
+
+.toggle {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--border-default);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.toggleOn { background: var(--blue-400); }
+.toggleOn::after { left: 20px; }
+
+.legalAccordionItem {
+  border-bottom: 0.5px solid var(--border-light);
+}
+.legalAccordionTrigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 14px 0;
+  background: none; border: none; cursor: pointer;
+  text-align: left; gap: 12px;
+}
+.legalAccordionTrigger:hover .legalAccordionTitle { color: var(--blue-400); }
+.legalAccordionTitle { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.legalAccordionDesc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.legalAccordionChevron {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
+  color: var(--text-tertiary);
+  transition: transform 0.2s ease;
+}
+.legalAccordionChevronOpen { transform: rotate(180deg); }
+.legalAccordionBody {
+  padding: 0 0 20px;
+}
+.legalDocMeta {
+  font-size: 12px; color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
+.legalDocSection { margin-bottom: 16px; }
+.legalDocSection h2 {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 6px;
+}
+.legalDocSection p, .legalDocSection li {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+}
+.legalDocSection ul {
+  padding-left: 18px; margin: 4px 0 0;
+}
+.legalDocSection li { margin-bottom: 4px; }
+.legalDocSection a { color: var(--blue-400); text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .settingsHeader { padding: 16px 16px 0; }
+  .settingsBody { flex-direction: column; }
+  .tabs {
+    width: 100%; flex-direction: row; overflow-x: auto;
+    border-right: none; border-bottom: 0.5px solid var(--border-light);
+    padding: 8px 12px; gap: 4px;
+  }
+  .tab { white-space: nowrap; font-size: 13px; padding: 8px 12px; }
+  .panel { padding: 20px 16px; max-height: none; }
+  .input { width: 100%; }
+  .planCard { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .downgradeNotice { width: 100%; }
+}

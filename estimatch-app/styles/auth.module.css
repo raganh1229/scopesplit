@@ -1,0 +1,111 @@
+.card {
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 12px; padding: 32px; width: 100%;
+}
+.card h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; }
+.subtitle { font-size: 14px; color: var(--text-secondary); text-align: center; margin-bottom: 24px; line-height: 1.5; }
+.subtitle strong { color: var(--text-primary); font-weight: 600; }
+
+.googleBtn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 11px; border-radius: 8px;
+  border: 0.5px solid var(--border-default);
+  background: var(--bg-primary); color: var(--text-primary);
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  transition: background 0.15s ease;
+}
+.googleBtn:hover { background: var(--bg-surface); }
+.googleBtn svg { width: 18px; height: 18px; }
+
+.divider {
+  display: flex; align-items: center; gap: 12px; margin: 20px 0;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 0.5px; background: var(--border-default);
+}
+.dividerText {
+  font-size: 12px; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.formGroup { margin-bottom: 16px; }
+.formLabel { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.formInput {
+  width: 100%; padding: 10px 14px;
+  border: 0.5px solid var(--border-default);
+  border-radius: 8px; font-family: var(--font-stack);
+  font-size: 15px; color: var(--text-primary);
+  background: var(--bg-page);
+  transition: border-color 0.15s ease;
+}
+.formInput:focus {
+  outline: none; border-color: var(--blue-400);
+  box-shadow: 0 0 0 3px rgba(55,138,221,0.1);
+}
+.formInput::placeholder { color: var(--text-tertiary); }
+.formInputError { border-color: var(--red-400); }
+
+.passwordWrap { position: relative; }
+.passwordWrap .formInput { padding-right: 42px; }
+.pwToggle {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: var(--text-tertiary);
+}
+.pwToggle svg {
+  width: 18px; height: 18px; stroke: currentColor; fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.pwToggle:hover { color: var(--text-secondary); }
+
+.formRow {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.forgotLink { font-size: 13px; color: var(--blue-600); font-weight: 500; }
+.forgotLink:hover { text-decoration: underline; }
+
+.formHint { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; }
+.formError {
+  display: none; font-size: 13px; color: var(--red-600); margin-top: 4px;
+}
+.formErrorShow { display: block; font-size: 13px; color: var(--red-600); margin-top: 4px; }
+
+.pwStrength { display: flex; gap: 4px; margin-top: 8px; }
+.pwStrengthBar {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: var(--border-light); transition: background 0.2s ease;
+}
+.pwStrengthActive1 { background: var(--red-400); }
+.pwStrengthActive2 { background: var(--amber-200); }
+.pwStrengthActive3 { background: var(--green-200); }
+.pwStrengthActive4 { background: var(--green-400); }
+
+.formSubmit {
+  width: 100%; padding: 12px; border-radius: 8px;
+  background: var(--text-primary); color: #fff;
+  font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: opacity 0.15s ease; margin-top: 8px;
+}
+.formSubmit:hover { opacity: 0.88; }
+.formSubmit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.footer {
+  text-align: center; margin-top: 20px;
+  font-size: 14px; color: var(--text-secondary);
+}
+.footer a { color: var(--blue-600); font-weight: 500; }
+.footer a:hover { text-decoration: underline; }
+
+.terms {
+  font-size: 12px; color: var(--text-tertiary);
+  text-align: center; margin-top: 14px; line-height: 1.5;
+}
+.terms a { color: var(--text-secondary); text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .card { padding: 24px 20px; }
+  .card h1 { font-size: 20px; }
+}

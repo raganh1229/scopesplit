@@ -1,0 +1,71 @@
+.wrap {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 40px 24px;
+}
+.card {
+  max-width: 520px; width: 100%;
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 14px; padding: 40px; text-align: center;
+}
+.icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--red-50);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.icon svg {
+  width: 28px; height: 28px;
+  stroke: var(--red-600); fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.card h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.subtitle {
+  font-size: 14px; color: var(--text-secondary);
+  line-height: 1.6; margin-bottom: 24px;
+  max-width: 400px; margin-left: auto; margin-right: auto;
+}
+.textarea {
+  width: 100%; min-height: 100px; padding: 12px 14px;
+  border: 0.5px solid var(--border-default);
+  border-radius: 8px; font-family: var(--font-stack);
+  font-size: 14px; color: var(--text-primary);
+  background: var(--bg-page); resize: vertical;
+  line-height: 1.5; margin-bottom: 8px;
+  transition: border-color 0.15s ease;
+}
+.textarea:focus {
+  outline: none; border-color: var(--blue-400);
+  box-shadow: 0 0 0 3px rgba(55,138,221,0.1);
+}
+.textarea::placeholder { color: var(--text-tertiary); }
+.hint { font-size: 12px; color: var(--text-tertiary); text-align: left; margin-bottom: 24px; }
+.error {
+  font-size: 13px;
+  color: var(--red-600);
+  text-align: left;
+  margin: 0 0 14px;
+}
+.cancelBtn {
+  width: 100%; padding: 12px; border-radius: 8px;
+  background: var(--red-600); color: #fff;
+  font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: opacity 0.15s ease; margin-bottom: 12px;
+}
+.cancelBtn:hover { opacity: 0.88; }
+.cancelBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.tierLink { font-size: 14px; color: var(--text-secondary); margin-bottom: 10px; }
+.tierLink a { color: var(--blue-600); font-weight: 500; }
+.tierLink a:hover { text-decoration: underline; }
+.keepLink { font-size: 14px; color: var(--text-secondary); }
+.keepLink a { color: var(--blue-600); font-weight: 500; }
+.keepLink a:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .card { padding: 28px 20px; }
+  .card h1 { font-size: 20px; }
+}

@@ -1,0 +1,235 @@
+import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { SubscriptionStatus, SubscriptionTier } from '@/app/generated/prisma/client';
+import prisma from '@/lib/prisma';
+import { PLAN_PRICE_IDS, assertConfiguredPrice, mapPriceIdToPlan, stripe, type PlanKey } from '@/lib/stripe';
+
+const MANAGEABLE_STATUSES = new Set(['trialing', 'active', 'past_due', 'unpaid']);
+
+type ChangePlanRequestBody = {
+  plan?: string;
+};
+
+const PLAN_LIMITS: Record<PlanKey, number> = {
+  starter: 10,
+  professional: 50,
+  business: 200,
+};
+
+const PLAN_MONTHLY_PRICES_CENTS: Record<PlanKey, number> = {
+  starter: 4999,
+  professional: 9900,
+  business: 24900,
+};
+
+function isPlanKey(value: string | undefined): value is PlanKey {
+  return value === 'starter' || value === 'professional' || value === 'business';
+}
+
+function toPrismaTier(plan: PlanKey): SubscriptionTier {
+  if (plan === 'starter') return SubscriptionTier.STARTER;
+  if (plan === 'professional') return SubscriptionTier.PROFESSIONAL;
+  return SubscriptionTier.ENTERPRISE;
+}
+
+function fromPrismaTier(tier: SubscriptionTier | null): PlanKey | null {
+  if (tier === SubscriptionTier.STARTER) return 'starter';
+  if (tier === SubscriptionTier.PROFESSIONAL) return 'professional';
+  if (tier === SubscriptionTier.ENTERPRISE) return 'business';
+  return null;
+}
+
+function getPlanRank(plan: PlanKey): number {
+  if (plan === 'starter') return 1;
+  if (plan === 'professional') return 2;
+  return 3;
+}
+
+function fromUnixSeconds(value: number | null): Date | null {
+  if (!value || !Number.isFinite(value)) return null;
+  const date = new Date(value * 1000);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function readUnixSecondsCandidate(record: unknown, ...keys: string[]): number | null {
+  if (!record || typeof record !== 'object') return null;
+
+  const source = record as Record<string, unknown>;
+  for (const key of keys) {
+    const value = source[key];
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const parsed = Number(value);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+  }
+
+  return null;
+}
+
+async function findManageableSubscription(customerId: string) {
+  const { data } = await stripe.subscriptions.list({
+    customer: customerId,
+    status: 'all',
+    limit: 20,
+  });
+
+  return (
+    data.find(sub => MANAGEABLE_STATUSES.has(sub.status) && !sub.ended_at) ??
+    data.find(sub => MANAGEABLE_STATUSES.has(sub.status)) ??
+    null
+  );
+}
+
+export async function POST(request: Request) {
+  const { userId: clerkId } = await auth();
+
+  if (!clerkId) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  }
+
+  let body: ChangePlanRequestBody;
+  try {
+    body = (await request.json()) as ChangePlanRequestBody;
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 });
+  }
+
+  if (!isPlanKey(body.plan)) {
+    return NextResponse.json({ error: 'Invalid subscription plan.' }, { status: 400 });
+  }
+
+  const appUser = await prisma.user.findUnique({
+    where: { clerkId },
+    select: {
+      id: true,
+      stripeCustomerId: true,
+      subscriptionTier: true,
+      comparisonsUsedThisPeriod: true,
+    },
+  });
+
+  if (!appUser?.stripeCustomerId) {
+    return NextResponse.json({ error: 'No Stripe customer found for this account.' }, { status: 400 });
+  }
+
+  try {
+    const subscription = await findManageableSubscription(appUser.stripeCustomerId);
+
+    if (!subscription) {
+      return NextResponse.json({ error: 'No active subscription found to update.' }, { status: 404 });
+    }
+
+    const subscriptionItem = subscription.items.data[0];
+    if (!subscriptionItem?.id) {
+      return NextResponse.json({ error: 'Subscription has no billable items.' }, { status: 400 });
+    }
+
+    const targetPrice = assertConfiguredPrice(
+      PLAN_PRICE_IDS[body.plan],
+      `STRIPE_PRICE_${body.plan.toUpperCase()}_MONTHLY`
+    );
+
+    const currentPrice = subscriptionItem.price?.id ?? null;
+    const mappedCurrentPlan = currentPrice ? mapPriceIdToPlan(currentPrice) : null;
+    const currentPlan = mappedCurrentPlan ?? fromPrismaTier(appUser.subscriptionTier) ?? body.plan;
+    const currentPlanRank = getPlanRank(currentPlan);
+    const targetPlanRank = getPlanRank(body.plan);
+    const isUpgrade = targetPlanRank > currentPlanRank;
+    const isDowngrade = targetPlanRank < currentPlanRank;
+
+    const prorationBehavior = isDowngrade ? 'none' : 'create_prorations';
+
+    const updatedSubscription =
+      currentPrice === targetPrice && !subscription.cancel_at_period_end
+        ? subscription
+        : await stripe.subscriptions.update(subscription.id, {
+            cancel_at_period_end: false,
+            proration_behavior: prorationBehavior,
+            items: [{
+              id: subscriptionItem.id,
+              price: targetPrice,
+            }],
+            metadata: {
+              selectedPlan: body.plan,
+            },
+          });
+
+    let subscriptionEndsAt = fromUnixSeconds(
+      readUnixSecondsCandidate(
+        updatedSubscription,
+        'current_period_end',
+        'currentPeriodEnd',
+        'cancel_at',
+        'cancelAt'
+      )
+    );
+
+    if (!subscriptionEndsAt) {
+      const refreshedSubscription = await stripe.subscriptions.retrieve(updatedSubscription.id);
+      subscriptionEndsAt = fromUnixSeconds(
+        readUnixSecondsCandidate(
+          refreshedSubscription,
+          'current_period_end',
+          'currentPeriodEnd',
+          'cancel_at',
+          'cancelAt'
+        )
+      );
+    }
+
+    if (!subscriptionEndsAt) {
+      subscriptionEndsAt = fromUnixSeconds(
+        readUnixSecondsCandidate(
+          subscription,
+          'current_period_end',
+          'currentPeriodEnd',
+          'cancel_at',
+          'cancelAt'
+        )
+      );
+    }
+
+    await prisma.user.update({
+      where: { id: appUser.id },
+      data: {
+        subscriptionTier: isDowngrade ? appUser.subscriptionTier : toPrismaTier(body.plan),
+        pendingTierDowngrade: isDowngrade ? toPrismaTier(body.plan) : null,
+        pendingTierEffectiveAt: isDowngrade ? subscriptionEndsAt : null,
+        subscriptionStatus: SubscriptionStatus.ACTIVE,
+        ...(subscriptionEndsAt
+          ? {
+              subscriptionEndsAt,
+              periodResetDate: subscriptionEndsAt,
+            }
+          : {}),
+      },
+    });
+
+    return NextResponse.json(
+      {
+        plan: body.plan,
+        previousPlan: currentPlan,
+        changeType: isUpgrade ? 'upgrade' : isDowngrade ? 'downgrade' : 'none',
+        cancelAtPeriodEnd: false,
+        subscriptionEndsAt,
+        comparisonsUsed: appUser.comparisonsUsedThisPeriod,
+        effectiveComparisonLimit: isDowngrade ? PLAN_LIMITS[currentPlan] : PLAN_LIMITS[body.plan],
+        nextComparisonLimit: PLAN_LIMITS[body.plan],
+        amountDueNowCents: isUpgrade
+          ? Math.max(PLAN_MONTHLY_PRICES_CENTS[body.plan] - PLAN_MONTHLY_PRICES_CENTS[currentPlan], 0)
+          : 0,
+        nextChargeAmountCents: PLAN_MONTHLY_PRICES_CENTS[body.plan],
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unable to change subscription plan.';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

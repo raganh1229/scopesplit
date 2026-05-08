@@ -1,0 +1,301 @@
+'use client';
+
+import React, { useState, useMemo } from 'react';
+import styles from './MatchReview.module.css';
+
+export type MatchPair = {
+  e1Zones: string[];
+  e2Zones: string[];
+  canonical: string;
+  isMerged: boolean;
+  confidence: number;
+};
+
+type Props = {
+  comparisonId: string;
+  initialPairs: MatchPair[];
+  initialUnmatchedE1: string[];
+  initialUnmatchedE2: string[];
+  onConfirmed: () => void;
+  onBack?: () => void;
+  onExit?: () => void;
+};
+
+function joinNames(names: string[]): string {
+  return names.join(' + ');
+}
+
+export default function MatchReview({
+  comparisonId,
+  initialPairs,
+  initialUnmatchedE1,
+  initialUnmatchedE2,
+  onConfirmed,
+  onBack,
+  onExit,
+}: Props) {
+  // ── Initialize slots ──────────────────────────────────────────────────
+  // Parallel arrays: same index = same row. null = no zone on that side.
+  const initSlots = (): { e1: (string | null)[]; e2: (string | null)[] } => {
+    const e1: (string | null)[] = [];
+    const e2: (string | null)[] = [];
+    for (const pair of initialPairs) {
+      e1.push(joinNames(pair.e1Zones));
+      e2.push(joinNames(pair.e2Zones));
+    }
+    for (const name of initialUnmatchedE1) {
+      e1.push(name);
+      e2.push(null);
+    }
+    for (const name of initialUnmatchedE2) {
+      e1.push(null);
+      e2.push(name);
+    }
+    return { e1, e2 };
+  };
+
+  const { e1: initE1, e2: initE2 } = initSlots();
+  const [e1Slots, setE1Slots] = useState<(string | null)[]>(initE1);
+  const [e2Slots, setE2Slots] = useState<(string | null)[]>(initE2);
+  const [confirming, setConfirming] = useState(false);
+  const [confirmError, setConfirmError] = useState<string | null>(null);
+  const [goingBack, setGoingBack] = useState(false);
+
+  const confidenceMap = useMemo(
+    () =>
+      new Map(
+        initialPairs.map(p => [
+          `${joinNames(p.e1Zones)}|${joinNames(p.e2Zones)}`,
+          p.confidence,
+        ]),
+      ),
+    [initialPairs],
+  );
+
+  // ── Drag state ────────────────────────────────────────────────────────
+  const [dragFrom, setDragFrom] = useState<{ col: 'e1' | 'e2'; index: number } | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<{ col: 'e1' | 'e2'; index: number } | null>(null);
+
+  function handleDragStart(col: 'e1' | 'e2', index: number) {
+    setDragFrom({ col, index });
+  }
+
+  function handleDragOver(e: React.DragEvent, col: 'e1' | 'e2', index: number) {
+    e.preventDefault();
+    if (dragFrom?.col === col) {
+      setDragOverIndex({ col, index });
+    }
+  }
+
+  function handleDrop(e: React.DragEvent, col: 'e1' | 'e2', toIndex: number) {
+    e.preventDefault();
+    if (!dragFrom || dragFrom.col !== col || dragFrom.index === toIndex) {
+      setDragFrom(null);
+      setDragOverIndex(null);
+      return;
+    }
+    const fromIndex = dragFrom.index;
+    const setter = col === 'e1' ? setE1Slots : setE2Slots;
+    setter(prev => {
+      const next = [...prev];
+      [next[fromIndex], next[toIndex]] = [next[toIndex], next[fromIndex]];
+      return next;
+    });
+    setDragFrom(null);
+    setDragOverIndex(null);
+  }
+
+  function handleDragEnd() {
+    setDragFrom(null);
+    setDragOverIndex(null);
+  }
+
+  // ── Back ──────────────────────────────────────────────────
+  async function handleBack() {
+    if (goingBack || confirming || !onBack) return;
+    setGoingBack(true);
+    setConfirmError(null);
+    try {
+      const res = await fetch(`/api/comparisons/${comparisonId}/match-review/back`, {
+        method: 'POST',
+      });
+      if (!res.ok) {
+        setConfirmError('Could not go back — please try again.');
+        setGoingBack(false);
+        return;
+      }
+      onBack();
+    } catch {
+      setConfirmError('Network error — please try again.');
+      setGoingBack(false);
+    }
+  }
+
+  // ── Confirm ──────────────────────────────────────────────────
+  async function handleConfirm() {
+    if (confirming) return;
+    setConfirming(true);
+    setConfirmError(null);
+    try {
+      const res = await fetch(`/api/comparisons/${comparisonId}/match-review/confirm`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ e1Slots, e2Slots }),
+      });
+      if (!res.ok) {
+        setConfirmError('Could not confirm — please try again.');
+        setConfirming(false);
+        return;
+      }
+      onConfirmed();
+    } catch {
+      setConfirmError('Network error — please try again.');
+      setConfirming(false);
+    }
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────
+  const rowCount = Math.max(e1Slots.length, e2Slots.length);
+
+  return (
+    <div className={styles.shell}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Confirm Zone Pairings</h1>
+        <p className={styles.subtitle}>
+          The AI has matched zones from your estimate to the adjuster&apos;s estimate.
+          Review each pairing — zones highlighted in green are high-confidence matches.
+          Drag any zone within its column to correct a mismatch. Zones without a
+          counterpart will be extracted independently.
+          When everything looks right, click <strong>Confirm pairings →</strong>.
+        </p>
+      </div>
+
+      <div className={styles.tableWrap}>
+        <div className={styles.colHeads}>
+          <div className={styles.colHead}>Your Estimate</div>
+          <div className={styles.colHeadMid} aria-hidden />
+          <div className={styles.colHead}>Adjuster&apos;s Estimate</div>
+        </div>
+
+        <div className={styles.rows}>
+          {Array.from({ length: rowCount }).map((_, i) => {
+            const e1Name = e1Slots[i] ?? null;
+            const e2Name = e2Slots[i] ?? null;
+            const confKey = e1Name && e2Name ? `${e1Name}|${e2Name}` : null;
+            const confidence = confKey ? confidenceMap.get(confKey) : undefined;
+            const isPaired = e1Name !== null && e2Name !== null;
+            const isHighConf = isPaired && confidence !== undefined && confidence >= 90;
+            const isDragOverE1 =
+              dragOverIndex?.col === 'e1' &&
+              dragOverIndex.index === i &&
+              dragFrom?.col === 'e1';
+            const isDragOverE2 =
+              dragOverIndex?.col === 'e2' &&
+              dragOverIndex.index === i &&
+              dragFrom?.col === 'e2';
+
+            return (
+              <div
+                key={i}
+                className={`${styles.row} ${isHighConf ? styles.rowHighConf : ''}`}
+              >
+                {/* ── E1 cell ─── */}
+                <div
+                  className={`${styles.cell} ${isDragOverE1 ? styles.cellDragOver : ''} ${
+                    !e1Name ? styles.cellEmpty : ''
+                  }`}
+                  draggable={e1Name !== null}
+                  onDragStart={() => e1Name !== null && handleDragStart('e1', i)}
+                  onDragOver={e => handleDragOver(e, 'e1', i)}
+                  onDrop={e => handleDrop(e, 'e1', i)}
+                  onDragEnd={handleDragEnd}
+                >
+                  {e1Name ? (
+                    <>
+                      <span className={styles.dragHandle} aria-hidden="true">⠿</span>
+                      <span className={styles.zoneName}>{e1Name}</span>
+                    </>
+                  ) : (
+                    <span className={styles.emptyLabel}>—</span>
+                  )}
+                </div>
+
+                {/* ── Confidence column ─── */}
+                <div className={styles.confCol}>
+                  {isPaired && confidence !== undefined && (
+                    <span
+                      className={`${styles.confBadge} ${
+                        confidence >= 90
+                          ? styles.confHigh
+                          : confidence >= 70
+                          ? styles.confMid
+                          : styles.confLow
+                      }`}
+                    >
+                      {confidence}%
+                    </span>
+                  )}
+                </div>
+
+                {/* ── E2 cell ─── */}
+                <div
+                  className={`${styles.cell} ${isDragOverE2 ? styles.cellDragOver : ''} ${
+                    !e2Name ? styles.cellEmpty : ''
+                  }`}
+                  draggable={e2Name !== null}
+                  onDragStart={() => e2Name !== null && handleDragStart('e2', i)}
+                  onDragOver={e => handleDragOver(e, 'e2', i)}
+                  onDrop={e => handleDrop(e, 'e2', i)}
+                  onDragEnd={handleDragEnd}
+                >
+                  {e2Name ? (
+                    <>
+                      <span className={styles.dragHandle} aria-hidden="true">⠿</span>
+                      <span className={styles.zoneName}>{e2Name}</span>
+                    </>
+                  ) : (
+                    <span className={styles.emptyLabel}>—</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {confirmError && <div className={styles.errorMessage}>{confirmError}</div>}
+
+      <div className={styles.bottomBar}>
+        <span className={styles.hint}>
+          {e1Slots.filter(Boolean).length} zone
+          {e1Slots.filter(Boolean).length !== 1 ? 's' : ''} ·{' '}
+          {e2Slots.filter(Boolean).length} zone
+          {e2Slots.filter(Boolean).length !== 1 ? 's' : ''}
+        </span>
+        <div className={styles.bottomBarActions}>
+          {onExit && (
+            <button className={styles.exitBtn} onClick={onExit} disabled={goingBack || confirming}>
+              Exit
+            </button>
+          )}
+          {onBack && (
+            <button
+              className={styles.backBtn}
+              onClick={handleBack}
+              disabled={goingBack || confirming}
+            >
+              {goingBack ? 'Going back…' : '← Revise zones'}
+            </button>
+          )}
+          <button
+            className={styles.confirmBtn}
+            onClick={handleConfirm}
+            disabled={confirming || goingBack}
+          >
+            {confirming ? 'Starting extraction…' : 'Confirm pairings →'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
