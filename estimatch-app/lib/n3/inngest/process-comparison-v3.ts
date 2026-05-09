@@ -49,6 +49,7 @@ import { buildComponentsN3 } from '@/lib/n3/passes/build-components';
 import { assignMatchesN3 } from '@/lib/n3/passes/assign-matches';
 import { groupMatchingN3 } from '@/lib/n3/passes/group-matching';
 import { llmAdjudicationN3 } from '@/lib/n3/passes/llm-adjudication';
+import { persistDecisionsN3 } from '@/lib/n3/passes/persist-decisions';
 
 type HandlerArgs = GetFunctionInput<typeof inngest>;
 
@@ -305,24 +306,17 @@ export const processComparisonV3 = inngest.createFunction(
 
       // ── Step 16: Phase 18 — Persist Decisions ────────────────────────────
       const finalResult = await step.run('p18-persist-decisions', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) {
-          return { step: 'p18-persist-decisions', skipped: true, lineItemCount: 0 };
-        }
-
-        // Stub: flip to COMPLETED with zero line items until Phase 18 logic is wired.
-        await prisma.comparison.update({
-          where: { id: comparisonId },
-          data: { status: 'COMPLETED' },
-        });
-
-        logger.info('[n3] p18-persist-decisions: stub complete — comparison flipped COMPLETED', {
-          comparisonId,
-        });
-        return { step: 'p18-persist-decisions', status: 'stub' as const, lineItemCount: 0 };
+        return persistDecisionsN3(comparisonId, logger);
+      });
+      logger.info('[n3] p18-persist-decisions complete', {
+        comparisonId,
+        lineItemCount:  finalResult.lineItemCount,
+        matchCount:     finalResult.matchCount,
+        modifiedCount:  finalResult.modifiedCount,
+        missingCount:   finalResult.missingCount,
+        addedCount:     finalResult.addedCount,
+        groupedCount:   finalResult.groupedCount,
+        totalGap:       finalResult.totalGap,
       });
 
       logger.info('[n3] process-comparison-v3 completed (all steps stubbed)', {
