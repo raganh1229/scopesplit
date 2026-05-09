@@ -1798,6 +1798,24 @@ export default function ComparisonDetailPage() {
           </button>
 
           <div className={styles.toolbarSpacer} />
+          <Link
+            href={`/app/n3-dashboard/${comparisonId}`}
+            target="_blank"
+            rel="noopener"
+            style={{
+              fontSize: 12,
+              color: '#4f46e5',
+              textDecoration: 'none',
+              padding: '6px 10px',
+              border: '1px solid #c7d2fe',
+              borderRadius: 4,
+              background: '#eef2ff',
+              marginRight: 8,
+            }}
+            title="Open N3 verification dashboard (debug)"
+          >
+            N3 Debug ↗
+          </Link>
           <div className={styles.notesTools}>
             {(draftEdits.size > 0 || draftZoneNames.size > 0) && (
               <button

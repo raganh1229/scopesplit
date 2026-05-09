@@ -1,0 +1,245 @@
+/* N3 Verification Dashboard styles
+   Information-dense; minimal aesthetics. */
+
+.page {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 13px;
+  color: var(--foreground, #111);
+  background: var(--background, #fff);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.headerMeta {
+  font-size: 12px;
+  color: #666;
+}
+
+.section {
+  margin: 32px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  background: #fafafa;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sectionHeader h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+}
+
+.statusDot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.statusGreen  { background: #16a34a; }
+.statusYellow { background: #eab308; }
+.statusRed    { background: #dc2626; }
+
+.headline {
+  color: #555;
+  font-size: 13px;
+}
+
+.flags {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  color: #b45309;
+  font-size: 12px;
+}
+.flags li { margin: 2px 0; }
+
+.healthGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 8px;
+}
+
+.healthCard {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 10px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.healthCard.green  { border-left: 4px solid #16a34a; }
+.healthCard.yellow { border-left: 4px solid #eab308; }
+.healthCard.red    { border-left: 4px solid #dc2626; }
+
+.healthCard .label {
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.healthCard .head {
+  color: #444;
+}
+
+.healthCard .flag {
+  display: block;
+  color: #b45309;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.kvGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 6px 16px;
+  margin: 8px 0;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted #ddd;
+  padding: 2px 0;
+}
+
+.kv .key   { color: #666; }
+.kv .value { font-weight: 600; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+th, td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #f0f0f0;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+}
+
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.bar {
+  display: inline-block;
+  background: #4f46e5;
+  height: 10px;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
+.histogramRow {
+  display: grid;
+  grid-template-columns: 90px 1fr 60px;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  margin: 2px 0;
+}
+
+.histogramRow .label { color: #666; }
+.histogramRow .count { text-align: right; font-variant-numeric: tabular-nums; }
+
+.featureTable th, .featureTable td { font-size: 11px; }
+
+.featureTable .deadFeature { background: #fef2f2; }
+.featureTable .strongFeature { background: #f0fdf4; }
+
+.confusionMatrix {
+  display: grid;
+  grid-template-columns: 120px 100px 100px;
+  gap: 1px;
+  background: #ddd;
+  margin: 8px 0;
+  width: max-content;
+}
+
+.confusionMatrix > div {
+  background: #fff;
+  padding: 8px 12px;
+}
+
+.confusionMatrix .header {
+  font-weight: 700;
+  background: #f0f0f0;
+}
+
+.confusionMatrix .diag {
+  background: #f0fdf4;
+}
+
+.decisionTable {
+  font-size: 11px;
+}
+.decisionTable td {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.errorBox {
+  padding: 16px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  color: #991b1b;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #4f46e5;
+  text-decoration: none;
+  font-size: 13px;
+}
+.backLink:hover { text-decoration: underline; }
+
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tag.match    { background: #dcfce7; color: #166534; }
+.tag.modified { background: #fef3c7; color: #854d0e; }
+.tag.unmatched { background: #fee2e2; color: #991b1b; }
+.tag.grouped { background: #dbeafe; color: #1e40af; }
+.tag.possible { background: #fef9c3; color: #713f12; }
+.tag.one_to_one { background: #dcfce7; color: #166534; }
