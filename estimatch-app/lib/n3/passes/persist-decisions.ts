@@ -116,15 +116,19 @@ export async function persistDecisionsN3(
   });
   const zoneMap = new Map(zones.map(z => [z.id, z]));
 
-  // ── 4. Detect orphaned adj items (adj not claimed by any decision) ──────────
-  const claimedAdjIds = new Set(decisions.flatMap(d => d.adjusterItemIds));
+  // ── 4. Detect orphaned items on both sides ─────────────────────────────────
+  const claimedAdjIds   = new Set(decisions.flatMap(d => d.adjusterItemIds));
+  const claimedYoursIds = new Set(decisions.flatMap(d => d.yourItemIds));
   const adjItemIds    = new Set(n3Items.filter(i => i.source === 'adjuster').map(i => i.id));
-  const orphanedAdjIds = [...adjItemIds].filter(id => !claimedAdjIds.has(id));
+  const yoursItemIds  = new Set(n3Items.filter(i => i.source === 'yours').map(i => i.id));
+  const orphanedAdjIds   = [...adjItemIds].filter(id => !claimedAdjIds.has(id));
+  const orphanedYoursIds = [...yoursItemIds].filter(id => !claimedYoursIds.has(id));
 
   logger.info('[n3/persist-decisions] loaded', {
     comparisonId,
     decisions: decisions.length,
     orphanedAdj: orphanedAdjIds.length,
+    orphanedYours: orphanedYoursIds.length,
   });
 
   // ── 5. Build LineItem rows ─────────────────────────────────────────────────
@@ -236,7 +240,55 @@ export async function persistDecisionsN3(
     });
   }
 
-  // ── 5b. Orphaned adj items → ADDED_BY_ADJUSTER ────────────────────────────
+  // ── 5b. Orphaned yours items → MISSING_FROM_ADJUSTER ──────────────────────
+  // Contractor items with no decision (Phase 15/16 silently dropped them).
+  // Defensive fallback — ensures every extracted item is persisted.
+  const sortedOrphanedYours = orphanedYoursIds
+    .map(id => itemMap.get(id))
+    .filter(Boolean) as NonNullable<ReturnType<typeof itemMap.get>>[];
+  sortedOrphanedYours.sort((a, b) =>
+    (a.pageNumber * 10000 + a.sourceLineNumber) - (b.pageNumber * 10000 + b.sourceLineNumber)
+  );
+
+  for (const yours of sortedOrphanedYours) {
+    const yoursZone = yours.zoneId ? zoneMap.get(yours.zoneId) : null;
+    const totalYours = toNum(yours.totalAmount);
+    totalYoursAcc += totalYours;
+    missingCount++;
+
+    rows.push({
+      comparisonId,
+      matchStatus: 'MISSING_FROM_ADJUSTER',
+      zoneYours:       yoursZone?.name ?? null,
+      zoneAdjuster:    null,
+      zoneCanonical:   yoursZone?.normalizedName ?? null,
+      zoneConfidence:  null,
+      descriptionYours:    yours.rawDescription,
+      descriptionAdjuster: null,
+      qtyYours:    formatQty(yours.normalizedQuantity, yours.normalizedUnit),
+      qtyAdjuster: null,
+      unitYours:   yours.normalizedUnit ?? null,
+      unitAdjuster: null,
+      removeYours:  toDecimalOrNull(yours.removeAmount),
+      removeAdjuster: null,
+      replaceYours:  toDecimalOrNull(yours.replaceAmount),
+      replaceAdjuster: null,
+      resetYours:  toDecimalOrNull(yours.resetAmount),
+      resetAdjuster: null,
+      taxYours:  toDecimalOrNull(yours.taxAmount),
+      taxAdjuster: null,
+      opYours:  toDecimalOrNull(yours.opAmount),
+      opAdjuster: null,
+      totalYours:  toDecimalOrNull(yours.totalAmount),
+      totalAdjuster: null,
+      diffAmount:  Number((-totalYours).toFixed(2)),
+      category:   null,
+      sortOrder:  sortOrder++,
+      groupId:    null,
+    });
+  }
+
+  // ── 5c. Orphaned adj items → ADDED_BY_ADJUSTER ────────────────────────────
   const sortedOrphanedAdj = orphanedAdjIds
     .map(id => itemMap.get(id))
     .filter(Boolean) as NonNullable<ReturnType<typeof itemMap.get>>[];

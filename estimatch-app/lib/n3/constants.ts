@@ -19,15 +19,15 @@ import type { N3CandidateScoreFeatures, N3RetrievalSource } from './types';
 // Feature groupings vs §16.1's 17 granular features — see §A.6 reconciliation.
 
 export const SCORE_WEIGHTS = {
-  descriptionFuzzySimilarity:    0.20,
-  descriptionSemanticSimilarity: 0.15,
-  tradeActionSimilarity:         0.12,
-  materialObjectSimilarity:      0.09,
-  quantityUnitSimilarity:        0.10,
-  totalSimilarity:               0.10,
+  descriptionFuzzySimilarity:    0.23,  // +0.03 (redistributed from stubs)
+  descriptionSemanticSimilarity: 0.19,  // +0.04 (redistributed from stubs)
+  tradeActionSimilarity:         0.14,  // +0.02 (redistributed from stubs)
+  materialObjectSimilarity:      0.01,  // stub (Phase 10 NLP not yet built); minimal to preserve slot
+  quantityUnitSimilarity:        0.12,  // +0.02 (redistributed from stubs)
+  totalSimilarity:               0.11,  // +0.01 (redistributed from stubs)
   unitPriceSimilarity:           0.06,
-  itemCodeSimilarity:            0.06,
-  zoneCorrespondenceSimilarity:  0.08,
+  itemCodeSimilarity:            0.01,  // stub (0% on real-description PDFs); minimal to preserve slot
+  zoneCorrespondenceSimilarity:  0.09,  // +0.01 (redistributed from stubs)
   sequenceSimilarity:            0.02,
   specialFlagCompatibility:      0.02,
 } as const satisfies Record<keyof N3CandidateScoreFeatures, number>;
