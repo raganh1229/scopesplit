@@ -47,6 +47,8 @@ import { generateCandidatesN3 } from '@/lib/n3/passes/generate-candidates';
 import { scoreCandidatesN3 } from '@/lib/n3/passes/score-candidates';
 import { buildComponentsN3 } from '@/lib/n3/passes/build-components';
 import { assignMatchesN3 } from '@/lib/n3/passes/assign-matches';
+import { groupMatchingN3 } from '@/lib/n3/passes/group-matching';
+import { llmAdjudicationN3 } from '@/lib/n3/passes/llm-adjudication';
 
 type HandlerArgs = GetFunctionInput<typeof inngest>;
 
@@ -272,47 +274,36 @@ export const processComparisonV3 = inngest.createFunction(
       });
       logger.info('[n3] p15-assign-matches complete', {
         comparisonId,
-        decisionCount: p15Result.decisionCount,
-        matchedCount: p15Result.matchedCount,
-        possibleCount: p15Result.possibleCount,
+        decisionCount:  p15Result.decisionCount,
+        matchedCount:   p15Result.matchedCount,
+        possibleCount:  p15Result.possibleCount,
         unmatchedYours: p15Result.unmatchedYours,
-        unmatchedAdj: p15Result.unmatchedAdj,
+        unmatchedAdj:   p15Result.unmatchedAdj,
       });
 
       // ── Step 14: Phase 16 — Group Matching ───────────────────────────────
-      // Write N3MatchDecision rows with decision_type='grouped'.
-      await step.run('p16-group-matching', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) return { step: 'p16-group-matching', skipped: true };
-
-        logger.info('[n3] p16-group-matching: stub — no group decisions written yet', {
-          comparisonId,
-        });
-        return { step: 'p16-group-matching', status: 'stub' as const, groupCount: 0 };
+      const p16Result = await step.run('p16-group-matching', async () => {
+        return groupMatchingN3(comparisonId, logger);
+      });
+      logger.info('[n3] p16-group-matching complete', {
+        comparisonId,
+        groupedCount:    p16Result.groupedCount,
+        relinquishedAdj: p16Result.relinquishedAdj,
       });
 
-      // ── Step 15: Phase 17 — LLM Adjudication ─────────────────────────
-      // TODO(Phase 17): For still-ambiguous components (is_ambiguous=true
-      // after Phase 16), call Claude Sonnet with the top-K candidates,
-      // persist decision with decided_by='llm', write N3LlmCall telemetry.
-      await step.run('p17-llm-adjudication', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) return { step: 'p17-llm-adjudication', skipped: true };
-
-        logger.info('[n3] p17-llm-adjudication: stub — no LLM calls made yet', { comparisonId });
-        return { step: 'p17-llm-adjudication', status: 'stub' as const, adjudicatedCount: 0 };
+      // ── Step 15: Phase 17 — LLM Adjudication ─────────────────────────────
+      const p17Result = await step.run('p17-llm-adjudication', async () => {
+        return llmAdjudicationN3(comparisonId, logger);
+      });
+      logger.info('[n3] p17-llm-adjudication complete', {
+        comparisonId,
+        adjudicatedCount: p17Result.adjudicatedCount,
+        acceptedCount:    p17Result.acceptedCount,
+        rejectedCount:    p17Result.rejectedCount,
+        skipped:          p17Result.skipped,
       });
 
-      // ── Step 16: Phase 18 — Persist Decisions ────────────────────────
-      // TODO(Phase 18): Read N3MatchDecision rows, project each decision
-      // to the existing LineItem schema (matching N1/N2 output shape),
-      // atomic deleteMany + createMany LineItems, flip status → COMPLETED.
+      // ── Step 16: Phase 18 — Persist Decisions ────────────────────────────
       const finalResult = await step.run('p18-persist-decisions', async () => {
         const exists = await prisma.comparison.findUnique({
           where: { id: comparisonId },
