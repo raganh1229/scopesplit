@@ -45,6 +45,7 @@ import { normalizeLineItemsN3 } from '@/lib/n3/passes/normalize-line-items';
 import { generateEmbeddingsN3 } from '@/lib/n3/passes/generate-embeddings';
 import { generateCandidatesN3 } from '@/lib/n3/passes/generate-candidates';
 import { scoreCandidatesN3 } from '@/lib/n3/passes/score-candidates';
+import { buildComponentsN3 } from '@/lib/n3/passes/build-components';
 
 type HandlerArgs = GetFunctionInput<typeof inngest>;
 
@@ -252,21 +253,16 @@ export const processComparisonV3 = inngest.createFunction(
         byBucket: p13Result.byBucket,
       });
 
-      // ── Step 12: Phase 14 — Build Connected Components ───────────────
-      // TODO(Phase 14): Query non-rejected edges, build sparse bipartite
-      // graph, run BFS/union-find to find connected components, classify
-      // as small/medium/large, write N3MatchComponent rows.
-      await step.run('p14-build-components', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) return { step: 'p14-build-components', skipped: true };
-
-        logger.info('[n3] p14-build-components: stub — no components written yet', {
-          comparisonId,
-        });
-        return { step: 'p14-build-components', status: 'stub' as const, componentCount: 0 };
+      // ── Step 12: Phase 14 — Build Connected Components ───────────────────
+      const p14Result = await step.run('p14-build-components', async () => {
+        return buildComponentsN3(comparisonId, logger);
+      });
+      logger.info('[n3] p14-build-components complete', {
+        comparisonId,
+        componentCount: p14Result.componentCount,
+        bySize: p14Result.bySize,
+        singletonYours: p14Result.singletonYours,
+        singletonAdj: p14Result.singletonAdj,
       });
 
       // ── Step 13: Phase 15 — Assign Matches ───────────────────────────
