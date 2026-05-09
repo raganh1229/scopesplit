@@ -55,11 +55,20 @@ export const ZONE_BOOSTS = {
 //
 // CALIBRATION REQUIRED: tune against Set3 labeled data before production.
 
+// PRE-CALIBRATION NOTE (Phase 13 live test, May 2026):
+// materialObjectSimilarity (weight 0.09) and itemCodeSimilarity (weight 0.06)
+// are both stubs returning 0 for all edges. This caps the max achievable
+// finalScore at ~0.895 instead of the theoretical 1.0 + boosts. The REJECT
+// threshold has been temporarily lowered from 0.60 → 0.30 so that true matches
+// are not discarded before Phase 14/15 can rank and assign them.
+// Raise back toward 0.55 once Phase 10 NLP (material/object) is built and
+// real item-code data is present in production comparisons.
+
 export const SCORE_THRESHOLDS = {
-  HIGH_CONFIDENCE: 0.90,   // auto-resolve without LLM if no competing edge
-  POSSIBLE_MATCH:  0.75,   // requires human review
-  WEAK_CANDIDATE:  0.60,   // above this → enters sparse graph; below → REJECT
-  REJECT:          0.60,   // same as WEAK_CANDIDATE; explicit alias for filter logic
+  HIGH_CONFIDENCE: 0.75,   // auto-resolve without LLM if no competing edge (was 0.90 pre-calibration)
+  POSSIBLE_MATCH:  0.55,   // requires human review (was 0.75 pre-calibration)
+  WEAK_CANDIDATE:  0.30,   // above this → enters sparse graph; below → REJECT (was 0.60 pre-calibration)
+  REJECT:          0.30,   // same as WEAK_CANDIDATE; explicit alias for filter logic (was 0.60 pre-calibration)
 } as const;
 
 // ── Zone verification confidence (§7, Page 7) ─────────────────────────────────

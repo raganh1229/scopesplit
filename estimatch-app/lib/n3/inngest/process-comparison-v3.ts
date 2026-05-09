@@ -44,6 +44,7 @@ import { extractLineItemsN3 } from '@/lib/n3/passes/extract-line-items';
 import { normalizeLineItemsN3 } from '@/lib/n3/passes/normalize-line-items';
 import { generateEmbeddingsN3 } from '@/lib/n3/passes/generate-embeddings';
 import { generateCandidatesN3 } from '@/lib/n3/passes/generate-candidates';
+import { scoreCandidatesN3 } from '@/lib/n3/passes/score-candidates';
 
 type HandlerArgs = GetFunctionInput<typeof inngest>;
 
@@ -241,18 +242,14 @@ export const processComparisonV3 = inngest.createFunction(
       });
 
       // ── Step 11: Phase 13 — Score Candidates ─────────────────────────
-      // TODO(Phase 13): For each N3CandidateEdge: computeRawScore on 11
-      // features, apply zone boosts via computeFinalScore, set is_rejected
-      // via shouldRejectEdge. All from lib/n3/normalization.ts.
-      await step.run('p13-score-candidates', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) return { step: 'p13-score-candidates', skipped: true };
-
-        logger.info('[n3] p13-score-candidates: stub — no scores written yet', { comparisonId });
-        return { step: 'p13-score-candidates', status: 'stub' as const, scoredCount: 0 };
+      const p13Result = await step.run('p13-score-candidates', async () => {
+        return scoreCandidatesN3(comparisonId, logger);
+      });
+      logger.info('[n3] p13-score-candidates complete', {
+        comparisonId,
+        scoredCount: p13Result.scoredCount,
+        rejectedCount: p13Result.rejectedCount,
+        byBucket: p13Result.byBucket,
       });
 
       // ── Step 12: Phase 14 — Build Connected Components ───────────────
