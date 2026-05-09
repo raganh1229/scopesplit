@@ -1,6 +1,6 @@
 # N3 Build Ledger
 
-**Status:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅ · Phase 3 ✅ · Phase 4 ✅ · Phase 6 ✅ · Phase 8 ✅ · Phase 9 ✅ · Phase 11 ✅ · Phase 12 ✅ · Phase 13 ✅ · Phase 14 ✅ · Phase 15+ Pending  
+**Status:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅ · Phase 3 ✅ · Phase 4 ✅ · Phase 6 ✅ · Phase 8 ✅ · Phase 9 ✅ · Phase 11 ✅ · Phase 12 ✅ · Phase 13 ✅ · Phase 14 ✅ · Phase 15 ✅ · Phase 16+ Pending  
 **Last updated:** May 8, 2026  
 **Spec reference:** `N3.md` (spec only — do not confuse with this ledger)
 
@@ -25,6 +25,7 @@ This document is the **implementation ledger** for N3. It records only what has 
 | May 8, 2026 | Phase 8 complete: `lib/n3/passes/extract-line-items.ts` — Sonnet vision per-zone extraction → 149 `n3_line_items` rows (75 yours + 74 adj) on 12 zones. Validated against ground truth: 100% accurate |
 | May 8, 2026 | Phase 9 complete: `lib/n3/passes/normalize-line-items.ts` — deterministic normalization → 149/149 quantity, 149/149 unit, 94/149 trade, 78/149 action, 8/149 specialFlags |
 | May 8, 2026 | Phase 11 complete: `lib/n3/passes/generate-embeddings.ts` — Voyage AI `voyage-3-lite` 512-dim embeddings → `n3_line_items.embedding vector(512)`. DB migration applied via raw SQL. VOYAGE_API_KEY env var required |
+| May 9, 2026 | Phase 15 complete: `lib/n3/passes/assign-matches.ts` — O(n³) Hungarian (dual-variable Jonker–Volgenant) on 5 components. 75 decisions: 54 one_to_one (≥0.55), 20 possible (0.30–0.55), 1 unmatched yours, 0 unmatched adj. All 74 adj items assigned; 1 yours item correctly surfaces as “added”. Math verified: 54+20+1=75 ✔️ |
 | May 9, 2026 | Phase 14 complete: `lib/n3/passes/build-components.ts` — Union-Find (path compression + union-by-rank) over 515 surviving edges → 5 components (4 small, 1 medium, 0 large). 0 singletons on either side — all 149 items connected. Medium component contains bulk of items (~100+); Phase 15 will solve as one ~50×54 Hungarian matrix. Ran in 313ms |
 | May 9, 2026 | Phase 13 complete: `lib/n3/passes/score-candidates.ts` — computes all 11 features per edge, rawScore+finalScore via computeRawScore/computeFinalScore, zone boosts from correspondence lookup, isRejected via shouldRejectEdge. 515/3366 edges survive (15.3%): 1 highConfidence, 55 possibleMatch, 459 weakCandidate. SCORE_THRESHOLDS.REJECT lowered 0.60→0.30 pre-calibration (materialObject+itemCode stubs subtract 0.15 from all scores; will be raised after Phase 10 NLP). Batch-updated 3366 rows in ~20s via 68 parallel chunks of 50 |
 | May 9, 2026 | Phase 12 complete: `lib/n3/passes/generate-candidates.ts` — 5 retrieval sources (ai_proposed_zone, semantic, fuzzy_description, total_similarity, item_code). 3,367 candidate edges generated from 149 items (75 yours + 74 adj). item_code=0 (no Xactimate codes in test PDFs). Retrieval sources are unioned and deduplicated into `n3_candidate_edges` with placeholder scores for Phase 13 |

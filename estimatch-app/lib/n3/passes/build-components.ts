@@ -192,6 +192,15 @@ export async function buildComponentsN3(
     await prisma.n3MatchComponent.createMany({ data: componentRows });
   }
 
+  const componentDetails = componentRows.map((c, i) => ({
+    idx: i,
+    yours: c.sourceItemIds.length,
+    adj: c.targetItemIds.length,
+    total: c.sourceItemIds.length + c.targetItemIds.length,
+    size: c.size,
+    isAmbiguous: c.isAmbiguous,
+  }));
+
   logger.info('[n3/build-components] complete', {
     comparisonId,
     componentCount: componentRows.length,
@@ -199,6 +208,7 @@ export async function buildComponentsN3(
     bySize,
     singletonYours,
     singletonAdj,
+    components: componentDetails,
   });
 
   return {

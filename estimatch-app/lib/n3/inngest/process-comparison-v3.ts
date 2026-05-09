@@ -46,6 +46,7 @@ import { generateEmbeddingsN3 } from '@/lib/n3/passes/generate-embeddings';
 import { generateCandidatesN3 } from '@/lib/n3/passes/generate-candidates';
 import { scoreCandidatesN3 } from '@/lib/n3/passes/score-candidates';
 import { buildComponentsN3 } from '@/lib/n3/passes/build-components';
+import { assignMatchesN3 } from '@/lib/n3/passes/assign-matches';
 
 type HandlerArgs = GetFunctionInput<typeof inngest>;
 
@@ -265,25 +266,20 @@ export const processComparisonV3 = inngest.createFunction(
         singletonAdj: p14Result.singletonAdj,
       });
 
-      // ── Step 13: Phase 15 — Assign Matches ───────────────────────────
-      // TODO(Phase 15): For small components: Hungarian assignment.
-      // For medium: pruned Hungarian. For large: greedy + repair.
-      // Write N3MatchDecision rows for all one-to-one assignments.
-      await step.run('p15-assign-matches', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) return { step: 'p15-assign-matches', skipped: true };
-
-        logger.info('[n3] p15-assign-matches: stub — no decisions written yet', { comparisonId });
-        return { step: 'p15-assign-matches', status: 'stub' as const, decisionCount: 0 };
+      // ── Step 13: Phase 15 — Assign Matches ───────────────────────────────
+      const p15Result = await step.run('p15-assign-matches', async () => {
+        return assignMatchesN3(comparisonId, logger);
+      });
+      logger.info('[n3] p15-assign-matches complete', {
+        comparisonId,
+        decisionCount: p15Result.decisionCount,
+        matchedCount: p15Result.matchedCount,
+        possibleCount: p15Result.possibleCount,
+        unmatchedYours: p15Result.unmatchedYours,
+        unmatchedAdj: p15Result.unmatchedAdj,
       });
 
-      // ── Step 14: Phase 16 — Group Matching ───────────────────────────
-      // TODO(Phase 16): For ambiguous components with is_ambiguous=true,
-      // test one-to-many / many-to-one group combinations (capped at
-      // TOP_K_CANDIDATES=8, MAX_GROUP_SIZE=5 → ≤210 combos per item).
+      // ── Step 14: Phase 16 — Group Matching ───────────────────────────────
       // Write N3MatchDecision rows with decision_type='grouped'.
       await step.run('p16-group-matching', async () => {
         const exists = await prisma.comparison.findUnique({
