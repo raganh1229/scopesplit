@@ -1,6 +1,6 @@
 # N3 Build Ledger
 
-**Status:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅ · Phase 3 ✅ · Phase 4 ✅ · Phase 6 ✅ · Phase 8 ✅ · Phase 9 ✅ · Phase 11 ✅ · Phase 12+ Pending  
+**Status:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅ · Phase 3 ✅ · Phase 4 ✅ · Phase 6 ✅ · Phase 8 ✅ · Phase 9 ✅ · Phase 11 ✅ · Phase 12 ✅ · Phase 13+ Pending  
 **Last updated:** May 8, 2026  
 **Spec reference:** `N3.md` (spec only — do not confuse with this ledger)
 
@@ -25,6 +25,7 @@ This document is the **implementation ledger** for N3. It records only what has 
 | May 8, 2026 | Phase 8 complete: `lib/n3/passes/extract-line-items.ts` — Sonnet vision per-zone extraction → 149 `n3_line_items` rows (75 yours + 74 adj) on 12 zones. Validated against ground truth: 100% accurate |
 | May 8, 2026 | Phase 9 complete: `lib/n3/passes/normalize-line-items.ts` — deterministic normalization → 149/149 quantity, 149/149 unit, 94/149 trade, 78/149 action, 8/149 specialFlags |
 | May 8, 2026 | Phase 11 complete: `lib/n3/passes/generate-embeddings.ts` — Voyage AI `voyage-3-lite` 512-dim embeddings → `n3_line_items.embedding vector(512)`. DB migration applied via raw SQL. VOYAGE_API_KEY env var required |
+| May 9, 2026 | Phase 12 complete: `lib/n3/passes/generate-candidates.ts` — 5 retrieval sources (ai_proposed_zone, semantic, fuzzy_description, total_similarity, item_code). 3,367 candidate edges generated from 149 items (75 yours + 74 adj). item_code=0 (no Xactimate codes in test PDFs). Retrieval sources are unioned and deduplicated into `n3_candidate_edges` with placeholder scores for Phase 13 |
 
 ---
 

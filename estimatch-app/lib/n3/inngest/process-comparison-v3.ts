@@ -43,6 +43,7 @@ import { proposeCorrespondencesN3 } from '@/lib/n3/passes/propose-correspondence
 import { extractLineItemsN3 } from '@/lib/n3/passes/extract-line-items';
 import { normalizeLineItemsN3 } from '@/lib/n3/passes/normalize-line-items';
 import { generateEmbeddingsN3 } from '@/lib/n3/passes/generate-embeddings';
+import { generateCandidatesN3 } from '@/lib/n3/passes/generate-candidates';
 
 type HandlerArgs = GetFunctionInput<typeof inngest>;
 
@@ -229,19 +230,14 @@ export const processComparisonV3 = inngest.createFunction(
       });
 
       // ── Step 10: Phase 12 — Generate Candidate Edges ─────────────────
-      // TODO(Phase 12): Run all 9 retrieval sources (verified_zone,
-      // ai_proposed_zone, semantic, fuzzy_description, item_code,
-      // trade_action_material, quantity_unit, total_similarity,
-      // sequence_nearby). Deduplicate. Write N3CandidateEdge rows.
+      // Five retrieval sources implemented in v1: ai_proposed_zone, semantic
+      // (cosine ANN), fuzzy_description (Jaccard), total_similarity, item_code.
+      // Sources are unioned and deduplicated; placeholder feature/score values
+      // are written for Phase 13 to overwrite.
       await step.run('p12-generate-candidates', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) return { step: 'p12-generate-candidates', skipped: true };
-
-        logger.info('[n3] p12-generate-candidates: stub — no edges written yet', { comparisonId });
-        return { step: 'p12-generate-candidates', status: 'stub' as const, edgeCount: 0 };
+        const result = await generateCandidatesN3(comparisonId, logger);
+        logger.info('[n3] p12-generate-candidates complete', { comparisonId, ...result });
+        return { step: 'p12-generate-candidates', ...result };
       });
 
       // ── Step 11: Phase 13 — Score Candidates ─────────────────────────
