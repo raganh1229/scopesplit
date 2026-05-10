@@ -35,21 +35,24 @@ import type { StepLogger } from '@/lib/n3/passes/detect-zones';
 // Order matters: more specific patterns must come before more general ones
 // (e.g. "remove and replace" before "remove").
 
+// NOTE on ordering: more specific trades come FIRST. Patterns that appear
+// in multiple trades (e.g. 'laminate' = floor OR countertop, 'underlayment'
+// = floor OR roof) are tightened with a qualifier so they only match one trade.
 const TRADE_KEYWORDS: Array<{ trade: string; patterns: string[] }> = [
-  { trade: 'drywall',     patterns: ['drywall', 'gypsum', 'sheetrock'] },
+  { trade: 'cabinetry',   patterns: ['cabinet', 'countertop', 'vanity', 'backsplash'] },
+  { trade: 'drywall',     patterns: ['drywall', 'gypsum', 'sheetrock', 'cement board', 'backer board'] },
   { trade: 'painting',    patterns: ['paint', 'primer', 'texture', 'sealer'] },
-  { trade: 'flooring',    patterns: ['carpet', 'hardwood', 'laminate', 'vinyl plank', 'tile floor', 'subfloor', 'underlayment', 'flooring', 'baseboard'] },
+  { trade: 'flooring',    patterns: ['carpet', 'hardwood', 'laminate floor', 'vinyl plank', 'tile floor', 'subfloor', 'floor underlayment', 'flooring', 'baseboard', 'base molding'] },
   { trade: 'electrical',  patterns: ['electrical', 'wiring', 'outlet', 'switch', 'breaker', 'circuit', 'light fixture', 'recessed', 'gfci', 'romex'] },
   { trade: 'plumbing',    patterns: ['plumb', 'pipe', 'drain', 'faucet', 'toilet', 'shower valve', 'p-trap', 'supply line'] },
   { trade: 'insulation',  patterns: ['insul', 'batt', 'fiberglass', 'cellulose', 'spray foam'] },
-  { trade: 'doors_windows', patterns: ['window', 'door', 'casing', 'jamb', 'threshold'] },
-  { trade: 'roofing',     patterns: ['roof', 'shingle', 'underlayment', 'flashing', 'gutter', 'downspout', 'soffit', 'fascia'] },
-  { trade: 'hvac',        patterns: ['hvac', 'furnace', 'duct', 'register', 'vent', 'air handler', 'condenser'] },
-  { trade: 'demolition',  patterns: ['demolition', 'debris', 'haul', 'dumpster', 'tear out'] },
-  { trade: 'cabinetry',   patterns: ['cabinet', 'countertop', 'vanity'] },
-  { trade: 'cleaning',    patterns: ['clean', 'sanitize', 'deodorize', 'wipe down'] },
-  { trade: 'water_mit',   patterns: ['dehumidifier', 'air mover', 'lgr', 'water extraction', 'drying chamber', 'antimicrobial', 'content manipulation'] },
-  { trade: 'tile',        patterns: ['tile', 'grout', 'thinset', 'mortar bed'] },
+  { trade: 'doors_windows', patterns: ['window', 'door', 'casing', 'jamb', 'threshold', 'blinds', 'crown molding'] },
+  { trade: 'roofing',     patterns: ['roof', 'shingle', 'roof underlayment', 'flashing', 'gutter', 'downspout', 'soffit', 'fascia'] },
+  { trade: 'hvac',        patterns: ['hvac', 'furnace', 'duct', 'register', 'air handler', 'condenser'] },
+  { trade: 'demolition',  patterns: ['demolition', 'debris', 'haul', 'dumpster', 'tear out', 'remove damaged', 'tear-out'] },
+  { trade: 'cleaning',    patterns: ['clean', 'sanitize', 'deodorize', 'wipe down', 'final cleaning', 'post-construction cleaning'] },
+  { trade: 'water_mit',   patterns: ['dehumidifier', 'air mover', 'lgr', 'water extraction', 'drying chamber', 'antimicrobial', 'mold inhibitor', 'moisture barrier', 'vapor barrier', 'content manipulation'] },
+  { trade: 'tile',        patterns: ['ceramic tile', 'grout', 'thinset', 'mortar bed', 'tile'] },
   { trade: 'masonry',     patterns: ['concrete', 'masonry', 'brick', 'stucco'] },
 ];
 

@@ -249,7 +249,92 @@ export async function assignMatchesN3(
     }
   }
 
-  // ── 4. Idempotent write ────────────────────────────────────────────────────
+  // ── 4. Bidirectional-best rescue pass ──────────────────────────────────────
+  // Hungarian's global cost minimization can sacrifice a clearly-mutual-best pair
+  // for a marginal aggregate gain elsewhere. This pass detects pairs where both
+  // items are unmatched, the edge between them is each side's TOP unmatched
+  // candidate, and the score is ≥ POSSIBLE_MATCH. Such pairs are merged into
+  // one one_to_one decision (decidedBy: 'mutual_best_rescue').
+  let rescuedCount = 0;
+  {
+    const unmatchedYoursDecisions = decisions.filter(
+      d => d.decisionType === 'unmatched' && d.yourItemIds.length > 0 && d.adjusterItemIds.length === 0,
+    );
+    const unmatchedAdjDecisionByItem = new Map(
+      decisions
+        .filter(d => d.decisionType === 'unmatched' && d.adjusterItemIds.length > 0 && d.yourItemIds.length === 0)
+        .map(d => [d.adjusterItemIds[0], d]),
+    );
+
+    // Build per-yours best edge to ANY unmatched adj.
+    const bestYoursToAdj = new Map<string, { adjId: string; score: number }>();
+    for (const d of unmatchedYoursDecisions) {
+      const yoursId = d.yourItemIds[0];
+      let best: { adjId: string; score: number } | null = null;
+      for (const [key, info] of edgeLookup) {
+        const [src, tgt] = key.split('__');
+        if (src !== yoursId) continue;
+        if (!unmatchedAdjDecisionByItem.has(tgt)) continue;
+        if (!best || info.finalScore > best.score) best = { adjId: tgt, score: info.finalScore };
+      }
+      if (best) bestYoursToAdj.set(yoursId, best);
+    }
+    // Build per-adj best edge from ANY unmatched yours.
+    const bestAdjToYours = new Map<string, { yoursId: string; score: number }>();
+    for (const adjId of unmatchedAdjDecisionByItem.keys()) {
+      let best: { yoursId: string; score: number } | null = null;
+      for (const d of unmatchedYoursDecisions) {
+        const yoursId = d.yourItemIds[0];
+        const info = edgeLookup.get(`${yoursId}__${adjId}`);
+        if (!info) continue;
+        if (!best || info.finalScore > best.score) best = { yoursId, score: info.finalScore };
+      }
+      if (best) bestAdjToYours.set(adjId, best);
+    }
+
+    const rescuedYoursIds = new Set<string>();
+    const rescuedAdjIds   = new Set<string>();
+
+    for (const d of unmatchedYoursDecisions) {
+      const yoursId = d.yourItemIds[0];
+      if (rescuedYoursIds.has(yoursId)) continue;
+      const yBest = bestYoursToAdj.get(yoursId);
+      if (!yBest || yBest.score < SCORE_THRESHOLDS.POSSIBLE_MATCH) continue;
+      if (rescuedAdjIds.has(yBest.adjId)) continue;
+      const aBest = bestAdjToYours.get(yBest.adjId);
+      if (!aBest || aBest.yoursId !== yoursId) continue;          // not mutual
+
+      // Mutual best AND score >= POSSIBLE_MATCH → rescue
+      const fs = yBest.score;
+      const edge = edgeLookup.get(`${yoursId}__${yBest.adjId}`)!;
+      d.decisionType    = decisionType(fs);
+      d.adjusterItemIds = [yBest.adjId];
+      d.finalScore      = fs;
+      d.topEdgeId       = edge.id;
+      d.decidedBy       = 'mutual_best_rescue';
+
+      // Drop the unmatched-adj decision (it's now claimed by this yours)
+      const adjDecision = unmatchedAdjDecisionByItem.get(yBest.adjId)!;
+      const idx = decisions.indexOf(adjDecision);
+      if (idx >= 0) decisions.splice(idx, 1);
+
+      // Adjust counters
+      unmatchedYours--;
+      unmatchedAdj--;
+      if (d.decisionType === 'possible') possibleCount++;
+      else matchedCount++;
+
+      rescuedYoursIds.add(yoursId);
+      rescuedAdjIds.add(yBest.adjId);
+      rescuedCount++;
+    }
+  }
+
+  if (rescuedCount > 0) {
+    logger.info('[n3/assign-matches] mutual-best rescue', { comparisonId, rescuedCount });
+  }
+
+  // ── 5. Idempotent write ────────────────────────────────────────────────────
   await prisma.n3MatchDecision.deleteMany({ where: { comparisonId } });
 
   const BATCH = 500;
