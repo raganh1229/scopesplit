@@ -40,8 +40,8 @@ import type { StepLogger } from '@/lib/n3/passes/detect-zones';
 // = floor OR roof) are tightened with a qualifier so they only match one trade.
 const TRADE_KEYWORDS: Array<{ trade: string; patterns: string[] }> = [
   { trade: 'cabinetry',   patterns: ['cabinet', 'countertop', 'vanity', 'backsplash'] },
-  { trade: 'drywall',     patterns: ['drywall', 'gypsum', 'sheetrock', 'cement board', 'backer board'] },
-  { trade: 'painting',    patterns: ['paint', 'primer', 'texture', 'sealer'] },
+  { trade: 'drywall',     patterns: ['drywall', 'gypsum', 'sheetrock', 'cement board', 'backer board', 'texture'] },
+  { trade: 'painting',    patterns: ['paint', 'primer', 'sealer'] },
   { trade: 'flooring',    patterns: ['carpet', 'hardwood', 'laminate floor', 'vinyl plank', 'tile floor', 'subfloor', 'floor underlayment', 'flooring', 'baseboard', 'base molding'] },
   { trade: 'electrical',  patterns: ['electrical', 'wiring', 'outlet', 'switch', 'breaker', 'circuit', 'light fixture', 'recessed', 'gfci', 'romex'] },
   { trade: 'plumbing',    patterns: ['plumb', 'pipe', 'drain', 'faucet', 'toilet', 'shower valve', 'p-trap', 'supply line'] },
