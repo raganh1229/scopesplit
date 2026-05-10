@@ -25,6 +25,7 @@ import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { parseAndValidate, withRetry, isTruncated, AIResponseError } from '@/lib/n2/utils/ai-response';
 import type { StepLogger } from '@/lib/n3/passes/detect-zones';
+import { SCORE_THRESHOLDS } from '@/lib/n3/constants';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -39,10 +40,11 @@ const COST_PER_M_OUTPUT = 15.0;
 // ── Return type ───────────────────────────────────────────────────────────────
 
 export type LlmAdjudicationN3Result = {
-  adjudicatedCount: number;
-  acceptedCount:    number;
-  rejectedCount:    number;
-  skipped:          boolean;   // true when no `possible` decisions exist
+  adjudicatedCount:    number;
+  acceptedCount:       number;
+  rejectedCount:       number;
+  postLlmRescueCount:  number;  // pairs rescued after LLM rejection by mutual-best pass
+  skipped:             boolean; // true when no `possible` decisions exist
 };
 
 // ── Zod schema for AI response ────────────────────────────────────────────────
@@ -126,7 +128,7 @@ export async function llmAdjudicationN3(
 
   if (possibleDecisions.length === 0) {
     logger.info('[n3/llm-adjudication] no possible decisions — skipping', { comparisonId });
-    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, skipped: true };
+    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, postLlmRescueCount: 0, skipped: true };
   }
 
   // ── 2. Load line items ─────────────────────────────────────────────────────
@@ -170,7 +172,7 @@ export async function llmAdjudicationN3(
 
   if (pairs.length === 0) {
     logger.info('[n3/llm-adjudication] no valid pairs to adjudicate', { comparisonId });
-    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, skipped: true };
+    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, postLlmRescueCount: 0, skipped: true };
   }
 
   logger.info('[n3/llm-adjudication] calling Sonnet', { comparisonId, pairs: pairs.length });
@@ -293,11 +295,99 @@ export async function llmAdjudicationN3(
     }
   }
 
+  // ── 7. Post-LLM mutual-best rescue pass ───────────────────────────────────
+  // Items whose `possible` decisions were rejected by LLM are now unmatched.
+  // Some of those items may still have a mutual-best HIGH_CONFIDENCE edge to
+  // another unmatched item — the LLM only evaluated them against wrong partners.
+  // Rescue such pairs as one_to_one decisions without re-calling LLM.
+  let postLlmRescueCount = 0;
+  {
+    // Load all contractor-unmatched decisions
+    const unmatchedContrDecisions = await prisma.n3MatchDecision.findMany({
+      where: { comparisonId, decisionType: 'unmatched' },
+      select: { id: true, yourItemIds: true, adjusterItemIds: true },
+    });
+    const unmatchedYoursList = unmatchedContrDecisions.filter(
+      d => d.yourItemIds.length > 0 && d.adjusterItemIds.length === 0,
+    );
+    const unmatchedYoursIds = unmatchedYoursList.map(d => d.yourItemIds[0]);
+
+    // Find all adjuster item IDs currently claimed (non-empty adjusterItemIds)
+    const allDecisions = await prisma.n3MatchDecision.findMany({
+      where: { comparisonId },
+      select: { adjusterItemIds: true },
+    });
+    const claimedAdjIds = new Set<string>();
+    for (const d of allDecisions) {
+      for (const id of d.adjusterItemIds) claimedAdjIds.add(id);
+    }
+
+    // All adjuster items not in any non-empty decision = unmatched adj
+    const adjLineItems = await prisma.n3LineItem.findMany({
+      where: { comparisonId, source: 'adjuster' },
+      select: { id: true },
+    });
+    const unmatchedAdjIds = new Set(adjLineItems.map(a => a.id).filter(id => !claimedAdjIds.has(id)));
+
+    if (unmatchedYoursIds.length > 0 && unmatchedAdjIds.size > 0) {
+      // Load all non-rejected edges from unmatched contractor items
+      const rescueEdges = await prisma.n3CandidateEdge.findMany({
+        where: { comparisonId, isRejected: false, sourceItemId: { in: unmatchedYoursIds } },
+        select: { id: true, sourceItemId: true, targetItemId: true, finalScore: true },
+      });
+
+      // Build best-edge maps (only considering edges to unmatched adj items)
+      const bestYoursToAdj = new Map<string, { adjId: string; score: number; edgeId: string }>();
+      for (const e of rescueEdges) {
+        if (!unmatchedAdjIds.has(e.targetItemId)) continue;
+        const score = Number(e.finalScore);
+        const cur = bestYoursToAdj.get(e.sourceItemId);
+        if (!cur || score > cur.score) bestYoursToAdj.set(e.sourceItemId, { adjId: e.targetItemId, score, edgeId: e.id });
+      }
+      const bestAdjToYours = new Map<string, { yoursId: string; score: number }>();
+      for (const e of rescueEdges) {
+        if (!unmatchedAdjIds.has(e.targetItemId)) continue;
+        const score = Number(e.finalScore);
+        const cur = bestAdjToYours.get(e.targetItemId);
+        if (!cur || score > cur.score) bestAdjToYours.set(e.targetItemId, { yoursId: e.sourceItemId, score });
+      }
+
+      const rescuedAdjIds = new Set<string>();
+      for (const d of unmatchedYoursList) {
+        const yoursId = d.yourItemIds[0];
+        const yBest = bestYoursToAdj.get(yoursId);
+        if (!yBest || yBest.score < SCORE_THRESHOLDS.POSSIBLE_MATCH) continue;
+        if (rescuedAdjIds.has(yBest.adjId)) continue;
+        const aBest = bestAdjToYours.get(yBest.adjId);
+        if (!aBest || aBest.yoursId !== yoursId) continue;  // not mutual-best
+
+        // Mutual-best with sufficient confidence — rescue as one_to_one
+        await prisma.n3MatchDecision.update({
+          where: { id: d.id },
+          data: {
+            decisionType:    'one_to_one',
+            adjusterItemIds: [yBest.adjId],
+            finalScore:      yBest.score,
+            topEdgeId:       yBest.edgeId,
+            decidedBy:       'post_llm_rescue',
+          },
+        });
+        rescuedAdjIds.add(yBest.adjId);
+        postLlmRescueCount++;
+      }
+    }
+  }
+
+  if (postLlmRescueCount > 0) {
+    logger.info('[n3/llm-adjudication] post-LLM rescue', { comparisonId, postLlmRescueCount });
+  }
+
   logger.info('[n3/llm-adjudication] complete', {
     comparisonId,
     adjudicatedCount: pairs.length,
     acceptedCount,
     rejectedCount,
+    postLlmRescueCount,
     promptTokens,
     completionTokens,
     estimatedCostUsd: estimatedCostUsd.toFixed(4),
@@ -308,6 +398,7 @@ export async function llmAdjudicationN3(
     adjudicatedCount: pairs.length,
     acceptedCount,
     rejectedCount,
+    postLlmRescueCount,
     skipped: false,
   };
 }
