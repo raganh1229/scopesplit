@@ -31,6 +31,11 @@ This document is the **implementation ledger** for N3. It records only what has 
 | May 9, 2026 | Phase 15 complete: `lib/n3/passes/assign-matches.ts` — O(n³) Hungarian (dual-variable Jonker–Volgenant) on 5 components. 75 decisions: 54 one_to_one (≥0.55), 20 possible (0.30–0.55), 1 unmatched yours, 0 unmatched adj. All 74 adj items assigned; 1 yours item correctly surfaces as “added”. Math verified: 54+20+1=75 ✔️ |
 | May 9, 2026 | Phase 14 complete: `lib/n3/passes/build-components.ts` — Union-Find (path compression + union-by-rank) over 515 surviving edges → 5 components (4 small, 1 medium, 0 large). 0 singletons on either side — all 149 items connected. Medium component contains bulk of items (~100+); Phase 15 will solve as one ~50×54 Hungarian matrix. Ran in 313ms |
 | May 9, 2026 | Phase 13 complete: `lib/n3/passes/score-candidates.ts` — computes all 11 features per edge, rawScore+finalScore via computeRawScore/computeFinalScore, zone boosts from correspondence lookup, isRejected via shouldRejectEdge. 515/3366 edges survive (15.3%): 1 highConfidence, 55 possibleMatch, 459 weakCandidate. SCORE_THRESHOLDS.REJECT lowered 0.60→0.30 pre-calibration (materialObject+itemCode stubs subtract 0.15 from all scores; will be raised after Phase 10 NLP). Batch-updated 3366 rows in ~20s via 68 parallel chunks of 50 |
+| May 9, 2026 | **Bug fix — `constants.ts` weight redistribution:** `materialObjectSimilarity` (stub, always 0) and `itemCodeSimilarity` (stub, always 0) each reduced from their original allocations to 0.01 (slot-reservation only). The freed weight (+0.13 total) redistributed to active features: fuzzy +0.03, semantic +0.04, tradeAction +0.02, qty +0.02, total +0.01, zone +0.01. Ensures stub features do not silently cap max achievable raw score at 0.85. |
+| May 9, 2026 | **Bug fix — `normalize-line-items.ts` trade keyword ordering:** `cabinetry` pattern now tested before `flooring` pattern. Previously `'laminate'` in the flooring block matched `"laminate countertop"` items before the cabinetry block could claim them, producing `tradeActionSimilarity = 0` on cabinet/countertop pairs. Also tightened `'laminate'` → `'laminate floor'` to prevent countertop false-positives. |
+| May 9, 2026 | **Bug fix — `persist-decisions.ts` orphaned contractor items:** Added orphan-detection pass (§5c) after the main decision loop. Any `yours`-side `N3LineItem` not referenced by any `N3MatchDecision` is now persisted as `MISSING_FROM_ADJUSTER`. Previously such items were silently dropped (e.g. ALE / contractor-only items whose edges were all rejected and who received no `unmatched` decision from Phase 15). |
+| May 9, 2026 | **Bug fix — `assign-matches.ts` mutual-best rescue pass (§4):** Added a post-Hungarian bidirectional-best-match rescue pass. Hungarian's global cost minimization can sacrifice a clearly-mutual-best pair for a marginal aggregate gain elsewhere (§A.6 known limitation). The rescue pass detects pairs where (a) both items are unmatched, (b) each item's highest-scoring edge to any remaining unmatched counterpart is the same edge, and (c) that edge scores ≥ `POSSIBLE_MATCH`. Such pairs are merged into a `one_to_one` decision with `decidedBy: 'mutual_best_rescue'`. Fixed the carpet pad cross-zone mis-assignment on V1. |
+| May 9, 2026 | **V1 end-to-end validation:** Triggered full N3 pipeline run against V1 verified-set PDFs (comparison `29811a19-5070-430f-a1ea-f513bd753040`). Results: 53/54 line-item pairs correct (98.1%). Counts match cheatsheet exactly: 36 MATCH, 9 MODIFIED, 5 MISSING, 2 ADDED. Dollar totals match: contractor $45,905.62, adjuster $36,510.72, gap $9,394.90. One known composition error: Master Bedroom closet items swapped (walk-in organizer incorrectly paired with wire shelving; closet wire shelving incorrectly MISSING). Total gap preserved by coincidence. Pending fix. |
 | May 9, 2026 | Phase 12 complete: `lib/n3/passes/generate-candidates.ts` — 5 retrieval sources (ai_proposed_zone, semantic, fuzzy_description, total_similarity, item_code). 3,367 candidate edges generated from 149 items (75 yours + 74 adj). item_code=0 (no Xactimate codes in test PDFs). Retrieval sources are unioned and deduplicated into `n3_candidate_edges` with placeholder scores for Phase 13 |
 
 ---
@@ -47,7 +52,7 @@ These decisions were made before Phase 0 and are binding for all subsequent phas
 - **Below-threshold edges are dropped**, not retained as low-confidence ghosts (§A.6 §17.1 fix).
 - **Zone correspondences are priors, not hard walls** (§A.4). A match outside a verified zone gets a penalty; it is not blocked.
 - **Candidate generation is bidirectional** (yours→adjuster AND adjuster→yours), deduplicated to (yours=source, adjuster=target) direction.
-- **Embeddings:** OpenAI `text-embedding-3-small` + pgvector for Phase 11. Not implemented yet.
+- **Embeddings:** Voyage AI `voyage-3-lite` (512-dim) + pgvector for Phase 11. Implemented and live. `VOYAGE_API_KEY` env var required. (Original spec said OpenAI `text-embedding-3-small`; switched to Voyage AI per Anthropic recommendation.)
 - **Group matching UI:** Flat-with-link badge (deferred to Phase 21).
 
 ---
@@ -110,22 +115,22 @@ All numeric and dictionary constants. Imports `N3CandidateScoreFeatures` and `N3
 
 **Calibration note:** `SCORE_WEIGHTS` and `SCORE_THRESHOLDS` are initial values from §16.2–§16.3. They must be recalibrated against labeled fixture data before Phase 13 is production-ready.
 
-**Score weights breakdown:**
+**Score weights breakdown** *(as of May 9, 2026 redistribution — see Bug Fixes section)*:
 
-| Feature | Weight |
-|---------|--------|
-| `descriptionFuzzySimilarity` | 0.20 |
-| `descriptionSemanticSimilarity` | 0.15 |
-| `tradeActionSimilarity` | 0.12 |
-| `quantityUnitSimilarity` | 0.10 |
-| `totalSimilarity` | 0.10 |
-| `materialObjectSimilarity` | 0.09 |
-| `zoneCorrespondenceSimilarity` | 0.08 |
-| `unitPriceSimilarity` | 0.06 |
-| `itemCodeSimilarity` | 0.06 |
-| `sequenceSimilarity` | 0.02 |
-| `specialFlagCompatibility` | 0.02 |
-| **Sum** | **1.00** |
+| Feature | Weight | Notes |
+|---------|--------|-------|
+| `descriptionFuzzySimilarity` | 0.23 | +0.03 from stubs |
+| `descriptionSemanticSimilarity` | 0.19 | +0.04 from stubs |
+| `tradeActionSimilarity` | 0.14 | +0.02 from stubs |
+| `quantityUnitSimilarity` | 0.12 | +0.02 from stubs |
+| `totalSimilarity` | 0.11 | +0.01 from stubs |
+| `zoneCorrespondenceSimilarity` | 0.09 | +0.01 from stubs |
+| `unitPriceSimilarity` | 0.06 | |
+| `sequenceSimilarity` | 0.02 | |
+| `specialFlagCompatibility` | 0.02 | |
+| `materialObjectSimilarity` | 0.01 | **Stub** (Phase 10 NLP not built); 0.01 preserves slot |
+| `itemCodeSimilarity` | 0.01 | **Stub** (0% on real-description PDFs); 0.01 preserves slot |
+| **Sum** | **1.00** | |
 
 ---
 
@@ -518,26 +523,85 @@ Imported `proposeCorrespondencesN3` and replaced the `p6-propose-correspondences
 
 ## What Is Not Yet Built
 
-The following N3 phases are pending. This list is the authoritative "what's next" register:
+Phases 8–18 are all complete. The following remain pending:
 
-| Phase | Deliverable | Key dependencies |
-|-------|-------------|-----------------|
+| Phase / Item | Deliverable | Key dependencies |
+|---|---|---|
 | **5** | Zone verification UI (gate currently auto-proceeds) | Phase 4 zones in DB |
 | **7** | Zone correspondence verification UI (gate currently auto-proceeds) | Phase 6 |
-| **8** | Line item extraction per zone | OCR strategy from Phase 4 |
-| **9** | Normalization pass (`normalizeDescription`, `expandUnit`, `parseAmount` wired to DB) | Phase 0 normalization.ts; Phase 8 |
 | **10** | Extraction validation + `N3ExtractionWarning` rows | Phase 9 |
-| **11** | Embedding generation (OpenAI `text-embedding-3-small` + pgvector) | Phase 9; pgvector migration needed |
-| **12** | Candidate generation (all 9 retrieval sources, bidirectional, dedup) | Phase 9/11 |
-| **13** | Candidate scoring (`computeRawScore`, zone boosts, `computeFinalScore`) | Phase 12 |
-| **14** | Sparse graph + connected components | Phase 13 |
-| **15** | Assignment (Hungarian/auction for small/medium; greedy+repair for large) | Phase 14 |
-| **16** | Group matching (one-to-many, many-to-one) | Phase 15 |
-| **17** | LLM adjudication for ambiguous components | Phase 16 |
-| **18** | Persist decisions → `LineItem` rows | Phase 17 |
-| **19** | `pipelineVersion = 'n3'` routing gate | Phase 18 verified |
-| **20** | LLM telemetry dashboards | Phase 17 |
+| **19** | `pipelineVersion = 'n3'` routing gate (production cutover) | Phase 18 verified end-to-end |
+| **20** | LLM telemetry dashboard (`/app/n3-dashboard/[id]`) | Phase 17; see `N3_VERIFICATION_DASHBOARD.md` |
 | **21** | Group matching UI (flat-with-link badge) | Phase 18 |
+| **V2/V3 validation** | Run pipeline against V2 and V3 verified-set PDFs to confirm generalization | V1 confirmed ✅ |
+| **Closet pair fix** | Master Bedroom: walk-in closet organizer incorrectly paired with wire shelving. Root cause: semantic similarity between "closet organizer system" and "wire shelving system" overcomes total-similarity signal (12:1 ratio). Fix: probe scores for these items; likely requires raising `totalSimilarity` weight or adding a per-item total-ratio hard guard for 10:1+ divergence. |
+
+---
+
+## Diagnostic Scripts
+
+Scripts in `estimatch-app/scripts/` for pipeline inspection and verification. All use the same Prisma + SSL pg.Pool pattern as `lib/prisma.ts`. Run via `npx tsx scripts/<name>.ts`.
+
+| Script | Purpose | Key arg |
+|--------|---------|---------|
+| `run-v1-n3.ts` | Upload V1 PDFs → Supabase, create Comparison row, fire `comparison/process-v3.requested` Inngest event | hardcoded V1 file paths |
+| `check-comparison.ts` | Print status, metrics, and zone names for a comparison | `COMPARISON_ID` env var |
+| `dump-results.ts` | Full line-item dump grouped by zone: status, descriptions, totals, diffs | `COMPARISON_ID` env var |
+| `dashboard.ts` | Multi-phase N3 diagnostic dashboard: zone counts, candidate edge stats, decision breakdown, LLM telemetry | `COMPARISON_ID` env var |
+| `probe-scores.ts` | Targeted edge/decision probe for specific items (carpet pad, ALE, etc.) | `COMPARISON_ID` env var |
+| `probe-errors.ts` | Probe specific known-error pairs (kitchen drywall walls, countertop, carpet pad) by lookup → edges → decisions | `COMPARISON_ID` env var |
+
+**Usage pattern** (safe to auto-run — read-only DB):
+```bash
+COMPARISON_ID=29811a19-5070-430f-a1ea-f513bd753040 npx tsx scripts/check-comparison.ts
+COMPARISON_ID=29811a19-5070-430f-a1ea-f513bd753040 npx tsx scripts/dump-results.ts
+```
+
+---
+
+## V1 Verified Set — End-to-End Validation Results
+
+**Run date:** May 9, 2026  
+**Comparison ID:** `29811a19-5070-430f-a1ea-f513bd753040`  
+**Verified set:** `PDFS/Generated Sets/Verified Sets/V1/` — Water Damage, Burst Supply Line, Tampa FL Condo  
+**Cheatsheet:** `V1_Cheatsheet.md`
+
+### Summary Metrics
+
+| Metric | Expected | Actual | ✓ |
+|--------|----------|--------|---|
+| MATCH | 36 | 36 | ✅ |
+| MODIFIED | 9 | 9 | ✅ |
+| MISSING_FROM_ADJUSTER | 5 | 5 | ✅ |
+| ADDED_BY_ADJUSTER | 2 | 2 | ✅ |
+| Contractor total | $45,905.62 | $45,905.62 | ✅ |
+| Adjuster total | $36,510.72 | $36,510.72 | ✅ |
+| Total gap | $9,394.90 | $9,394.90 | ✅ |
+| Zone pairings | 5/5 | 5/5 | ✅ |
+| Correct line-item pairs | 54/54 expected | **53/54** | ⚠️ |
+
+### Zone-by-Zone Pair Accuracy
+
+| Zone pair | Expected items | Pipeline items | Correct pairs | Notes |
+|---|---|---|---|---|
+| General Conditions / Project General Conditions | 6 | 6 | 6/6 | ✅ |
+| Kitchen / Kitchen | 11 | 11 | 11/11 | ✅ |
+| Hall Bathroom / Secondary Bathroom | 8 | 8 | 8/8 | ✅ |
+| Living & Dining Room / Main Living Area | 15 | 15 | 15/15 | ✅ |
+| Master Bedroom / Primary Bedroom Suite | 12 | 12 | **11/12** | ⚠️ closet swap |
+
+### Known Composition Error — Master Bedroom Closet Swap
+
+| Item | Expected | Actual |
+|------|----------|--------|
+| "Closet wire shelving — ventilated, per LF" ($244.80) | MOD-QTY ↔ "Wire shelving system — closet" ($183.60) | **MISSING** ❌ |
+| "Walk-in closet organizer system — standard" ($2,220) | MISSING | **MODIFIED** ↔ Wire shelving ($183.60) ❌ |
+
+**Root cause:** LLM semantic similarity between "walk-in closet organizer system" and "wire shelving system — closet" (both share "system" and "closet") scores higher than "closet wire shelving — ventilated" ↔ "wire shelving system — closet" despite the organizer having a 12:1 total ratio ($2,220/$183.60 vs $244.80/$183.60 ≈ 0.75). Hungarian optimization selects the semantically-inflated pair.
+
+**Dollar impact:** Total gap is preserved ($2,036.40 + $244.80 = $61.20 + $2,220 = $2,281.20) but the per-item breakdown is misleading — a $61 MOD-QTY is displayed as a $2,036 MODIFIED, and the walk-in closet organizer appears as a small missing item instead of a large one.
+
+**Fix target:** Probe closet item edge scores; consider raising `totalSimilarity` weight or adding a hard rejection guard when total ratio > 8:1 and `descriptionFuzzySimilarity` < 0.6.
 
 ---
 
