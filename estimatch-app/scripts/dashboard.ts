@@ -79,7 +79,7 @@ async function main() {
     const srcs = (e.retrievalSources as string[] | null) ?? [];
     for (const s of srcs) sources[s] = (sources[s] ?? 0) + 1;
   }
-  const zoomed = edges.filter(e => { const b = e.boostsJson as unknown as { zoneBoost?: number }; return (b?.zoneBoost ?? 0) > 0; }).length;
+  const zoomed = edges.filter(e => { const b = e.boostsJson as unknown as Array<{ type: string; value: number }>; return Array.isArray(b) && b.length > 0; }).length;
   console.log(`\n── PHASE 12: Candidate Generation ──`);
   console.log(`  Total edges    : ${edges.length}`);
   console.log(`  Avg sources/edge: ${f2(Object.values(sources).reduce((a, b) => a + b, 0) / Math.max(edges.length, 1))}`);

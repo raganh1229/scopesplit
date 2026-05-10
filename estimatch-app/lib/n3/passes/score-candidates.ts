@@ -112,13 +112,24 @@ function buildBoosts(
   yoursZoneId: string | null,
   adjZoneId: string | null,
   lookup: CorrespondenceLookup,
+  verifiedYoursZones: Set<string>,
+  verifiedAdjZones: Set<string>,
 ): N3ZoneBoost[] {
   if (!yoursZoneId || !adjZoneId) return [];
   const corr = lookup.get(`${yoursZoneId}__${adjZoneId}`);
-  if (!corr) return [];
-  const boostType = corr.verificationStatus as keyof typeof ZONE_BOOSTS;
-  const baseBoost = ZONE_BOOSTS[boostType] ?? 0;
-  return [{ type: boostType, value: baseBoost * corr.confidence }];
+  if (corr) {
+    // In-zone pair: apply positive boost scaled by correspondence confidence
+    const boostType = corr.verificationStatus as keyof typeof ZONE_BOOSTS;
+    const baseBoost = ZONE_BOOSTS[boostType] ?? 0;
+    return [{ type: boostType, value: baseBoost * corr.confidence }];
+  }
+  // Cross-zone pair: if both zones are part of a verified correspondence
+  // (just not with each other), apply the outside_verified penalty so the
+  // global assignment prefers in-zone pairs over near-identical cross-zone ones.
+  if (verifiedYoursZones.has(yoursZoneId) && verifiedAdjZones.has(adjZoneId)) {
+    return [{ type: 'outside_verified', value: ZONE_BOOSTS.outside_verified }];
+  }
+  return [];
 }
 
 function computeSequenceSimilarity(
@@ -186,10 +197,14 @@ export async function scoreCandidatesN3(
   });
 
   const corrLookup: CorrespondenceLookup = new Map();
+  const verifiedYoursZones = new Set<string>();
+  const verifiedAdjZones   = new Set<string>();
   for (const corr of correspondences) {
     const conf = Number(corr.confidence);
     for (const yz of corr.yourZones) {
+      verifiedYoursZones.add(yz.id);
       for (const az of corr.adjusterZones) {
+        verifiedAdjZones.add(az.id);
         corrLookup.set(`${yz.id}__${az.id}`, {
           confidence: conf,
           verificationStatus: corr.verificationStatus,
@@ -259,7 +274,7 @@ export async function scoreCandidatesN3(
       specialFlagCompatibility:      computeSpecialFlagCompatibility(yours.specialFlags, adj.specialFlags),
     };
 
-    const boosts     = buildBoosts(yours.zoneId, adj.zoneId, corrLookup);
+    const boosts     = buildBoosts(yours.zoneId, adj.zoneId, corrLookup, verifiedYoursZones, verifiedAdjZones);
     const rawScore   = computeRawScore(features);
     const finalScore = computeFinalScore(rawScore, boosts);
     const isRejected = shouldRejectEdge(finalScore);
