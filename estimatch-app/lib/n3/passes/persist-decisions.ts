@@ -179,7 +179,7 @@ export async function persistDecisionsN3(
         matchStatus = 'GROUPED';
         break;
       case 'unmatched':
-        matchStatus = 'MISSING_FROM_ADJUSTER';
+        matchStatus = decision.yourItemIds.length > 0 ? 'MISSING_FROM_ADJUSTER' : 'ADDED_BY_ADJUSTER';
         break;
       default:
         // possible (defensive — shouldn't reach here after Phase 17)
@@ -195,6 +195,7 @@ export async function persistDecisionsN3(
       case 'MODIFIED': modifiedCount++; break;
       case 'GROUPED':  groupedCount++;  break;
       case 'MISSING_FROM_ADJUSTER': missingCount++; break;
+      case 'ADDED_BY_ADJUSTER':     addedCount++;   break;
     }
 
     // For grouped decisions, collapse adj items into a summary adj description

@@ -43,10 +43,10 @@ export type ScoreCandidatesN3Result = {
   scoredCount: number;
   rejectedCount: number;
   byBucket: {
-    highConfidence: number;   // finalScore >= HIGH_CONFIDENCE (0.90)
-    possibleMatch: number;    // finalScore >= POSSIBLE_MATCH (0.75)
-    weakCandidate: number;    // finalScore >= WEAK_CANDIDATE / REJECT (0.60)
-    rejected: number;         // finalScore < REJECT (0.60) — isRejected=true
+    highConfidence: number;   // finalScore >= HIGH_CONFIDENCE (0.75)
+    possibleMatch: number;    // finalScore >= POSSIBLE_MATCH (0.55)
+    weakCandidate: number;    // finalScore >= REJECT (0.30)
+    rejected: number;         // finalScore < REJECT (0.30) — isRejected=true
   };
 };
 
@@ -63,13 +63,14 @@ type CorrespondenceLookup = Map<string, ZoneCorr>;
 // ── Feature helpers (pure, no I/O) ────────────────────────────────────────────
 
 function computeJaccard(tokensA: string[], tokensB: string[]): number {
-  if (tokensA.length === 0 && tokensB.length === 0) return 0;
+  if (tokensA.length === 0 || tokensB.length === 0) return 0;
   const setA = new Set(tokensA);
+  const setB = new Set(tokensB);
   let intersection = 0;
-  for (const t of tokensB) {
+  for (const t of setB) {
     if (setA.has(t)) intersection++;
   }
-  const union = setA.size + tokensB.length - intersection;
+  const union = setA.size + setB.size - intersection;
   return union === 0 ? 0 : intersection / union;
 }
 
@@ -282,24 +283,45 @@ export async function scoreCandidatesN3(
     scored.push({ id: edge.id, featuresJson: features, boostsJson: boosts, rawScore, finalScore, isRejected });
   }
 
-  // ── 6. Batch update in chunks of 50 ───────────────────────────────────────
-  const CHUNK = 50;
-  for (let i = 0; i < scored.length; i += CHUNK) {
-    const chunk = scored.slice(i, i + CHUNK);
-    await Promise.all(
-      chunk.map(e =>
-        prisma.n3CandidateEdge.update({
-          where: { id: e.id },
-          data: {
-            featuresJson: e.featuresJson,
-            boostsJson:   e.boostsJson,
-            rawScore:     e.rawScore,
-            finalScore:   e.finalScore,
-            isRejected:   e.isRejected,
-          },
-        }),
-      ),
-    );
+  // ── 6. Bulk update via UPDATE FROM VALUES ─────────────────────────────────
+  // Replaces the previous per-row update pattern (chunks of 50 parallel updates).
+  // For 15k edges that pattern fired 300 sequential batches = 300 round trips.
+  // This collapses to one round trip per UPDATE_BATCH (1000 rows). Postgres bind
+  // parameter cap is ~32k; at 5 params/row we stay well under with batches of 1000.
+  if (scored.length > 0) {
+    const UPDATE_BATCH = 1000;
+    for (let i = 0; i < scored.length; i += UPDATE_BATCH) {
+      const chunk = scored.slice(i, i + UPDATE_BATCH);
+      // Build VALUES list: ($1, $2::jsonb, $3::jsonb, $4::numeric, $5::numeric, $6::boolean), ...
+      const placeholders: string[] = [];
+      const params: unknown[] = [];
+      for (const e of chunk) {
+        const base = params.length;
+        placeholders.push(
+          `($${base + 1}, $${base + 2}::jsonb, $${base + 3}::jsonb, $${base + 4}::numeric, $${base + 5}::numeric, $${base + 6}::boolean)`,
+        );
+        params.push(
+          e.id,
+          JSON.stringify(e.featuresJson),
+          JSON.stringify(e.boostsJson),
+          e.rawScore,
+          e.finalScore,
+          e.isRejected,
+        );
+      }
+      const sql = `
+        UPDATE n3_candidate_edges AS e
+        SET    features_json = v.features_json,
+               boosts_json   = v.boosts_json,
+               raw_score     = v.raw_score,
+               final_score   = v.final_score,
+               is_rejected   = v.is_rejected
+        FROM   (VALUES ${placeholders.join(',')})
+               AS v(id, features_json, boosts_json, raw_score, final_score, is_rejected)
+        WHERE  e.id = v.id
+      `;
+      await prisma.$executeRawUnsafe(sql, ...params);
+    }
   }
 
   // ── 7. Build result summary ────────────────────────────────────────────────

@@ -13,7 +13,7 @@
 //   6.  p8-extract-line-items      — Phase 8: extract raw line items per zone
 //   7.  p9-normalize-line-items    — Phase 9: normalize + tokenize all items
 //   8.  p10-extraction-validation  — Phase 10: write N3ExtractionWarning rows
-//   9.  p11-generate-embeddings    — Phase 11: OpenAI embeddings → pgvector
+//   9.  p11-generate-embeddings    — Phase 11: Voyage AI embeddings (voyage-3-lite) → pgvector
 //   10. p12-generate-candidates    — Phase 12: 9 retrieval sources → candidate edges
 //   11. p13-score-candidates       — Phase 13: weighted score + zone boosts
 //   12. p14-build-components       — Phase 14: connected components of sparse graph
@@ -275,11 +275,12 @@ export const processComparisonV3 = inngest.createFunction(
       });
       logger.info('[n3] p15-assign-matches complete', {
         comparisonId,
-        decisionCount:  p15Result.decisionCount,
-        matchedCount:   p15Result.matchedCount,
-        possibleCount:  p15Result.possibleCount,
-        unmatchedYours: p15Result.unmatchedYours,
-        unmatchedAdj:   p15Result.unmatchedAdj,
+        decisionCount:   p15Result.decisionCount,
+        matchedCount:    p15Result.matchedCount,
+        possibleCount:   p15Result.possibleCount,
+        unmatchedYours:  p15Result.unmatchedYours,
+        unmatchedAdj:    p15Result.unmatchedAdj,
+        zoneRepairCount: p15Result.zoneRepairCount,
       });
 
       // ── Step 14: Phase 16 — Group Matching ───────────────────────────────
@@ -298,10 +299,11 @@ export const processComparisonV3 = inngest.createFunction(
       });
       logger.info('[n3] p17-llm-adjudication complete', {
         comparisonId,
-        adjudicatedCount: p17Result.adjudicatedCount,
-        acceptedCount:    p17Result.acceptedCount,
-        rejectedCount:    p17Result.rejectedCount,
-        skipped:          p17Result.skipped,
+        adjudicatedCount:  p17Result.adjudicatedCount,
+        acceptedCount:     p17Result.acceptedCount,
+        rejectedCount:     p17Result.rejectedCount,
+        autoRejectedCount: p17Result.autoRejectedCount,
+        skipped:           p17Result.skipped,
       });
 
       // ── Step 16: Phase 18 — Persist Decisions ────────────────────────────

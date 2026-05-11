@@ -35,8 +35,8 @@ export type BuildComponentsN3Result = {
   componentCount: number;
   edgesConsumed: number;
   bySize: { small: number; medium: number; large: number };
-  singletonYours: number;    // yours items not in any surviving edge → will be "added"
-  singletonAdj: number;      // adj items not in any surviving edge → will be "missing"
+  singletonYours: number;    // yours items not in any surviving edge → will be "missing from adjuster"
+  singletonAdj: number;      // adj items not in any surviving edge → will be "added by adjuster"
 };
 
 // ── Union-Find (path compression + union by rank) ─────────────────────────────

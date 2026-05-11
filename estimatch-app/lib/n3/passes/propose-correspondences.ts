@@ -27,7 +27,7 @@ import type { StepLogger } from '@/lib/n3/passes/detect-zones';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const SONNET_MODEL = 'claude-sonnet-4-5';
+const SONNET_MODEL = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 const CORRESPONDENCE_MAX_TOKENS = 1500;

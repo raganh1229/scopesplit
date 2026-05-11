@@ -37,10 +37,10 @@ import type { EstimateFormat } from '@/lib/n2/schemas/types';
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const ESTIMATES_BUCKET = 'estimates';
-const SONNET_MODEL = 'claude-sonnet-4-5';
+const SONNET_MODEL = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
-const EXTRACTION_MAX_TOKENS = 4096;
+const EXTRACTION_MAX_TOKENS = 8192;
 const CONCURRENT_ZONE_CALLS = 5;
 
 // ── Zod schema for AI response ────────────────────────────────────────────────
@@ -69,7 +69,12 @@ const ZoneExtractionResponseSchema = z.object({
 type ExtractedZoneResult = {
   zoneId: string;
   source: string;
-  items: z.infer<typeof N3ExtractedItemSchema>[];
+  // Match the type returned by `parseAndValidate<T>(...schema: z.ZodSchema<T>): T`,
+  // which binds T from the schema's *input* shape. With `.nullable().default(null)`
+  // the input type is `string | null | undefined` (the default fills missing keys at
+  // runtime, so values are actually `string | null` after parsing). Downstream
+  // consumption coalesces with `?? null` so `undefined` is handled safely.
+  items: z.input<typeof N3ExtractedItemSchema>[];
 };
 
 // ── Return type ───────────────────────────────────────────────────────────────

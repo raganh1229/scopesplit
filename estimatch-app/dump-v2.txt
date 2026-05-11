@@ -1,0 +1,137 @@
+﻿Γùç injected env (49) from .env.local // tip: Γîÿ override existing { override: true }
+
+Total line items: 107
+
+
+ΓòÉΓòÉΓòÉ BEDROOM 2 ΓòÉΓòÉΓòÉ
+  [MATCH                 ] C: Tear out wet drywall ΓÇö walls                      A: Remove damaged drywall ΓÇö walls                    C$:    583.68  A$:    583.68  diff:         0
+  [MATCH                 ] C: Remove base molding, per LF                       A: Tear out base molding, per LF                     C$:     48.72  A$:     48.72  diff:         0
+  [MODIFIED              ] C: Drywall ΓÇö walls, hang, tape & finish              A: Hang, tape & finish drywall ΓÇö walls               C$:    1755.6  A$:    1940.4  diff:     184.8
+  [MISSING_FROM_ADJUSTER ] C: Texture walls ΓÇö knockdown                         A: (none)                                            C$:     433.2  A$:         ΓÇö  diff:    -433.2
+  [MATCH                 ] C: Paint walls ΓÇö 2 coats                             A: Wall paint ΓÇö 2 coats                              C$:     706.8  A$:     706.8  diff:         0
+  [MATCH                 ] C: Paint base molding, per LF                        A: Base molding paint, per LF                        C$:     60.48  A$:     60.48  diff:         0
+  [MATCH                 ] C: Base molding ΓÇö 3.5-in colonial, per LF            A: Base molding ΓÇö 3.5-in, per LF                     C$:       273  A$:       273  diff:         0
+  [MODIFIED              ] C: Window blinds ΓÇö 2-in faux wood, per EA            A: Window blinds ΓÇö 1-in aluminum mini, per EA        C$:       396  A$:       228  diff:      -168
+  [MISSING_FROM_ADJUSTER ] C: Ceiling fan ΓÇö standard 52-in, replace             A: (none)                                            C$:       462  A$:         ΓÇö  diff:      -462
+  [MATCH                 ] C: Carpet ΓÇö medium grade, per SY                     A: Carpet ΓÇö mid-grade, per SY                        C$:     957.6  A$:     957.6  diff:         0
+  [MODIFIED              ] C: Carpet pad ΓÇö 8-lb rebond, per SY                  A: Carpet cushion ΓÇö per SY                           C$:       252  A$:     176.4  diff:     -75.6
+
+ΓòÉΓòÉΓòÉ GARAGE ΓòÉΓòÉΓòÉ
+  [MATCH                 ] C: Garage door ΓÇö steel flush, 16├ù7, replace          A: Garage door ΓÇö 16├ù7 steel, replace                 C$:      1542  A$:      1542  diff:         0
+  [MATCH                 ] C: Garage door opener ΓÇö replace                      A: Garage door operator ΓÇö replace                    C$:       582  A$:       582  diff:         0
+  [MATCH                 ] C: Exterior paint ΓÇö roll & brush, per SF             A: Exterior paint ΓÇö per SF                           C$:       480  A$:       480  diff:         0
+  [MATCH                 ] C: Window ΓÇö aluminum single-hung, 2├ù4, replace       A: Window ΓÇö aluminum single-hung replacement         C$:       342  A$:       342  diff:         0
+  [MATCH                 ] C: Weatherstripping ΓÇö door, per LF                   A: Door weatherstrip ΓÇö per LF                        C$:        84  A$:        84  diff:         0
+  [MODIFIED              ] C: Fascia board ΓÇö 1├ù6 PVC garage, per LF             A: PVC fascia board ΓÇö garage, per LF                 C$:       252  A$:     176.4  diff:     -75.6
+  [MODIFIED              ] C: Soffit ΓÇö aluminum vented garage, per SF           A: Vented soffit ΓÇö garage, per SF                    C$:     392.7  A$:     277.2  diff:    -115.5
+  [MISSING_FROM_ADJUSTER ] C: Overhead light fixture ΓÇö replace                  A: (none)                                            C$:       222  A$:         ΓÇö  diff:      -222
+  [MATCH                 ] C: Tear out drywall ΓÇö walls                          A: Remove drywall ΓÇö walls                            C$:    430.08  A$:    430.08  diff:         0
+  [MATCH                 ] C: Antimicrobial treatment ΓÇö walls                   A: Mold inhibitor application ΓÇö walls                C$:     151.2  A$:     151.2  diff:         0
+  [MATCH                 ] C: Drywall ΓÇö walls, hang, tape & finish              A: Install & finish drywall ΓÇö walls                  C$:    1293.6  A$:    1293.6  diff:         0
+  [MATCH                 ] C: Paint walls ΓÇö 2 coats                             A: Wall paint ΓÇö 2 coats                              C$:     520.8  A$:     520.8  diff:         0
+  [MATCH                 ] C: Concrete floor sealer ΓÇö per SF                    A: Concrete floor sealer ΓÇö per SF                    C$:     524.4  A$:     524.4  diff:         0
+
+ΓòÉΓòÉΓòÉ GENERAL CONDITIONS ΓòÉΓòÉΓòÉ
+  [MATCH                 ] C: Dumpster ΓÇö 20 cubic yard                          A: 20 cy construction dumpster                       C$:       510  A$:       510  diff:         0
+  [MATCH                 ] C: Building permit ΓÇö roofing                         A: Municipal permit ΓÇö roofing                        C$:       485  A$:       485  diff:         0
+  [MATCH                 ] C: Building permit ΓÇö exterior                        A: Municipal permit ΓÇö exterior repairs               C$:       225  A$:       225  diff:         0
+  [MATCH                 ] C: Final cleaning ΓÇö residential                      A: Post-construction cleaning ΓÇö residential          C$:     806.4  A$:     806.4  diff:         0
+  [MATCH                 ] C: General laborer ΓÇö per hour                        A: General helper labor ΓÇö hourly                     C$:     662.4  A$:     662.4  diff:         0
+  [MATCH                 ] C: Temporary toilet facility ΓÇö per month             A: Portable restroom rental ΓÇö monthly                C$:       444  A$:       444  diff:         0
+  [MATCH                 ] C: Temporary fence panels ΓÇö rental per month         A: Site fencing panels rental ΓÇö monthly              C$:       684  A$:       684  diff:         0
+  [MATCH                 ] C: Emergency roof tarping ΓÇö per SF                   A: Emergency tarp ΓÇö temporary roof cover, per SF     C$:      3192  A$:      3192  diff:         0
+  [MODIFIED              ] C: Project supervision ΓÇö per hour Senior PM at $72/  A: Construction supervision labor ΓÇö hourly           C$:    2534.4  A$:      1936  diff:    -598.4
+  [MODIFIED              ] C: General liability insurance ΓÇö job cost            A: General liability insurance rider ΓÇö job           C$:      1020  A$:       750  diff:      -270
+  [MISSING_FROM_ADJUSTER ] C: Temporary housing allowance ΓÇö per month           A: (none)                                            C$:      2400  A$:         ΓÇö  diff:     -2400
+
+ΓòÉΓòÉΓòÉ KITCHEN ΓòÉΓòÉΓòÉ
+  [MATCH                 ] C: Tear out wet drywall ΓÇö ceiling                    A: Remove damaged drywall ΓÇö ceiling                  C$:    299.52  A$:    299.52  diff:         0
+  [MATCH                 ] C: Tear out wet drywall ΓÇö walls                      A: Remove damaged drywall ΓÇö walls                    C$:    645.12  A$:    645.12  diff:         0
+  [MATCH                 ] C: Tear out vinyl plank flooring                     A: Remove LVP flooring                               C$:     491.4  A$:     491.4  diff:         0
+  [MATCH                 ] C: Antimicrobial treatment ΓÇö walls                   A: Mold inhibitor spray ΓÇö walls                      C$:     226.8  A$:     226.8  diff:         0
+  [MATCH                 ] C: Drywall ΓÇö ceiling, install & finish               A: Hang, tape & finish drywall ΓÇö ceiling             C$:     900.9  A$:     900.9  diff:         0
+  [MODIFIED              ] C: Drywall ΓÇö walls, install & finish                 A: Install & finish drywall ΓÇö walls                  C$:    1940.4  A$:    1755.6  diff:    -184.8
+  [MATCH                 ] C: Paint ceiling ΓÇö 2 coats                           A: Ceiling paint ΓÇö 2 coats                           C$:     362.7  A$:     362.7  diff:         0
+  [MATCH                 ] C: Paint walls ΓÇö 2 coats                             A: Wall paint ΓÇö 2 coats                              C$:     781.2  A$:     781.2  diff:         0
+  [MATCH                 ] C: Paint base cabinets ΓÇö doors & boxes, per LF       A: Cabinet paint ΓÇö base units, per LF                C$:       360  A$:       360  diff:         0
+  [MATCH                 ] C: Luxury vinyl plank flooring ΓÇö install             A: LVP flooring ΓÇö furnished & installed              C$:    1696.5  A$:    1696.5  diff:         0
+  [MATCH                 ] C: Cabinet hardware ΓÇö full set, replace              A: Cabinet hardware replacement set                  C$:       342  A$:       342  diff:         0
+  [MODIFIED              ] C: Kitchen upper cabinets ΓÇö replace, per LF Semi-cu  A: Upper wall cabinets ΓÇö builder grade, per LF       C$:      5724  A$:      4212  diff:     -1512
+  [MODIFIED              ] C: Kitchen countertop ΓÇö quartz, per SF Original cou  A: Countertop ΓÇö laminate, per SF                     C$:      4416  A$:    1996.8  diff:   -2419.2
+  [MISSING_FROM_ADJUSTER ] C: Kitchen faucet ΓÇö single handle, replace           A: (none)                                            C$:       342  A$:         ΓÇö  diff:      -342
+  [MISSING_FROM_ADJUSTER ] C: Kitchen range hood ΓÇö 30-in, replace               A: (none)                                            C$:       582  A$:         ΓÇö  diff:      -582
+
+ΓòÉΓòÉΓòÉ LIVING ROOM ΓòÉΓòÉΓòÉ
+  [MATCH                 ] C: Tear out wet drywall ΓÇö walls                      A: Remove damaged drywall ΓÇö walls                    C$:    890.88  A$:    890.88  diff:         0
+  [MATCH                 ] C: Remove base molding, per LF                       A: Tear out base molding, per LF                     C$:      69.6  A$:      69.6  diff:         0
+  [MATCH                 ] C: Tear out carpet & pad, per SY                     A: Remove carpet and pad, per SY                     C$:    194.04  A$:    194.04  diff:         0
+  [MATCH                 ] C: Antimicrobial treatment ΓÇö walls, per SF           A: Mold inhibitor application, per SF                C$:     313.2  A$:     313.2  diff:         0
+  [MATCH                 ] C: Drywall ΓÇö walls, hang, tape & finish              A: Install & finish drywall ΓÇö walls                  C$:    2679.6  A$:    2679.6  diff:         0
+  [MATCH                 ] C: Texture walls ΓÇö knockdown, per SF                 A: Drywall texture ΓÇö knockdown finish                C$:     661.2  A$:     661.2  diff:         0
+  [MODIFIED              ] C: Drywall ΓÇö ceiling, hang, tape & finish Full ceil  A: Install & finish drywall ΓÇö ceiling                C$:    1778.7  A$:    1432.2  diff:    -346.5
+  [MATCH                 ] C: Paint walls ΓÇö 2 coats, latex eggshell             A: Wall paint ΓÇö latex eggshell, 2 coats              C$:    1078.8  A$:    1078.8  diff:         0
+  [MATCH                 ] C: Paint base molding, per LF                        A: Base molding ΓÇö finish paint, per LF               C$:      86.4  A$:      86.4  diff:         0
+  [MATCH                 ] C: Paint ceiling ΓÇö 2 coats, per SF                   A: Ceiling paint ΓÇö latex flat, 2 coats               C$:     716.1  A$:     716.1  diff:         0
+  [MATCH                 ] C: Base molding ΓÇö 3.5-in colonial, per LF            A: Base molding ΓÇö 3.5-in colonial, per LF            C$:       390  A$:       390  diff:         0
+  [MODIFIED              ] C: Window trim ΓÇö replace, per LF                     A: Window casing & stool ΓÇö replace, per LF           C$:     259.2  A$:     172.8  diff:     -86.4
+  [MISSING_FROM_ADJUSTER ] C: Crown molding ΓÇö 3.25-in, per LF                   A: (none)                                            C$:       429  A$:         ΓÇö  diff:      -429
+  [MISSING_FROM_ADJUSTER ] C: Smoke detector ΓÇö replace                          A: (none)                                            C$:       156  A$:         ΓÇö  diff:      -156
+  [MATCH                 ] C: Carpet pad ΓÇö 8-lb rebond, per SY                  A: Carpet cushion ΓÇö 8-lb rebond, per SY              C$:     327.6  A$:     327.6  diff:         0
+  [MATCH                 ] C: Carpet ΓÇö medium grade, per SY                     A: Carpet ΓÇö mid-grade residential, per SY            C$:    1436.4  A$:    1436.4  diff:         0
+
+ΓòÉΓòÉΓòÉ MASTER BEDROOM ΓòÉΓòÉΓòÉ
+  [MATCH                 ] C: Tear out wet drywall ΓÇö walls                      A: Remove damaged drywall ΓÇö walls                    C$:    798.72  A$:    798.72  diff:         0
+  [MATCH                 ] C: Remove base molding, per LF                       A: Tear out base molding, per LF                     C$:     62.64  A$:     62.64  diff:         0
+  [MATCH                 ] C: Tear out carpet & pad, per SY                     A: Remove carpet and pad, per SY                     C$:    175.56  A$:    175.56  diff:         0
+  [MATCH                 ] C: Antimicrobial treatment ΓÇö walls                   A: Mold inhibitor application ΓÇö walls                C$:     280.8  A$:     280.8  diff:         0
+  [MATCH                 ] C: Drywall ΓÇö walls, hang, tape & finish              A: Install & finish drywall ΓÇö walls                  C$:    2402.4  A$:    2402.4  diff:         0
+  [MATCH                 ] C: Texture walls ΓÇö knockdown                         A: Drywall texture ΓÇö knockdown finish                C$:     592.8  A$:     592.8  diff:         0
+  [MATCH                 ] C: Paint walls ΓÇö 2 coats                             A: Wall paint ΓÇö 2 coats                              C$:     967.2  A$:     967.2  diff:         0
+  [MATCH                 ] C: Paint base molding, per LF                        A: Base molding paint, per LF                        C$:     77.76  A$:     77.76  diff:         0
+  [MATCH                 ] C: Base molding ΓÇö 3.5-in colonial, per LF            A: Base molding ΓÇö 3.5-in, per LF                     C$:       351  A$:       351  diff:         0
+  [MATCH                 ] C: Window trim ΓÇö replace, per LF                     A: Window casing trim ΓÇö per LF                       C$:     172.8  A$:     172.8  diff:         0
+  [MODIFIED              ] C: Closet wire shelving ΓÇö ventilated, per LF Walk-i  A: Wire shelving ΓÇö closet, per LF                    C$:     326.4  A$:     244.8  diff:     -81.6
+  [MODIFIED              ] C: Interior door ΓÇö hollow-core pre-hung              A: Hollow-core pre-hung interior door                C$:       684  A$:       342  diff:      -342
+  [MATCH                 ] C: Carpet pad ΓÇö 8-lb rebond, per SY                  A: Carpet cushion ΓÇö 8-lb rebond, per SY              C$:     296.4  A$:     296.4  diff:         0
+  [MATCH                 ] C: Carpet ΓÇö medium grade, per SY                     A: Carpet ΓÇö mid-grade, per SY                        C$:    1299.6  A$:    1299.6  diff:         0
+  [MISSING_FROM_ADJUSTER ] C: Vanity mirror ΓÇö replace                           A: (none)                                            C$:       222  A$:         ΓÇö  diff:      -222
+  [MISSING_FROM_ADJUSTER ] C: Ceiling fan ΓÇö standard 52-in, replace             A: (none)                                            C$:       462  A$:         ΓÇö  diff:      -462
+
+ΓòÉΓòÉΓòÉ ROOF & EXTERIOR ΓòÉΓòÉΓòÉ
+  [MATCH                 ] C: Remove 3-tab asphalt shingles                     A: Tear-off 3-tab asphalt roof covering              C$:      4200  A$:      4200  diff:         0
+  [MATCH                 ] C: Install 30-yr architectural shingles              A: 30-yr dimensional shingle ΓÇö install               C$:      9576  A$:      9576  diff:         0
+  [MATCH                 ] C: Synthetic roofing underlayment                    A: Roofing underlayment ΓÇö synthetic, per SQ          C$:      1512  A$:      1512  diff:         0
+  [MATCH                 ] C: Ridge cap shingles                                A: Hip & ridge cap shingles, per LF                  C$:     535.5  A$:     535.5  diff:         0
+  [MATCH                 ] C: Ice & water shield ΓÇö eave course                  A: Eave ice/water barrier, per LF                    C$:     495.9  A$:     495.9  diff:         0
+  [MATCH                 ] C: Drip edge ΓÇö eave metal, per LF                    A: Metal drip edge ΓÇö eaves, per LF                   C$:     321.9  A$:     321.9  diff:         0
+  [MATCH                 ] C: Roof decking ΓÇö OSB 7/16-in, per SF                A: Roof sheathing ΓÇö 7/16 OSB, replace                C$:      4872  A$:      4872  diff:         0
+  [MATCH                 ] C: Pipe flashing ΓÇö lead boot, replace                A: Plumbing stack flashing ΓÇö replace                 C$:       312  A$:       312  diff:         0
+  [MATCH                 ] C: Chimney flashing ΓÇö step & counter                 A: Chimney counter and step flashing                 C$:       342  A$:       342  diff:         0
+  [MISSING_FROM_ADJUSTER ] C: Storm collar / pipe boot collar, per EA           A: (none)                                            C$:       216  A$:         ΓÇö  diff:      -216
+  [MISSING_FROM_ADJUSTER ] C: Box roof vents ΓÇö remove & replace, per EA         A: (none)                                            C$:       306  A$:         ΓÇö  diff:      -306
+  [MATCH                 ] C: Gutters ΓÇö 5-in aluminum K-style, per LF           A: Aluminum gutters ΓÇö 5-in K-style, install          C$:    1017.9  A$:    1017.9  diff:         0
+  [MATCH                 ] C: Downspouts ΓÇö 3├ù4 aluminum, per LF                 A: Aluminum downspouts ΓÇö 3├ù4, per LF                 C$:     326.4  A$:     326.4  diff:         0
+  [MATCH                 ] C: Vinyl siding ΓÇö remove & replace, per SF           A: Vinyl siding replacement, per SF                  C$:    3957.8  A$:    3957.8  diff:         0
+  [MATCH                 ] C: Garage door panel ΓÇö hail damaged, replace         A: Garage door panel replacement                     C$:      1182  A$:      1182  diff:         0
+  [MATCH                 ] C: Exterior paint ΓÇö roll & brush, per SF             A: Exterior paint ΓÇö full coat, per SF                C$:      1020  A$:      1020  diff:         0
+  [MODIFIED              ] C: Fascia board ΓÇö 1├ù6 PVC, per LF                    A: PVC fascia board ΓÇö 1├ù6, per LF                    C$:     913.5  A$:       693  diff:    -220.5
+  [MODIFIED              ] C: Soffit ΓÇö aluminum vented, per SF                  A: Vented aluminum soffit, per SF                    C$:    1016.4  A$:     808.5  diff:    -207.9
+
+ΓòÉΓòÉΓòÉ PROJECT GENERAL CONDITIONS ΓòÉΓòÉΓòÉ
+  [ADDED_BY_ADJUSTER     ] C: (none)                                            A: Independent roof inspection fee                   C$:         ΓÇö  A$:       342  diff:       342
+
+ΓòÉΓòÉΓòÉ LIVING AREA ΓòÉΓòÉΓòÉ
+  [ADDED_BY_ADJUSTER     ] C: (none)                                            A: Drywall primer sealer ΓÇö walls, per SF             C$:         ΓÇö  A$:    292.32  diff:    292.32
+
+ΓòÉΓòÉΓòÉ KITCHEN ΓòÉΓòÉΓòÉ
+  [ADDED_BY_ADJUSTER     ] C: (none)                                            A: Drywall primer sealer ΓÇö ceiling & walls           C$:         ΓÇö  A$:    309.96  diff:    309.96
+
+ΓòÉΓòÉΓòÉ PRIMARY BEDROOM SUITE ΓòÉΓòÉΓòÉ
+  [ADDED_BY_ADJUSTER     ] C: (none)                                            A: Drywall primer sealer ΓÇö walls                     C$:         ΓÇö  A$:    262.08  diff:    262.08
+
+ΓòÉΓòÉΓòÉ SECOND BEDROOM ΓòÉΓòÉΓòÉ
+  [ADDED_BY_ADJUSTER     ] C: (none)                                            A: Drywall texture ΓÇö knockdown                       C$:         ΓÇö  A$:     433.2  diff:     433.2
+  [ADDED_BY_ADJUSTER     ] C: (none)                                            A: Drywall primer sealer ΓÇö walls                     C$:         ΓÇö  A$:    191.52  diff:    191.52
+
+ΓòÉΓòÉΓòÉ ATTACHED GARAGE ΓòÉΓòÉΓòÉ
+  [ADDED_BY_ADJUSTER     ] C: (none)                                            A: Concrete floor ΓÇö clean & prep for sealer          C$:         ΓÇö  A$:    176.64  diff:    176.64

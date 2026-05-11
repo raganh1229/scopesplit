@@ -1,7 +1,7 @@
 # N3 Build Ledger
 
 **Status:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅ · Phase 3 ✅ · Phase 4 ✅ · Phase 6 ✅ · Phase 8 ✅ · Phase 9 ✅ · Phase 11 ✅ · Phase 12 ✅ · Phase 13 ✅ · Phase 14 ✅ · Phase 15 ✅ · Phase 16 ✅ · Phase 17 ✅ · Phase 18 ✅ · UI gates (5, 7, 10) + calibration pending  
-**Last updated:** May 9, 2026  
+**Last updated:** May 10, 2026  
 **Spec reference:** `N3.md` (spec only — do not confuse with this ledger)
 
 ---
@@ -16,6 +16,7 @@ This document is the **implementation ledger** for N3. It records only what has 
 
 | Date | Entry |
 |------|-------|
+| May 10, 2026 | **Third-party review remediation (11 items + 2 follow-ups)** — addressed all findings from external N3 flaw analysis plus two cleanup items surfaced during review. **Follow-up A:** All 4 N3 phases that call Anthropic are now consistently on `claude-sonnet-4-6` — `detect-zones.ts`, `propose-correspondences.ts`, `extract-line-items.ts` updated to match `llm-adjudication.ts`. **Follow-up B:** Pre-existing TS2322 error at `extract-line-items.ts:153` resolved — `ExtractedZoneResult.items` now uses `z.input<typeof N3ExtractedItemSchema>` to match what `parseAndValidate<T>(...schema: z.ZodSchema<T>): T` actually returns (T is inferred from schema input shape). Downstream consumption already coalesces with `?? null`, so the change is type-only. Full codebase now type-checks clean (`tsc --noEmit` exit 0). **Correctness:** (1) `llm-adjudication.ts` model `claude-sonnet-4-5` → `claude-sonnet-4-6`. (2) Phase 17 silent `possible`-leak fix: when LLM omits an index in its JSON response, the decision now converts to `unmatched` instead of falling through to `persist-decisions` default of `MODIFIED` (which would have surfaced uncertain pairs as confirmed price-different matches). (3) `MAX_TOKENS` now scales with `pairs.length × 80` (floor 2000) so large adjudication batches do not silently truncate. **Algorithmic:** (4) Phase 16 `zoneCompatibility` feature now uses `N3ZoneCorrespondence` lookup (matching Phase 13 behaviour) so cross-zone correspondences (e.g. "Master Bath" ↔ "Master Bathroom") no longer score `f5 = 0`. (5) Standardised Jaccard empty-set behaviour to `0.0` across all three implementations (`normalization.ts:jaccardSimilarity`, `score-candidates.ts:computeJaccard`, `group-matching.ts:jaccard`); test updated. (6) `score-candidates.ts:computeJaccard` now dedups `tokensB` and uses set-size denominator (previously raw `tokensB.length` inflated intersection on duplicate tokens). **Performance:** (7) `assign-matches.ts` now pre-builds `edgesByYours` and `edgesByAdj` indices once after `edgeLookup`; both the bidirectional-best rescue pass and the zone-conflict repair pass now use O(degree) lookups instead of O(all-edges) scans per decision (~960k iterations → ~80k for typical comparison). (8) `score-candidates.ts` per-edge updates replaced with bulk `UPDATE … FROM (VALUES …)` via `$executeRawUnsafe`, batched 1000 rows per round trip (was 50 per round trip = 300 RTs for 15k edges → 15 RTs). **Documentation:** (9) `score-candidates.ts:46-49` `byBucket` threshold comments now match actual `SCORE_THRESHOLDS` constants (0.75/0.55/0.30, was 0.90/0.75/0.60). (10) `build-components.ts:38-39` swapped singleton comments fixed (yours-only → MISSING_FROM_ADJUSTER, adj-only → ADDED_BY_ADJUSTER). (11) `process-comparison-v3.ts:16` Phase 11 step comment fixed: "OpenAI embeddings" → "Voyage AI embeddings (voyage-3-lite)". All touched files lint-clean. |
 | May 7, 2026 | Phase 0 complete: types, constants, normalization, fixture, 128 passing tests |
 | May 7, 2026 | Phase 1 complete: 8 n3_* Prisma models + migration `20260512000000_n3_foundation` applied to Supabase |
 | May 8, 2026 | Phase 2 complete: `n3-routing.ts` gate + `process-comparison-v3.ts` 16-step Inngest scaffold registered in route |
@@ -665,6 +666,55 @@ Keep the static list as a fast first pass. Only call AI for items where the stat
 **Infrastructure required:** A Prisma migration to add `vector(1536)` column to `n3_line_items` (requires pgvector extension enabled on Supabase — available on Pro plan).
 
 **When to act:** After Phase 15 produces a first accuracy benchmark. If semantic paraphrasing mismatches are a top error category, implement with Voyage AI or OpenAI.
+
+---
+
+### 4. ⚠️ SCALE FAILURE — pgvector Brute-Force Retrieval (Phase 12 / generate-candidates.ts)
+
+**Current behavior:** `lib/n3/passes/generate-candidates.ts` retrieves semantic candidates via a raw `CROSS JOIN` that computes cosine distance between every yours-item and every adjuster-item in the comparison. There is no HNSW or IVFFlat index on the `embedding` column.
+
+**The problem:** Query cost is **O(n × m)** where n and m are the item counts on each side. At small test sizes this is unnoticeable, but:
+
+- 100 × 100 items → 10,000 distance computations
+- 500 × 500 items → 250,000 distance computations
+- 1,000 × 1,000 items → 1,000,000 distance computations (multi-second sequential scan)
+
+PostgreSQL must read every embedding row from disk on every comparison. Without an approximate nearest-neighbor index, Phase 12 becomes the pipeline bottleneck at any estimate size above ~200 items per side.
+
+**When it fails hard:** Any comparison involving large commercial or restoration estimates (500+ line items per side). Phase 12 will time out or lock the database under concurrent load.
+
+**Deferred fix:** Add an HNSW index via Prisma migration: `CREATE INDEX ON n3_line_items USING hnsw (embedding vector_cosine_ops);`. Requires pgvector ≥ 0.5.0.
+
+---
+
+### 5. ⚠️ SCALE FAILURE — Voyage AI Partial Response Crash (Phase 11 / generate-embeddings.ts)
+
+**Current behavior:** `lib/n3/passes/generate-embeddings.ts` calls the Voyage AI batch embedding endpoint and maps the returned `data` array back to items by index position (i.e., `data[0]` → item 0, `data[1]` → item 1, etc.).
+
+**The problem:** Voyage AI's API does not guarantee that a partial-failure batch returns vectors for every input. If the API returns fewer vectors than items sent (due to a rate limit, a content filter, or a transient error on any single item), the index mapping silently misaligns: item N receives item N+1's embedding. This produces incorrect cosine scores with no error or warning in the logs.
+
+**Failure mode:** Silent — the pipeline continues, embeddings are stored, and Phase 12 retrieves plausible-but-wrong candidates. Accuracy degrades without any observable error.
+
+**Approximate scale trigger:** Voyage AI batch endpoint has an input limit of ~128 texts per request. The current code batches in chunks. Any single chunk where one item is rejected by the API will corrupt the embedding alignment for that entire chunk.
+
+**Deferred fix:** After receiving each batch response, validate `data.length === chunk.length` and that each `data[i].index` matches the expected position before writing. Reject and re-queue any chunk that fails this check.
+
+---
+
+### 6. ⚠️ SCALE FAILURE — PostgreSQL Bind Parameter Limit in Batch Inserts (Phase 18 / persist-decisions.ts)
+
+**Current behavior:** `lib/n3/passes/persist-decisions.ts` uses Prisma `createMany` to bulk-insert `N3MatchDecision` rows inside a transaction. Prisma compiles `createMany` into a single parameterized SQL statement with one bind parameter per field per row.
+
+**The problem:** PostgreSQL enforces a hard limit of **65,535 bind parameters** per statement. Each `N3MatchDecision` row has approximately 80 fields. This means:
+
+- Safe limit: **~819 decisions per `createMany` call** (65,535 ÷ 80 ≈ 819)
+- A comparison with 900+ match decisions will throw `ERROR: too many parameters` and the entire Phase 18 transaction will roll back.
+
+**Practical impact:** A comparison with ~410 line items per side could produce up to ~820 match decisions — already at the boundary. Any commercial estimate exceeding ~400 items per side is at risk of a complete Phase 18 failure with no partial save.
+
+**When it fails hard:** Estimates with more than ~820 total match decisions (roughly 410+ items per side). The transaction rolls back, no decisions are persisted, and the comparison is left in an incomplete state.
+
+**Deferred fix:** Chunk the `createMany` payload into batches of ≤800 rows before insertion. Alternatively, switch to a raw `INSERT ... VALUES` with unnested arrays to sidestep the parameter limit entirely.
 
 ---
 

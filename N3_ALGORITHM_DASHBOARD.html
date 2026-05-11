@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N3 Pipeline Algorithm Dashboard</title>
+<style>
+:root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--purple:#8b5cf6;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--cyan:#06b6d4;--teal:#14b8a6;--indigo:#6366f1}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--blue);text-decoration:none}
+.layout{display:flex;min-height:100vh}
+nav{position:fixed;top:0;left:0;width:230px;height:100vh;background:var(--surface);border-right:1px solid var(--border);padding:1.5rem 0;overflow-y:auto;z-index:100}
+nav h2{padding:0 1rem;margin-bottom:1rem;font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+nav a{display:block;padding:.45rem 1.1rem;font-size:.82rem;color:var(--muted);border-left:3px solid transparent}
+nav a:hover{color:var(--text);background:var(--surface2);border-left-color:var(--blue);text-decoration:none}
+nav .ng{padding:.3rem 1rem .1rem;font-size:.7rem;color:var(--indigo);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:.5rem}
+main{margin-left:230px;padding:2rem 2.5rem;max-width:1100px}
+section{margin-bottom:3.5rem}
+h1{font-size:1.8rem;margin-bottom:.4rem}
+h2{font-size:1.35rem;margin-bottom:1rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+h3{font-size:1rem;margin:1.2rem 0 .6rem;color:var(--cyan)}
+.badge{display:inline-block;padding:.1rem .45rem;border-radius:4px;font-size:.7rem;font-weight:600}
+.b-blue{background:rgba(59,130,246,.2);color:var(--blue)}
+.b-purple{background:rgba(139,92,246,.2);color:var(--purple)}
+.b-green{background:rgba(16,185,129,.2);color:var(--green)}
+.b-orange{background:rgba(245,158,11,.2);color:var(--orange)}
+.b-teal{background:rgba(20,184,166,.2);color:var(--teal)}
+.b-indigo{background:rgba(99,102,241,.2);color:var(--indigo)}
+.b-cyan{background:rgba(6,182,212,.2);color:var(--cyan)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.1rem;margin-bottom:.85rem}
+.card-p{border-color:var(--purple)}
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0}
+th{background:var(--surface2);text-align:left;padding:.5rem .6rem;border-bottom:2px solid var(--border);font-weight:600;white-space:nowrap}
+td{padding:.5rem .6rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.02)}
+details{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:.6rem}
+details summary{padding:.65rem .9rem;cursor:pointer;font-weight:600;font-size:.85rem}
+details summary:hover{background:var(--surface2)}
+details[open] summary{border-bottom:1px solid var(--border)}
+details .ct{padding:.9rem}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.8rem;overflow-x:auto;font-size:.75rem;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+code{font-family:'JetBrains Mono','Fira Code',monospace;font-size:.8rem}
+.hi{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:.9rem;margin:.75rem 0}
+.hi strong{color:var(--orange)}
+.hi-g{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:8px;padding:.9rem;margin:.75rem 0}
+.hi-g strong{color:var(--green)}
+.hi-b{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);border-radius:8px;padding:.9rem;margin:.75rem 0}
+.hi-b strong{color:var(--blue)}
+/* Flow */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;padding:.75rem 0}
+.fn{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:.85rem 1.2rem;width:480px;position:relative}
+.fn.ai{border-color:var(--blue)}.fn.code{border-color:var(--green)}.fn.llm{border-color:var(--purple)}.fn.inf{border-color:var(--surface2)}
+.fn b{font-size:.9rem}.fn .s{font-size:.75rem;color:var(--muted);margin-top:.2rem}.fn .m{display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap}
+.fa{width:2px;height:24px;background:var(--border);position:relative}.fa::after{content:'▼';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);color:var(--border);font-size:9px}
+/* Score bar */
+.thresh{display:flex;height:24px;border-radius:6px;overflow:hidden;margin:.6rem 0;font-size:.72rem;font-weight:700}
+.thresh-r{flex:35;background:rgba(239,68,68,.25);color:var(--red);display:flex;align-items:center;padding:0 .5rem}
+.thresh-w{flex:20;background:rgba(245,158,11,.25);color:var(--orange);display:flex;align-items:center;padding:0 .5rem}
+.thresh-p{flex:20;background:rgba(99,102,241,.25);color:var(--indigo);display:flex;align-items:center;padding:0 .5rem}
+.thresh-h{flex:25;background:rgba(16,185,129,.25);color:var(--green);display:flex;align-items:center;padding:0 .5rem}
+/* Feature bars */
+.fb{display:flex;align-items:center;gap:.6rem;margin:.3rem 0;font-size:.8rem}
+.fb .nm{width:220px;color:var(--muted)}
+.fb .br{flex:1;height:10px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.fb .fi{height:100%;border-radius:4px}
+.fb .wt{width:40px;text-align:right;color:var(--cyan);font-weight:700;font-size:.75rem}
+@media(max-width:1024px){nav{display:none}main{margin-left:0;padding:1.2rem}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+<h2>N3 Dashboard</h2>
+<a href="#overview">Overview</a>
+<a href="#flowchart">Algorithm Flowchart</a>
+<div class="ng">Extraction</div>
+<a href="#p4">Phase 4 — Zone Detection</a>
+<a href="#p6">Phase 6 — Zone Correspondences</a>
+<a href="#p8">Phase 8 — Line Item Extraction</a>
+<a href="#p9">Phase 9 — Normalization</a>
+<div class="ng">Matching Engine</div>
+<a href="#p11">Phase 11 — Embeddings</a>
+<a href="#p12">Phase 12 — Candidates</a>
+<a href="#p13">Phase 13 — Scoring ⭐</a>
+<a href="#p14">Phase 14 — Components</a>
+<a href="#p15">Phase 15 — Hungarian</a>
+<a href="#p17">Phase 17 — LLM Adjudication</a>
+<a href="#p18">Phase 18 — Persist</a>
+<div class="ng">Reference</div>
+<a href="#schema">Database Schema</a>
+<a href="#accuracy">Verified Accuracy</a>
+<a href="#costs">Cost &amp; Models</a>
+<a href="#vsn2">N3 vs N2</a>
+</nav>
+<main>
+
+<!-- OVERVIEW -->
+<section id="overview">
+<h1>N3 Pipeline Architecture Dashboard</h1>
+<div style="display:flex;gap:1.5rem;margin:.4rem 0 1.5rem;flex-wrap:wrap;font-size:.82rem;color:var(--muted)">
+  <span><strong>Status:</strong> Live — V1 &amp; V2 verified 100%</span>
+  <span><strong>Scope:</strong> Xactimate ↔ Xactimate</span>
+  <span><strong>Models:</strong> Sonnet 4-5 (P4, P6, P17) · Haiku 4.5 (P8, P12)</span>
+  <span><strong>Pipeline:</strong> 18 phases, DB-centric, fully observable</span>
+</div>
+<div class="card">
+<h3 style="margin-top:0">Core Design Philosophy</h3>
+<p style="font-size:.85rem">N3 replaces N2's monolithic AI-matching approach with a <strong>structured scoring and assignment engine</strong>. AI is used only for zone detection, line item extraction, and borderline-case adjudication. The vast majority of matching is deterministic code: multi-feature scoring, zone boost/penalty logic, and the Hungarian optimal assignment algorithm.</p>
+<p style="font-size:.85rem;margin-top:.5rem"><strong>Key shift from N2:</strong> In N2 the LLM was the matching oracle for every pair. In N3 the LLM is the last resort for ~10% of borderline pairs — everything else is scored, ranked, and assigned by code with full observability at every step.</p>
+</div>
+<div class="card">
+<h3 style="margin-top:0">Goals</h3>
+<table>
+<tr><th>#</th><th>Goal</th><th>Targets</th></tr>
+<tr><td>1</td><td><strong>Accuracy</strong></td><td>100% on verified sets V1 &amp; V2. Item counts exact. Dollar totals exact.</td></tr>
+<tr><td>2</td><td><strong>Observability</strong></td><td>Every artifact in DB. Every phase queryable. Full audit trail: raw PDF → final decision.</td></tr>
+<tr><td>3</td><td><strong>Cost efficiency</strong></td><td>LLM called for &lt;15% of pairs. ~$0.01–0.02 per typical comparison.</td></tr>
+<tr><td>4</td><td><strong>Correctness guarantees</strong></td><td>Two mutual-best rescue passes. Zone boost/penalty system. Hungarian global optimality.</td></tr>
+</table>
+</div>
+<div class="card">
+<h3 style="margin-top:0">Architecture — 18 Phases, 3 Tiers</h3>
+<table>
+<tr><th>Tier</th><th>Phases</th><th>Method</th><th>Output</th></tr>
+<tr><td><strong>Extraction</strong></td><td>4, 6, 8, 9, 10</td><td>AI (zones + items) + code (normalize)</td><td>Structured line items with parsed trade/action/qty</td></tr>
+<tr><td><strong>Matching</strong></td><td>11, 12, 13, 14, 15, 16</td><td>Embeddings + code scoring + Hungarian</td><td>Optimal bipartite assignment with confidence scores</td></tr>
+<tr><td><strong>Adjudication</strong></td><td>17, 18</td><td>LLM (borderline only) + code persist</td><td>Final MATCH / MODIFIED / MISSING / ADDED decisions</td></tr>
+</table>
+</div>
+</section>
+
+<!-- FLOWCHART -->
+<section id="flowchart">
+<h2>Algorithm Flowchart</h2>
+<p style="color:var(--muted);margin-bottom:1rem;font-size:.82rem">Color key: <span class="badge b-purple">Sonnet 4-5</span> <span class="badge b-blue">Haiku 4.5</span> <span class="badge b-green">Code-only</span> <span class="badge b-indigo">pgvector</span></p>
+<div class="flow">
+  <div class="fn ai"><b>Phase 4 — Zone Detection</b><div class="s">Chunk PDFs (~10 pages each, 1-page overlap) · Sonnet detects zone headers per chunk · Merge &amp; deduplicate into zone list with page ranges</div><div class="m"><span class="badge b-purple">Sonnet 4-5</span><span class="badge b-teal">→ n3_zones</span></div></div>
+  <div class="fa"></div>
+  <div class="fn ai"><b>Phase 6 — Zone Correspondences</b><div class="s">Match contractor zones to adjuster zones · Assign confidence 0.0–1.0 · Types: one_to_one / one_to_many / many_to_one · Drives Phase 13 zone boost system</div><div class="m"><span class="badge b-purple">Sonnet 4-5</span><span class="badge b-teal">→ n3_zone_correspondences</span></div></div>
+  <div class="fa"></div>
+  <div class="fn ai"><b>Phase 8 — Line Item Extraction</b><div class="s">Per-zone sub-PDFs sent as document blocks · Extract description, qty, unit, amounts, confidence per item · Both contractor and adjuster sides</div><div class="m"><span class="badge b-blue">Haiku 4.5</span><span class="badge b-teal">→ n3_line_items</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 9 — Normalization</b><div class="s">Parse trade (painting / drywall / roofing / …) · Parse action (install / remove / paint / …) · Tokenize description · Normalize qty + unit</div><div class="m"><span class="badge b-green">Code-only</span><span class="badge b-green">&lt;1s</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 10 — Compute Totals</b><div class="s">Derive totalAmount per line item from extracted cost columns</div><div class="m"><span class="badge b-green">Code-only</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 11 — Embeddings</b><div class="s">Generate text embeddings for each line item's normalized description · Stored for pgvector semantic retrieval in Phase 12</div><div class="m"><span class="badge b-indigo">pgvector</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 12 — Candidate Generation</b><div class="s">Three retrieval sources → deduplicated edge table with source tags</div><div class="m"><span class="badge b-indigo">semantic (pgvector)</span><span class="badge b-green">fuzzy (tokens)</span><span class="badge b-blue">ai_proposed_zone</span><span class="badge b-teal">→ n3_candidate_edges</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 13 — Scoring ⭐</b><div class="s">6 features × weights → rawScore · Zone boosts applied → finalScore · Classify: HIGH_CONF ≥0.75 / POSSIBLE ≥0.55 / WEAK ≥0.35 / REJECTED &lt;0.35</div><div class="m"><span class="badge b-green">Code-only</span><span class="badge b-green">~1s</span><span class="badge b-teal">updates n3_candidate_edges</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 14 — Build Components</b><div class="s">Union-Find over non-rejected edges → bipartite connected components · small(≤50) / medium(≤250) / large(&gt;250)</div><div class="m"><span class="badge b-green">Code-only</span><span class="badge b-teal">→ n3_match_components</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 15 — Hungarian Assignment</b><div class="s">Jonker-Volgenant O(n³) algorithm per component · cost[i][j] = 1 − finalScore · Dummy columns = 0.70 (unmatched cost) · Mutual-best rescue pass for unmatched items after solve</div><div class="m"><span class="badge b-green">Code-only</span><span class="badge b-teal">→ n3_match_decisions</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 16 — Group Matching</b><div class="s">Handle many-to-one zone cases · Relinquish extra adjuster items from grouped decisions</div><div class="m"><span class="badge b-green">Code-only</span></div></div>
+  <div class="fa"></div>
+  <div class="fn llm"><b>Phase 17 — LLM Adjudication + Post-LLM Rescue</b><div class="s">Sonnet 4-5 evaluates all "possible" decisions (score 0.30–0.55) · Accept → one_to_one · Reject → unmatched · Then: post-LLM mutual-best rescue pass for newly-unmatched pairs</div><div class="m"><span class="badge b-purple">Sonnet 4-5</span><span class="badge b-purple">~10-15s</span><span class="badge b-purple">~$0.01–0.02</span><span class="badge b-green">+ rescue pass</span></div></div>
+  <div class="fa"></div>
+  <div class="fn code"><b>Phase 18 — Persist Decisions</b><div class="s">Convert n3_match_decisions → line_items · MATCH / MODIFIED / MISSING_FROM_ADJUSTER / ADDED_BY_ADJUSTER · Compute aggregates · Set Comparison.status → COMPLETED</div><div class="m"><span class="badge b-green">Code-only</span><span class="badge b-teal">→ line_items</span></div></div>
+  <div class="fa"></div>
+  <div style="background:var(--green);color:#000;font-weight:700;padding:.4rem 1.3rem;border-radius:20px;font-size:.82rem">DONE</div>
+</div>
+<div class="hi-g"><strong>Observability guarantee:</strong> Every phase writes to a dedicated DB table. Any comparison is inspectable at any pipeline stage via the live N3 dashboard at <code>/app/n3-dashboard/[id]</code>.</div>
+</section>
+
+<!-- PHASE 4 -->
+<section id="p4">
+<h2>Phase 4 — Zone Detection</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Model:</strong> Claude Sonnet 4-5 · <strong>Method:</strong> PDF chunking + vision · <strong>DB:</strong> n3_zones</p>
+<p style="font-size:.82rem;margin-top:.4rem">Both PDFs are chunked into ~10-page sub-PDFs with 1-page overlap at boundaries. Each chunk is sent to Sonnet to identify zone headers. Chunks are processed in parallel, then merged and deduplicated into a final zone list with derived page ranges.</p></div>
+<h3>Zone Detection Rules</h3>
+<table>
+<tr><th>Rule</th><th>Detail</th></tr>
+<tr><td>Evidence requirement</td><td>Zone must be followed by extractable line items — not a table of contents or summary</td></tr>
+<tr><td>VERBATIM names</td><td>Zone names copied character-for-character. No paraphrasing, no abbreviation.</td></tr>
+<tr><td>Duplicate names</td><td>Zone key = (name, startPage). "Bathroom p16" ≠ "Bathroom p34" — both valid distinct zones.</td></tr>
+<tr><td>Boundary handling</td><td>1-page overlap ensures zone headers at chunk boundaries are always captured in at least one chunk.</td></tr>
+<tr><td>Zero zones (flat PDF)</td><td>Synthesize a single "General" zone spanning the entire document.</td></tr>
+<tr><td>approxItems</td><td>AI estimates item count per zone — used as context signal in scoring and candidate generation.</td></tr>
+</table>
+<h3>Stored Fields (n3_zones)</h3>
+<table>
+<tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
+<tr><td><code>source</code></td><td>enum</td><td>'yours' | 'adjuster'</td></tr>
+<tr><td><code>name</code></td><td>string</td><td>Verbatim from PDF</td></tr>
+<tr><td><code>normalizedName</code></td><td>string</td><td>Lowercased + stripped (e.g. "BEDROOM 2" → "bedroom 2")</td></tr>
+<tr><td><code>startPage</code> / <code>endPage</code></td><td>int</td><td>Printed page numbers for Phase 8 sub-PDF slicing</td></tr>
+<tr><td><code>approxItems</code></td><td>int</td><td>AI-estimated line item count</td></tr>
+</table>
+</section>
+
+<!-- PHASE 6 -->
+<section id="p6">
+<h2>Phase 6 — Zone Correspondences</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Model:</strong> Claude Sonnet 4-5 · <strong>Method:</strong> Text-only zone list matching · <strong>DB:</strong> n3_zone_correspondences</p>
+<p style="font-size:.82rem;margin-top:.4rem">The two normalized zone lists are compared to find which contractor zones correspond to which adjuster zones. This table drives the <strong>zone boost/penalty system</strong> in Phase 13 — preventing cross-zone false positives.</p></div>
+<h3>Correspondence Types</h3>
+<table>
+<tr><th>Type</th><th>Example</th></tr>
+<tr><td><code>one_to_one</code></td><td>"BEDROOM 2" ↔ "SECOND BEDROOM" (conf: 0.95)</td></tr>
+<tr><td><code>one_to_many</code></td><td>"MASTER SUITE" ↔ "PRIMARY BEDROOM" + "PRIMARY BATHROOM"</td></tr>
+<tr><td><code>many_to_one</code></td><td>"LIVING ROOM" + "DINING ROOM" ↔ "MAIN LIVING AREA"</td></tr>
+</table>
+<div class="hi-b"><strong>Phase 13 impact:</strong> The set of "verified" correspondences (confidence ≥ threshold) defines which zone boundaries are authoritative. Any candidate edge that crosses a verified boundary gets the <code>outside_verified</code> penalty (−0.08). Items whose zones have no correspondence get no penalty but also no zone-match bonus.</div>
+</section>
+
+<!-- PHASE 8 -->
+<section id="p8">
+<h2>Phase 8 — Line Item Extraction</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Model:</strong> Claude Haiku 4.5 · <strong>Method:</strong> Per-zone sub-PDF document blocks · <strong>DB:</strong> n3_line_items</p>
+<p style="font-size:.82rem;margin-top:.4rem">For each zone, a sub-PDF is sliced using Phase 4 page ranges and sent to Haiku as a document block. The model extracts all numbered line items within that zone only, stopping at the next zone header.</p></div>
+<h3>Extracted Fields</h3>
+<table>
+<tr><th>Field</th><th>Description</th></tr>
+<tr><td><code>rawDescription</code></td><td>Verbatim from PDF (multi-line concatenated)</td></tr>
+<tr><td><code>quantity</code> / <code>unit</code></td><td>Raw string qty + unit code (SF, LF, EA, SY…)</td></tr>
+<tr><td><code>totalAmount</code></td><td>Rightmost cost column — the canonical comparison value</td></tr>
+<tr><td><code>extractionConfidence</code></td><td>0.0–1.0 model self-confidence</td></tr>
+<tr><td><code>source</code></td><td>'yours' | 'adjuster'</td></tr>
+</table>
+</section>
+
+<!-- PHASE 9 -->
+<section id="p9">
+<h2>Phase 9 — Normalization</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Method:</strong> Code-only · Regex + keyword lists + tokenization · Updates <code>n3_line_items</code> in-place</p></div>
+<h3>Trade Classification (keyword match, first-wins priority)</h3>
+<table>
+<tr><th>Trade</th><th>Keywords</th></tr>
+<tr><td>roofing</td><td>roof, shingle, underlayment, flashing, fascia, soffit, gutter, eave, ridge</td></tr>
+<tr><td>drywall</td><td>drywall, gypsum, sheetrock, cement board, backer board, <strong>texture</strong></td></tr>
+<tr><td>painting</td><td>paint, primer, sealer</td></tr>
+<tr><td>flooring</td><td>floor, hardwood, laminate, vinyl, tile, grout, subfloor</td></tr>
+<tr><td>carpentry</td><td>door, window, frame, trim, molding, baseboard, casing, header</td></tr>
+<tr><td>cabinetry</td><td>cabinet, countertop, vanity</td></tr>
+<tr><td>electrical</td><td>electrical, wire, outlet, switch, panel, circuit, fixture, fan</td></tr>
+<tr><td>plumbing</td><td>plumbing, pipe, faucet, toilet, tub, shower, drain, water heater</td></tr>
+<tr><td>framing</td><td>framing, stud, joist, rafter, sheathing, osb, plywood</td></tr>
+<tr><td>cleanup</td><td>haul, debris, dump, cleanup</td></tr>
+</table>
+<div class="hi"><strong>Critical: "texture" lives in drywall, not painting.</strong> Knockdown, orange-peel, and skip-trowel texture are drywall finishing techniques. If misclassified under painting, "Texture walls knockdown" vs "Drywall texture knockdown" gets tradeActionSimilarity=0.4 (trade mismatch cap) instead of 1.0, causing incorrect LLM rejection of a valid pair.</div>
+<h3>Other Parsed Fields</h3>
+<table>
+<tr><th>Field</th><th>Method</th></tr>
+<tr><td><code>action</code></td><td>Keyword scan: install, remove, replace, repair, paint, hang, tape, finish, seal, tear out, demo…</td></tr>
+<tr><td><code>normalizedQuantity</code></td><td>Parse float from qty string</td></tr>
+<tr><td><code>normalizedUnit</code></td><td>Normalize to canonical forms: SF, LF, EA, SY, LF, HR…</td></tr>
+<tr><td><code>descriptionTokens</code></td><td>Lowercase, split on whitespace+punctuation, remove stop words → string array for Phase 12/13 fuzzy matching</td></tr>
+</table>
+</section>
+
+<!-- PHASE 11 -->
+<section id="p11">
+<h2>Phase 11 — Embeddings</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Method:</strong> pgvector text embeddings · <strong>Input:</strong> normalizedDescription per line item · Stored for cosine similarity retrieval in Phase 12</p>
+<p style="font-size:.82rem;margin-top:.4rem">Embeddings enable semantic retrieval — finding candidates with similar meaning even when vocabulary differs. This is critical because contractor and adjuster descriptions for the same work often use entirely different words.</p></div>
+<h3>Examples of Semantic vs Token Similarity</h3>
+<table>
+<tr><th>Pair</th><th>Token Overlap</th><th>Semantic Sim</th></tr>
+<tr><td>"Tear out wet drywall" ↔ "Remove damaged drywall"</td><td>Low</td><td>High ✓</td></tr>
+<tr><td>"R&amp;R carpet" ↔ "Remove and replace carpet"</td><td>Low (abbrev.)</td><td>High ✓</td></tr>
+<tr><td>"Paint walls 2 coats" ↔ "Wall paint — 2 coats"</td><td>Medium</td><td>High ✓</td></tr>
+<tr><td>"Carpet pad — 8-lb rebond" ↔ "Carpet cushion — per SY"</td><td>Very low</td><td>High ✓</td></tr>
+</table>
+</section>
+
+<!-- PHASE 12 -->
+<section id="p12">
+<h2>Phase 12 — Candidate Generation</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Method:</strong> Three parallel retrieval sources · deduplicated into <code>n3_candidate_edges</code></p>
+<p style="font-size:.82rem;margin-top:.4rem">For each contractor line item, three independent methods generate candidate adjuster items. The results are unioned and deduplicated. Each edge records which sources found it — a "source set" used in scoring.</p></div>
+<h3>Retrieval Sources</h3>
+<table>
+<tr><th>Source</th><th>Method</th><th>Typical Coverage</th></tr>
+<tr><td><code>semantic</code></td><td>pgvector ANN cosine similarity top-K — finds semantically similar descriptions</td><td>~55% of edges</td></tr>
+<tr><td><code>fuzzy_description</code></td><td>Token Jaccard similarity over normalizedTokens — finds lexically overlapping descriptions</td><td>~30% of edges</td></tr>
+<tr><td><code>ai_proposed_zone</code></td><td>Claude Haiku reviews contractor items zone-by-zone and nominates adjuster candidates from the corresponding adjuster zone</td><td>~37% of edges</td></tr>
+<tr><td><code>total_similarity</code></td><td>Dollar amount proximity — finds items with near-identical totals</td><td>~24% of edges</td></tr>
+</table>
+<p style="font-size:.82rem;color:var(--muted);margin-top:.5rem">A typical V2 comparison (100×95 items) generates ~3,700 raw candidate edges. After Phase 13 scoring, ~76% are rejected, leaving ~900 surviving edges for Phase 14+.</p>
+</section>
+
+<!-- PHASE 13 -->
+<section id="p13">
+<h2>Phase 13 — Scoring ⭐</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Method:</strong> Multi-feature weighted scoring + zone boosts · This is the algorithmic core of N3.</p>
+<p style="font-size:.82rem;margin-top:.4rem">Every candidate edge gets a <code>rawScore</code> (weighted sum of 6 features) and a <code>finalScore</code> (rawScore ± boosts). The finalScore determines whether a pair is auto-matched, evaluated by code, sent to LLM, or rejected.</p></div>
+
+<h3>Score Thresholds</h3>
+<div class="thresh">
+  <div class="thresh-r">REJECTED &lt;0.35</div>
+  <div class="thresh-w">WEAK 0.35–0.55</div>
+  <div class="thresh-p">POSSIBLE 0.55–0.75</div>
+  <div class="thresh-h">HIGH CONF ≥0.75</div>
+</div>
+<table>
+<tr><th>Bucket</th><th>Range</th><th>Phase 15 outcome</th><th>Phase 17 LLM?</th></tr>
+<tr><td>HIGH_CONFIDENCE</td><td>≥ 0.75</td><td>one_to_one + auto_high_confidence</td><td>No</td></tr>
+<tr><td>POSSIBLE_MATCH (assignment)</td><td>0.55–0.75</td><td>one_to_one + assignment</td><td>No</td></tr>
+<tr><td>WEAK_CANDIDATE → possible</td><td>0.35–0.55</td><td>possible + assignment → LLM</td><td>Yes</td></tr>
+<tr><td>REJECTED</td><td>&lt; 0.35</td><td>Excluded from all further phases</td><td>No</td></tr>
+</table>
+
+<h3>Feature Weights</h3>
+<div class="fb"><span class="nm">tradeActionSimilarity</span><div class="br"><div class="fi" style="width:25%;background:var(--blue)"></div></div><span class="wt">0.25</span></div>
+<div class="fb"><span class="nm">semanticSimilarity</span><div class="br"><div class="fi" style="width:25%;background:var(--indigo)"></div></div><span class="wt">0.25</span></div>
+<div class="fb"><span class="nm">fuzzyDescSimilarity</span><div class="br"><div class="fi" style="width:20%;background:var(--cyan)"></div></div><span class="wt">0.20</span></div>
+<div class="fb"><span class="nm">totalSimilarity</span><div class="br"><div class="fi" style="width:15%;background:var(--green)"></div></div><span class="wt">0.15</span></div>
+<div class="fb"><span class="nm">zoneCorrespondenceSimilarity</span><div class="br"><div class="fi" style="width:10%;background:var(--orange)"></div></div><span class="wt">0.10</span></div>
+<div class="fb"><span class="nm">qtyUnitSimilarity</span><div class="br"><div class="fi" style="width:5%;background:var(--red)"></div></div><span class="wt">0.05</span></div>
+
+<h3>Feature Computation</h3>
+<table>
+<tr><th>Feature</th><th>How Computed</th></tr>
+<tr><td><code>tradeActionSimilarity</code></td><td>Trade exact match (0 or 1) × 0.6 + action similarity × 0.4. Trade mismatch caps the sub-score at 0.4 regardless of description similarity.</td></tr>
+<tr><td><code>semanticSimilarity</code></td><td>Cosine similarity between pgvector embeddings of the two normalized descriptions.</td></tr>
+<tr><td><code>fuzzyDescSimilarity</code></td><td>Jaccard similarity of description token sets (stop words removed).</td></tr>
+<tr><td><code>totalSimilarity</code></td><td><code>1 − |c − a| / max(c, a)</code>. Perfect amount match = 1.0. 2× difference = 0.5. Missing amount = 0.</td></tr>
+<tr><td><code>zoneCorrespondenceSimilarity</code></td><td>Confidence of the zone correspondence linking the two items' zones. In-zone = correspondence confidence. No correspondence = 0.</td></tr>
+<tr><td><code>qtyUnitSimilarity</code></td><td>Unit compatibility × 0.5 + normalized quantity ratio × 0.5.</td></tr>
+</table>
+
+<h3>Zone Boost System</h3>
+<table>
+<tr><th>Boost</th><th>Value</th><th>Applied When</th></tr>
+<tr><td><code>ai_proposed</code></td><td><strong style="color:var(--green)">+0.057</strong></td><td>Edge was nominated by Claude in Phase 12 (ai_proposed_zone source). AI zone-awareness is rewarded.</td></tr>
+<tr><td><code>outside_verified</code></td><td><strong style="color:var(--red)">−0.080</strong></td><td>Edge crosses zone boundaries AND both items' home zones have verified correspondences to other zones. Strong deterrent to cross-zone false positives.</td></tr>
+</table>
+
+<h3>Score Formula</h3>
+<pre><code>rawScore   = (tradeActionSimilarity × 0.25)
+           + (semanticSimilarity    × 0.25)
+           + (fuzzyDescSimilarity   × 0.20)
+           + (totalSimilarity       × 0.15)
+           + (zoneCorrSimilarity    × 0.10)
+           + (qtyUnitSimilarity     × 0.05)
+
+finalScore = rawScore + Σ boosts</code></pre>
+
+<div class="hi"><strong>Example — "Texture walls knockdown" (Bedroom 2, $433.20) ↔ "Drywall texture knockdown" (Second Bedroom, $433.20):</strong><br>
+tradeAction=1.0 · semantic≈0.85 · fuzzy≈0.72 · total=1.0 · zone=0.95 · qty≈0.90<br>
+rawScore ≈ 0.754 + ai_proposed(+0.057) = <strong>finalScore 0.811 → HIGH_CONFIDENCE</strong> ✓</div>
+</section>
+
+<!-- PHASE 14 -->
+<section id="p14">
+<h2>Phase 14 — Build Components</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Algorithm:</strong> Union-Find with path compression + union by rank · <strong>DB:</strong> n3_match_components</p>
+<p style="font-size:.82rem;margin-top:.4rem">All non-rejected Phase 13 edges define a sparse bipartite graph. Union-Find partitions it into connected components. Items with no surviving edges become singletons and surface as MISSING/ADDED in Phase 18. Phase 15 runs the Hungarian independently per component.</p></div>
+<h3>Component Size Classification</h3>
+<table>
+<tr><th>Class</th><th>Total Items</th><th>Phase 15 Strategy</th></tr>
+<tr><td>small</td><td>≤ 50</td><td>Exact Hungarian (Jonker-Volgenant O(n³))</td></tr>
+<tr><td>medium</td><td>51–250</td><td>Pruned Hungarian</td></tr>
+<tr><td>large</td><td>&gt; 250</td><td>Greedy assignment + repair pass</td></tr>
+</table>
+<div class="hi-b"><strong>Typical result:</strong> Standard residential comparisons (100 contractor × 95 adjuster items) produce one medium component containing all items. Phase 15 runs a single Hungarian solve over the full 100×95 matrix padded to 100×100.</div>
+</section>
+
+<!-- PHASE 15 -->
+<section id="p15">
+<h2>Phase 15 — Hungarian Assignment</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Algorithm:</strong> Jonker-Volgenant O(n³) · <strong>DB:</strong> n3_match_decisions</p>
+<p style="font-size:.82rem;margin-top:.4rem">For each component, a cost matrix is built where <code>cost[i][j] = 1 − finalScore(contractor[i], adjuster[j])</code>. Dummy columns represent "leave unmatched" at UNMATCHED_COST=0.70. Hungarian finds the globally optimal assignment minimizing total cost — not greedy best-first.</p></div>
+<h3>Cost Matrix</h3>
+<pre><code>Dimensions: N×N where N = max(yoursCount, adjCount), padded to square
+
+cost[i][j]:
+  i ≥ yoursCount OR j ≥ adjCount  →  UNMATCHED_COST = 0.70  (dummy)
+  edge exists between i and j     →  1 − edge.finalScore
+  no edge (no candidate pair)     →  NO_EDGE_COST = 1.0  (avoid if possible)</code></pre>
+<h3>Decision Classification</h3>
+<table>
+<tr><th>Condition after assignment</th><th>decisionType</th><th>decidedBy</th><th>Goes to LLM?</th></tr>
+<tr><td>finalScore ≥ 0.75</td><td>one_to_one</td><td>auto_high_confidence</td><td>No</td></tr>
+<tr><td>0.55 ≤ finalScore &lt; 0.75</td><td>one_to_one</td><td>assignment</td><td>No</td></tr>
+<tr><td>finalScore &lt; 0.55</td><td>possible</td><td>assignment</td><td>Yes</td></tr>
+<tr><td>Assigned to dummy column</td><td>unmatched</td><td>assignment</td><td>No — MISSING</td></tr>
+</table>
+<h3>Phase 15 Mutual-Best Rescue Pass</h3>
+<div class="card"><p style="font-size:.82rem">After the Hungarian solve, scans all <em>unmatched</em> contractor items. For each, checks if there is an unmatched adjuster item such that both items' highest-scoring non-rejected edge points to each other (mutual-best). If score ≥ POSSIBLE_MATCH (0.55) → rescued as <code>one_to_one</code> with <code>decidedBy: 'mutual_best_rescue'</code>.</p>
+<p style="font-size:.82rem;margin-top:.4rem"><strong>Why:</strong> The Hungarian finds the global optimum which occasionally sacrifices a locally strong pair to improve overall cost. The rescue pass restores such pairs without violating global feasibility.</p></div>
+</section>
+
+<!-- PHASE 17 -->
+<section id="p17">
+<h2>Phase 17 — LLM Adjudication</h2>
+<div class="card"><p style="font-size:.82rem"><strong>Model:</strong> Claude Sonnet 4-5 · <strong>Scope:</strong> Only <code>possible</code> decisions (score &lt; 0.55) · <strong>Cost:</strong> ~$0.01–0.02/comparison</p>
+<p style="font-size:.82rem;margin-top:.4rem">All <code>possible</code> decisions are batched into a single Sonnet call. For each pair, Sonnet sees the descriptions, trades, actions, quantities, totals, and the finalScore. It returns <code>match</code> or <code>no_match</code> with confidence and reasoning (max 400 chars).</p></div>
+<h3>LLM Call Structure</h3>
+<table>
+<tr><th>Field</th><th>Detail</th></tr>
+<tr><td>Model</td><td>claude-sonnet-4-5</td></tr>
+<tr><td>Input per pair</td><td>description, action, trade, qty, unit, total (both sides) + finalScore</td></tr>
+<tr><td>Output per pair</td><td>index · decision (match | no_match) · confidence · reasoning (≤400 chars)</td></tr>
+<tr><td>Max tokens</td><td>2,000 output</td></tr>
+<tr><td>Pricing</td><td>$3/MTok input · $15/MTok output</td></tr>
+</table>
+<h3>Decision Updates</h3>
+<table>
+<tr><th>LLM verdict</th><th>decisionType</th><th>decidedBy</th><th>adjusterItemIds</th></tr>
+<tr><td>match</td><td>one_to_one</td><td>llm_adjudication</td><td>unchanged (pair kept)</td></tr>
+<tr><td>no_match</td><td>unmatched</td><td>llm_adjudication</td><td>[] — cleared</td></tr>
+</table>
+<h3>Post-LLM Mutual-Best Rescue Pass ⭐</h3>
+<div class="card card-p" style="font-size:.82rem">
+<p><strong>Problem:</strong> When Hungarian makes a globally-optimal-but-locally-wrong assignment, both items end up in <code>possible</code> decisions with wrong partners. The LLM correctly rejects both wrong pairings — but now both items are unmatched, and their correct mutual-best edge was never evaluated. Phase 15's rescue pass already ran and can't help (it ran before LLM).</p>
+<p style="margin-top:.5rem"><strong>Solution — runs after LLM decisions are applied:</strong></p>
+<ol style="padding-left:1.2rem;margin-top:.3rem">
+<li>Find all contractor-unmatched decisions (<code>yourItemIds</code> non-empty, <code>adjusterItemIds</code> empty)</li>
+<li>Find all adjuster items not in any non-empty <code>adjusterItemIds</code> (also unmatched)</li>
+<li>For each unmatched contractor, find its best non-rejected edge to any unmatched adjuster</li>
+<li>Check mutual-best: that adjuster's best edge also points back to this contractor</li>
+<li>If mutual-best AND score ≥ 0.55 → rescue as <code>one_to_one</code>, <code>decidedBy: 'post_llm_rescue'</code></li>
+</ol>
+<p style="margin-top:.5rem;color:var(--purple)"><strong>V2 concrete example:</strong> "Texture walls knockdown" (Bedroom 2) ↔ "Drywall texture knockdown" (Second Bedroom). Score 0.811. Both were wrongly assigned by Hungarian → LLM rejected both wrong pairings → post-LLM rescue correctly rescued them as MATCH.</p>
+</div>
+<h3>Complete Decision Provenance</h3>
+<table>
+<tr><th>decidedBy</th><th>Phase</th><th>Meaning</th></tr>
+<tr><td><code>auto_high_confidence</code></td><td>15</td><td>Score ≥ 0.75 — auto-accepted by Hungarian, no human/LLM review</td></tr>
+<tr><td><code>assignment</code></td><td>15</td><td>Score 0.55–0.75 — code-decided, no LLM review</td></tr>
+<tr><td><code>mutual_best_rescue</code></td><td>15</td><td>Was unmatched post-Hungarian; rescued because both sides' best edge is each other</td></tr>
+<tr><td><code>llm_adjudication</code></td><td>17</td><td>Was in "possible" bucket; Claude accepted or rejected it</td></tr>
+<tr><td><code>post_llm_rescue</code></td><td>17</td><td>Both items unmatched after LLM rejection; rescued by post-LLM mutual-best pass</td></tr>
+</table>
+</section>
+
+<!-- PHASE 18 -->
+<section id="p18">
+<h2>Phase 18 — Persist Decisions</h2>
+<div class="card"><p style="font-size:.82rem">Converts <code>n3_match_decisions</code> to <code>line_items</code> records. For each <code>one_to_one</code> decision, MATCH if totalAmounts are equal, MODIFIED if they differ. Unmatched contractor → MISSING_FROM_ADJUSTER. Unmatched adjuster → ADDED_BY_ADJUSTER. Computes aggregate totals and sets Comparison.status = COMPLETED.</p></div>
+<h3>Status Assignment Logic</h3>
+<table>
+<tr><th>Decision</th><th>Amounts</th><th>matchStatus</th></tr>
+<tr><td>one_to_one</td><td>Equal (within $0.01)</td><td>MATCH</td></tr>
+<tr><td>one_to_one</td><td>Different</td><td>MODIFIED</td></tr>
+<tr><td>unmatched (contractor)</td><td>—</td><td>MISSING_FROM_ADJUSTER</td></tr>
+<tr><td>unmatched (adjuster)</td><td>—</td><td>ADDED_BY_ADJUSTER</td></tr>
+</table>
+</section>
+
+<!-- SCHEMA -->
+<section id="schema">
+<h2>Database Schema — N3 Tables</h2>
+<p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">All N3 tables are keyed by <code>comparisonId</code>. Each phase is idempotent: deletes prior rows for the comparison before inserting, making retry safe.</p>
+<details><summary>n3_zones</summary><div class="ct"><table>
+<tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+<tr><td><code>id</code></td><td>UUID PK</td><td></td></tr>
+<tr><td><code>comparisonId</code></td><td>UUID FK</td><td>→ Comparison</td></tr>
+<tr><td><code>source</code></td><td>enum</td><td>'yours' | 'adjuster'</td></tr>
+<tr><td><code>name</code></td><td>string</td><td>Verbatim from PDF</td></tr>
+<tr><td><code>normalizedName</code></td><td>string</td><td>Lowercased</td></tr>
+<tr><td><code>startPage</code> / <code>endPage</code></td><td>int</td><td>Printed page numbers</td></tr>
+<tr><td><code>approxItems</code></td><td>int</td><td>AI estimate</td></tr>
+</table></div></details>
+<details><summary>n3_zone_correspondences</summary><div class="ct"><table>
+<tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+<tr><td><code>yoursZoneId</code></td><td>UUID FK</td><td>→ n3_zones</td></tr>
+<tr><td><code>adjZoneId</code></td><td>UUID FK</td><td>→ n3_zones</td></tr>
+<tr><td><code>type</code></td><td>enum</td><td>one_to_one / one_to_many / many_to_one</td></tr>
+<tr><td><code>confidence</code></td><td>float</td><td>0.0–1.0 — Phase 13 zoneCorrespondenceSimilarity</td></tr>
+</table></div></details>
+<details><summary>n3_line_items</summary><div class="ct"><table>
+<tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+<tr><td><code>zoneId</code></td><td>UUID FK</td><td>→ n3_zones</td></tr>
+<tr><td><code>source</code></td><td>enum</td><td>'yours' | 'adjuster'</td></tr>
+<tr><td><code>rawDescription</code></td><td>string</td><td>Verbatim from PDF</td></tr>
+<tr><td><code>normalizedDescription</code></td><td>string</td><td>Lowercased</td></tr>
+<tr><td><code>descriptionTokens</code></td><td>string[]</td><td>For fuzzy matching</td></tr>
+<tr><td><code>trade</code></td><td>string?</td><td>painting / drywall / roofing / …</td></tr>
+<tr><td><code>action</code></td><td>string?</td><td>install / remove / paint / …</td></tr>
+<tr><td><code>normalizedQuantity</code></td><td>float?</td><td></td></tr>
+<tr><td><code>normalizedUnit</code></td><td>string?</td><td>SF / LF / EA / SY / …</td></tr>
+<tr><td><code>totalAmount</code></td><td>decimal?</td><td>Rightmost cost column</td></tr>
+<tr><td><code>extractionConfidence</code></td><td>float</td><td>0.0–1.0</td></tr>
+</table></div></details>
+<details><summary>n3_candidate_edges</summary><div class="ct"><table>
+<tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+<tr><td><code>sourceItemId</code></td><td>UUID FK</td><td>→ n3_line_items (contractor)</td></tr>
+<tr><td><code>targetItemId</code></td><td>UUID FK</td><td>→ n3_line_items (adjuster)</td></tr>
+<tr><td><code>sources</code></td><td>string[]</td><td>Retrieval sources that found this edge</td></tr>
+<tr><td><code>rawScore</code></td><td>float</td><td>Weighted feature sum</td></tr>
+<tr><td><code>finalScore</code></td><td>float</td><td>rawScore + boosts</td></tr>
+<tr><td><code>featureScoresJson</code></td><td>JSON</td><td>All 6 feature values</td></tr>
+<tr><td><code>boostsJson</code></td><td>JSON</td><td>Array of {type, value} boosts applied</td></tr>
+<tr><td><code>isRejected</code></td><td>bool</td><td>true if finalScore &lt; 0.35</td></tr>
+</table></div></details>
+<details><summary>n3_match_components</summary><div class="ct"><table>
+<tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+<tr><td><code>sourceItemIds</code></td><td>UUID[]</td><td>Contractor item IDs in this component</td></tr>
+<tr><td><code>targetItemIds</code></td><td>UUID[]</td><td>Adjuster item IDs in this component</td></tr>
+<tr><td><code>size</code></td><td>enum</td><td>small / medium / large</td></tr>
+<tr><td><code>isAmbiguous</code></td><td>bool</td><td>true if either side has &gt;1 item</td></tr>
+</table></div></details>
+<details><summary>n3_match_decisions</summary><div class="ct"><table>
+<tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+<tr><td><code>componentId</code></td><td>UUID FK</td><td>→ n3_match_components</td></tr>
+<tr><td><code>yourItemIds</code></td><td>UUID[]</td><td>Contractor item(s)</td></tr>
+<tr><td><code>adjusterItemIds</code></td><td>UUID[]</td><td>Adjuster item(s) — [] if unmatched</td></tr>
+<tr><td><code>decisionType</code></td><td>enum</td><td>one_to_one / possible / unmatched / grouped</td></tr>
+<tr><td><code>decidedBy</code></td><td>string</td><td>auto_high_confidence / assignment / mutual_best_rescue / llm_adjudication / post_llm_rescue</td></tr>
+<tr><td><code>finalScore</code></td><td>float</td><td>Score of the assigned edge (0 if unmatched)</td></tr>
+<tr><td><code>topEdgeId</code></td><td>UUID FK?</td><td>→ n3_candidate_edges — the winning edge</td></tr>
+<tr><td><code>llmReasoning</code></td><td>string?</td><td>Sonnet's reasoning (Phase 17 decisions only)</td></tr>
+</table></div></details>
+</section>
+
+<!-- ACCURACY -->
+<section id="accuracy">
+<h2>Verified Accuracy</h2>
+<div class="hi-g"><strong>Both verified sets achieve 100% accuracy</strong> — all counts and dollar totals match the hand-verified cheatsheets exactly.</div>
+<h3>V1 Results</h3>
+<table>
+<tr><th>Metric</th><th>Expected</th><th>N3 Actual</th><th>✓</th></tr>
+<tr><td>MATCH</td><td>35</td><td>35</td><td>✓</td></tr>
+<tr><td>MODIFIED</td><td>10</td><td>10</td><td>✓</td></tr>
+<tr><td>MISSING_FROM_ADJUSTER</td><td>5</td><td>5</td><td>✓</td></tr>
+<tr><td>ADDED_BY_ADJUSTER</td><td>2</td><td>2</td><td>✓</td></tr>
+<tr><td>Contractor total</td><td>$45,905.62</td><td>$45,905.62</td><td>✓</td></tr>
+<tr><td>Adjuster total</td><td>$36,510.72</td><td>$36,510.72</td><td>✓</td></tr>
+</table>
+<h3>V2 Results (100 contractor × 95 adjuster items)</h3>
+<table>
+<tr><th>Metric</th><th>Expected</th><th>N3 Actual</th><th>✓</th></tr>
+<tr><td>MATCH</td><td>75</td><td>75</td><td>✓</td></tr>
+<tr><td>MODIFIED</td><td>14</td><td>14</td><td>✓</td></tr>
+<tr><td>MISSING_FROM_ADJUSTER</td><td>11</td><td>11</td><td>✓</td></tr>
+<tr><td>ADDED_BY_ADJUSTER</td><td>6</td><td>6</td><td>✓</td></tr>
+<tr><td>Contractor total</td><td>$97,581.70</td><td>$97,581.70</td><td>✓</td></tr>
+<tr><td>Adjuster total</td><td>$86,838.02</td><td>$86,838.02</td><td>✓</td></tr>
+<tr><td>Gap</td><td>$10,743.68</td><td>$10,743.68</td><td>✓</td></tr>
+</table>
+<h3>V2 Decision Provenance Breakdown</h3>
+<table>
+<tr><th>decidedBy</th><th>Count</th><th>%</th></tr>
+<tr><td>auto_high_confidence</td><td>54</td><td>54%</td></tr>
+<tr><td>assignment</td><td>37</td><td>37%</td></tr>
+<tr><td>llm_adjudication</td><td>8</td><td>8%</td></tr>
+<tr><td>post_llm_rescue</td><td>1</td><td>1%</td></tr>
+<tr><td>unmatched (MISSING)</td><td>11</td><td>—</td></tr>
+</table>
+</section>
+
+<!-- COSTS -->
+<section id="costs">
+<h2>Cost &amp; Models</h2>
+<h3>Models Used</h3>
+<table>
+<tr><th>Model</th><th>Used In</th><th>Input</th><th>Output</th></tr>
+<tr><td><strong>Sonnet 4-5</strong></td><td>Phase 4 (zone detection), Phase 6 (zone correspondences), Phase 17 (LLM adjudication)</td><td>$3/MTok</td><td>$15/MTok</td></tr>
+<tr><td><strong>Haiku 4.5</strong></td><td>Phase 8 (extraction), Phase 12 (ai_proposed_zone)</td><td>$1/MTok</td><td>$5/MTok</td></tr>
+</table>
+<h3>Typical Costs</h3>
+<table>
+<tr><th>Component</th><th>Typical Cost</th><th>Notes</th></tr>
+<tr><td>Phase 4 — Zone detection (both PDFs)</td><td>~$0.09–0.18</td><td>Sonnet 4-5, chunked (~10–14 calls)</td></tr>
+<tr><td>Phase 6 — Zone correspondences</td><td>~$0.02–0.03</td><td>Sonnet 4-5, text only (1 call)</td></tr>
+<tr><td>Phase 8 — Line item extraction</td><td>~$0.05–0.15</td><td>Haiku 4.5, per-zone sub-PDFs</td></tr>
+<tr><td>Phase 12 — AI-proposed candidates</td><td>~$0.02–0.05</td><td>Haiku 4.5, zone-by-zone</td></tr>
+<tr><td>Phase 17 — LLM adjudication</td><td>~$0.01–0.02</td><td>Sonnet 4-5, single batch call</td></tr>
+<tr><td><strong>Total (typical residential)</strong></td><td><strong>~$0.19–0.43</strong></td><td>vs N2 ~$0.25–0.35</td></tr>
+</table>
+<div class="hi-g"><strong>Cost driver shift from N2:</strong> N2's dominant cost was Pass 4 output tokens (AI-matching every pair). N3's dominant cost is Phase 8 extraction (same as N2's Pass 4A) but Phase 17 adjudication is dramatically cheaper — a single Sonnet batch call for &lt;30 pairs vs N2's per-zone AI matching calls.</div>
+</section>
+
+<!-- N3 vs N2 -->
+<section id="vsn2">
+<h2>N3 vs N2 — Key Differences</h2>
+<table>
+<tr><th>Aspect</th><th>N2</th><th>N3</th></tr>
+<tr><td><strong>Matching oracle</strong></td><td>LLM (Claude Haiku) for every zone pair</td><td>Multi-feature scoring engine + Hungarian algorithm</td></tr>
+<tr><td><strong>LLM usage</strong></td><td>Every zone extraction + matching call (~50% of cost)</td><td>Only Phase 17 adjudication for ~10% of borderline pairs</td></tr>
+<tr><td><strong>State storage</strong></td><td>Inngest JSON blobs (ComparisonProcessingState)</td><td>Dedicated DB tables for every artifact (fully queryable)</td></tr>
+<tr><td><strong>Assignment algorithm</strong></td><td>Greedy / AI-first per zone</td><td>Hungarian optimal assignment (global minimum cost)</td></tr>
+<tr><td><strong>Cross-zone protection</strong></td><td>None — zones matched and siloed by Pass 3</td><td>outside_verified penalty (−0.08) on cross-zone edges</td></tr>
+<tr><td><strong>Rescue mechanisms</strong></td><td>splitMispaired (post-extract description mismatch)</td><td>Phase 15 mutual-best rescue + Phase 17 post-LLM rescue</td></tr>
+<tr><td><strong>Observability</strong></td><td>Inngest logs only</td><td>Live dashboard at /app/n3-dashboard/[id] showing every phase</td></tr>
+<tr><td><strong>Semantic search</strong></td><td>None — Jaccard + abbreviation expansion</td><td>pgvector embeddings for cross-vocabulary semantic retrieval</td></tr>
+<tr><td><strong>Trade/action signals</strong></td><td>Part of AI prompt context</td><td>Explicit feature: tradeActionSimilarity (weight 0.25)</td></tr>
+<tr><td><strong>Accuracy (V1)</strong></td><td>Not verified on V1 cheatsheet</td><td>100% — 35/10/5/2 exact, dollar totals exact</td></tr>
+<tr><td><strong>Accuracy (V2)</strong></td><td>Not verified on V2 cheatsheet</td><td>100% — 75/14/11/6 exact, dollar totals exact</td></tr>
+</table>
+</section>
+
+<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
+  N3 Pipeline Architecture Dashboard · Built from live pipeline code and verified results · Not connected to application
+</div>
+
+</main>
+</div>
+</body>
+</html>

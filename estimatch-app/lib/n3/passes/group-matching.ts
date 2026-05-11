@@ -57,11 +57,12 @@ const GROUP_MARGIN = 0.10;
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function jaccard(a: string[], b: string[]): number {
-  if (a.length === 0 && b.length === 0) return 0;
+  if (a.length === 0 || b.length === 0) return 0;
   const setA = new Set(a);
+  const setB = new Set(b);
   let inter = 0;
-  for (const t of b) if (setA.has(t)) inter++;
-  const union = setA.size + b.length - inter;
+  for (const t of setB) if (setA.has(t)) inter++;
+  const union = setA.size + setB.size - inter;
   return union === 0 ? 0 : inter / union;
 }
 
@@ -98,10 +99,27 @@ type ItemSnapshot = {
 
 type EdgeInfo = { adjItemId: string; finalScore: number };
 
+// Zone correspondence lookup, keyed by `${yoursZoneId}__${adjusterZoneId}`.
+// Matches the lookup built by Phase 13 (score-candidates.ts) so cross-zone
+// correspondences (e.g. "Master Bath" ↔ "Master Bathroom") are recognised here.
+type CorrespondenceLookup = Map<string, { confidence: number }>;
+
+/** True when the adj item's zone is in correspondence with the source's zone. */
+function isZoneCompatible(
+  sourceZoneId: string | null,
+  adjZoneId: string | null,
+  corrLookup: CorrespondenceLookup,
+): boolean {
+  if (!sourceZoneId || !adjZoneId) return false;
+  if (sourceZoneId === adjZoneId) return true;             // same N3Zone row
+  return corrLookup.has(`${sourceZoneId}__${adjZoneId}`);  // cross-zone correspondence
+}
+
 function scoreGroup(
   source: ItemSnapshot,
   group: ItemSnapshot[],
   edges: EdgeInfo[],  // edges from source → each group member
+  corrLookup: CorrespondenceLookup,
 ): number {
   // Feature 1: combinedDescriptionCoverage
   const unionTokens = Array.from(new Set(group.flatMap(g => g.descriptionTokens)));
@@ -125,8 +143,11 @@ function scoreGroup(
   const scores = group.map(g => edgeMap.get(g.id) ?? 0);
   const f4 = scores.reduce((s, v) => s + v, 0) / (scores.length || 1);
 
-  // Feature 5: zoneCompatibility (all items in same zone as source, or 0.5 if unknown)
-  const compatCount = group.filter(g => g.zoneId && g.zoneId === source.zoneId).length;
+  // Feature 5: zoneCompatibility — fraction of group members whose zone is in
+  // correspondence with source's zone (same zone OR cross-zone correspondence).
+  // Previously this required exact zoneId equality, which penalised valid
+  // cross-zone matches (e.g. "Master Bath" ↔ "Master Bathroom") with f5 = 0.
+  const compatCount = group.filter(g => isZoneCompatible(source.zoneId, g.zoneId, corrLookup)).length;
   const f5 = group.length > 0 ? compatCount / group.length : 0;
 
   // Feature 6: sequenceProximity (how close to source's page/line)
@@ -216,6 +237,27 @@ export async function groupMatchingN3(
     edgesBySource.set(e.sourceItemId, arr);
   }
 
+  // ── 3b. Load zone correspondences for zoneCompatibility feature ───────────
+  // Mirrors the lookup built in Phase 13 so cross-zone correspondences
+  // (e.g. "Master Bath" ↔ "Master Bathroom") are recognised when scoring groups.
+  const correspondences = await prisma.n3ZoneCorrespondence.findMany({
+    where: { comparisonId },
+    select: {
+      confidence:    true,
+      yourZones:     { select: { id: true } },
+      adjusterZones: { select: { id: true } },
+    },
+  });
+  const corrLookup: CorrespondenceLookup = new Map();
+  for (const corr of correspondences) {
+    const conf = Number(corr.confidence);
+    for (const yz of corr.yourZones) {
+      for (const az of corr.adjusterZones) {
+        corrLookup.set(`${yz.id}__${az.id}`, { confidence: conf });
+      }
+    }
+  }
+
   // ── 4. Try to form groups for each unmatched yours item ───────────────────
   let groupedCount    = 0;
   let relinquishedAdj = 0;
@@ -243,7 +285,7 @@ export async function groupMatchingN3(
     for (let size = GROUP_MATCH.MIN_GROUP_SIZE; size <= Math.min(GROUP_MATCH.MAX_GROUP_SIZE, candidates.length); size++) {
       for (const combo of combinations(candidates, size)) {
         const groupItems = combo.map(c => itemMap.get(c.adjItemId)).filter(Boolean) as ItemSnapshot[];
-        const gs = scoreGroup(source, groupItems, combo);
+        const gs = scoreGroup(source, groupItems, combo, corrLookup);
         if (gs > bestGroupScore) { bestGroupScore = gs; bestGroup = combo; }
       }
     }

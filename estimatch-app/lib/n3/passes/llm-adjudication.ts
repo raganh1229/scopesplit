@@ -29,22 +29,32 @@ import { SCORE_THRESHOLDS } from '@/lib/n3/constants';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const SONNET_MODEL      = 'claude-sonnet-4-5';
+const SONNET_MODEL      = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
-const MAX_TOKENS        = 2000;
-// Claude Sonnet 4-5 pricing (per million tokens, USD)
+// Output token budget. Each adjudication ruling is ~80 tokens of structured JSON
+// (index + decision + confidence + ≤400-char reasoning). For large batches we must
+// scale max_tokens upward or the response gets truncated and isTruncated retries
+// fail (since input is identical). 2000 is the floor for small batches.
+const MAX_TOKENS_BASE     = 2000;
+const MAX_TOKENS_PER_PAIR = 80;
+function computeMaxTokens(pairCount: number): number {
+  return Math.max(MAX_TOKENS_BASE, pairCount * MAX_TOKENS_PER_PAIR);
+}
+// Claude Sonnet 4-6 pricing (per million tokens, USD)
 const COST_PER_M_INPUT  = 3.0;
 const COST_PER_M_OUTPUT = 15.0;
 
 // ── Return type ───────────────────────────────────────────────────────────────
 
 export type LlmAdjudicationN3Result = {
-  adjudicatedCount:    number;
-  acceptedCount:       number;
-  rejectedCount:       number;
-  postLlmRescueCount:  number;  // pairs rescued after LLM rejection by mutual-best pass
-  skipped:             boolean; // true when no `possible` decisions exist
+  adjudicatedCount:      number;
+  acceptedCount:         number;
+  rejectedCount:         number;
+  autoRejectedCount:     number;  // cross-zone possibles auto-rejected before LLM (Tier 2)
+  postLlmRescueCount:    number;  // pairs rescued after LLM rejection by mutual-best pass
+  skippedByLlmCount:     number;  // pairs the LLM omitted from its JSON response (converted to unmatched)
+  skipped:               boolean; // true when no `possible` decisions exist
 };
 
 // ── Zod schema for AI response ────────────────────────────────────────────────
@@ -71,12 +81,14 @@ type PairContext = {
   yoursQty:      string;
   yoursUnit:     string;
   yoursTotal:    string;
+  yoursZone:     string | null;
   adjDesc:       string;
   adjTrade:      string | null;
   adjAction:     string | null;
   adjQty:        string;
   adjUnit:       string;
   adjTotal:      string;
+  adjZone:       string | null;
   finalScore:    number;
 };
 
@@ -89,7 +101,11 @@ Rules:
 - Identical or near-identical descriptions → match
 - Same trade/action with proportional quantities → match
 - Fundamentally different work scopes → no_match
-- When genuinely ambiguous, prefer match over no_match (false positives are less harmful than missed matches)
+- ZONE RULE: If both items have a zone listed and the zones are different rooms/areas with
+  no obvious equivalence, treat the zone mismatch as a strong signal against matching.
+  Different zones + different quantities + different totals = no_match unless the description
+  match is overwhelming and the zone names are near-synonyms.
+- When genuinely ambiguous with matching zones, prefer match over no_match.
 
 Respond ONLY with valid JSON matching this schema exactly:
 {"adjudications":[{"index":0,"decision":"match","confidence":0.85,"reasoning":"brief explanation"},...]}`;
@@ -98,8 +114,8 @@ Respond ONLY with valid JSON matching this schema exactly:
 function buildUserPrompt(pairs: PairContext[]): string {
   const lines = pairs.map(p =>
     `[${p.index}]
-  YOUR  | "${p.yoursDesc}" | trade: ${p.yoursTrade ?? '—'} | action: ${p.yoursAction ?? '—'} | qty: ${p.yoursQty} ${p.yoursUnit} | total: $${p.yoursTotal}
-  ADJ   | "${p.adjDesc}" | trade: ${p.adjTrade ?? '—'} | action: ${p.adjAction ?? '—'} | qty: ${p.adjQty} ${p.adjUnit} | total: $${p.adjTotal}
+  YOUR  | "${p.yoursDesc}" | zone: ${p.yoursZone ?? '—'} | trade: ${p.yoursTrade ?? '—'} | action: ${p.yoursAction ?? '—'} | qty: ${p.yoursQty} ${p.yoursUnit} | total: $${p.yoursTotal}
+  ADJ   | "${p.adjDesc}" | zone: ${p.adjZone ?? '—'} | trade: ${p.adjTrade ?? '—'} | action: ${p.adjAction ?? '—'} | qty: ${p.adjQty} ${p.adjUnit} | total: $${p.adjTotal}
   score: ${p.finalScore.toFixed(3)}`
   );
   return `Evaluate the following ${pairs.length} candidate pair(s):\n\n${lines.join('\n\n')}`;
@@ -123,15 +139,15 @@ export async function llmAdjudicationN3(
   // ── 1. Load possible decisions ─────────────────────────────────────────────
   const possibleDecisions = await prisma.n3MatchDecision.findMany({
     where: { comparisonId, decisionType: 'possible' },
-    select: { id: true, yourItemIds: true, adjusterItemIds: true, finalScore: true },
+    select: { id: true, yourItemIds: true, adjusterItemIds: true, finalScore: true, topEdgeId: true },
   });
 
   if (possibleDecisions.length === 0) {
     logger.info('[n3/llm-adjudication] no possible decisions — skipping', { comparisonId });
-    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, postLlmRescueCount: 0, skipped: true };
+    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, autoRejectedCount: 0, postLlmRescueCount: 0, skippedByLlmCount: 0, skipped: true };
   }
 
-  // ── 2. Load line items ─────────────────────────────────────────────────────
+  // ── 2. Load line items (with zone name for Tier 1 zone-aware prompting) ─────────────
   const allItemIds = [
     ...possibleDecisions.flatMap(d => d.yourItemIds),
     ...possibleDecisions.flatMap(d => d.adjusterItemIds),
@@ -141,38 +157,117 @@ export async function llmAdjudicationN3(
     select: {
       id: true, rawDescription: true, trade: true, action: true,
       normalizedQuantity: true, normalizedUnit: true, totalAmount: true,
+      zone: { select: { name: true } },
     },
   });
   const itemMap = new Map(items.map(li => [li.id, li]));
 
-  // ── 3. Build pair contexts ─────────────────────────────────────────────────
+  // ── 2b. Pre-LLM cross-zone auto-rejection (Tier 2) ───────────────────────────
+  // Possible decisions whose assigned edge has an outside_verified penalty AND whose
+  // yours item has a better non-rejected edge to a different adj item are rejected
+  // algorithmically — without calling the LLM — freeing the rescue pass to find
+  // the correct in-zone partner.
+  const autoRejectedIds = new Set<string>();
+  {
+    const topEdgeIds = possibleDecisions
+      .map(d => d.topEdgeId)
+      .filter((id): id is string => id != null);
+
+    const topEdges = topEdgeIds.length > 0
+      ? await prisma.n3CandidateEdge.findMany({
+          where: { id: { in: topEdgeIds } },
+          select: { id: true, boostsJson: true },
+        })
+      : [];
+
+    const topEdgeBoosts = new Map(topEdges.map(e => [e.id, e.boostsJson]));
+
+    type BoostEntry = { type: string; value: number };
+    const isCrossZone = (boostsJson: unknown): boolean =>
+      Array.isArray(boostsJson) &&
+      (boostsJson as BoostEntry[]).some(b => b.type === 'outside_verified');
+
+    const crossZoneDecisions = possibleDecisions.filter(
+      d => d.topEdgeId != null && isCrossZone(topEdgeBoosts.get(d.topEdgeId!)),
+    );
+
+    if (crossZoneDecisions.length > 0) {
+      const crossZoneYoursIds = [...new Set(
+        crossZoneDecisions.map(d => d.yourItemIds[0]).filter(Boolean),
+      )];
+      const altEdges = await prisma.n3CandidateEdge.findMany({
+        where: { comparisonId, isRejected: false, sourceItemId: { in: crossZoneYoursIds } },
+        select: { sourceItemId: true, targetItemId: true, finalScore: true },
+      });
+
+      const bestEdgeForYours = new Map<string, { adjId: string; score: number }>();
+      for (const e of altEdges) {
+        const score = Number(e.finalScore);
+        const cur = bestEdgeForYours.get(e.sourceItemId);
+        if (!cur || score > cur.score) {
+          bestEdgeForYours.set(e.sourceItemId, { adjId: e.targetItemId, score });
+        }
+      }
+
+      for (const d of crossZoneDecisions) {
+        const yoursId  = d.yourItemIds[0];
+        const curAdjId = d.adjusterItemIds[0];
+        const best     = bestEdgeForYours.get(yoursId);
+        if (best && best.adjId !== curAdjId && best.score > Number(d.finalScore)) {
+          await prisma.n3MatchDecision.update({
+            where: { id: d.id },
+            data: {
+              decisionType:    'unmatched',
+              adjusterItemIds: [],
+              finalScore:      0,
+              topEdgeId:       null,
+              decidedBy:       'pre_llm_zone_filter',
+            },
+          });
+          autoRejectedIds.add(d.id);
+        }
+      }
+
+      if (autoRejectedIds.size > 0) {
+        logger.info('[n3/llm-adjudication] pre-LLM cross-zone auto-rejection', {
+          comparisonId,
+          autoRejected: autoRejectedIds.size,
+        });
+      }
+    }
+  }
+
+  // ── 3. Build pair contexts (excluding auto-rejected decisions) ─────────────────
   const pairs: PairContext[] = [];
   for (const [i, d] of possibleDecisions.entries()) {
+    if (autoRejectedIds.has(d.id)) continue;
     const yours = itemMap.get(d.yourItemIds[0]);
     const adj   = itemMap.get(d.adjusterItemIds[0]);
     if (!yours || !adj) continue;
     pairs.push({
-      index:      i,
-      decisionId: d.id,
-      yoursDesc:  yours.rawDescription,
-      yoursTrade: yours.trade,
+      index:       i,
+      decisionId:  d.id,
+      yoursDesc:   yours.rawDescription,
+      yoursTrade:  yours.trade,
       yoursAction: yours.action,
-      yoursQty:   String(yours.normalizedQuantity ?? '?'),
-      yoursUnit:  yours.normalizedUnit ?? '?',
-      yoursTotal: yours.totalAmount != null ? Number(yours.totalAmount).toFixed(2) : '?',
-      adjDesc:    adj.rawDescription,
-      adjTrade:   adj.trade,
-      adjAction:  adj.action,
-      adjQty:     String(adj.normalizedQuantity ?? '?'),
-      adjUnit:    adj.normalizedUnit ?? '?',
-      adjTotal:   adj.totalAmount != null ? Number(adj.totalAmount).toFixed(2) : '?',
-      finalScore: Number(d.finalScore),
+      yoursQty:    String(yours.normalizedQuantity ?? '?'),
+      yoursUnit:   yours.normalizedUnit ?? '?',
+      yoursTotal:  yours.totalAmount != null ? Number(yours.totalAmount).toFixed(2) : '?',
+      yoursZone:   yours.zone?.name ?? null,
+      adjDesc:     adj.rawDescription,
+      adjTrade:    adj.trade,
+      adjAction:   adj.action,
+      adjQty:      String(adj.normalizedQuantity ?? '?'),
+      adjUnit:     adj.normalizedUnit ?? '?',
+      adjTotal:    adj.totalAmount != null ? Number(adj.totalAmount).toFixed(2) : '?',
+      adjZone:     adj.zone?.name ?? null,
+      finalScore:  Number(d.finalScore),
     });
   }
 
   if (pairs.length === 0) {
     logger.info('[n3/llm-adjudication] no valid pairs to adjudicate', { comparisonId });
-    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, postLlmRescueCount: 0, skipped: true };
+    return { adjudicatedCount: 0, acceptedCount: 0, rejectedCount: 0, autoRejectedCount: autoRejectedIds.size, postLlmRescueCount: 0, skippedByLlmCount: 0, skipped: autoRejectedIds.size === 0 };
   }
 
   logger.info('[n3/llm-adjudication] calling Sonnet', { comparisonId, pairs: pairs.length });
@@ -193,7 +288,7 @@ export async function llmAdjudicationN3(
         },
         body: JSON.stringify({
           model:       SONNET_MODEL,
-          max_tokens:  MAX_TOKENS,
+          max_tokens:  computeMaxTokens(pairs.length),
           temperature: 0,
           system:      buildSystemPrompt(),
           messages:    [{ role: 'user', content: buildUserPrompt(pairs) }],
@@ -263,11 +358,30 @@ export async function llmAdjudicationN3(
   // Build index → decision row lookup
   const adjMap = new Map(parsed.adjudications.map(a => [a.index, a]));
 
-  let acceptedCount = 0, rejectedCount = 0;
+  let acceptedCount = 0, rejectedCount = 0, skippedCount = 0;
 
   for (const pair of pairs) {
     const ruling = adjMap.get(pair.index);
-    if (!ruling) continue;  // Sonnet skipped this index — leave as-is
+    if (!ruling) {
+      // Sonnet omitted this index. Convert to `unmatched` rather than leaving
+      // the row as `possible`, which would silently default to MODIFIED in
+      // Phase 18 (persist-decisions.ts:186) and surface to the user as a
+      // confirmed price-different match.
+      await prisma.n3MatchDecision.update({
+        where: { id: pair.decisionId },
+        data: {
+          decisionType:    'unmatched',
+          adjusterItemIds: [],
+          finalScore:      0,
+          topEdgeId:       null,
+          decidedBy:       'llm_adjudication',
+          llmReasoning:    'LLM did not return a ruling for this pair; treated as no_match.',
+        },
+      });
+      skippedCount++;
+      rejectedCount++;
+      continue;
+    }
 
     if (ruling.decision === 'match') {
       await prisma.n3MatchDecision.update({
@@ -293,6 +407,13 @@ export async function llmAdjudicationN3(
       });
       rejectedCount++;
     }
+  }
+
+  if (skippedCount > 0) {
+    logger.info('[n3/llm-adjudication] LLM skipped some indices — converted to unmatched', {
+      comparisonId,
+      skippedCount,
+    });
   }
 
   // ── 7. Post-LLM mutual-best rescue pass ───────────────────────────────────
@@ -395,10 +516,12 @@ export async function llmAdjudicationN3(
   });
 
   return {
-    adjudicatedCount: pairs.length,
+    adjudicatedCount:  pairs.length,
     acceptedCount,
     rejectedCount,
+    autoRejectedCount: autoRejectedIds.size,
     postLlmRescueCount,
+    skippedByLlmCount: skippedCount,
     skipped: false,
   };
 }

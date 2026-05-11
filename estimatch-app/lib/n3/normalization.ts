@@ -147,18 +147,16 @@ export function tokenizeDescription(description: string): string[] {
 /**
  * Compute the Jaccard similarity coefficient between two token arrays.
  *
- *   J(A, B) = |A ∩ B| / |A ∪ B|
- *
- * Deduplicates tokens within each array before computing (set semantics).
- *
- * Special cases:
- *   - Both empty → 1.0  (two "nothing" descriptions are equally empty)
+ * Jaccard similarity: |A ∩ B| / |A ∪ B|.
+ * Edge cases:
+ *   - Both empty → 0.0  (degenerate pair — no positive evidence of similarity;
+ *                        consistent with score-candidates.ts and group-matching.ts
+ *                        so all three Jaccard implementations agree.)
  *   - One empty  → 0.0  (no overlap possible)
  *
  * Returns a value in [0, 1].
  */
 export function jaccardSimilarity(a: string[], b: string[]): number {
-  if (a.length === 0 && b.length === 0) return 1.0;
   if (a.length === 0 || b.length === 0) return 0.0;
 
   const setA = new Set(a);

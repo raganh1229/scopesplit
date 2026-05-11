@@ -392,8 +392,8 @@ describe('jaccardSimilarity', () => {
     expect(jaccardSimilarity(['carpet'], ['drywall'])).toBe(0.0);
   });
 
-  it('returns 1.0 for two empty arrays', () => {
-    expect(jaccardSimilarity([], [])).toBe(1.0);
+  it('returns 0.0 for two empty arrays (standardized across all N3 Jaccard impls)', () => {
+    expect(jaccardSimilarity([], [])).toBe(0.0);
   });
 
   it('returns 0.0 when one array is empty and the other is not', () => {
