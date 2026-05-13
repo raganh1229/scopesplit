@@ -67,7 +67,7 @@ export function buildExtractionPrompt(p: ExtractionPromptParams): {
     `- rs: reset cost (number or null)\n` +
     `- tx: tax (number or null)\n` +
     `- op: overhead & profit (number or null)\n` +
-    `- t: total — the rightmost cost value for this line item (number or null)\n\n` +
+    `- t: total — use the RCV (Replacement Cost Value) column if both RCV and ACV columns are present. Do NOT use ACV. If only a single TOTAL column exists, use that. (number or null)\n\n` +
 
     `Return this exact JSON — nothing else:\n` +
     `{\n` +

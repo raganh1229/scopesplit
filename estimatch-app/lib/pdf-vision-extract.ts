@@ -102,7 +102,7 @@ For each item return:
 - rs: reset cost (number or null if no RESET column exists)
 - tx: tax (number or null)
 - op: overhead & profit (number or null)
-- t: total — always the rightmost cost value for this line item
+- t: total — use the RCV (Replacement Cost Value) column if both RCV and ACV columns are present. Do NOT use ACV. If only a single TOTAL column exists, use that.
 
 Return JSON in this exact format:
 {"total_count":91,"items":[{"n":1,"d":"Dumpster load","q":"2.00","u":"EA","z":"General Items","rm":0,"rp":731.00,"rs":null,"tx":68.41,"op":142.40,"t":941.81}]}

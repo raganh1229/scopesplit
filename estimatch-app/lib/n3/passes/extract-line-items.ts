@@ -294,7 +294,11 @@ export async function extractLineItemsN3(
     const format = zone.source === 'yours' ? yoursFormat : adjFormat;
 
     const startInternal = printedToInternal(zone.startPage, totalPages);
-    const endInternal = printedToInternal(zone.endPage, totalPages);
+    // +1 page buffer: ensures items that flow past the detected endPage boundary
+    // are still captured. The extraction prompt Rule 3 ("stop at next zone header")
+    // prevents false positives. printedToInternal clamps to [0, totalPages-1] so
+    // the last zone automatically extends to the actual final PDF page.
+    const endInternal = printedToInternal(zone.endPage + 1, totalPages);
 
     let chunkBytes: Uint8Array;
     try {
