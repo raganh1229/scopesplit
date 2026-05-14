@@ -40,12 +40,14 @@ const ESTIMATES_BUCKET = 'estimates';
 const SONNET_MODEL = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
-const EXTRACTION_MAX_TOKENS = 8192;     // vision path: 8192 is sufficient for ≤60 items
-const TEXT_EXTRACTION_MAX_TOKENS = 16384; // text path: dense zones need full cap
-const CONCURRENT_ZONE_CALLS = 5;
-const FETCH_TIMEOUT_MS = 120_000;        // 2 min per API call
-const TEXT_ZONE_THRESHOLD = 60;          // approxItems above this → use text extraction path
-const MIN_TEXT_CHARS_PER_PAGE = 200;     // below this → text is too sparse, fall back to vision
+const BASE_MAX_TOKENS = 8192;           // sufficient for ≤3 pages of dense items
+const MAX_TOKENS_CAP = 16384;           // hard cap for large page spans
+const TOKENS_PER_PAGE = 2400;           // ~25 items/page × ~95 tokens/item
+const CONCURRENT_ZONE_CALLS = 5;        // concurrency for single-zone calls
+const FETCH_TIMEOUT_MS = 180_000;       // 3 min per vision call
+const ITEM_SPLIT_THRESHOLD = 60;        // zones with more approxItems get page-chunked
+const MAX_PAGES_PER_CHUNK = 3;          // max pages per individual vision call
+const CHUNK_OVERLAP_PAGES = 1;          // overlap between chunks to catch boundary items
 
 // ── Zod schema for AI response ────────────────────────────────────────────────
 
@@ -154,117 +156,20 @@ type ZoneCallSpec = {
   format: EstimateFormat;
   chunkBytes: Uint8Array;
   context: string;
-  useTextExtraction: boolean; // true → pdf-parse + text Claude call; false → PDF vision
+  maxTokens: number;
 };
 
 /**
- * Extract plain text from sliced PDF bytes using pdf-parse.
- * Returns null if text is too sparse (scanned/image-only PDF).
+ * Compute dynamic max_tokens based on zone page span.
+ * Larger page chunks need more output tokens to avoid truncation.
  */
-async function extractPdfText(
-  chunkBytes: Uint8Array,
-  pageSpan: number,
-): Promise<string | null> {
-  try {
-    const pdfParseModule = (await import('pdf-parse')) as unknown as {
-      default: (buf: Buffer, opts?: Record<string, unknown>) => Promise<{ text: string }>;
-    };
-    const result = await pdfParseModule.default(Buffer.from(chunkBytes));
-    const text = result.text ?? '';
-    if (text.length < MIN_TEXT_CHARS_PER_PAGE * pageSpan) return null;
-    return text;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Send extracted PDF text to Claude for structured line item extraction.
- * Uses the same JSON schema as vision path — drop-in replacement.
- */
-async function extractZoneViaText(
-  spec: ZoneCallSpec,
-  rawText: string,
-): Promise<ExtractedZoneResult> {
-  const { zoneId, zoneName, source, startPage, endPage, format, context } = spec;
-
-  return withRetry(
-    async () => {
-      const prompts = buildExtractionPrompt({
-        zoneName,
-        startPage,
-        endPage,
-        side: source === 'yours' ? 'contractor' : 'adjuster',
-        format,
-      });
-
-      const apiKey = getApiKey();
-
-      const response = await fetch(ANTHROPIC_API_URL, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': ANTHROPIC_VERSION,
-        },
-        body: JSON.stringify({
-          model: SONNET_MODEL,
-          max_tokens: TEXT_EXTRACTION_MAX_TOKENS,
-          temperature: 0,
-          system: prompts.system,
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text:
-                    `The following is the raw text extracted from the PDF for the zone "${zoneName}" ` +
-                    `(pages ${startPage}–${endPage}). Use this text instead of a PDF image.\n\n` +
-                    `<pdf_text>\n${rawText}\n</pdf_text>\n\n` +
-                    prompts.user,
-                },
-              ],
-            },
-          ],
-        }),
-        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-      });
-
-      if (!response.ok) {
-        throw new AIResponseError(
-          `[n3/extract-line-items] Anthropic ${response.status} for ${context} (text): ${response.statusText}`,
-          response.status >= 500 || response.status === 429,
-          context,
-        );
-      }
-
-      const body = (await response.json()) as {
-        content?: Array<{ text?: string }>;
-        stop_reason?: string | null;
-      };
-      const responseText = body.content?.[0]?.text ?? '';
-      const stopReason = body.stop_reason ?? null;
-
-      if (isTruncated(stopReason, responseText)) {
-        throw new AIResponseError(
-          `[n3/extract-line-items] Text response truncated for ${context} — zone text may be too large`,
-          true,
-          context,
-        );
-      }
-
-      const parsed = parseAndValidate(responseText, ZoneExtractionResponseSchema, context);
-      return { zoneId, source, items: deduplicateItems(parsed.items) };
-    },
-    3,
-    context,
-  );
+function computeMaxTokens(pageSpan: number): number {
+  return Math.max(BASE_MAX_TOKENS, Math.min(pageSpan * TOKENS_PER_PAGE, MAX_TOKENS_CAP));
 }
 
 /**
  * Deduplicate extracted items by source line number, keeping the first occurrence.
- * Prevents doubles when overlapping page ranges or multi-pass extraction are used.
+ * Prevents doubles when overlapping page chunks return the same item.
  */
 function deduplicateItems(
   items: z.input<typeof N3ExtractedItemSchema>[],
@@ -277,20 +182,13 @@ function deduplicateItems(
   });
 }
 
+/**
+ * Single Claude vision call for one page chunk.
+ * All extraction — small zones and sub-chunks alike — flows through here.
+ */
 async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
-  const { zoneId, zoneName, source, startPage, endPage, format, chunkBytes, context, useTextExtraction } = spec;
+  const { zoneId, zoneName, source, startPage, endPage, format, chunkBytes, context, maxTokens } = spec;
 
-  // ── Text extraction path (large/dense zones) ────────────────────────────────
-  if (useTextExtraction) {
-    const pageSpan = endPage - startPage + 1;
-    const rawText = await extractPdfText(chunkBytes, pageSpan);
-    if (rawText !== null) {
-      return extractZoneViaText(spec, rawText);
-    }
-    // Fall through to vision if text extraction yielded sparse/no text
-  }
-
-  // ── Vision path (proven accurate for normal zones, fallback for sparse PDFs) ─
   return withRetry(
     async () => {
       const prompts = buildExtractionPrompt({
@@ -313,7 +211,7 @@ async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
         },
         body: JSON.stringify({
           model: SONNET_MODEL,
-          max_tokens: EXTRACTION_MAX_TOKENS,
+          max_tokens: maxTokens,
           temperature: 0,
           system: prompts.system,
           messages: [
@@ -349,7 +247,7 @@ async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
 
       if (isTruncated(stopReason, text)) {
         throw new AIResponseError(
-          `[n3/extract-line-items] Response truncated for ${context} — increase max_tokens`,
+          `[n3/extract-line-items] Response truncated for ${context} (maxTokens=${maxTokens})`,
           true,
           context,
         );
@@ -361,6 +259,93 @@ async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
     3,
     context,
   );
+}
+
+/**
+ * For large zones (approxItems > ITEM_SPLIT_THRESHOLD), split the zone's pages
+ * into MAX_PAGES_PER_CHUNK-page chunks with CHUNK_OVERLAP_PAGES overlap and
+ * run all chunks as concurrent Claude vision calls. Results are merged and
+ * deduplicated by line number.
+ */
+async function extractLargeZone(
+  zone: { id: string; source: string; name: string; startPage: number; endPage: number },
+  doc: Awaited<ReturnType<typeof loadPdf>>,
+  totalPages: number,
+  format: EstimateFormat,
+  logger: StepLogger,
+  comparisonId: string,
+): Promise<ExtractedZoneResult> {
+  const pageSpan = zone.endPage - zone.startPage + 1;
+  const subSpecs: ZoneCallSpec[] = [];
+
+  for (
+    let chunkStart = zone.startPage;
+    chunkStart <= zone.endPage;
+    chunkStart += MAX_PAGES_PER_CHUNK - CHUNK_OVERLAP_PAGES
+  ) {
+    const chunkEnd = Math.min(chunkStart + MAX_PAGES_PER_CHUNK - 1, zone.endPage);
+    const startInternal = printedToInternal(chunkStart, totalPages);
+    const endInternal = printedToInternal(chunkEnd + 1, totalPages); // +1 buffer
+
+    let chunkBytes: Uint8Array;
+    try {
+      chunkBytes = await slicePages(doc, startInternal, endInternal);
+    } catch (err) {
+      logger.warn('[n3/extract-line-items] Failed to slice sub-chunk — skipping', {
+        comparisonId,
+        zoneName: zone.name,
+        chunkStart,
+        chunkEnd,
+        error: (err as Error).message,
+      });
+      continue;
+    }
+
+    const chunkPageSpan = chunkEnd - chunkStart + 1;
+    subSpecs.push({
+      zoneId: zone.id,
+      zoneName: zone.name,
+      source: zone.source,
+      startPage: chunkStart,
+      endPage: chunkEnd,
+      format,
+      chunkBytes,
+      context: `${zone.source}-${zone.name.slice(0, 20).replace(/\s+/g, '_')}-p${chunkStart}-${chunkEnd}`,
+      maxTokens: computeMaxTokens(chunkPageSpan),
+    });
+  }
+
+  logger.info('[n3/extract-line-items] Splitting large zone into parallel sub-chunks', {
+    comparisonId,
+    zoneName: zone.name,
+    pageSpan,
+    subChunks: subSpecs.length,
+  });
+
+  // Run all sub-chunks in parallel — each is a small, fast vision call
+  const subResults = await Promise.all(subSpecs.map(spec => extractZone(spec)));
+
+  // Merge and deduplicate by line number (overlap pages may produce duplicates)
+  const allItems: z.input<typeof N3ExtractedItemSchema>[] = [];
+  const seenLineNumbers = new Set<number>();
+  for (const result of subResults) {
+    for (const item of result.items) {
+      if (!seenLineNumbers.has(item.n)) {
+        seenLineNumbers.add(item.n);
+        allItems.push(item);
+      }
+    }
+  }
+  allItems.sort((a, b) => a.n - b.n);
+
+  logger.info('[n3/extract-line-items] Large zone chunked extraction complete', {
+    comparisonId,
+    zoneName: zone.name,
+    totalItems: allItems.length,
+    subChunks: subSpecs.length,
+  });
+
+  return { zoneId: zone.id, source: zone.source, items: allItems };
 }
 
 // ── Main export ───────────────────────────────────────────────────────────────
@@ -391,7 +376,7 @@ export async function extractLineItemsN3(
 
   const zones = await prisma.n3Zone.findMany({
     where: { comparisonId },
-    select: { id: true, source: true, name: true, startPage: true, endPage: true, approxItems: true },
+    select: { id: true, source: true, name: true, startPage: true, endPage: true, approxItems: true  },
     orderBy: [{ source: 'asc' }, { startPage: 'asc' }],
   });
 
@@ -422,13 +407,32 @@ export async function extractLineItemsN3(
     adjPages: adjTotalPages,
   });
 
-  // ── 3. Build call specs (slice zone sub-PDFs) ───────────────────────────────
-  const specs: ZoneCallSpec[] = [];
+  // ── 3. Partition zones: small (single call) vs large (sub-chunked) ──────────
+  const smallZones: typeof zones = [];
+  const largeZones: typeof zones = [];
 
   for (const zone of zones) {
+    if ((zone.approxItems ?? 0) > ITEM_SPLIT_THRESHOLD) {
+      largeZones.push(zone);
+    } else {
+      smallZones.push(zone);
+    }
+  }
+
+  logger.info('[n3/extract-line-items] Zone routing', {
+    comparisonId,
+    smallZones: smallZones.length,
+    largeZones: largeZones.length,
+  });
+
+  // ── 4a. Build call specs for small zones ────────────────────────────────────
+  const specs: ZoneCallSpec[] = [];
+
+  for (const zone of smallZones) {
     const doc = zone.source === 'yours' ? yoursDoc : adjDoc;
     const totalPages = zone.source === 'yours' ? yoursTotalPages : adjTotalPages;
     const format = zone.source === 'yours' ? yoursFormat : adjFormat;
+    const pageSpan = zone.endPage - zone.startPage + 1;
 
     const startInternal = printedToInternal(zone.startPage, totalPages);
     // +1 page buffer: ensures items that flow past the detected endPage boundary
@@ -452,9 +456,6 @@ export async function extractLineItemsN3(
       continue;
     }
 
-    const approxItems = zone.approxItems ?? 0;
-    const useTextExtraction = approxItems > TEXT_ZONE_THRESHOLD;
-
     specs.push({
       zoneId: zone.id,
       zoneName: zone.name,
@@ -464,27 +465,33 @@ export async function extractLineItemsN3(
       format,
       chunkBytes,
       context: `${zone.source}-${zone.name.slice(0, 20).replace(/\s+/g, '_')}`,
-      useTextExtraction,
+      maxTokens: computeMaxTokens(pageSpan),
     });
   }
 
-  const textZones = specs.filter(s => s.useTextExtraction).length;
-  const visionZones = specs.filter(s => !s.useTextExtraction).length;
-  logger.info('[n3/extract-line-items] Firing extraction calls', {
+  // ── 4b. Extract large zones (parallel sub-chunks per zone) ─────────────────
+  const largeZoneResults: ExtractedZoneResult[] = [];
+  for (const zone of largeZones) {
+    const doc = zone.source === 'yours' ? yoursDoc : adjDoc;
+    const totalPages = zone.source === 'yours' ? yoursTotalPages : adjTotalPages;
+    const format = zone.source === 'yours' ? yoursFormat : adjFormat;
+    const result = await extractLargeZone(zone, doc, totalPages, format, logger, comparisonId);
+    largeZoneResults.push(result);
+  }
+
+  // ── 4c. Fan out small zones with concurrency cap ────────────────────────────
+  logger.info('[n3/extract-line-items] Firing small-zone extraction calls', {
     comparisonId,
     calls: specs.length,
-    visionZones,
-    textZones,
   });
 
-  // ── 4. Fan out with concurrency cap ─────────────────────────────────────────
   const allSettled = await runWithConcurrencyLimit(
     specs.map(s => () => extractZone(s)),
     CONCURRENT_ZONE_CALLS,
   );
 
   // ── 5. Collect results — fail fast ─────────────────────────────────────────
-  const zoneResults: ExtractedZoneResult[] = [];
+  const zoneResults: ExtractedZoneResult[] = [...largeZoneResults];
   for (let i = 0; i < allSettled.length; i++) {
     const settled = allSettled[i]!;
     const spec = specs[i]!;
