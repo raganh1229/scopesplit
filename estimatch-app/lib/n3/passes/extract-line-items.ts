@@ -40,13 +40,13 @@ const ESTIMATES_BUCKET = 'estimates';
 const SONNET_MODEL = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
-const BASE_MAX_TOKENS = 8192;           // sufficient for ≤3 pages of dense items
-const MAX_TOKENS_CAP = 16384;           // hard cap for large page spans
-const TOKENS_PER_PAGE = 2400;           // ~25 items/page × ~95 tokens/item
+const BASE_MAX_TOKENS = 16384;          // full cap — prevents truncation on any chunk size
+const MAX_TOKENS_CAP = 16384;           // hard cap
+const TOKENS_PER_PAGE = 2400;           // ~25 items/page × ~95 tokens/item (informational)
 const CONCURRENT_ZONE_CALLS = 5;        // concurrency for single-zone calls
 const FETCH_TIMEOUT_MS = 180_000;       // 3 min per vision call
 const ITEM_SPLIT_THRESHOLD = 60;        // zones with more approxItems get page-chunked
-const MAX_PAGES_PER_CHUNK = 3;          // max pages per individual vision call
+const MAX_PAGES_PER_CHUNK = 2;          // max pages per chunk — keeps items ~50/call, safe for 16384 cap
 const CHUNK_OVERLAP_PAGES = 1;          // overlap between chunks to catch boundary items
 
 // ── Zod schema for AI response ────────────────────────────────────────────────
