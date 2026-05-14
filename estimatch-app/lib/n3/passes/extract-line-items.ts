@@ -40,8 +40,12 @@ const ESTIMATES_BUCKET = 'estimates';
 const SONNET_MODEL = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
-const EXTRACTION_MAX_TOKENS = 8192;
+const EXTRACTION_MAX_TOKENS = 8192;     // vision path: 8192 is sufficient for ≤60 items
+const TEXT_EXTRACTION_MAX_TOKENS = 16384; // text path: dense zones need full cap
 const CONCURRENT_ZONE_CALLS = 5;
+const FETCH_TIMEOUT_MS = 120_000;        // 2 min per API call
+const TEXT_ZONE_THRESHOLD = 60;          // approxItems above this → use text extraction path
+const MIN_TEXT_CHARS_PER_PAGE = 200;     // below this → text is too sparse, fall back to vision
 
 // ── Zod schema for AI response ────────────────────────────────────────────────
 
@@ -150,11 +154,143 @@ type ZoneCallSpec = {
   format: EstimateFormat;
   chunkBytes: Uint8Array;
   context: string;
+  useTextExtraction: boolean; // true → pdf-parse + text Claude call; false → PDF vision
 };
 
-async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
-  const { zoneId, zoneName, source, startPage, endPage, format, chunkBytes, context } = spec;
+/**
+ * Extract plain text from sliced PDF bytes using pdf-parse.
+ * Returns null if text is too sparse (scanned/image-only PDF).
+ */
+async function extractPdfText(
+  chunkBytes: Uint8Array,
+  pageSpan: number,
+): Promise<string | null> {
+  try {
+    const pdfParseModule = (await import('pdf-parse')) as unknown as {
+      default: (buf: Buffer, opts?: Record<string, unknown>) => Promise<{ text: string }>;
+    };
+    const result = await pdfParseModule.default(Buffer.from(chunkBytes));
+    const text = result.text ?? '';
+    if (text.length < MIN_TEXT_CHARS_PER_PAGE * pageSpan) return null;
+    return text;
+  } catch {
+    return null;
+  }
+}
 
+/**
+ * Send extracted PDF text to Claude for structured line item extraction.
+ * Uses the same JSON schema as vision path — drop-in replacement.
+ */
+async function extractZoneViaText(
+  spec: ZoneCallSpec,
+  rawText: string,
+): Promise<ExtractedZoneResult> {
+  const { zoneId, zoneName, source, startPage, endPage, format, context } = spec;
+
+  return withRetry(
+    async () => {
+      const prompts = buildExtractionPrompt({
+        zoneName,
+        startPage,
+        endPage,
+        side: source === 'yours' ? 'contractor' : 'adjuster',
+        format,
+      });
+
+      const apiKey = getApiKey();
+
+      const response = await fetch(ANTHROPIC_API_URL, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': ANTHROPIC_VERSION,
+        },
+        body: JSON.stringify({
+          model: SONNET_MODEL,
+          max_tokens: TEXT_EXTRACTION_MAX_TOKENS,
+          temperature: 0,
+          system: prompts.system,
+          messages: [
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'text',
+                  text:
+                    `The following is the raw text extracted from the PDF for the zone "${zoneName}" ` +
+                    `(pages ${startPage}–${endPage}). Use this text instead of a PDF image.\n\n` +
+                    `<pdf_text>\n${rawText}\n</pdf_text>\n\n` +
+                    prompts.user,
+                },
+              ],
+            },
+          ],
+        }),
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
+
+      if (!response.ok) {
+        throw new AIResponseError(
+          `[n3/extract-line-items] Anthropic ${response.status} for ${context} (text): ${response.statusText}`,
+          response.status >= 500 || response.status === 429,
+          context,
+        );
+      }
+
+      const body = (await response.json()) as {
+        content?: Array<{ text?: string }>;
+        stop_reason?: string | null;
+      };
+      const responseText = body.content?.[0]?.text ?? '';
+      const stopReason = body.stop_reason ?? null;
+
+      if (isTruncated(stopReason, responseText)) {
+        throw new AIResponseError(
+          `[n3/extract-line-items] Text response truncated for ${context} — zone text may be too large`,
+          true,
+          context,
+        );
+      }
+
+      const parsed = parseAndValidate(responseText, ZoneExtractionResponseSchema, context);
+      return { zoneId, source, items: deduplicateItems(parsed.items) };
+    },
+    3,
+    context,
+  );
+}
+
+/**
+ * Deduplicate extracted items by source line number, keeping the first occurrence.
+ * Prevents doubles when overlapping page ranges or multi-pass extraction are used.
+ */
+function deduplicateItems(
+  items: z.input<typeof N3ExtractedItemSchema>[],
+): z.input<typeof N3ExtractedItemSchema>[] {
+  const seen = new Set<number>();
+  return items.filter(item => {
+    if (seen.has(item.n)) return false;
+    seen.add(item.n);
+    return true;
+  });
+}
+
+async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
+  const { zoneId, zoneName, source, startPage, endPage, format, chunkBytes, context, useTextExtraction } = spec;
+
+  // ── Text extraction path (large/dense zones) ────────────────────────────────
+  if (useTextExtraction) {
+    const pageSpan = endPage - startPage + 1;
+    const rawText = await extractPdfText(chunkBytes, pageSpan);
+    if (rawText !== null) {
+      return extractZoneViaText(spec, rawText);
+    }
+    // Fall through to vision if text extraction yielded sparse/no text
+  }
+
+  // ── Vision path (proven accurate for normal zones, fallback for sparse PDFs) ─
   return withRetry(
     async () => {
       const prompts = buildExtractionPrompt({
@@ -193,6 +329,7 @@ async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
             },
           ],
         }),
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       });
 
       if (!response.ok) {
@@ -219,7 +356,7 @@ async function extractZone(spec: ZoneCallSpec): Promise<ExtractedZoneResult> {
       }
 
       const parsed = parseAndValidate(text, ZoneExtractionResponseSchema, context);
-      return { zoneId, source, items: parsed.items };
+      return { zoneId, source, items: deduplicateItems(parsed.items) };
     },
     3,
     context,
@@ -254,7 +391,7 @@ export async function extractLineItemsN3(
 
   const zones = await prisma.n3Zone.findMany({
     where: { comparisonId },
-    select: { id: true, source: true, name: true, startPage: true, endPage: true },
+    select: { id: true, source: true, name: true, startPage: true, endPage: true, approxItems: true },
     orderBy: [{ source: 'asc' }, { startPage: 'asc' }],
   });
 
@@ -315,6 +452,9 @@ export async function extractLineItemsN3(
       continue;
     }
 
+    const approxItems = zone.approxItems ?? 0;
+    const useTextExtraction = approxItems > TEXT_ZONE_THRESHOLD;
+
     specs.push({
       zoneId: zone.id,
       zoneName: zone.name,
@@ -324,12 +464,17 @@ export async function extractLineItemsN3(
       format,
       chunkBytes,
       context: `${zone.source}-${zone.name.slice(0, 20).replace(/\s+/g, '_')}`,
+      useTextExtraction,
     });
   }
 
+  const textZones = specs.filter(s => s.useTextExtraction).length;
+  const visionZones = specs.filter(s => !s.useTextExtraction).length;
   logger.info('[n3/extract-line-items] Firing extraction calls', {
     comparisonId,
     calls: specs.length,
+    visionZones,
+    textZones,
   });
 
   // ── 4. Fan out with concurrency cap ─────────────────────────────────────────

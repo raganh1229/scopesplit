@@ -46,7 +46,7 @@ const ADJUSTER_PATH     = path.join(SET_DIR, `Adjuster_${SET_ID}.pdf`);
 const ESTIMATES_BUCKET  = 'estimates';
 const INNGEST_DEV_URL   = process.env.INNGEST_DEV ?? 'http://127.0.0.1:8288';
 const POLL_INTERVAL_MS  = 4_000;
-const POLL_TIMEOUT_MS   = 360_000;   // 6 minutes
+const POLL_TIMEOUT_MS   = 900_000;   // 15 minutes — large sets need time for extraction
 
 // ── DB + Supabase clients ──────────────────────────────────────────────────────
 

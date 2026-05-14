@@ -234,6 +234,7 @@ async function processOneChunk(spec: ChunkCallSpec): Promise<ChunkZoneDetectionR
             },
           ],
         }),
+        signal: AbortSignal.timeout(120_000),
       });
 
       if (!response.ok) {

@@ -293,6 +293,7 @@ export async function llmAdjudicationN3(
           system:      buildSystemPrompt(),
           messages:    [{ role: 'user', content: buildUserPrompt(pairs) }],
         }),
+        signal: AbortSignal.timeout(120_000),
       });
 
       if (!response.ok) {

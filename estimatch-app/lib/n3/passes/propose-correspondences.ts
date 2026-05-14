@@ -146,6 +146,7 @@ export async function proposeCorrespondencesN3(
           system: prompts.system,
           messages: [{ role: 'user', content: prompts.user }],
         }),
+        signal: AbortSignal.timeout(120_000),
       });
 
       if (!response.ok) {
