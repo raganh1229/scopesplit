@@ -143,27 +143,37 @@ export const processComparisonV3 = inngest.createFunction(
       });
 
       // ── Step 3: Phase 5 — Zone Review Gate ───────────────────────────
-      // TODO(Phase 5): Replace this stub with step.waitForEvent():
-      //   await step.waitForEvent('zone-review-complete', {
-      //     event: 'comparison/n3-zone-review.completed',
-      //     timeout: '24h',
-      //     match: 'data.comparisonId',
-      //   });
-      // Until the N3 Zone Review UI is built, auto-proceed.
-      // In dev, set N3_SKIP_ZONE_VERIFICATION=true to document intent.
-      await step.run('p5-zone-review-gate', async () => {
-        const skipVerification =
-          process.env.N3_SKIP_ZONE_VERIFICATION === 'true';
-        logger.info('[n3] p5-zone-review-gate: auto-proceeding (UI not yet built)', {
-          comparisonId,
-          skipVerification,
+      // Flips status to AWAITING_ZONE_REVIEW so the UI renders the zone
+      // detection review card. Waits for the user to confirm (or the
+      // pipeline to be skipped via N3_SKIP_ZONE_REVIEW=true).
+      const skipZoneReview = process.env.N3_SKIP_ZONE_REVIEW === 'true';
+      if (!skipZoneReview) {
+        await step.run('p5-zone-review-flip', async () => {
+          await prisma.comparison.update({
+            where: { id: comparisonId },
+            data: { status: 'AWAITING_ZONE_REVIEW' },
+          });
+          logger.info('[n3] p5: flipped to AWAITING_ZONE_REVIEW', { comparisonId });
+          return { step: 'p5-zone-review-flip', status: 'waiting' };
         });
-        return {
-          step: 'p5-zone-review-gate',
-          status: 'auto-proceed' as const,
-          reason: 'phase-5-ui-not-built',
-        };
-      });
+
+        await step.waitForEvent('p5-zone-review-gate', {
+          event: 'comparison/n3-zone-review.completed',
+          timeout: '24h',
+          match: 'data.comparisonId',
+        });
+
+        await step.run('p5-zone-review-resume', async () => {
+          await prisma.comparison.update({
+            where: { id: comparisonId },
+            data: { status: 'PROCESSING' },
+          });
+          logger.info('[n3] p5: zone review confirmed, resuming', { comparisonId });
+          return { step: 'p5-zone-review-resume' };
+        });
+      } else {
+        logger.info('[n3] p5-zone-review-gate: skipped (N3_SKIP_ZONE_REVIEW=true)', { comparisonId });
+      }
 
       // ── Step 4: Phase 6 — Propose Zone Correspondences ────────────────
       // Reads n3_zones rows, calls Sonnet to propose which contractor zones
@@ -177,17 +187,36 @@ export const processComparisonV3 = inngest.createFunction(
       });
 
       // ── Step 5: Phase 7 — Correspondence Review Gate ─────────────────
-      // TODO(Phase 7): Replace with step.waitForEvent() when UI is built.
-      await step.run('p7-correspondence-gate', async () => {
-        logger.info('[n3] p7-correspondence-gate: auto-proceeding (UI not yet built)', {
-          comparisonId,
+      // Flips status to AWAITING_MATCH_REVIEW so the UI renders the zone
+      // correspondence review card. Waits for the user to confirm.
+      // Skip via N3_SKIP_ZONE_REVIEW=true (same flag as zone review).
+      if (!skipZoneReview) {
+        await step.run('p7-correspondence-flip', async () => {
+          await prisma.comparison.update({
+            where: { id: comparisonId },
+            data: { status: 'AWAITING_MATCH_REVIEW' },
+          });
+          logger.info('[n3] p7: flipped to AWAITING_MATCH_REVIEW', { comparisonId });
+          return { step: 'p7-correspondence-flip', status: 'waiting' };
         });
-        return {
-          step: 'p7-correspondence-gate',
-          status: 'auto-proceed' as const,
-          reason: 'phase-7-ui-not-built',
-        };
-      });
+
+        await step.waitForEvent('p7-correspondence-gate', {
+          event: 'comparison/n3-correspondence-review.completed',
+          timeout: '24h',
+          match: 'data.comparisonId',
+        });
+
+        await step.run('p7-correspondence-resume', async () => {
+          await prisma.comparison.update({
+            where: { id: comparisonId },
+            data: { status: 'PROCESSING' },
+          });
+          logger.info('[n3] p7: correspondence review confirmed, resuming', { comparisonId });
+          return { step: 'p7-correspondence-resume' };
+        });
+      } else {
+        logger.info('[n3] p7-correspondence-gate: skipped (N3_SKIP_ZONE_REVIEW=true)', { comparisonId });
+      }
 
       // ── Step 6: Phase 8 — Extract Line Items ─────────────────────────
       // Slices each zone's PDF pages, calls Sonnet vision to extract numbered
@@ -198,6 +227,55 @@ export const processComparisonV3 = inngest.createFunction(
         logger.info('[n3] p8-extract-line-items complete', { comparisonId, ...result });
         return { step: 'p8-extract-line-items', ...result };
       });
+
+      // ── Step 6.5: Phase 8.5 — Line Item Review Gate ──────────────────
+      // Flips status to AWAITING_LINE_ITEM_REVIEW so the UI renders the
+      // per-zone item-count review card. Waits for the user to confirm (or
+      // trigger a re-extract). On confirm the UI calls
+      // POST /api/comparisons/[id]/line-item-review/confirm which fires
+      // 'comparison/n3-line-item-review.completed'. On re-extract it fires
+      // 'comparison/n3-line-item-reextract.requested' which this step also
+      // handles by looping back to p8-extract-line-items before continuing.
+      //
+      // Skip in automated runs by setting N3_SKIP_LINE_ITEM_REVIEW=true.
+      const skipLineItemReview = process.env.N3_SKIP_LINE_ITEM_REVIEW === 'true';
+      if (!skipLineItemReview) {
+        await step.run('p8-5-line-item-review-flip', async () => {
+          await prisma.comparison.update({
+            where: { id: comparisonId },
+            data: { status: 'AWAITING_LINE_ITEM_REVIEW' },
+          });
+          logger.info('[n3] p8.5: flipped to AWAITING_LINE_ITEM_REVIEW', { comparisonId });
+          return { step: 'p8-5-line-item-review-flip', status: 'waiting' };
+        });
+
+        const reviewEvent = await step.waitForEvent('p8-5-line-item-review-gate', {
+          event: 'comparison/n3-line-item-review.completed',
+          timeout: '24h',
+          match: 'data.comparisonId',
+        });
+
+        if (reviewEvent?.data?.action === 'reextract') {
+          // User flagged missing items — re-run Phase 8 before continuing.
+          await step.run('p8-reextract-line-items', async () => {
+            await prisma.comparison.update({
+              where: { id: comparisonId },
+              data: { status: 'PROCESSING' },
+            });
+            const result = await extractLineItemsN3(comparisonId, logger, reviewEvent.data.reextractSource);
+            logger.info('[n3] p8-reextract-line-items complete', { comparisonId, ...result });
+            return { step: 'p8-reextract-line-items', ...result };
+          });
+        } else {
+          await step.run('p8-5-line-item-review-resume', async () => {
+            await prisma.comparison.update({
+              where: { id: comparisonId },
+              data: { status: 'PROCESSING' },
+            });
+            return { step: 'p8-5-line-item-review-resume', status: 'confirmed' };
+          });
+        }
+      }
 
       // ── Step 7: Phase 9 — Normalize Line Items ────────────────────────
       // Pure deterministic normalization — no LLM. Fills normalizedQuantity,
@@ -308,7 +386,7 @@ export const processComparisonV3 = inngest.createFunction(
 
       // ── Step 16: Phase 18 — Persist Decisions ────────────────────────────
       const finalResult = await step.run('p18-persist-decisions', async () => {
-        return persistDecisionsN3(comparisonId, logger);
+        return persistDecisionsN3(comparisonId, logger, trigger ?? 'unknown');
       });
       logger.info('[n3] p18-persist-decisions complete', {
         comparisonId,
@@ -319,6 +397,27 @@ export const processComparisonV3 = inngest.createFunction(
         addedCount:     finalResult.addedCount,
         groupedCount:   finalResult.groupedCount,
         totalGap:       finalResult.totalGap,
+      });
+
+      // ── Step 17: Dump metrics snapshot to disk (dev analysis) ────────────
+      await step.run('dump-metrics-snapshot', async () => {
+        try {
+          const { computePipelineMetrics } = await import('@/lib/n3/metrics/compute-metrics');
+          const fs = await import('fs');
+          const path = await import('path');
+          const metrics = await computePipelineMetrics(comparisonId);
+          if (metrics) {
+            const dir = path.resolve(process.cwd(), 'run-results');
+            fs.mkdirSync(dir, { recursive: true });
+            const filename = `${new Date().toISOString().replace(/[:.]/g, '-')}_${comparisonId.slice(0, 8)}.json`;
+            fs.writeFileSync(path.join(dir, filename), JSON.stringify(metrics, null, 2));
+            fs.writeFileSync(path.join(dir, 'latest.json'), JSON.stringify(metrics, null, 2));
+            logger.info('[n3] metrics snapshot written', { file: filename });
+          }
+        } catch (err) {
+          logger.warn('[n3] metrics snapshot failed (non-fatal)', { err: String(err) });
+        }
+        return { step: 'dump-metrics-snapshot' };
       });
 
       logger.info('[n3] process-comparison-v3 completed (all steps stubbed)', {

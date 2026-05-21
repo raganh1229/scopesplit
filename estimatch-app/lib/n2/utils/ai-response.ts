@@ -49,9 +49,20 @@ export function cleanJsonString(raw: string): string {
     throw new AIResponseError('No JSON object found in AI response', true);
   }
 
-  // Prefer { over [ if both present; if only one exists, use it
+  // Prefer { over [ always (all our prompts return objects).
+  // Only use [ as a fallback when no { exists AND the character immediately
+  // following [ (ignoring whitespace) is a valid JSON array element opener:
+  // {  "  digit  [  ]  (i.e. NOT a letter like "[ SETTLEMENT...").
+  const bracketIsValidJson =
+    firstBracket !== -1 &&
+    /^\s*[{\["'\d\[\]]/.test(s.slice(firstBracket + 1));
   const useObject =
-    firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket);
+    firstBrace !== -1 && (firstBracket === -1 || !bracketIsValidJson || firstBrace < firstBracket);
+
+  if (!useObject && !bracketIsValidJson) {
+    throw new AIResponseError('No JSON object found in AI response', true);
+  }
+
   const startChar = useObject ? '{' : '[';
   const endChar = useObject ? '}' : ']';
 

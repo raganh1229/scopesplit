@@ -58,6 +58,15 @@ export default function MatchReview({
   const [e1Slots, setE1Slots] = useState<(string | null)[]>(initE1);
   const [e2Slots, setE2Slots] = useState<(string | null)[]>(initE2);
   const [confirming, setConfirming] = useState(false);
+
+  const isDirty =
+    e1Slots.some((v, i) => v !== initE1[i]) ||
+    e2Slots.some((v, i) => v !== initE2[i]);
+
+  function handleReset() {
+    setE1Slots([...initE1]);
+    setE2Slots([...initE2]);
+  }
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const [goingBack, setGoingBack] = useState(false);
 
@@ -160,7 +169,7 @@ export default function MatchReview({
   return (
     <div className={styles.shell}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Confirm Zone Pairings</h1>
+        <h1 className={styles.title}>Step 2 of 4 — Confirm Zone Pairings</h1>
         <p className={styles.subtitle}>
           The AI has matched zones from your estimate to the adjuster&apos;s estimate.
           Review each pairing — zones highlighted in green are high-confidence matches.
@@ -232,7 +241,7 @@ export default function MatchReview({
                           : styles.confLow
                       }`}
                     >
-                      {confidence}%
+                      {confidence.toFixed(2)}%
                     </span>
                   )}
                 </div>
@@ -276,6 +285,15 @@ export default function MatchReview({
           {onExit && (
             <button className={styles.exitBtn} onClick={onExit} disabled={goingBack || confirming}>
               Exit
+            </button>
+          )}
+          {isDirty && (
+            <button
+              className={styles.backBtn}
+              onClick={handleReset}
+              disabled={goingBack || confirming}
+            >
+              Reset to default
             </button>
           )}
           {onBack && (

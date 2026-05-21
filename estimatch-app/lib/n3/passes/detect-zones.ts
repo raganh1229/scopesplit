@@ -238,9 +238,11 @@ async function processOneChunk(spec: ChunkCallSpec): Promise<ChunkZoneDetectionR
       });
 
       if (!response.ok) {
+        let errBody = '';
+        try { errBody = await response.text(); } catch { /* ignore */ }
         throw new AIResponseError(
-          `[n3/detect-zones] Anthropic ${response.status} for ${context}: ${response.statusText}`,
-          response.status >= 500 || response.status === 429,
+          `[n3/detect-zones] Anthropic ${response.status} for ${context}: ${response.statusText} — ${errBody.slice(0, 500)}`,
+          response.status >= 500 || response.status === 429 || response.status === 400,
           context,
         );
       }

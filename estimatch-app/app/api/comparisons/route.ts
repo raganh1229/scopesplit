@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { supabaseAdmin } from '@/lib/supabase';
 import { inngest } from '@/lib/inngest/client';
 import { isN2Eligible } from '@/lib/n2/n2-routing';
+import { isN3Eligible } from '@/lib/n3/n3-routing';
 import { PLAN_COMPARISON_LIMITS } from '@/lib/stripe';
 
 // Vercel serverless runtime cap. This POST handler uploads files and triggers
@@ -357,9 +358,18 @@ export async function POST(request: Request) {
       });
     });
 
-    // Route to N2 if enabled, otherwise fall back to N1.
-    // N2_ENABLED=true in .env.local activates the zone-first pipeline.
-    if (await isN2Eligible(comparison.id)) {
+    // Route to N3 first, then N2, then N1 (fallback).
+    // N3_ENABLED=true in .env.local activates the global-candidate pipeline.
+    // N2_ENABLED=true activates the zone-first pipeline.
+    if (await isN3Eligible(comparison.id)) {
+      await inngest.send({
+        name: 'comparison/process-v3.requested',
+        data: {
+          comparisonId: comparison.id,
+          trigger: 'create-route',
+        },
+      });
+    } else if (await isN2Eligible(comparison.id)) {
       await inngest.send({
         name: 'comparison/process-v2.requested',
         data: {

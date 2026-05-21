@@ -157,15 +157,15 @@ function Phase4Section({ metrics }: { metrics: N3DashboardMetrics }) {
       </div>
       <details>
         <summary>Zone listing ({p.zones.length})</summary>
-        <table>
-          <thead><tr><th>Side</th><th>Name</th><th className="num">Pages</th><th className="num">~Items</th></tr></thead>
+        <table className={styles.table}>
+          <thead><tr><th>Side</th><th>Name</th><th className={styles.num}>Pages</th><th className={styles.num}>~Items</th></tr></thead>
           <tbody>
             {p.zones.map((z, i) => (
               <tr key={i}>
                 <td>{z.side}</td>
                 <td>{z.name}</td>
-                <td className="num">{z.startPage}–{z.endPage}</td>
-                <td className="num">{z.approxItems}</td>
+                <td className={styles.num}>{z.startPage}–{z.endPage}</td>
+                <td className={styles.num}>{z.approxItems}</td>
               </tr>
             ))}
           </tbody>
@@ -197,13 +197,13 @@ function Phase6Section({ metrics }: { metrics: N3DashboardMetrics }) {
       </div>
       <details>
         <summary>Correspondence list ({p.correspondences.length})</summary>
-        <table>
-          <thead><tr><th>Type</th><th className="num">Conf</th><th>Yours</th><th>Adj</th></tr></thead>
+        <table className={styles.table}>
+          <thead><tr><th>Type</th><th className={styles.num}>Conf</th><th>Yours</th><th>Adj</th></tr></thead>
           <tbody>
             {p.correspondences.map((c, i) => (
               <tr key={i}>
                 <td><span className={`${styles.tag} ${styles[c.type]}`}>{c.type}</span></td>
-                <td className="num">{fmt(c.confidence, 2)}</td>
+                <td className={styles.num}>{fmt(c.confidence, 2)}</td>
                 <td>{c.yoursZones.join(', ')}</td>
                 <td>{c.adjZones.join(', ')}</td>
               </tr>
@@ -382,18 +382,18 @@ function Phase13Section({ metrics }: { metrics: N3DashboardMetrics }) {
 
 function FeatureTable({ features }: { features: FeatureStats[] }) {
   return (
-    <table className={styles.featureTable}>
+    <table className={`${styles.table} ${styles.featureTable}`}>
       <thead>
         <tr>
           <th>Feature</th>
-          <th className="num">Weight</th>
-          <th className="num">Mean (all)</th>
-          <th className="num">Mean (high)</th>
-          <th className="num">Mean (rej)</th>
-          <th className="num">Discrim</th>
-          <th className="num">Std</th>
-          <th className="num">% zero</th>
-          <th className="num">Contrib</th>
+          <th className={styles.num}>Weight</th>
+          <th className={styles.num}>Mean (all)</th>
+          <th className={styles.num}>Mean (high)</th>
+          <th className={styles.num}>Mean (rej)</th>
+          <th className={styles.num}>Discrim</th>
+          <th className={styles.num}>Std</th>
+          <th className={styles.num}>% zero</th>
+          <th className={styles.num}>Contrib</th>
         </tr>
       </thead>
       <tbody>
@@ -404,14 +404,14 @@ function FeatureTable({ features }: { features: FeatureStats[] }) {
           return (
             <tr key={f.name} className={cls}>
               <td>{f.name}</td>
-              <td className="num">{fmt(f.weight, 2)}</td>
-              <td className="num">{fmt(f.meanAll, 3)}</td>
-              <td className="num">{fmt(f.meanHighConf, 3)}</td>
-              <td className="num">{fmt(f.meanRejected, 3)}</td>
-              <td className="num"><strong>{fmt(f.discriminativePower, 3)}</strong></td>
-              <td className="num">{fmt(f.std, 3)}</td>
-              <td className="num">{fmtPct(f.pctZero)}</td>
-              <td className="num">{fmt(f.weightedContribAll, 3)}</td>
+              <td className={styles.num}>{fmt(f.weight, 2)}</td>
+              <td className={styles.num}>{fmt(f.meanAll, 3)}</td>
+              <td className={styles.num}>{fmt(f.meanHighConf, 3)}</td>
+              <td className={styles.num}>{fmt(f.meanRejected, 3)}</td>
+              <td className={styles.num}><strong>{fmt(f.discriminativePower, 3)}</strong></td>
+              <td className={styles.num}>{fmt(f.std, 3)}</td>
+              <td className={styles.num}>{fmtPct(f.pctZero)}</td>
+              <td className={styles.num}>{fmt(f.weightedContribAll, 3)}</td>
             </tr>
           );
         })}
@@ -438,11 +438,11 @@ function Phase14Section({ metrics }: { metrics: N3DashboardMetrics }) {
         <KV label="singletons (yours)"   value={p.singletonsYours} />
         <KV label="singletons (adj)"     value={p.singletonsAdj} />
       </div>
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
-            <th>#</th><th>Size</th><th className="num">Yours</th><th className="num">Adj</th>
-            <th className="num">Edges</th><th className="num">Density</th><th>Ambiguous</th>
+            <th>#</th><th>Size</th><th className={styles.num}>Yours</th><th className={styles.num}>Adj</th>
+            <th className={styles.num}>Edges</th><th className={styles.num}>Density</th><th>Ambiguous</th>
           </tr>
         </thead>
         <tbody>
@@ -450,10 +450,10 @@ function Phase14Section({ metrics }: { metrics: N3DashboardMetrics }) {
             <tr key={c.idx}>
               <td>{c.idx}</td>
               <td>{c.size}</td>
-              <td className="num">{c.yoursCount}</td>
-              <td className="num">{c.adjCount}</td>
-              <td className="num">{c.edgeCount}</td>
-              <td className="num">{fmt(c.edgeDensity, 3)}</td>
+              <td className={styles.num}>{c.yoursCount}</td>
+              <td className={styles.num}>{c.adjCount}</td>
+              <td className={styles.num}>{c.edgeCount}</td>
+              <td className={styles.num}>{fmt(c.edgeDensity, 3)}</td>
               <td>{c.isAmbiguous ? 'yes' : 'no'}</td>
             </tr>
           ))}
@@ -554,13 +554,13 @@ function Phase17Section({ metrics }: { metrics: N3DashboardMetrics }) {
           </div>
 
           <h4 style={{ margin: '12px 0 4px' }}>Reasoning samples</h4>
-          <table>
-            <thead><tr><th>Decision</th><th className="num">Score</th><th>Yours</th><th>Adj</th><th>Reasoning</th></tr></thead>
+          <table className={styles.table}>
+            <thead><tr><th>Decision</th><th className={styles.num}>Score</th><th>Yours</th><th>Adj</th><th>Reasoning</th></tr></thead>
             <tbody>
               {p.reasoningSamples.map(s => (
                 <tr key={s.pairIndex}>
                   <td><span className={`${styles.tag} ${s.decision === 'match' ? styles.match : styles.unmatched}`}>{s.decision}</span></td>
-                  <td className="num">{fmt(s.finalScore, 3)}</td>
+                  <td className={styles.num}>{fmt(s.finalScore, 3)}</td>
                   <td>{s.yoursDesc}</td>
                   <td>{s.adjDesc}</td>
                   <td style={{ fontSize: 11, color: '#444' }}>{s.reasoning}</td>
@@ -599,11 +599,11 @@ function Phase18Section({ metrics }: { metrics: N3DashboardMetrics }) {
         <KV label="matched $ %"           value={fmtPct(p.matchedDollarPct)} />
       </div>
       <h4 style={{ margin: '12px 0 4px' }}>Decision provenance</h4>
-      <table>
-        <thead><tr><th>decided_by</th><th className="num">count</th></tr></thead>
+      <table className={styles.table}>
+        <thead><tr><th>decided_by</th><th className={styles.num}>count</th></tr></thead>
         <tbody>
           {Object.entries(p.byProvenance).map(([k, v]) => (
-            <tr key={k}><td>{k}</td><td className="num">{v}</td></tr>
+            <tr key={k}><td>{k}</td><td className={styles.num}>{v}</td></tr>
           ))}
         </tbody>
       </table>
@@ -632,17 +632,17 @@ function DecisionsSection({ metrics }: { metrics: N3DashboardMetrics }) {
           <option value="grouped">grouped</option>
         </select>
       </div>
-      <table className={styles.decisionTable}>
+      <table className={`${styles.table} ${styles.decisionTable}`}>
         <thead>
           <tr>
             <th>Type</th>
             <th>Decided by</th>
-            <th className="num">Score</th>
+            <th className={styles.num}>Score</th>
             <th>Yours</th>
             <th>Adj</th>
-            <th className="num">Yours $</th>
-            <th className="num">Adj $</th>
-            <th className="num">Diff</th>
+            <th className={styles.num}>Yours $</th>
+            <th className={styles.num}>Adj $</th>
+            <th className={styles.num}>Diff</th>
             <th>Reasoning</th>
           </tr>
         </thead>
@@ -651,12 +651,12 @@ function DecisionsSection({ metrics }: { metrics: N3DashboardMetrics }) {
             <tr key={d.id}>
               <td><span className={`${styles.tag} ${styles[d.decisionType]}`}>{d.decisionType}</span></td>
               <td>{d.decidedBy}</td>
-              <td className="num">{fmt(d.finalScore, 3)}</td>
+              <td className={styles.num}>{fmt(d.finalScore, 3)}</td>
               <td title={d.yoursDesc ?? ''}>{d.yoursDesc?.slice(0, 60)}</td>
               <td title={d.adjDesc ?? ''}>{d.adjDesc?.slice(0, 60)}</td>
-              <td className="num">{d.yoursTotal != null ? fmtMoney(d.yoursTotal) : '—'}</td>
-              <td className="num">{d.adjTotal   != null ? fmtMoney(d.adjTotal)   : '—'}</td>
-              <td className="num">{d.diff       != null ? fmtMoney(d.diff)       : '—'}</td>
+              <td className={styles.num}>{d.yoursTotal != null ? fmtMoney(d.yoursTotal) : '—'}</td>
+              <td className={styles.num}>{d.adjTotal   != null ? fmtMoney(d.adjTotal)   : '—'}</td>
+              <td className={styles.num}>{d.diff       != null ? fmtMoney(d.diff)       : '—'}</td>
               <td title={d.llmReasoning ?? ''} style={{ fontSize: 11, color: '#666' }}>
                 {d.llmReasoning?.slice(0, 80)}
               </td>

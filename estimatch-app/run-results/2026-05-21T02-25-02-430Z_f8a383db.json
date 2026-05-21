@@ -1,0 +1,2895 @@
+{
+  "comparisonId": "f8a383db-42da-4b80-92b6-cda60659bbfe",
+  "generatedAt": "2026-05-21T02:25:02.427Z",
+  "health": [
+    {
+      "phase": "p4",
+      "label": "Zones",
+      "status": "green",
+      "headline": "10 yours · 10 adj",
+      "flags": []
+    },
+    {
+      "phase": "p6",
+      "label": "Corresps",
+      "status": "green",
+      "headline": "10 corresps · 0 unmatched",
+      "flags": []
+    },
+    {
+      "phase": "p8",
+      "label": "Extract",
+      "status": "green",
+      "headline": "175 + 173 = 348 items",
+      "flags": []
+    },
+    {
+      "phase": "p9",
+      "label": "Normalize",
+      "status": "green",
+      "headline": "100% qty · 80% trade",
+      "flags": []
+    },
+    {
+      "phase": "p11",
+      "label": "Embed",
+      "status": "red",
+      "headline": "0/348 embedded",
+      "flags": [
+        "348 item(s) missing embeddings"
+      ]
+    },
+    {
+      "phase": "p12",
+      "label": "Candidates",
+      "status": "green",
+      "headline": "8243 edges",
+      "flags": []
+    },
+    {
+      "phase": "p13",
+      "label": "Score",
+      "status": "yellow",
+      "headline": "136 hi · 305 pos · 3270 weak · 4532 rej",
+      "flags": [
+        "895 edges within 0.02 of REJECT — fragile",
+        "dead/weak features: specialFlagCompatibility, materialObjectSimilarity, itemCodeSimilarity"
+      ]
+    },
+    {
+      "phase": "p14",
+      "label": "Components",
+      "status": "yellow",
+      "headline": "1 components · largest=348",
+      "flags": [
+        "largest component 348 > MEDIUM_MAX (250)"
+      ]
+    },
+    {
+      "phase": "p15",
+      "label": "Assign",
+      "status": "green",
+      "headline": "165 matched · 0 possible · 10 unmatched",
+      "flags": []
+    },
+    {
+      "phase": "p16",
+      "label": "Group",
+      "status": "green",
+      "headline": "0 groups",
+      "flags": []
+    },
+    {
+      "phase": "p17",
+      "label": "LLM",
+      "status": "green",
+      "headline": "1 acc · 8 rej · $0.0106",
+      "flags": []
+    },
+    {
+      "phase": "p18",
+      "label": "Persist",
+      "status": "green",
+      "headline": "183 items · gap $-5371.12",
+      "flags": []
+    }
+  ],
+  "p4": {
+    "yoursZoneCount": 10,
+    "adjZoneCount": 10,
+    "yoursFormat": null,
+    "adjFormat": null,
+    "yoursPagesCovered": 13,
+    "adjPagesCovered": 7,
+    "emptyZones": 0,
+    "oversizedZones": 0,
+    "flatZones": 0,
+    "zones": [
+      {
+        "side": "adjuster",
+        "name": "Project General Conditions",
+        "startPage": 3,
+        "endPage": 3,
+        "approxItems": 11
+      },
+      {
+        "side": "adjuster",
+        "name": "Roofing and Exterior Systems",
+        "startPage": 3,
+        "endPage": 4,
+        "approxItems": 25
+      },
+      {
+        "side": "adjuster",
+        "name": "Attic and Roof Structure",
+        "startPage": 4,
+        "endPage": 5,
+        "approxItems": 21
+      },
+      {
+        "side": "adjuster",
+        "name": "Main Living Area",
+        "startPage": 5,
+        "endPage": 6,
+        "approxItems": 24
+      },
+      {
+        "side": "adjuster",
+        "name": "Kitchen & Breakfast Nook",
+        "startPage": 6,
+        "endPage": 7,
+        "approxItems": 20
+      },
+      {
+        "side": "adjuster",
+        "name": "Primary Bedroom Suite",
+        "startPage": 7,
+        "endPage": 7,
+        "approxItems": 20
+      },
+      {
+        "side": "adjuster",
+        "name": "Secondary Bedroom",
+        "startPage": 7,
+        "endPage": 8,
+        "approxItems": 16
+      },
+      {
+        "side": "adjuster",
+        "name": "Primary Bathroom",
+        "startPage": 8,
+        "endPage": 8,
+        "approxItems": 13
+      },
+      {
+        "side": "adjuster",
+        "name": "Attached Garage",
+        "startPage": 8,
+        "endPage": 9,
+        "approxItems": 12
+      },
+      {
+        "side": "adjuster",
+        "name": "Entry Foyer and Hallway",
+        "startPage": 9,
+        "endPage": 9,
+        "approxItems": 11
+      },
+      {
+        "side": "yours",
+        "name": "GENERAL ITEMS",
+        "startPage": 2,
+        "endPage": 3,
+        "approxItems": 12
+      },
+      {
+        "side": "yours",
+        "name": "ROOF & EXTERIOR ENVELOPE",
+        "startPage": 3,
+        "endPage": 4,
+        "approxItems": 26
+      },
+      {
+        "side": "yours",
+        "name": "ATTIC SPACE",
+        "startPage": 4,
+        "endPage": 5,
+        "approxItems": 22
+      },
+      {
+        "side": "yours",
+        "name": "GREAT ROOM",
+        "startPage": 5,
+        "endPage": 7,
+        "approxItems": 24
+      },
+      {
+        "side": "yours",
+        "name": "KITCHEN",
+        "startPage": 7,
+        "endPage": 9,
+        "approxItems": 20
+      },
+      {
+        "side": "yours",
+        "name": "MASTER BEDROOM",
+        "startPage": 9,
+        "endPage": 10,
+        "approxItems": 20
+      },
+      {
+        "side": "yours",
+        "name": "BEDROOM 2",
+        "startPage": 10,
+        "endPage": 11,
+        "approxItems": 24
+      },
+      {
+        "side": "yours",
+        "name": "MASTER BATH",
+        "startPage": 11,
+        "endPage": 12,
+        "approxItems": 12
+      },
+      {
+        "side": "yours",
+        "name": "GARAGE",
+        "startPage": 12,
+        "endPage": 13,
+        "approxItems": 12
+      },
+      {
+        "side": "yours",
+        "name": "HALLWAY & ENTRY",
+        "startPage": 13,
+        "endPage": 14,
+        "approxItems": 11
+      }
+    ]
+  },
+  "p6": {
+    "correspondenceCount": 10,
+    "unmatchedYoursZones": 0,
+    "unmatchedAdjZones": 0,
+    "avgConfidence": 0.9409999999999998,
+    "byType": {
+      "one_to_one": 10,
+      "one_to_many": 0,
+      "many_to_one": 0
+    },
+    "correspondences": [
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "GENERAL ITEMS"
+        ],
+        "adjZones": [
+          "Project General Conditions"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "ROOF & EXTERIOR ENVELOPE"
+        ],
+        "adjZones": [
+          "Roofing and Exterior Systems"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "ATTIC SPACE"
+        ],
+        "adjZones": [
+          "Attic and Roof Structure"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.92,
+        "yoursZones": [
+          "GREAT ROOM"
+        ],
+        "adjZones": [
+          "Main Living Area"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "KITCHEN"
+        ],
+        "adjZones": [
+          "Kitchen & Breakfast Nook"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.93,
+        "yoursZones": [
+          "MASTER BEDROOM"
+        ],
+        "adjZones": [
+          "Primary Bedroom Suite"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.93,
+        "yoursZones": [
+          "BEDROOM 2"
+        ],
+        "adjZones": [
+          "Secondary Bedroom"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "MASTER BATH"
+        ],
+        "adjZones": [
+          "Primary Bathroom"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "GARAGE"
+        ],
+        "adjZones": [
+          "Attached Garage"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.93,
+        "yoursZones": [
+          "HALLWAY & ENTRY"
+        ],
+        "adjZones": [
+          "Entry Foyer and Hallway"
+        ]
+      }
+    ]
+  },
+  "p8": {
+    "yoursItemCount": 175,
+    "adjItemCount": 173,
+    "totalItems": 348,
+    "itemsPerZone": {
+      "min": 11,
+      "median": 18,
+      "max": 26
+    },
+    "avgExtractionConfidence": 1,
+    "itemsMissingTotal": 0,
+    "itemsMissingQuantity": 0,
+    "itemsLowConfidence": 0,
+    "yoursTotalAmount": 159784.66999999995,
+    "adjTotalAmount": 154413.55000000002,
+    "estimateGap": -5371.119999999937
+  },
+  "p9": {
+    "totalRows": 348,
+    "pctWithQuantity": 1,
+    "pctWithUnit": 1,
+    "pctWithTrade": 0.8017241379310345,
+    "pctWithAction": 0.8505747126436781,
+    "pctWithSpecialFlags": 0.03735632183908046,
+    "distinctTrades": 14,
+    "distinctActions": 7,
+    "topTrades": [
+      {
+        "value": "drywall",
+        "count": 62
+      },
+      {
+        "value": "flooring",
+        "count": 46
+      },
+      {
+        "value": "painting",
+        "count": 43
+      },
+      {
+        "value": "roofing",
+        "count": 33
+      },
+      {
+        "value": "doors_windows",
+        "count": 21
+      }
+    ],
+    "topActions": [
+      {
+        "value": "remove_replace",
+        "count": 108
+      },
+      {
+        "value": "replace",
+        "count": 88
+      },
+      {
+        "value": "remove",
+        "count": 47
+      },
+      {
+        "value": "paint",
+        "count": 34
+      },
+      {
+        "value": "apply",
+        "count": 7
+      }
+    ],
+    "topFlags": [
+      {
+        "value": "debris_removal",
+        "count": 8
+      },
+      {
+        "value": "permit",
+        "count": 4
+      },
+      {
+        "value": "emergency_service",
+        "count": 1
+      }
+    ]
+  },
+  "p11": {
+    "totalRows": 348,
+    "embedded": 0,
+    "missing": 348,
+    "pctEmbedded": 0
+  },
+  "p12": {
+    "totalEdges": 8243,
+    "bySource": {
+      "ai_proposed_zone": 3297,
+      "semantic": 3719,
+      "fuzzy_description": 2403,
+      "total_similarity": 1702
+    },
+    "itemsWithZeroCandidates": 0,
+    "yoursCandidatesHistogram": [
+      0,
+      0,
+      0,
+      2,
+      173
+    ],
+    "adjCandidatesHistogram": [
+      0,
+      0,
+      0,
+      4,
+      169
+    ],
+    "avgCandidatesPerYours": 47.10285714285714,
+    "avgCandidatesPerAdj": 47.64739884393064
+  },
+  "p13": {
+    "scoredCount": 8243,
+    "bucketCounts": {
+      "highConfidence": 136,
+      "possibleMatch": 305,
+      "weakCandidate": 3270,
+      "rejected": 4532
+    },
+    "survivalRate": 0.4502001698410773,
+    "scoreHistogram": [
+      941,
+      1859,
+      1732,
+      1937,
+      1052,
+      433,
+      111,
+      82,
+      75,
+      21
+    ],
+    "featureStats": [
+      {
+        "name": "zoneCorrespondenceSimilarity",
+        "weight": 0.09,
+        "meanAll": 0.3759953900278924,
+        "meanHighConf": 0.9390441176470619,
+        "meanRejected": 0.1460458958517206,
+        "std": 0.4605878847104523,
+        "min": 0,
+        "max": 0.95,
+        "pctZero": 0.6000242630110396,
+        "weightedContribAll": 0.03383958510251031,
+        "discriminativePower": 0.7929982217953413
+      },
+      {
+        "name": "unitPriceSimilarity",
+        "weight": 0.06,
+        "meanAll": 0.3479512759752113,
+        "meanHighConf": 0.9895725734683765,
+        "meanRejected": 0.213653261204455,
+        "std": 0.3426078826589537,
+        "min": 0.00022895622895622897,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.02087707655851268,
+        "discriminativePower": 0.7759193122639214
+      },
+      {
+        "name": "quantityUnitSimilarity",
+        "weight": 0.12,
+        "meanAll": 0.3636132210809622,
+        "meanHighConf": 0.992064950980392,
+        "meanRejected": 0.22222926970993628,
+        "std": 0.37527054370299673,
+        "min": 0.00015625,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.04363358652971547,
+        "discriminativePower": 0.7698356812704558
+      },
+      {
+        "name": "tradeActionSimilarity",
+        "weight": 0.14,
+        "meanAll": 0.15819483197864964,
+        "meanHighConf": 0.6367647058823525,
+        "meanRejected": 0.04770520741394534,
+        "std": 0.29543699943583385,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.7591896154312751,
+        "weightedContribAll": 0.022147276477010952,
+        "discriminativePower": 0.5890594984684071
+      },
+      {
+        "name": "descriptionFuzzySimilarity",
+        "weight": 0.23,
+        "meanAll": 0.10746429423488851,
+        "meanHighConf": 0.5672414799253034,
+        "meanRejected": 0.07439698675356132,
+        "std": 0.11981084096258188,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.3275506490355453,
+        "weightedContribAll": 0.024716787674024358,
+        "discriminativePower": 0.49284449317174206
+      },
+      {
+        "name": "descriptionSemanticSimilarity",
+        "weight": 0.19,
+        "meanAll": 0.3863002025668843,
+        "meanHighConf": 0.8076855784380002,
+        "meanRejected": 0.3419544108073933,
+        "std": 0.15023310767057624,
+        "min": 0,
+        "max": 0.963965117931366,
+        "pctZero": 0.00048526022079340043,
+        "weightedContribAll": 0.07339703848770802,
+        "discriminativePower": 0.46573116763060685
+      },
+      {
+        "name": "totalSimilarity",
+        "weight": 0.11,
+        "meanAll": 0.5515356020024399,
+        "meanHighConf": 0.9761781518655406,
+        "meanRejected": 0.5311130326334523,
+        "std": 0.2984244965258102,
+        "min": 0.005154639175257732,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.06066891622026839,
+        "discriminativePower": 0.44506511923208825
+      },
+      {
+        "name": "sequenceSimilarity",
+        "weight": 0.02,
+        "meanAll": 0.6806199199320674,
+        "meanHighConf": 0.8873897058823532,
+        "meanRejected": 0.5842552956751988,
+        "std": 0.256346682292555,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.008613368919082858,
+        "weightedContribAll": 0.013612398398641349,
+        "discriminativePower": 0.30313441020715437
+      },
+      {
+        "name": "specialFlagCompatibility",
+        "weight": 0.02,
+        "meanAll": 0.9746451534635449,
+        "meanHighConf": 1,
+        "meanRejected": 0.964585172109444,
+        "std": 0.11350665360114562,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.0016984107727769015,
+        "weightedContribAll": 0.019492903069270897,
+        "discriminativePower": 0.035414827890556055
+      },
+      {
+        "name": "materialObjectSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      },
+      {
+        "name": "itemCodeSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      }
+    ],
+    "borderline": {
+      "nearReject": 895,
+      "nearPossible": 165,
+      "nearHighConf": 28
+    },
+    "boostStats": {
+      "edgesWithBoost": 8243,
+      "avgBoostMagnitude": 0.07056166444255764,
+      "bucketChangedByBoost": 0
+    }
+  },
+  "p14": {
+    "componentCount": 1,
+    "bySize": {
+      "small": 0,
+      "medium": 0,
+      "large": 1
+    },
+    "largestComponentSize": 348,
+    "singletonsYours": 0,
+    "singletonsAdj": 0,
+    "components": [
+      {
+        "idx": 0,
+        "yoursCount": 175,
+        "adjCount": 173,
+        "edgeCount": 0,
+        "size": "large",
+        "isAmbiguous": true,
+        "edgeDensity": 0
+      }
+    ]
+  },
+  "p15": {
+    "decisionCount": 175,
+    "matchedCount": 165,
+    "possibleCount": 0,
+    "unmatchedYours": 10,
+    "unmatchedAdj": 0,
+    "matchedScores": {
+      "min": 0.4721,
+      "mean": 0.808039393939394,
+      "max": 0.9643
+    },
+    "possibleScores": {
+      "min": 0,
+      "mean": 0,
+      "max": 0
+    },
+    "scoreHistogramMatched": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      4,
+      7,
+      57,
+      75,
+      21
+    ],
+    "scoreHistogramPossible": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "p16": {
+    "groupedCount": 0,
+    "relinquishedAdj": 0
+  },
+  "p17": {
+    "adjudicatedCount": 9,
+    "acceptedCount": 1,
+    "rejectedCount": 8,
+    "estimatedCostUsd": 0.010584,
+    "durationMs": 7998,
+    "confusionMatrix": {
+      "algoHigh_llmAccept": 0,
+      "algoHigh_llmReject": 0,
+      "algoLow_llmAccept": 1,
+      "algoLow_llmReject": 8
+    },
+    "agreementRate": 0.8888888888888888,
+    "reasoningSamples": [
+      {
+        "pairIndex": 0,
+        "finalScore": 0.4721,
+        "decision": "match",
+        "reasoning": "Both items represent supervisory/oversight labor billed hourly in a general conditions zone. Descriptions are near-synonymous; quantity and total differ proportionally but the scope is the same type of work.",
+        "yoursDesc": "Residential supervision - per hour",
+        "adjDesc": "Project oversight - hourly billing rate"
+      },
+      {
+        "pairIndex": 1,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "LED shop light replacement vs. garage floor seal coat are completely different trades and scopes.",
+        "yoursDesc": "R&R Shop light - LED 4 ft",
+        "adjDesc": "R&R Shop light - LED 4 ft"
+      },
+      {
+        "pairIndex": 2,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Exterior shutter replacement vs. exterior power washing are fundamentally different scopes of work.",
+        "yoursDesc": "R&R Exterior shutters - per pair",
+        "adjDesc": "R&R Exterior shutters - per pair"
+      },
+      {
+        "pairIndex": 3,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Under-cabinet LED lighting installation vs. moving and resetting kitchen contents are different trades and scopes.",
+        "yoursDesc": "R&R Under-cabinet LED lighting strip",
+        "adjDesc": "R&R Under-cabinet LED lighting strip"
+      }
+    ]
+  },
+  "p18": {
+    "lineItemCount": 183,
+    "byStatus": {
+      "MATCH": 149,
+      "MODIFIED": 16,
+      "MISSING_FROM_ADJUSTER": 10,
+      "ADDED_BY_ADJUSTER": 8,
+      "GROUPED": 0
+    },
+    "byProvenance": {
+      "auto_high_confidence": 130,
+      "assignment": 35,
+      "llm_adjudication": 9,
+      "post_llm_rescue": 1
+    },
+    "totalGap": -5371.120000000054,
+    "yourEstimateTotal": 159784.67000000004,
+    "adjEstimateTotal": 154413.55,
+    "matchedDollars": 129076.58999999994,
+    "matchedDollarPct": 0.8078158561769405
+  },
+  "decisions": [
+    {
+      "id": "deed6067-93f5-4dea-a116-1124969f18b3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9643,
+      "yoursDesc": "Paint soffit & fascia after replacement",
+      "adjDesc": "Paint replacement soffit and fascia",
+      "yoursTotal": 493.24,
+      "adjTotal": 493.24,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c63a5927-5ee9-4022-9231-d9b13868a5b7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9454,
+      "yoursDesc": "Paint baseboard & casing - semi-gloss",
+      "adjDesc": "Paint baseboard and casing semi-gloss finish",
+      "yoursTotal": 203.5,
+      "adjTotal": 203.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "23d8ade0-8f3d-4d6d-888c-4dd5731935dd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9356,
+      "yoursDesc": "R&R Batt insulation R-13 - knee walls",
+      "adjDesc": "Replace batt insulation R-13 knee walls",
+      "yoursTotal": 354,
+      "adjTotal": 354,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "eb277182-e6c3-42e3-bb4e-fd8eb8b5e08c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9288,
+      "yoursDesc": "R&R Garage door - 16x7 steel insulated",
+      "adjDesc": "Replace 16x7 insulated steel garage door",
+      "yoursTotal": 2183,
+      "adjTotal": 2183,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "00742520-188e-4f41-9a5f-a30c16f9d0cf",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9234,
+      "yoursDesc": "Caulk & paint exterior wood trim",
+      "adjDesc": "Caulk and paint exterior trim surfaces",
+      "yoursTotal": 792,
+      "adjTotal": 792,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1400b1af-cb76-4f52-97ac-faf7b3723afe",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.923,
+      "yoursDesc": "R&R Attic access insulation dam",
+      "adjDesc": "Replace insulation dam at attic access",
+      "yoursTotal": 200.6,
+      "adjTotal": 200.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a4280438-75c9-4408-bc12-5638ed571b0b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9209,
+      "yoursDesc": "R&R Front door threshold & weatherstrip",
+      "adjDesc": "Replace front door threshold and weatherstrip",
+      "yoursTotal": 218.3,
+      "adjTotal": 218.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "94fd4252-b3ef-4a55-994f-06b04340dd8d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9207,
+      "yoursDesc": "R&R Garage entry door - steel",
+      "adjDesc": "Replace steel entry door from garage",
+      "yoursTotal": 808.3,
+      "adjTotal": 808.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e267c991-a43b-4c55-a812-a65141f1a6ff",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9195,
+      "yoursDesc": "R&R Ridge cap - hip & ridge shingles",
+      "adjDesc": "Replace hip and ridge cap shingles",
+      "yoursTotal": 852.55,
+      "adjTotal": 852.55,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ad83cab6-1516-4744-8933-b4142307c4aa",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9159,
+      "yoursDesc": "R&R Garage door opener - belt drive",
+      "adjDesc": "Replace belt drive garage door opener",
+      "yoursTotal": 572.3,
+      "adjTotal": 572.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f11b0f50-994c-484f-a0e3-6e47af89ee9a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9155,
+      "yoursDesc": "R&R Downspouts - 3x4\" rectangular",
+      "adjDesc": "Replace 3x4 rectangular downspouts",
+      "yoursTotal": 497.02,
+      "adjTotal": 497.02,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "aefa347c-c455-4441-894b-76e76e56f10b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9145,
+      "yoursDesc": "Tear out water-stained drywall ceiling",
+      "adjDesc": "Remove water-stained ceiling drywall",
+      "yoursTotal": 514.8,
+      "adjTotal": 514.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5b0989ed-fdd9-48e5-9794-2f040b4acaba",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9142,
+      "yoursDesc": "Tear out hail-damaged ceiling drywall",
+      "adjDesc": "Remove hail-damaged ceiling drywall",
+      "yoursTotal": 1038.18,
+      "adjTotal": 1038.18,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f7dc5d20-c50f-4cba-ba3c-cfbde15b71e1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9134,
+      "yoursDesc": "R&R Flex duct boot connections",
+      "adjDesc": "Replace flex duct boot connections",
+      "yoursTotal": 401.2,
+      "adjTotal": 401.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "146ef333-4b34-4a82-8a23-6534440013aa",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9127,
+      "yoursDesc": "R&R Kitchen faucet - single handle",
+      "adjDesc": "Replace kitchen faucet - single handle",
+      "yoursTotal": 336.3,
+      "adjTotal": 336.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2de44da8-7cdd-49df-940b-8881e27a81d0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9108,
+      "yoursDesc": "Tear out water-damaged ceiling drywall",
+      "adjDesc": "Remove water-damaged ceiling drywall",
+      "yoursTotal": 643.5,
+      "adjTotal": 643.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "efbcd6b0-4a80-4b8b-b9e0-2798b0f218eb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9103,
+      "yoursDesc": "R&R Countertop - post-form laminate",
+      "adjDesc": "Laminate countertop - remove and replace",
+      "yoursTotal": 859.04,
+      "adjTotal": 859.04,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ee48bc71-91c9-4f42-877d-ac4883becfa3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9099,
+      "yoursDesc": "Tear out water-damaged wall drywall",
+      "adjDesc": "Remove water-damaged wall drywall",
+      "yoursTotal": 651.2,
+      "adjTotal": 651.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7d306617-814b-4462-a300-fc8829221a49",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9087,
+      "yoursDesc": "Tear out water-damaged ceiling drywall",
+      "adjDesc": "Remove water-damaged ceiling drywall",
+      "yoursTotal": 343.2,
+      "adjTotal": 343.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4a1a9113-44fc-46f9-9237-cd937c62b5c9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9013,
+      "yoursDesc": "Tear out water-damaged carpet & pad",
+      "adjDesc": "Remove water-damaged carpet and pad",
+      "yoursTotal": 287.1,
+      "adjTotal": 287.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d9ccc90e-2ee8-41f0-b7a4-116e18655eb6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9006,
+      "yoursDesc": "Prime & paint walls - hallway & entry",
+      "adjDesc": "Paint hallway and entry walls - 2 coat",
+      "yoursTotal": 618.51,
+      "adjTotal": 618.51,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "16f7b3fa-0670-46c5-b1f1-64025df12037",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8994,
+      "yoursDesc": "R&R Step flashing - chimney",
+      "adjDesc": "Replace chimney step flashing",
+      "yoursTotal": 410.64,
+      "adjTotal": 410.64,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3c5ea77a-e259-4cfc-b00f-1ec6f890338a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8982,
+      "yoursDesc": "R&R Light fixture - kitchen pendant",
+      "adjDesc": "Replace pendant light fixture kitchen",
+      "yoursTotal": 584.1,
+      "adjTotal": 584.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ef75d88c-1739-454f-b378-855c6062106e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8964,
+      "yoursDesc": "R&R Attic light fixture",
+      "adjDesc": "Replace attic light fixture",
+      "yoursTotal": 200.6,
+      "adjTotal": 200.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1c706609-8aa0-427d-a1cb-e1c229e58ae7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8948,
+      "yoursDesc": "R&R Tile backer board - cement",
+      "adjDesc": "Replace cement tile backer board",
+      "yoursTotal": 205.32,
+      "adjTotal": 205.32,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8365e54f-1e6a-4c5b-af3c-fbb9677437c1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8932,
+      "yoursDesc": "Board-up window opening - per opening",
+      "adjDesc": "Window opening board-up - per unit",
+      "yoursTotal": 550,
+      "adjTotal": 550,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5d0afd4f-898c-4021-9f70-bd7f136fa24b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8926,
+      "yoursDesc": "R&R Blown fiberglass insulation R-38",
+      "adjDesc": "Replace blown fiberglass insulation R-38 value",
+      "yoursTotal": 6985.6,
+      "adjTotal": 6985.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f34ed470-3d1a-4a14-88e6-db39de26d694",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8905,
+      "yoursDesc": "R&R Fascia board - 2x8 primed",
+      "adjDesc": "Replace fascia board 2x8 primed lumber",
+      "yoursTotal": 1518.66,
+      "adjTotal": 1518.66,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5d7103df-a326-425b-a577-6b406c3e6c69",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8888,
+      "yoursDesc": "R&R Vanity 48\" double sink",
+      "adjDesc": "Replace 48 inch double sink vanity",
+      "yoursTotal": 1044.3,
+      "adjTotal": 1044.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "db39dc34-5aac-4898-b1d4-410c0d1f11fb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8879,
+      "yoursDesc": "R&R Insulation R-13 - exterior wall",
+      "adjDesc": "Replace R-13 insulation exterior wall cavity",
+      "yoursTotal": 305.62,
+      "adjTotal": 305.62,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9027622f-bace-4a55-9a2a-3097aeae514f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8877,
+      "yoursDesc": "Paint baseboard & casing",
+      "adjDesc": "Paint baseboard and casing - semi-gloss",
+      "yoursTotal": 150.59,
+      "adjTotal": 150.59,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1422db41-d75c-4a14-a424-2ed5db4d1f9f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8828,
+      "yoursDesc": "R&R Chimney counter flashing & cricket",
+      "adjDesc": "Replace chimney counter flashing cricket assembly",
+      "yoursTotal": 582,
+      "adjTotal": 582,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "57ed045f-b2a0-42a2-a123-16b6edf3f9fc",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8785,
+      "yoursDesc": "R&R Insulation R-13 - exterior wall cavities",
+      "adjDesc": "Replace R-13 insulation exterior wall",
+      "yoursTotal": 392.94,
+      "adjTotal": 392.94,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "937c3e32-15c5-4d02-a835-1d3eb8209109",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8774,
+      "yoursDesc": "R&R Pipe boot flashing - all penetrations",
+      "adjDesc": "Replace pipe boot flashing penetrations",
+      "yoursTotal": 383.5,
+      "adjTotal": 383.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "235ceafe-10da-4f00-861f-965c4f04e598",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8762,
+      "yoursDesc": "Prime & paint ceiling - hallway",
+      "adjDesc": "Paint hallway ceiling - 2 coat",
+      "yoursTotal": 196.35,
+      "adjTotal": 196.35,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bf5a5882-cf69-481a-96f5-248d3c5243ee",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8729,
+      "yoursDesc": "R&R MR drywall ceiling - moisture resistant",
+      "adjDesc": "Replace moisture-resistant ceiling drywall",
+      "yoursTotal": 545.16,
+      "adjTotal": 545.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "259023f1-d8ef-4105-90b9-a762304559d9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8703,
+      "yoursDesc": "R&R 1/2\" drywall ceiling - garage",
+      "adjDesc": "Replace garage ceiling drywall 1/2 inch",
+      "yoursTotal": 1285.02,
+      "adjTotal": 1285.02,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "79925260-a965-49c7-922a-d4d1ae436454",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.87,
+      "yoursDesc": "Antimicrobial treatment - attic framing",
+      "adjDesc": "Antimicrobial application - attic framing",
+      "yoursTotal": 2870.4,
+      "adjTotal": 2870.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3889360b-d4fc-48e0-b853-078c883b8d67",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8687,
+      "yoursDesc": "R&R 1/2\" drywall ceiling - hallway",
+      "adjDesc": "Replace hallway ceiling drywall 1/2 inch",
+      "yoursTotal": 424.8,
+      "adjTotal": 424.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fd9da74c-35a2-4fe9-8522-883875bc3db3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8671,
+      "yoursDesc": "Tear out water-damaged baseboard",
+      "adjDesc": "Remove water-damaged baseboard trim",
+      "yoursTotal": 126.17,
+      "adjTotal": 126.17,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f370e41f-e7d7-4d52-a49b-eca3d52c2213",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8664,
+      "yoursDesc": "Prime & paint ceiling - garage",
+      "adjDesc": "Paint garage ceiling - 2 coat flat",
+      "yoursTotal": 485.45,
+      "adjTotal": 485.45,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7bc77d07-12c6-4e94-8d58-e13cc6698830",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.866,
+      "yoursDesc": "R&R Tile entry floor - ceramic 18x18",
+      "adjDesc": "Replace ceramic entry tile 18x18 inch",
+      "yoursTotal": 814.2,
+      "adjTotal": 814.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b31643ea-608b-4280-a185-f5ca02d96efa",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8653,
+      "yoursDesc": "R&R Toilet - elongated",
+      "adjDesc": "Replace elongated toilet",
+      "yoursTotal": 572.3,
+      "adjTotal": 572.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "def239ff-8fa5-4b35-803d-f51a58d99a5b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8651,
+      "yoursDesc": "R&R Soffit - aluminum vented",
+      "adjDesc": "Replace aluminum vented soffit panels",
+      "yoursTotal": 3811.4,
+      "adjTotal": 3539.7,
+      "diff": -271.7000000000003,
+      "llmReasoning": null
+    },
+    {
+      "id": "3cd7475f-aee6-4a7a-80e6-4f1d04ad1466",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8624,
+      "yoursDesc": "Tear out water-damaged drywall - walls",
+      "adjDesc": "Remove water-damaged wall drywall",
+      "yoursTotal": 569.8,
+      "adjTotal": 569.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "717d4f4c-e231-41d6-8f52-1fdf6d85bd11",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8612,
+      "yoursDesc": "R&R Gutters - 6\" K-style aluminum, full",
+      "adjDesc": "Replace 6 inch K-style aluminum gutters - full perimeter",
+      "yoursTotal": 2206.6,
+      "adjTotal": 2206.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4ba2ced3-90b2-41ca-beee-43e86b6f55d6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8606,
+      "yoursDesc": "R&R Fascia metal wrap",
+      "adjDesc": "Replace fascia metal wrap aluminum",
+      "yoursTotal": 999.46,
+      "adjTotal": 999.46,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "29586107-4502-4732-be39-58c2463197ba",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8599,
+      "yoursDesc": "R&R Cabinet crown detail",
+      "adjDesc": "Replace cabinet crown molding detail",
+      "yoursTotal": 240.72,
+      "adjTotal": 240.72,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "069f92df-8bc4-485b-907c-8102549f1d5f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8585,
+      "yoursDesc": "Prime & paint walls - garage",
+      "adjDesc": "Paint garage walls - 2 coat flat",
+      "yoursTotal": 882.64,
+      "adjTotal": 882.64,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c8718067-30c6-402a-bb5c-511882de24bd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8576,
+      "yoursDesc": "Paint baseboard - hallway",
+      "adjDesc": "Paint hallway baseboard trim - semi-gloss",
+      "yoursTotal": 113.96,
+      "adjTotal": 113.96,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "36f4c778-75d3-4d4d-bdb3-823e42ea7fc3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8571,
+      "yoursDesc": "R&R Carpet tack strip",
+      "adjDesc": "Replace carpet tack strip perimeter",
+      "yoursTotal": 74.25,
+      "adjTotal": 74.25,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3da88d03-4d73-4cb3-9fca-31c2083f1689",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8571,
+      "yoursDesc": "R&R Carpet tack strip",
+      "adjDesc": "Replace carpet tack strip perimeter",
+      "yoursTotal": 93.5,
+      "adjTotal": 93.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f91c052a-74f7-4143-8347-7b69715c82dc",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.857,
+      "yoursDesc": "R&R Gutter splash blocks",
+      "adjDesc": "Replace gutter splash blocks - all downspouts",
+      "yoursTotal": 188.1,
+      "adjTotal": 188.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e9e77745-261d-43c8-b0c7-44997cb0eb88",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8566,
+      "yoursDesc": "R&R Carpet tack strip",
+      "adjDesc": "Replace carpet tack strip - perimeter",
+      "yoursTotal": 123.9,
+      "adjTotal": 123.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1f4085a4-6b66-41d4-ada1-7a8f117328b9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8536,
+      "yoursDesc": "Paint baseboard & casing",
+      "adjDesc": "Paint baseboard and window casing - semi-gloss",
+      "yoursTotal": 268.62,
+      "adjTotal": 268.62,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "69df922c-f615-43e7-bd9d-2577e1de1ae0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8522,
+      "yoursDesc": "R&R Carpet & pad - standard plush",
+      "adjDesc": "Replace carpet and padding - plush standard",
+      "yoursTotal": 2070.9,
+      "adjTotal": 2070.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9cd5b02a-525c-4d55-93f5-9c75318acc0e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8503,
+      "yoursDesc": "R&R Window casing - 3 1/2\"",
+      "adjDesc": "Replace window casing 3.5 inch",
+      "yoursTotal": 123.9,
+      "adjTotal": 123.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a066a713-a6a8-4fd9-84f6-54cd1477b2eb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8502,
+      "yoursDesc": "Tear out damaged radiant barrier",
+      "adjDesc": "Remove damaged radiant barrier film",
+      "yoursTotal": 1584,
+      "adjTotal": 1584,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d306438d-e0e2-4adc-bbb8-ca24d9f92174",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8479,
+      "yoursDesc": "Paint crown molding",
+      "adjDesc": "Paint replacement crown molding - semi-gloss",
+      "yoursTotal": 170.94,
+      "adjTotal": 170.94,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c506c660-9e1a-4a83-87bf-e14ae3e57ce5",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8468,
+      "yoursDesc": "R&R Ceiling light fixture",
+      "adjDesc": "Replace ceiling light fixture",
+      "yoursTotal": 147.5,
+      "adjTotal": 114.5,
+      "diff": -33,
+      "llmReasoning": null
+    },
+    {
+      "id": "8c5d4606-f373-4725-8db8-e3e884cf6f5b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8402,
+      "yoursDesc": "Tear out water-damaged ceiling drywall",
+      "adjDesc": "Remove water-stained ceiling drywall",
+      "yoursTotal": 257.4,
+      "adjTotal": 257.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "22256ced-aadf-47db-bd05-fd6c382d59ca",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8394,
+      "yoursDesc": "R&R Tile floor - ceramic 12x12",
+      "adjDesc": "Replace ceramic tile flooring 12x12 inch",
+      "yoursTotal": 1394.76,
+      "adjTotal": 1394.76,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a57a8cdd-aef6-406c-b9fb-f7bd3f7a6b64",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8372,
+      "yoursDesc": "Tear out water-damaged ceiling drywall",
+      "adjDesc": "Remove water-stained ceiling drywall",
+      "yoursTotal": 386.1,
+      "adjTotal": 386.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bea72f06-d441-469a-bb3b-a9419e14459e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8358,
+      "yoursDesc": "R&R Ceiling texture - knockdown finish",
+      "adjDesc": "Apply knockdown texture finish - ceiling",
+      "yoursTotal": 545.16,
+      "adjTotal": 545.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3d028af3-fa03-4da6-8a99-5fdbf7f92610",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8353,
+      "yoursDesc": "R&R Ceiling texture - knockdown finish",
+      "adjDesc": "Apply knockdown texture finish ceiling",
+      "yoursTotal": 233.64,
+      "adjTotal": 233.64,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "34ec20c5-235f-4ac8-85db-28b2853efed0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8349,
+      "yoursDesc": "R&R Drywall - walls, water damaged",
+      "adjDesc": "Replace wall drywall - water-damaged sections",
+      "yoursTotal": 584.1,
+      "adjTotal": 584.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4d612c0b-4138-467f-be00-15756f63e692",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8348,
+      "yoursDesc": "R&R Roof truss - wind displaced, repair",
+      "adjDesc": "Repair wind-displaced roof truss",
+      "yoursTotal": 1716.9,
+      "adjTotal": 1183.4,
+      "diff": -533.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "bfe3bd39-5269-47ae-9f70-e2bef3de647d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8343,
+      "yoursDesc": "R&R Faucet - dual handle",
+      "adjDesc": "Replace dual handle bath faucet",
+      "yoursTotal": 389.4,
+      "adjTotal": 389.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d8ae6091-841f-4802-ac51-ce76a14e4045",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8342,
+      "yoursDesc": "R&R Ceiling texture - smooth finish",
+      "adjDesc": "Apply smooth texture finish - ceiling",
+      "yoursTotal": 311.52,
+      "adjTotal": 311.52,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cf2ea53d-985d-4161-9966-05610c81fdb8",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8304,
+      "yoursDesc": "Tear out collapsed drywall ceiling",
+      "adjDesc": "Remove collapsed ceiling drywall - water damaged",
+      "yoursTotal": 900.9,
+      "adjTotal": 900.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e8860a0c-0a25-4745-9a6d-dc495c1ba2b9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8301,
+      "yoursDesc": "R&R Drywall patch - wall water stain",
+      "adjDesc": "Patch wall drywall - water stain area",
+      "yoursTotal": 212.4,
+      "adjTotal": 212.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "64067c2a-5fdf-4a8b-9bfd-f01beacd90ed",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8282,
+      "yoursDesc": "R&R Upper cabinets - standard grade",
+      "adjDesc": "Replace upper kitchen cabinets - standard",
+      "yoursTotal": 2312.8,
+      "adjTotal": 2312.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f343b4c1-debf-49c9-8d23-6d9666350bcf",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8243,
+      "yoursDesc": "Debris haul - insulation & attic",
+      "adjDesc": "Attic insulation debris haul - per load",
+      "yoursTotal": 2134,
+      "adjTotal": 1600.5,
+      "diff": -533.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "50db4233-acb0-40e2-a25c-c0d9c51523dd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8227,
+      "yoursDesc": "R&R Drywall patch - hallway wall stain",
+      "adjDesc": "Patch hallway wall drywall - water stain",
+      "yoursTotal": 212.4,
+      "adjTotal": 212.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "dd2c066c-5584-4cff-aaae-50ed3e484175",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8216,
+      "yoursDesc": "R&R Crown molding - 3 1/2\" colonial",
+      "adjDesc": "Replace crown molding 3.5 inch colonial profile",
+      "yoursTotal": 842.52,
+      "adjTotal": 727.02,
+      "diff": -115.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "f4613c04-a4b9-4c3d-995d-78f0c79a6a8d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8215,
+      "yoursDesc": "R&R Baseboard - 3 1/4\" hallway",
+      "adjDesc": "Replace hallway baseboard 3.25 inch",
+      "yoursTotal": 409.7,
+      "adjTotal": 409.7,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bfc64f48-bc3d-4253-9d88-40527ae47610",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8163,
+      "yoursDesc": "R&R Drip edge - all eaves & rakes",
+      "adjDesc": "Replace drip edge eaves and rakes",
+      "yoursTotal": 1272.04,
+      "adjTotal": 1272.04,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d2706c97-92e4-435e-a8f9-731973a5f6ff",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8162,
+      "yoursDesc": "R&R HVAC supply duct - attic damaged run",
+      "adjDesc": "Replace HVAC supply ductwork - attic section",
+      "yoursTotal": 1746.4,
+      "adjTotal": 1746.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8ac1ad76-6758-4608-8330-ba148d267719",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8159,
+      "yoursDesc": "R&R Window casing - 3 1/2\"",
+      "adjDesc": "Replace window casing 3.5 inch profile",
+      "yoursTotal": 198.24,
+      "adjTotal": 198.24,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "063aacff-0e80-46f0-9449-444d99a1a302",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8155,
+      "yoursDesc": "Tear out water-damaged wall drywall - 2 walls",
+      "adjDesc": "Remove water-stained wall drywall",
+      "yoursTotal": 447.7,
+      "adjTotal": 447.7,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3e01844f-230c-4f74-85f1-9846ee700999",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8152,
+      "yoursDesc": "Tear out damaged baseboard",
+      "adjDesc": "Remove damaged baseboard trim",
+      "yoursTotal": 138.38,
+      "adjTotal": 138.38,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3bf2c22a-ee94-4967-af13-0cabd893baf7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8147,
+      "yoursDesc": "Tear out damaged baseboard",
+      "adjDesc": "Remove damaged baseboard trim",
+      "yoursTotal": 170.94,
+      "adjTotal": 170.94,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4fb3dfcd-67da-40a9-9bee-b6eb73fac35d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8144,
+      "yoursDesc": "R&R Window casing - 3 1/2\"",
+      "adjDesc": "Replace window casing 3.5 inch profile",
+      "yoursTotal": 297.36,
+      "adjTotal": 297.36,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "536178dc-184a-45e3-ab0d-a4837311612d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8142,
+      "yoursDesc": "Tear out damaged baseboard",
+      "adjDesc": "Remove damaged baseboard trim",
+      "yoursTotal": 109.89,
+      "adjTotal": 109.89,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ce57f55e-7cda-4b16-ae8d-add0ba60386e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8136,
+      "yoursDesc": "R&R Weatherstrip - garage door",
+      "adjDesc": "Replace garage door weatherstripping",
+      "yoursTotal": 295.94,
+      "adjTotal": 295.94,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "10ad478d-a140-4f8c-9e08-2dba96539a90",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8122,
+      "yoursDesc": "R&R Ceiling fan w/ light kit - 52\"",
+      "adjDesc": "Replace 52 inch ceiling fan with light kit",
+      "yoursTotal": 454.3,
+      "adjTotal": 454.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cc1210ad-982d-4848-8877-96c00386af9e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8118,
+      "yoursDesc": "Tear out damaged tile floor",
+      "adjDesc": "Remove damaged tile flooring",
+      "yoursTotal": 772.2,
+      "adjTotal": 772.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f892d257-3aad-48a3-976e-fdee0d3a9ca2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8081,
+      "yoursDesc": "R&R Dishwasher - standard residential",
+      "adjDesc": "Replace standard residential dishwasher",
+      "yoursTotal": 582,
+      "adjTotal": 582,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "25a5334a-cd98-49ea-9a1d-17d7322b2e26",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8081,
+      "yoursDesc": "R&R Ridge vent - continuous",
+      "adjDesc": "Replace continuous ridge vent",
+      "yoursTotal": 708,
+      "adjTotal": 708,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2b3d5d52-59f5-481a-8e5f-448bd9054f7f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8031,
+      "yoursDesc": "R&R Drywall - walls, water damaged sections",
+      "adjDesc": "Replace wall drywall - water-damaged areas",
+      "yoursTotal": 743.4,
+      "adjTotal": 743.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "48a8802a-3f22-4582-9d25-d6a687809600",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8028,
+      "yoursDesc": "R&R Smoke detector - hardwired",
+      "adjDesc": "Replace hardwired smoke detector",
+      "yoursTotal": 100.3,
+      "adjTotal": 100.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "99dff7e3-0f42-4762-90f8-e394e74873ff",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8022,
+      "yoursDesc": "R&R Baseboard - 5 1/4\" colonial",
+      "adjDesc": "Replace baseboard trim 5.25 inch colonial",
+      "yoursTotal": 629.88,
+      "adjTotal": 629.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "064f0b96-5754-4090-a0b9-14b420bd2bef",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8022,
+      "yoursDesc": "R&R Ceiling fan w/ light - 52\"",
+      "adjDesc": "Replace 52 inch ceiling fan with light",
+      "yoursTotal": 454.3,
+      "adjTotal": 454.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2367fd43-59c8-4d49-bb34-e3a9c0074d00",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8009,
+      "yoursDesc": "R&R Baseboard - 5 1/4\" colonial",
+      "adjDesc": "Replace baseboard trim 5.25 inch colonial",
+      "yoursTotal": 778.09,
+      "adjTotal": 778.09,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9a5a5043-d532-4fe6-b6e8-1469b6fbcb34",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8002,
+      "yoursDesc": "R&R Pipe insulation - attic runs",
+      "adjDesc": "Replace pipe insulation attic supply lines",
+      "yoursTotal": 545.16,
+      "adjTotal": 545.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "abb02206-5249-43b9-9780-5aaa15222c49",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8001,
+      "yoursDesc": "Tear out damaged carpet & pad",
+      "adjDesc": "Remove water-damaged carpet and padding",
+      "yoursTotal": 478.5,
+      "adjTotal": 478.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "752f643b-3577-4599-a2d3-06f3dbfa6182",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7997,
+      "yoursDesc": "R&R Garbage disposal - 1/2 HP",
+      "adjDesc": "Replace garbage disposal 1/2 HP unit",
+      "yoursTotal": 265.5,
+      "adjTotal": 265.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "90b458cd-778a-4369-bc97-add331d72666",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7996,
+      "yoursDesc": "R&R Dimmer switch",
+      "adjDesc": "Replace dimmer switch - living area",
+      "yoursTotal": 153.4,
+      "adjTotal": 153.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bf040345-a476-419e-a6b3-f74c019d147b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7995,
+      "yoursDesc": "Tear out damaged carpet & pad",
+      "adjDesc": "Remove water-damaged carpet and padding",
+      "yoursTotal": 669.9,
+      "adjTotal": 669.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "94afe76f-2824-4765-8972-3f7bc71e6207",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7982,
+      "yoursDesc": "R&R Carpet & pad - standard",
+      "adjDesc": "Replace carpet and padding - standard grade",
+      "yoursTotal": 1242.54,
+      "adjTotal": 1242.54,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "23a33368-7d37-44b4-b214-9f02dc0de8a7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7963,
+      "yoursDesc": "Haul debris per pickup truck load",
+      "adjDesc": "Storm debris hauling - per truck load",
+      "yoursTotal": 580.8,
+      "adjTotal": 580.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a7c0239d-a421-4b3d-adc7-fbae7906a4ba",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7938,
+      "yoursDesc": "R&R Baseboard - 3 1/4\" colonial",
+      "adjDesc": "Replace baseboard trim 3.25 inch colonial",
+      "yoursTotal": 395.06,
+      "adjTotal": 395.06,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ed55f68f-0b5c-4eef-8f09-e79030eaa1bb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7936,
+      "yoursDesc": "R&R Closet shelf & rod",
+      "adjDesc": "Replace closet shelf and rod assembly",
+      "yoursTotal": 130.98,
+      "adjTotal": 130.98,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4b7dbb0d-83f5-4807-90ba-456648586567",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7922,
+      "yoursDesc": "R&R Carpet & pad - upgraded plush",
+      "adjDesc": "Replace carpet and padding - plush grade",
+      "yoursTotal": 2899.26,
+      "adjTotal": 2899.26,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cff516a7-ff7b-4419-a909-883cd72a7792",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7917,
+      "yoursDesc": "R&R Ceiling texture - knockdown",
+      "adjDesc": "Apply knockdown texture ceiling finish",
+      "yoursTotal": 389.4,
+      "adjTotal": 389.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e2407b5a-4e44-4c0b-aaac-73b3244f5c70",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7897,
+      "yoursDesc": "R&R Wall texture - knockdown",
+      "adjDesc": "Apply knockdown texture wall finish",
+      "yoursTotal": 285.56,
+      "adjTotal": 285.56,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f41b2d01-b6d9-4197-b50f-6a55e78ab3af",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7895,
+      "yoursDesc": "Tear out wet blown insulation - full attic",
+      "adjDesc": "Remove water-damaged blown insulation - complete",
+      "yoursTotal": 2992,
+      "adjTotal": 2992,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7e290dc5-f283-4c15-b505-b23e6bf156dd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7894,
+      "yoursDesc": "R&R Ceiling texture - knockdown",
+      "adjDesc": "Apply knockdown texture finish ceiling",
+      "yoursTotal": 207.68,
+      "adjTotal": 207.68,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "44cb8915-d476-4643-9ab9-84aebd05d443",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7855,
+      "yoursDesc": "R&R Skylight - hail shattered, curb mount",
+      "adjDesc": "Replace curb mount skylight - hail damaged",
+      "yoursTotal": 1616.6,
+      "adjTotal": 1616.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "971adf11-aa90-4254-af03-6ce4300195ad",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7854,
+      "yoursDesc": "R&R Wall texture - knockdown finish",
+      "adjDesc": "Apply knockdown texture finish - walls",
+      "yoursTotal": 363.44,
+      "adjTotal": 363.44,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2e61ad47-4e17-4f62-a75c-c0e0ea10677c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7851,
+      "yoursDesc": "R&R Attic exhaust fan - bath vent",
+      "adjDesc": "Replace attic bath exhaust fan",
+      "yoursTotal": 436.6,
+      "adjTotal": 436.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6290cbf3-1681-4f80-83e2-324cc3bea0f2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7839,
+      "yoursDesc": "R&R Exterior floodlight - over garage door",
+      "adjDesc": "Replace exterior floodlight over garage",
+      "yoursTotal": 194.7,
+      "adjTotal": 172.7,
+      "diff": -22,
+      "llmReasoning": null
+    },
+    {
+      "id": "918cd0e9-6623-4e35-9a11-87777eaa80b6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7834,
+      "yoursDesc": "R&R 1/2\" drywall walls - fire-code sections",
+      "adjDesc": "Replace garage wall drywall fire-rated sections",
+      "yoursTotal": 849.6,
+      "adjTotal": 849.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "63d4f791-4676-4267-9875-82de0baa5172",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7781,
+      "yoursDesc": "R&R Baseboard - 3 1/4\" colonial",
+      "adjDesc": "Replace baseboard trim 3.25 inch colonial profile",
+      "yoursTotal": 453.59,
+      "adjTotal": 453.59,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ad620340-f805-4478-acfb-432a83d10726",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7773,
+      "yoursDesc": "R&R 1/2\" drywall ceiling - hung taped floated",
+      "adjDesc": "Replace ceiling drywall 1/2 inch - hang tape float",
+      "yoursTotal": 637.2,
+      "adjTotal": 637.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "771069ab-10cb-4a11-9d72-1c4008785496",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.777,
+      "yoursDesc": "R&R Architectural shingles 30-yr - full replacement",
+      "adjDesc": "Install 30-year architectural shingles - complete",
+      "yoursTotal": 19458.2,
+      "adjTotal": 19458.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6555b2c7-10b3-4634-9bff-31076cb62ee2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7743,
+      "yoursDesc": "R&R 1/2\" drywall ceiling - hung taped floated",
+      "adjDesc": "Replace ceiling drywall 1/2 inch - hang tape float",
+      "yoursTotal": 796.5,
+      "adjTotal": 796.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fea69168-5cd6-4708-b692-1a8093da80f5",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7738,
+      "yoursDesc": "R&R LVP flooring - water resistant",
+      "adjDesc": "Replace luxury vinyl plank flooring - water resistant",
+      "yoursTotal": 1939.92,
+      "adjTotal": 1939.92,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2692de5e-abc8-4b79-a94e-ff00a79d1c78",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7738,
+      "yoursDesc": "R&R 1/2\" drywall - ceiling, hung taped floated",
+      "adjDesc": "Replace ceiling drywall 1/2 inch - hang tape float",
+      "yoursTotal": 1115.1,
+      "adjTotal": 1115.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a45e4f4e-987c-4505-b3bf-1d11c1f5f6cd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7733,
+      "yoursDesc": "R&R 1/2\" drywall ceiling - hung taped floated",
+      "adjDesc": "Replace ceiling drywall 1/2 inch - hang tape float",
+      "yoursTotal": 477.9,
+      "adjTotal": 477.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "27558805-28eb-4d05-9333-8cfc61b2c514",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7731,
+      "yoursDesc": "Final cleaning - construction - residential",
+      "adjDesc": "Post-construction cleanup - residential",
+      "yoursTotal": 1196.8,
+      "adjTotal": 1196.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f664ba67-9d60-4c0f-ad1d-dd147b2cc60a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7714,
+      "yoursDesc": "Tear out damaged LVP flooring",
+      "adjDesc": "Remove damaged luxury vinyl plank flooring",
+      "yoursTotal": 646.8,
+      "adjTotal": 646.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "62ca60f9-0490-4387-af94-6a8a012ebf4b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7705,
+      "yoursDesc": "R&R Roof sheathing 7/16\" OSB - hail punctured",
+      "adjDesc": "Replace roof sheathing 7/16 inch OSB - damaged sections",
+      "yoursTotal": 2690.4,
+      "adjTotal": 2063.4,
+      "diff": -627,
+      "llmReasoning": null
+    },
+    {
+      "id": "c2c5d135-dd47-4673-887f-b14bd0770345",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7666,
+      "yoursDesc": "R&R Recessed can lights - 6\"",
+      "adjDesc": "Replace 6 inch recessed lighting cans",
+      "yoursTotal": 885,
+      "adjTotal": 885,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d13fd8a4-d9d9-416a-827a-f7fa2991a8f1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7661,
+      "yoursDesc": "R&R Underlayment - LVP",
+      "adjDesc": "Replace LVP underlayment membrane",
+      "yoursTotal": 240.72,
+      "adjTotal": 240.72,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "810c74f3-05f2-4c38-9287-0fdd89386444",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7586,
+      "yoursDesc": "R&R MR drywall - wall water damage",
+      "adjDesc": "Replace moisture-resistant wall drywall",
+      "yoursTotal": 726.88,
+      "adjTotal": 726.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8dae6af6-1960-4ebe-8911-2054fa4c3cb9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7585,
+      "yoursDesc": "R&R Attic junction boxes - water damaged",
+      "adjDesc": "Replace attic junction boxes - water exposure",
+      "yoursTotal": 306.8,
+      "adjTotal": 306.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c99d912c-6db5-4e04-9508-e2d8c394b2f1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7568,
+      "yoursDesc": "R&R Closet shelf & rod - master",
+      "adjDesc": "Replace closet shelf and rod system",
+      "yoursTotal": 218.3,
+      "adjTotal": 218.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9ab28626-7fc9-48a5-9c15-15ba9b2fc9ce",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7563,
+      "yoursDesc": "R&R Vinyl siding - hail-damaged sections",
+      "adjDesc": "Replace vinyl siding damaged sections",
+      "yoursTotal": 2747.04,
+      "adjTotal": 2213.54,
+      "diff": -533.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "0d799c48-6c66-4bfe-bd29-fb26efc4a019",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7527,
+      "yoursDesc": "R&R Lower cabinets - standard grade",
+      "adjDesc": "Replace lower kitchen cabinets - economy grade",
+      "yoursTotal": 4096.96,
+      "adjTotal": 3172.96,
+      "diff": -924,
+      "llmReasoning": null
+    },
+    {
+      "id": "2e04f8b4-8fac-4da2-81df-0d50fb32a35c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7498,
+      "yoursDesc": "R&R Radiant barrier - foil faced",
+      "adjDesc": "Replace radiant barrier foil facing",
+      "yoursTotal": 2454.4,
+      "adjTotal": 2454.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2a386df3-7486-468e-b5cc-307d73a867f8",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7491,
+      "yoursDesc": "Paint walls - two coats, semi-gloss kitchen",
+      "adjDesc": "Wall painting - 2 coat semi-gloss",
+      "yoursTotal": 589.06,
+      "adjTotal": 589.06,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "16e2ba7d-4797-474a-abde-9577faa70f0d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7456,
+      "yoursDesc": "R&R Collar ties - wind loosened",
+      "adjDesc": "Replace collar ties - wind damage",
+      "yoursTotal": 460.2,
+      "adjTotal": 460.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bd962afc-3dee-41c9-8ed0-01c255257bc2",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7428,
+      "yoursDesc": "Tear out damaged tile entry floor",
+      "adjDesc": "Remove damaged entry tile flooring",
+      "yoursTotal": 386.1,
+      "adjTotal": 386.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "40fcf632-a4b3-42c4-8663-ad5175b8e1f7",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7424,
+      "yoursDesc": "R&R Attic HVAC condensate line",
+      "adjDesc": "Replace attic condensate drain line",
+      "yoursTotal": 401.2,
+      "adjTotal": 401.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b0d1019c-3d6d-4cf4-a86d-30103767b8f3",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7421,
+      "yoursDesc": "Debris haul - great room",
+      "adjDesc": "Living area debris haul - per load",
+      "yoursTotal": 1067,
+      "adjTotal": 1067,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f6da41f6-fa50-42af-9757-ba71e1311cde",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.741,
+      "yoursDesc": "R&R Ridge board splice - wind cracked",
+      "adjDesc": "Replace ridge board splice - damaged",
+      "yoursTotal": 318.6,
+      "adjTotal": 318.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "67c7d77b-b336-4e04-b12b-f5228ad4fc8f",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7408,
+      "yoursDesc": "R&R Ice & water shield - eaves 3 ft",
+      "adjDesc": "Install ice water shield at eaves",
+      "yoursTotal": 1032.5,
+      "adjTotal": 1032.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "041b3868-2a37-4ec3-843e-f244488f427f",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.74,
+      "yoursDesc": "R&R Window screen - hail torn",
+      "adjDesc": "Replace window screens - hail damaged",
+      "yoursTotal": 453.12,
+      "adjTotal": 347.52,
+      "diff": -105.60000000000002,
+      "llmReasoning": null
+    },
+    {
+      "id": "4d8bdf50-d337-4667-bdda-e93b162c34fb",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7287,
+      "yoursDesc": "Emergency roof tarp - per square",
+      "adjDesc": "Protective roof covering - per roofing square",
+      "yoursTotal": 1478.4,
+      "adjTotal": 1478.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e23d1624-afc9-4b26-bc5f-ed2ff9d4760b",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7263,
+      "yoursDesc": "Prime & paint walls - semi-gloss",
+      "adjDesc": "Wall painting - 2 coat semi-gloss bath",
+      "yoursTotal": 530.15,
+      "adjTotal": 530.15,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0b3a48f0-dc9e-4c2f-ae33-80767117c322",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.726,
+      "yoursDesc": "Paint ceiling - two coats",
+      "adjDesc": "Ceiling painting - 2 coat application",
+      "yoursTotal": 294.53,
+      "adjTotal": 294.53,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "513ccca9-7e75-4093-b55f-2c01c349be79",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7251,
+      "yoursDesc": "Roofing permit - full replacement",
+      "adjDesc": "Roof installation permit fee",
+      "yoursTotal": 225,
+      "adjTotal": 225,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4c1d6aef-6e78-4230-b623-6e6ecd230c53",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7217,
+      "yoursDesc": "Prime & paint walls - two coats eggshell",
+      "adjDesc": "Wall painting - 2 coat eggshell finish",
+      "yoursTotal": 834.5,
+      "adjTotal": 834.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bc1659a8-c4a4-40ab-a64d-8249b281df41",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7212,
+      "yoursDesc": "Prime & paint walls - two coats eggshell",
+      "adjDesc": "Wall painting - 2 coat eggshell finish",
+      "yoursTotal": 1030.85,
+      "adjTotal": 1030.85,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9079d1d3-83cc-4fe8-937f-913681455375",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7182,
+      "yoursDesc": "Tear off existing roofing - arch shingles",
+      "adjDesc": "Remove architectural shingle roofing - complete",
+      "yoursTotal": 2558.16,
+      "adjTotal": 2558.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c348901e-d825-4707-88cb-794ae99f0dc7",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7156,
+      "yoursDesc": "Dumpster load - 30 CY, hail debris",
+      "adjDesc": "Debris container 30 cubic yard - storm cleanup",
+      "yoursTotal": 1930.5,
+      "adjTotal": 1930.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7be5d109-3c85-440a-a0df-b9caff16fc84",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7151,
+      "yoursDesc": "Prime & paint ceiling - two coats",
+      "adjDesc": "Ceiling painting - 2 coat application",
+      "yoursTotal": 147.26,
+      "adjTotal": 147.26,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "602e106a-4e94-4835-be9c-aaab138cf987",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.714,
+      "yoursDesc": "Prime & paint ceiling - two coats",
+      "adjDesc": "Ceiling painting - 2 coat application",
+      "yoursTotal": 368.16,
+      "adjTotal": 368.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9c3f2f33-b0a1-4789-a3bd-2a1038c66a16",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7138,
+      "yoursDesc": "Tear off damaged ridge cap",
+      "adjDesc": "Remove damaged ridge cap shingles",
+      "yoursTotal": 359.98,
+      "adjTotal": 359.98,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "483b8d84-25ef-4217-86bb-654d6300bddb",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7131,
+      "yoursDesc": "Prime & paint ceiling - two coats",
+      "adjDesc": "Ceiling painting - 2 coat application",
+      "yoursTotal": 220.9,
+      "adjTotal": 220.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d2fd2354-5fee-4c73-bc48-304c827f6476",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7125,
+      "yoursDesc": "Prime & paint ceiling - two coats",
+      "adjDesc": "Ceiling painting - 2 coat application",
+      "yoursTotal": 515.42,
+      "adjTotal": 515.42,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d6f23afd-a76d-4e17-99ab-06ae788ef58d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7024,
+      "yoursDesc": "Structural engineer inspection",
+      "adjDesc": "Structural engineering inspection report",
+      "yoursTotal": 1782,
+      "adjTotal": 1782,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b23d3e45-a262-4350-a74f-22e6d7c7f28c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6952,
+      "yoursDesc": "R&R Synthetic underlayment",
+      "adjDesc": "Replace synthetic felt underlayment - full roof",
+      "yoursTotal": 1945.82,
+      "adjTotal": 1945.82,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e7423609-2ba2-41eb-aeac-eaf4baf1b255",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6776,
+      "yoursDesc": "R&R Exhaust fan - bath",
+      "adjDesc": "Replace bathroom exhaust vent fan",
+      "yoursTotal": 218.3,
+      "adjTotal": 196.3,
+      "diff": -22,
+      "llmReasoning": null
+    },
+    {
+      "id": "f7a7139e-23cf-4665-9f66-287c80b9ec23",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6641,
+      "yoursDesc": "Prime & paint walls - two coats",
+      "adjDesc": "Wall painting - 2 coat eggshell finish",
+      "yoursTotal": 596.42,
+      "adjTotal": 596.42,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "63ca7b21-3e96-4642-81e9-f16f54ce4e87",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6272,
+      "yoursDesc": "General labor - per hour",
+      "adjDesc": "Helper labor rate - hourly",
+      "yoursTotal": 910.8,
+      "adjTotal": 910.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "152e40ee-ce5f-42d5-9564-f386ea05030e",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6161,
+      "yoursDesc": "Content manipulation - bedroom furniture",
+      "adjDesc": "Move and reset bedroom furniture",
+      "yoursTotal": 211.2,
+      "adjTotal": 158.4,
+      "diff": -52.79999999999998,
+      "llmReasoning": null
+    },
+    {
+      "id": "f3ad32d0-96b7-4a8b-9868-45c0e3a00ca0",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.614,
+      "yoursDesc": "R&R Hurricane straps - code upgrade",
+      "adjDesc": "Install hurricane strap connectors - code",
+      "yoursTotal": 523.92,
+      "adjTotal": 444.72,
+      "diff": -79.19999999999993,
+      "llmReasoning": null
+    },
+    {
+      "id": "871ed135-5591-4fe5-a81d-08aa8cd69a2a",
+      "decisionType": "one_to_one",
+      "decidedBy": "post_llm_rescue",
+      "finalScore": 0.6119,
+      "yoursDesc": "Content manipulation - kitchen contents",
+      "adjDesc": "Move and reset kitchen contents",
+      "yoursTotal": 316.8,
+      "adjTotal": 211.2,
+      "diff": -105.60000000000002,
+      "llmReasoning": "Content manipulation (moving items) vs. range hood vent cleaning are different tasks despite sharing the kitchen zone."
+    },
+    {
+      "id": "8a4c354b-3308-437b-82a7-2dbf27d6c23c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5907,
+      "yoursDesc": "Building permit - storm damage repair",
+      "adjDesc": "Permit fee - wind and hail restoration work",
+      "yoursTotal": 485,
+      "adjTotal": 485,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ba2ed302-351d-47a5-a31a-c2b2e88b33de",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5842,
+      "yoursDesc": "Temp scaffolding erect & dismantle",
+      "adjDesc": "Scaffold assembly and removal - temporary access",
+      "yoursTotal": 822,
+      "adjTotal": 822,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0568f3d0-3e2a-43c9-b66e-57a9a3e56189",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5835,
+      "yoursDesc": "Content manipulation - move furniture",
+      "adjDesc": "Furniture move out and reset - living area",
+      "yoursTotal": 211.2,
+      "adjTotal": 158.4,
+      "diff": -52.79999999999998,
+      "llmReasoning": null
+    },
+    {
+      "id": "52abb514-eb7b-418d-8ea5-45e508bd0630",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5807,
+      "yoursDesc": "Tear off damaged felt underlayment",
+      "adjDesc": "Remove existing underlayment - full",
+      "yoursTotal": 467.5,
+      "adjTotal": 467.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8e8873b4-9d8e-4061-94de-507561b8254c",
+      "decisionType": "one_to_one",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0.4721,
+      "yoursDesc": "Residential supervision - per hour",
+      "adjDesc": "Project oversight - hourly billing rate",
+      "yoursTotal": 6600,
+      "adjTotal": 4950,
+      "diff": -1650,
+      "llmReasoning": "Both items represent supervisory/oversight labor billed hourly in a general conditions zone. Descriptions are near-synonymous; quantity and total differ proportionally but the scope is the same type of work."
+    },
+    {
+      "id": "5ab980ea-bf4e-486e-9ec8-011796677b4c",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "R&R Mailbox post & box - storm damaged",
+      "adjDesc": null,
+      "yoursTotal": 342,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "5f35f767-be93-43ca-be7f-3397afabd25a",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Shop light - LED 4 ft",
+      "adjDesc": null,
+      "yoursTotal": 295,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "LED shop light replacement vs. garage floor seal coat are completely different trades and scopes."
+    },
+    {
+      "id": "ecac0144-7bf9-43f7-b12f-d19ee282a05a",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Exterior shutters - per pair",
+      "adjDesc": null,
+      "yoursTotal": 873.2,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Exterior shutter replacement vs. exterior power washing are fundamentally different scopes of work."
+    },
+    {
+      "id": "ff193553-6b92-49e5-b5d0-511cc14f5009",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Attic ventilation improvement - soffit baffles",
+      "adjDesc": null,
+      "yoursTotal": 220,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "639aa4f8-2fa0-4988-b0cf-1e5786151efc",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Under-cabinet LED lighting strip",
+      "adjDesc": null,
+      "yoursTotal": 594.72,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Under-cabinet LED lighting installation vs. moving and resetting kitchen contents are different trades and scopes."
+    },
+    {
+      "id": "5b8f2cd5-1f9a-4b59-b523-cd5005c494bb",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Expedited material delivery surcharge",
+      "adjDesc": null,
+      "yoursTotal": 462,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Expedited material delivery surcharge vs. independent wind/hail assessment report are fundamentally different line items despite similar totals and zone."
+    },
+    {
+      "id": "f204c03b-91c8-4910-9959-0e318710115a",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Smoke detector - hardwired",
+      "adjDesc": null,
+      "yoursTotal": 200.6,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Smoke detector installation vs. air quality testing are fundamentally different scopes of work."
+    },
+    {
+      "id": "18e08ec6-475b-49ff-82e3-4f8e949fc5fd",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Content manipulation - bedroom 2",
+      "adjDesc": null,
+      "yoursTotal": 158.4,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Content manipulation in bedroom vs. carpet seam repair in hallway are different trades and scopes entirely."
+    },
+    {
+      "id": "36227242-be7f-4d7b-a788-9e948542fb9e",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Seal attic penetrations - weatherization",
+      "adjDesc": null,
+      "yoursTotal": 376.2,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Sealing attic penetrations vs. independent mold clearance testing are different scopes despite sharing the attic zone."
+    },
+    {
+      "id": "f5ba180d-3e5c-4e3d-8bb5-44df000e0f31",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Storm documentation & photo log",
+      "adjDesc": null,
+      "yoursTotal": 270,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Storm documentation and photo log vs. shower valve trim replacement are completely unrelated scopes of work."
+    }
+  ]
+}

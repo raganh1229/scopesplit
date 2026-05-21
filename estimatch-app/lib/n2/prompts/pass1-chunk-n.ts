@@ -28,7 +28,7 @@ export function buildPass1ChunkNPrompt(p: Pass1ChunkNPromptParams): {
 } {
   return {
     system:
-      'You are analyzing a section of an insurance estimate PDF. Your only job is to locate all zone/section headers on these pages. Do not extract line items, costs, or any other data. Return only valid JSON — no markdown fences, no explanation.',
+      'You are analyzing a section of an insurance estimate PDF. Your only job is to locate all zone/section headers on these pages. Do not extract line items, costs, or any other data. Return only valid JSON — no markdown fences, no explanation, no preamble, no PDF text. If the pages contain non-estimate content (appendices, settlement agreements, diagrams, maps, signature pages, etc.) with no line-item zones, return the JSON with an empty zones array. NEVER return raw page text or prose — ALWAYS return the JSON structure.',
 
     user: `You are processing a section of a ${p.totalPages}-page insurance estimate PDF. This section covers approximately pages ${p.startPage}–${p.endPage} of the original document.
 Use whichever page numbers are PRINTED on each page of this sub-document for all page references — do not renumber from 1.
@@ -91,7 +91,7 @@ RULES:
 4. Return zone names VERBATIM — character for character exactly as they appear in the PDF. Do NOT abbreviate, shorten, rephrase, or paraphrase. Always include floor prefixes exactly as shown. When a "Totals: <name>" line is visible for the zone, the <name> after "Totals:" is the authoritative spelling.
 5. If the same zone name appears more than once on these pages (after excluding CONTINUED - markers, which are already filtered by the rules above), report only the FIRST occurrence (the original header). Subsequent appearances are recap entries.
 6. Use the page numbers PRINTED on each page of this sub-document for all page references — do not use sub-document numbering (1, 2, 3...). The approximate range in the original document is ${p.startPage}–${p.endPage}.
-7. If no valid zone headers are found, return an empty zones array. This is valid and expected.
+7. If no valid zone headers are found on these pages — including chunks that consist entirely of CONTINUED pages from zones that started earlier — return an empty zones array. This is valid, expected, and correct. Do NOT output prose, page text, or any non-JSON content in this case.
 8. For each zone, count line items by reading the printed item numbers (e.g. items 16 through 29 = 14 items). Do NOT visually count rows — printed numbers are explicit and reliable. Count only items visible on these pages; if the zone continues past this chunk, count only what is visible here.
 9. Also count the total number of numbered line items visible on ALL pages in this chunk, regardless of which zone they belong to. Return this as approx_items_on_pages.
 

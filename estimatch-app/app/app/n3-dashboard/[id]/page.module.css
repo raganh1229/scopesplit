@@ -130,28 +130,28 @@
 .kv .key   { color: #666; }
 .kv .value { font-weight: 600; }
 
-table {
+.table {
   width: 100%;
   border-collapse: collapse;
   margin: 8px 0;
   font-size: 12px;
 }
 
-th, td {
+.table th, .table td {
   padding: 4px 8px;
   border-bottom: 1px solid #eee;
   text-align: left;
   vertical-align: top;
 }
 
-th {
+.table th {
   background: #f0f0f0;
   font-weight: 700;
   position: sticky;
   top: 0;
 }
 
-td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.table td.num, .num { text-align: right; font-variant-numeric: tabular-nums; }
 
 .bar {
   display: inline-block;
@@ -173,7 +173,7 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .histogramRow .label { color: #666; }
 .histogramRow .count { text-align: right; font-variant-numeric: tabular-nums; }
 
-.featureTable th, .featureTable td { font-size: 11px; }
+.featureTable.table th, .featureTable.table td { font-size: 11px; }
 
 .featureTable .deadFeature { background: #fef2f2; }
 .featureTable .strongFeature { background: #f0fdf4; }
@@ -201,10 +201,10 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
   background: #f0fdf4;
 }
 
-.decisionTable {
+.decisionTable.table {
   font-size: 11px;
 }
-.decisionTable td {
+.decisionTable.table td {
   max-width: 280px;
   overflow: hidden;
   text-overflow: ellipsis;

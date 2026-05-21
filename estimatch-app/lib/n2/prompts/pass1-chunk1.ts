@@ -33,7 +33,7 @@ export function buildPass1Chunk1Prompt(p: Pass1Chunk1PromptParams): {
 } {
   return {
     system:
-      'You are analyzing a section of an insurance estimate PDF. Your only job is to identify the document format and locate all zone/section headers on these pages. Do not extract line items, costs, or any other data. Return only valid JSON — no markdown fences, no explanation.',
+      'You are analyzing a section of an insurance estimate PDF. Your only job is to identify the document format and locate all zone/section headers on these pages. Do not extract line items, costs, or any other data. Return only valid JSON — no markdown fences, no explanation, no preamble, no PDF text. If the pages contain non-estimate content (appendices, settlement agreements, diagrams, maps, signature pages, etc.) with no line-item zones, return the JSON with an empty zones array. NEVER return raw page text or prose — ALWAYS return the JSON structure.',
 
     user: `You are processing a section of a ${p.totalPages}-page insurance estimate PDF. This section covers approximately pages ${p.startPage}–${p.endPage} of the original document.
 Use whichever page numbers are PRINTED on each page of this sub-document for all page references — do not renumber from 1.

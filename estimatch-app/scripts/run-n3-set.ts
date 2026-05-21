@@ -39,7 +39,10 @@ const SET_ID = process.argv[setIdx + 1];
 
 // ── Paths ──────────────────────────────────────────────────────────────────────
 
-const WORKSPACE_ROOT    = path.resolve(__dirname, '../../..');
+const _threeUp          = path.resolve(__dirname, '../../..');
+const WORKSPACE_ROOT    = fs.existsSync(path.join(_threeUp, 'PDFS'))
+  ? _threeUp
+  : path.join(_threeUp, 'scopesplit-testing');
 const SET_DIR           = path.join(WORKSPACE_ROOT, 'PDFS', 'Generated Sets', SET_ID);
 const CONTRACTOR_PATH   = path.join(SET_DIR, `Contractor_${SET_ID}.pdf`);
 const ADJUSTER_PATH     = path.join(SET_DIR, `Adjuster_${SET_ID}.pdf`);

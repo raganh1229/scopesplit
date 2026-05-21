@@ -45,13 +45,26 @@ export async function POST(
 
   const comparison = await prisma.comparison.findUnique({
     where: { id: comparisonId },
-    select: { userId: true, status: true },
+    select: { userId: true, status: true, pipelineVersion: true },
   });
   if (!comparison) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (comparison.userId !== dbUser.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   if (comparison.status !== 'AWAITING_ZONE_REVIEW') {
     return NextResponse.json({ ok: true, skipped: true, reason: 'not-awaiting-review' });
+  }
+
+  // ── N3 path ─────────────────────────────────────────────────────────────────
+  if (comparison.pipelineVersion === 'n3') {
+    await prisma.comparison.update({
+      where: { id: comparisonId },
+      data: { status: 'PROCESSING' },
+    });
+    await inngest.send({
+      name: 'comparison/n3-zone-review.completed',
+      data: { comparisonId, action: 'confirmed' },
+    });
+    return NextResponse.json({ ok: true, skipped: false });
   }
 
   // ── Re-entry detection ────────────────────────────────────────────────────

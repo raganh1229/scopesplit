@@ -158,7 +158,7 @@ export default function ZoneReview({
   return (
     <div className={styles.shell}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Review Detected Zones</h1>
+        <h1 className={styles.title}>Step 1 of 4 — Zone Detection Review</h1>
         <p className={styles.subtitle}>
           These zones have been detected but <strong>not yet matched to each other</strong>. Before
           matching begins, confirm both lists look right. If a zone is missing, misnamed, or

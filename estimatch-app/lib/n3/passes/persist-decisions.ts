@@ -75,6 +75,7 @@ function amountsMatch(a: { toNumber?: () => number } | null | undefined, b: { to
 export async function persistDecisionsN3(
   comparisonId: string,
   logger: StepLogger,
+  trigger: string = 'unknown',
 ): Promise<PersistDecisionsN3Result> {
 
   // ── 1. Load decisions ──────────────────────────────────────────────────────
@@ -386,6 +387,57 @@ export async function persistDecisionsN3(
     groupedCount,
     totalGap: totalGap.toFixed(2),
   });
+
+  // ── 7. Write run snapshot (fire-and-forget — never fails the run) ──────────
+  void (async () => {
+    try {
+      const [zoneAgg, itemAgg, edgeAgg] = await Promise.all([
+        prisma.n3Zone.groupBy({
+          by: ['source'],
+          where: { comparisonId },
+          _count: { id: true },
+        }),
+        prisma.n3LineItem.groupBy({
+          by: ['source'],
+          where: { comparisonId },
+          _count: { id: true },
+        }),
+        prisma.n3CandidateEdge.count({ where: { comparisonId } }),
+      ]);
+
+      const zoneYoursCount   = zoneAgg.find(r => r.source === 'yours')?._count.id ?? 0;
+      const zoneAdjCount     = zoneAgg.find(r => r.source === 'adjuster')?._count.id ?? 0;
+      const itemYoursCount   = itemAgg.find(r => r.source === 'yours')?._count.id ?? 0;
+      const itemAdjCount     = itemAgg.find(r => r.source === 'adjuster')?._count.id ?? 0;
+
+      const corrCount = await prisma.n3ZoneCorrespondence.count({ where: { comparisonId } });
+
+      await prisma.n3RunSnapshot.create({
+        data: {
+          comparisonId,
+          trigger,
+          yoursZoneCount:      zoneYoursCount,
+          adjusterZoneCount:   zoneAdjCount,
+          correspondenceCount: corrCount,
+          yoursItemCount:      itemYoursCount,
+          adjusterItemCount:   itemAdjCount,
+          candidateEdgeCount:  edgeAgg,
+          matchCount,
+          modifiedCount,
+          missingCount,
+          addedCount,
+          groupedCount,
+          totalGap,
+        },
+      });
+      logger.info('[n3/persist-decisions] run snapshot written', { comparisonId });
+    } catch (snapErr) {
+      logger.warn('[n3/persist-decisions] run snapshot write failed (non-fatal)', {
+        comparisonId,
+        error: (snapErr as Error).message,
+      });
+    }
+  })();
 
   return { lineItemCount: rows.length, matchCount, modifiedCount, missingCount, addedCount, groupedCount, totalGap };
 }

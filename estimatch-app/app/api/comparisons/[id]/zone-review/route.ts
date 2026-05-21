@@ -27,7 +27,7 @@ export async function GET(
 
   const comparison = await prisma.comparison.findUnique({
     where: { id: comparisonId },
-    select: { userId: true, status: true },
+    select: { userId: true, status: true, pipelineVersion: true },
   });
   if (!comparison) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (comparison.userId !== dbUser.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -39,6 +39,27 @@ export async function GET(
     );
   }
 
+  const slim = (z: { name: string; startPage: number; endPage: number; approxItems: number }) => ({
+    name: z.name,
+    startPage: z.startPage,
+    endPage: z.endPage,
+    approxItems: z.approxItems,
+  });
+
+  // ── N3 path: read from n3_zones table ────────────────────────────────────
+  if (comparison.pipelineVersion === 'n3') {
+    const zones = await prisma.n3Zone.findMany({
+      where: { comparisonId },
+      select: { name: true, source: true, startPage: true, endPage: true, approxItems: true },
+      orderBy: [{ source: 'asc' }, { startPage: 'asc' }],
+    });
+    return NextResponse.json({
+      e1Zones: zones.filter(z => z.source === 'yours').map(slim),
+      e2Zones: zones.filter(z => z.source === 'adjuster').map(slim),
+    });
+  }
+
+  // ── N2 path: read from n2 state ───────────────────────────────────────────
   const corrected = await readZonesCorrected(comparisonId);
   const detected = await readZonesDetected(comparisonId);
   const source = corrected ?? detected;
@@ -46,13 +67,6 @@ export async function GET(
   if (!source) {
     return NextResponse.json({ error: 'Zone detection state not found' }, { status: 500 });
   }
-
-  const slim = (z: { name: string; startPage: number; endPage: number; approxItems: number }) => ({
-    name: z.name,
-    startPage: z.startPage,
-    endPage: z.endPage,
-    approxItems: z.approxItems,
-  });
 
   return NextResponse.json({
     e1Zones: source.e1Zones.map(slim),

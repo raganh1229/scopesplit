@@ -14,11 +14,6 @@
   font-weight: 500;
   color: var(--text-primary);
 }
-.nameOptional {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--text-secondary);
-}
 .nameInput {
   width: 100%;
   padding: 10px 14px;

@@ -361,6 +361,7 @@ async function extractLargeZone(
 export async function extractLineItemsN3(
   comparisonId: string,
   logger: StepLogger,
+  reextractSource?: 'yours' | 'adjuster' | 'both',
 ): Promise<ExtractLineItemsN3Result> {
   // ── 1. Load comparison + zones ──────────────────────────────────────────────
   const comparison = await prisma.comparison.findUnique({
@@ -374,8 +375,14 @@ export async function extractLineItemsN3(
     throw new Error(`[n3/extract-line-items] Comparison ${comparisonId} not found`);
   }
 
+  // When re-extracting for one estimate side only, filter zones to that side.
+  // The opposite side's existing n3_line_items rows are left untouched.
+  const sourceFilter = reextractSource && reextractSource !== 'both'
+    ? { source: reextractSource }
+    : {};
+
   const zones = await prisma.n3Zone.findMany({
-    where: { comparisonId },
+    where: { comparisonId, ...sourceFilter },
     select: { id: true, source: true, name: true, startPage: true, endPage: true, approxItems: true  },
     orderBy: [{ source: 'asc' }, { startPage: 'asc' }],
   });
@@ -570,8 +577,14 @@ export async function extractLineItemsN3(
   });
 
   // ── 7. Idempotent DB write ──────────────────────────────────────────────────
+  // When re-extracting for a specific side only, delete only that side's rows
+  // so the opposite side's existing items are preserved.
+  const deleteFilter = reextractSource && reextractSource !== 'both'
+    ? { comparisonId, source: reextractSource }
+    : { comparisonId };
+
   await prisma.$transaction([
-    prisma.n3LineItem.deleteMany({ where: { comparisonId } }),
+    prisma.n3LineItem.deleteMany({ where: deleteFilter }),
     prisma.n3LineItem.createMany({ data: lineItemRows }),
   ]);
 

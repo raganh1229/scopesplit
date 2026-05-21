@@ -62,6 +62,11 @@ export default function NewComparisonPage() {
   };
 
   const handleCompare = async () => {
+    if (!comparisonName.trim()) {
+      setErrorMessage('Please enter a name for this comparison.');
+      return;
+    }
+
     if (!file1 || !file2) {
       setErrorMessage('Please upload both PDF files before comparing.');
       return;
@@ -74,7 +79,7 @@ export default function NewComparisonPage() {
 
     try {
       const formData = new FormData();
-      if (comparisonName.trim()) formData.append('name', comparisonName.trim());
+      formData.append('name', comparisonName.trim());
       formData.append('yourEstimate', file1);
       formData.append('adjusterEstimate', file2);
 
@@ -141,7 +146,7 @@ export default function NewComparisonPage() {
 
         const payload = (await response.json()) as {
           error?: string;
-          comparison?: { status: 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'AWAITING_ZONE_REVIEW' | 'AWAITING_MATCH_REVIEW'; errorMessage?: string | null };
+          comparison?: { status: 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'AWAITING_ZONE_REVIEW' | 'AWAITING_MATCH_REVIEW' | 'AWAITING_LINE_ITEM_REVIEW'; errorMessage?: string | null };
         };
 
         if (!response.ok || !payload.comparison) {
@@ -151,7 +156,8 @@ export default function NewComparisonPage() {
         if (
           payload.comparison.status === 'COMPLETED' ||
           payload.comparison.status === 'AWAITING_ZONE_REVIEW' ||
-          payload.comparison.status === 'AWAITING_MATCH_REVIEW'
+          payload.comparison.status === 'AWAITING_MATCH_REVIEW' ||
+          payload.comparison.status === 'AWAITING_LINE_ITEM_REVIEW'
         ) {
           if (cancelled) return;
           setProgressPercent(100);
@@ -204,7 +210,7 @@ export default function NewComparisonPage() {
               <p>Upload two Xactimate PDF estimates to compare them side by side.</p>
             </div>
             <div className={styles.nameField}>
-              <label className={styles.nameLabel} htmlFor="comparison-name">Comparison Name <span className={styles.nameOptional}>(optional)</span></label>
+              <label className={styles.nameLabel} htmlFor="comparison-name">Comparison Name</label>
               <input
                 id="comparison-name"
                 className={styles.nameInput}
@@ -265,7 +271,7 @@ export default function NewComparisonPage() {
 
             {errorMessage ? <p className={styles.errorText}>{errorMessage}</p> : null}
 
-            <button className={styles.compareBtn} disabled={!file1 || !file2} onClick={handleCompare}>
+            <button className={styles.compareBtn} disabled={!(comparisonName.trim() && file1 && file2)} onClick={handleCompare}>
               <svg viewBox="0 0 24 24" width="18" height="18"><polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" /></svg>
               Compare Estimates
             </button>

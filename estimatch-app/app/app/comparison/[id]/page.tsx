@@ -11,6 +11,8 @@ import ZoneReview from '@/components/app/ZoneReview';
 import type { ReviewZone } from '@/components/app/ZoneReview';
 import MatchReview from '@/components/app/MatchReview';
 import type { MatchPair } from '@/components/app/MatchReview';
+import LineItemReview from '@/components/app/LineItemReview';
+import type { LineItemZoneRow } from '@/components/app/LineItemReview';
 import { markdownToHtml } from '@/lib/markdown-to-html';
 import styles from './page.module.css';
 import npStyles from '@/components/app/NotesPanel.module.css';
@@ -45,7 +47,7 @@ interface Zone {
 type ApiComparisonDetail = {
   id: string;
   name: string | null;
-  status: 'PROCESSING' | 'AWAITING_ZONE_REVIEW' | 'AWAITING_MATCH_REVIEW' | 'COMPLETED' | 'FAILED';
+  status: 'PROCESSING' | 'AWAITING_ZONE_REVIEW' | 'AWAITING_MATCH_REVIEW' | 'AWAITING_LINE_ITEM_REVIEW' | 'COMPLETED' | 'FAILED';
   errorMessage: string | null;
   createdAt: string;
   yourEstimateFilename: string;
@@ -207,8 +209,10 @@ export default function ComparisonDetailPage() {
   const [summaryError, setSummaryError] = useState<string | null>(null);
   const [n2ReviewZones, setN2ReviewZones] = useState<{ e1: ReviewZone[]; e2: ReviewZone[] } | null>(null);
   const [n2MatchData, setN2MatchData] = useState<{ pairs: MatchPair[]; unmatchedE1: string[]; unmatchedE2: string[] } | null>(null);
+  const [n3LineItemData, setN3LineItemData] = useState<{ yours: LineItemZoneRow[]; adjuster: LineItemZoneRow[]; yoursTotal: number; adjusterTotal: number } | null>(null);
   const [isAwaitingNextPass, setIsAwaitingNextPass] = useState(false);
   const [isAwaitingExtractPhase, setIsAwaitingExtractPhase] = useState(false);
+  const [isAwaitingLineItemPhase, setIsAwaitingLineItemPhase] = useState(false);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [rowNoteMenu, setRowNoteMenu] = useState<{ x: number; y: number; rowKey: string; target: NoteLineItemContext; row: Row; isZoneRow?: boolean; zoneId?: string } | null>(null);
   const [editingRowKey, setEditingRowKey] = useState<string | null>(null);
@@ -414,7 +418,7 @@ export default function ComparisonDetailPage() {
   }, [draftEdits.size]);
 
   useEffect(() => {
-    const isGate = comparison?.status === 'AWAITING_ZONE_REVIEW' || comparison?.status === 'AWAITING_MATCH_REVIEW';
+    const isGate = comparison?.status === 'AWAITING_ZONE_REVIEW' || comparison?.status === 'AWAITING_MATCH_REVIEW' || comparison?.status === 'AWAITING_LINE_ITEM_REVIEW';
     if (!isGate) return;
     function handleBeforeUnload(e: BeforeUnloadEvent) { e.preventDefault(); e.returnValue = ''; }
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -915,6 +919,18 @@ export default function ComparisonDetailPage() {
           }
         }
 
+        if (payload.comparison.status === 'AWAITING_LINE_ITEM_REVIEW') {
+          try {
+            const lirRes = await fetch(`/api/comparisons/${comparisonId}/line-item-review`);
+            if (lirRes.ok) {
+              const lirData = await lirRes.json() as { yours: LineItemZoneRow[]; adjuster: LineItemZoneRow[]; yoursTotal: number; adjusterTotal: number };
+              if (isMounted) setN3LineItemData(lirData);
+            }
+          } catch {
+            // non-fatal — LineItemReview will show empty counts
+          }
+        }
+
         if (!isMounted) return;
         setComparison(payload.comparison);
         setZones(payload.zones ?? []);
@@ -982,6 +998,7 @@ export default function ComparisonDetailPage() {
         if (payload.comparison.status !== 'PROCESSING') {
           setIsAwaitingNextPass(false);
           setIsAwaitingExtractPhase(false);
+          setIsAwaitingLineItemPhase(false);
         }
 
         // Fetch review data before setComparison so updates batch in one render.
@@ -1006,6 +1023,18 @@ export default function ComparisonDetailPage() {
             }
           } catch {
             // non-fatal — MatchReview shows empty lists
+          }
+        }
+
+        if (payload.comparison.status === 'AWAITING_LINE_ITEM_REVIEW') {
+          try {
+            const lirRes = await fetch(`/api/comparisons/${comparisonId}/line-item-review`);
+            if (lirRes.ok) {
+              const lirData = await lirRes.json() as { yours: LineItemZoneRow[]; adjuster: LineItemZoneRow[]; yoursTotal: number; adjusterTotal: number };
+              setN3LineItemData(lirData);
+            }
+          } catch {
+            // non-fatal — LineItemReview shows empty counts
           }
         }
 
@@ -1531,10 +1560,10 @@ export default function ComparisonDetailPage() {
       <div className={styles.unsavedGuardDialog} onClick={(e) => e.stopPropagation()}>
         <p className={styles.unsavedGuardTitle}>Exit and delete comparison?</p>
         <p className={styles.unsavedGuardBody}>
-          Leaving now will <strong>permanently delete</strong> this comparison. You&apos;ll need to start a new one.
+          Leaving now will <strong>permanently delete</strong>{' '}this comparison. You&apos;ll need to start a new one.
         </p>
         <div className={styles.unsavedGuardActions}>
-          <button className={styles.unsavedGuardSaveBtn} style={{ background: 'var(--danger-color, #dc2626)' }} disabled={gateExiting} onClick={handleGateExitConfirm}>
+          <button className={styles.unsavedGuardSaveBtn} style={{ background: 'var(--danger-color, #dc2626)', color: '#fff' }} disabled={gateExiting} onClick={handleGateExitConfirm}>
             {gateExiting ? 'Deleting…' : 'Yes, delete and exit'}
           </button>
           <button className={styles.unsavedGuardCancelBtn} disabled={gateExiting} onClick={() => setGateExitConfirmOpen(false)}>Cancel</button>
@@ -1609,6 +1638,27 @@ export default function ComparisonDetailPage() {
     );
   }
 
+  if (comparison?.status === 'AWAITING_LINE_ITEM_REVIEW' && comparisonId) {
+    return (
+      <>
+        <LineItemReview
+          comparisonId={comparisonId}
+          initialYours={n3LineItemData?.yours ?? []}
+          initialAdj={n3LineItemData?.adjuster ?? []}
+          yoursTotal={n3LineItemData?.yoursTotal ?? 0}
+          adjusterTotal={n3LineItemData?.adjusterTotal ?? 0}
+          onConfirmed={() => {
+            setComparison(prev => prev ? { ...prev, status: 'PROCESSING' } : prev);
+            setN3LineItemData(null);
+            setIsAwaitingLineItemPhase(true);
+          }}
+          onExit={handleGateExitRequest}
+        />
+        {gateExitDialog}
+      </>
+    );
+  }
+
   if (isAwaitingExtractPhase && comparison?.status === 'PROCESSING') {
     return (
       <>
@@ -1617,6 +1667,20 @@ export default function ComparisonDetailPage() {
         <div className={styles.n2LoadingOverlay}>
           <div className={styles.n2LoadingSpinner} />
           <h2 className={styles.n2LoadingHeadline}>Extracting and matching line items…</h2>
+          <p className={styles.n2LoadingSub}>This may take a moment.</p>
+        </div>
+      </>
+    );
+  }
+
+  if (isAwaitingLineItemPhase && comparison?.status === 'PROCESSING') {
+    return (
+      <>
+        <MobileAppBar title={comparison?.name ?? 'Comparison'} />
+        <TrialBanner />
+        <div className={styles.n2LoadingOverlay}>
+          <div className={styles.n2LoadingSpinner} />
+          <h2 className={styles.n2LoadingHeadline}>Matching line items…</h2>
           <p className={styles.n2LoadingSub}>This may take a moment.</p>
         </div>
       </>
@@ -2159,7 +2223,7 @@ export default function ComparisonDetailPage() {
                               {draftZoneNames.has(zone.id) && <span className={styles.draftIndicator} title="Zone name edited"> ✎</span>}
                               <span className={styles.zoneItemCount}>{visibleItems.length}</span>
                               {zone.confidence !== null && zone.confidence > 0 && (
-                                <span className={`${styles.confidenceBadge} ${zone.confidence >= 85 ? styles.confidenceHigh : styles.confidenceMed}`} title={`Zone matching confidence: ${zone.confidence}%`}>{zone.confidence}%</span>
+                                <span className={`${styles.confidenceBadge} ${zone.confidence >= 85 ? styles.confidenceHigh : styles.confidenceMed}`} title={`Zone matching confidence: ${zone.confidence.toFixed(2)}%`}>{zone.confidence.toFixed(2)}%</span>
                               )}
                               {zone.yourName && zone.yourName !== zone.canonicalName && (
                                 <span className={styles.zoneAltName}>{zone.yourName}</span>

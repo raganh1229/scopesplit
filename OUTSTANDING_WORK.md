@@ -2,7 +2,7 @@
 
 > **Purpose**: Single source of truth for known follow-up work derived from the Apr 27, 2026 full-application code review (multiple passes, including a Vercel/serverless hardening pass in the evening). Items are scoped to "needs implementation/fix"; routine testing tasks are tracked separately.
 >
-> **Last Updated**: May 3, 2026 (~22:59 EDT) — N1 Inngest conversion **RESOLVED** (all 9 phases complete, empirically verified end-to-end on 1717-item run). Added #32 continuation-extraction hallucination, #33 Stage A page-chunking for >1K-item PDFs, #34 undici dispatcher prod-verification — three hand-offs to N2 (speed / capacity / accuracy).
+> **Last Updated**: May 20, 2026 — N3 pipeline fully built (all 18 phases) and connected to the Scopesplit UI. Line Item Review gate (Phase 8.5) implemented. Run snapshot logging added. See `N3_BUILD_LEDGER.md` for current N3 status and pending items (Phases 5, 7, 10 UI gates; P8 extraction miss root-cause fix; V2/V3 validation). Previous update: May 3, 2026 (~22:59 EDT) — N1 Inngest conversion **RESOLVED** (all 9 phases complete, empirically verified end-to-end on 1717-item run). Added #32 continuation-extraction hallucination, #33 Stage A page-chunking for >1K-item PDFs, #34 undici dispatcher prod-verification — three hand-offs to N2 (speed / capacity / accuracy).
 >
 > **Source**: Multi-pass `/review` of `estimatch-app/` covering all API routes, lib modules, middleware (`proxy.ts`), webhooks, frontend pages, and components. The evening pass specifically evaluated behavior under Vercel serverless constraints (maxDuration, fire-and-forget patterns, read-only filesystem).
 
@@ -468,3 +468,32 @@ A second deep review specifically evaluating behavior under **Vercel serverless 
 ### N15 — `lib/debug-trace.ts` trace file can race under concurrent dev runs (**P2, OPEN**)
 - **Symptom**: `traceReset()` truncates `scripts/pipeline-trace.txt` on every comparison. Concurrent local comparisons race. Never affects production (N3 guard prevents filesystem writes entirely in prod).
 - **Fix** (optional): include comparison ID in filename: `scripts/pipeline-trace-${comparisonId}.txt`. Dev-only nicety.
+
+---
+
+## N3 Pipeline — Specific Outstanding Items
+
+> These are N3-only items. The canonical tracking doc is `N3_BUILD_LEDGER.md §What Is Not Yet Built`. This section summarises the highest-priority items for quick reference here.
+
+### N3-1 — Phase 5 + Phase 7 UI review gates not yet implemented (**P1, OPEN**)
+- **Symptom**: Zone Review gate (Phase 5) and Zone Correspondence Review gate (Phase 7) auto-proceed in the Inngest pipeline without pausing for user review. The `AWAITING_ZONE_REVIEW` and `AWAITING_MATCH_REVIEW` statuses exist and the UI components (`ZoneReview`, `MatchReview`) exist, but the `p5-zone-review-gate` and `p7-correspondence-gate` Inngest steps do not yet flip to these statuses — they fire an immediate `step.waitForEvent` that is immediately satisfied by a no-op confirm.
+- **Fix**: Implement `p5-zone-review-gate` and `p7-correspondence-gate` in `process-comparison-v3.ts` to mirror the Phase 8.5 gate pattern (flip status, `step.waitForEvent`, resume on confirm). Wire confirm endpoints similarly to `/api/comparisons/[id]/line-item-review/confirm`.
+
+### N3-2 — 4 line items consistently not extracted by Phase 8 (**P1, OPEN**)
+- **Files**: `lib/n3/passes/extract-line-items.ts`, `lib/n3/prompts/extraction.ts`
+- **Symptom**: Set12 accuracy runs show 4 items never extracted (2 contractor-only `MISSING`, 2 adjuster-only `ADDED`). Items are present in source PDFs. Root cause: extraction prompt's strict "Extract ONLY numbered line items beginning with an integer followed by a period" rule may be over-filtering items that use sub-numbering or alternate formatting.
+- **Mitigation in place**: Line Item Review gate (Phase 8.5) lets user flag and trigger re-extraction.
+- **Fix** (longer-term): audit the specific missed items' PDF formatting; relax prompt rule for sub-numbered items; consider `approxItems` delta auto-trigger for re-extraction without user input.
+
+### N3-3 — Phase 10 extraction validation not implemented (**P2, OPEN**)
+- **File**: `lib/n3/passes/` (no pass exists for Phase 10 yet)
+- **Symptom**: `N3ExtractionWarning` rows are never written. The schema and model exist but no pass populates them.
+- **Fix**: Implement `lib/n3/passes/extraction-validation.ts` that compares extracted `itemCount` per zone against `approxItems` and writes `N3ExtractionWarning` rows for zones where the delta exceeds a threshold.
+
+### N3-4 — Prisma migration history has schema drift (**P2, OPEN**)
+- **Symptom**: `prisma migrate dev` detects drift because the `embedding` column on `n3_line_items` and the `comparison_status` enum value `AWAITING_LINE_ITEM_REVIEW` were applied via raw SQL (not via migration files). `prisma migrate dev` prompts to reset the DB.
+- **Fix**: Create a baseline migration with `prisma migrate resolve --applied` or add a new migration file that accounts for the raw SQL changes, then verify `prisma migrate status` shows no drift. Do NOT run `prisma migrate reset` on production.
+
+### N3-5 — V2/V3 test set validation not yet run (**P1, OPEN**)
+- **Symptom**: N3 accuracy has only been verified on Set11 and Set12 (V1-format PDFs). No accuracy runs have been done against V2 or V3 format PDFs.
+- **Fix**: Run `runner-n3.js --set <SetN>` against V2 and V3 sets once they are available. Investigate any format-specific failures.

@@ -31,7 +31,7 @@ export async function GET(
 
   const comparison = await prisma.comparison.findUnique({
     where: { id: comparisonId },
-    select: { userId: true, status: true },
+    select: { userId: true, status: true, pipelineVersion: true },
   });
   if (!comparison) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (comparison.userId !== dbUser.id)
@@ -44,6 +44,48 @@ export async function GET(
     );
   }
 
+  // ── N3 path: read from n3_zone_correspondences table ─────────────────────
+  if (comparison.pipelineVersion === 'n3') {
+    const corrs = await prisma.n3ZoneCorrespondence.findMany({
+      where: { comparisonId },
+      include: {
+        yourZones: { select: { name: true } },
+        adjusterZones: { select: { name: true } },
+      },
+      orderBy: { confidence: 'desc' },
+    });
+
+    const paired = new Set<string>();
+    const pairs = corrs.map(c => {
+      const e1 = c.yourZones.map(z => z.name);
+      const e2 = c.adjusterZones.map(z => z.name);
+      e1.forEach(n => paired.add(n));
+      e2.forEach(n => paired.add(n));
+      return {
+        e1Zones: e1,
+        e2Zones: e2,
+        canonical: e1[0] ?? e2[0] ?? '',
+        isMerged: e1.length > 1 || e2.length > 1,
+        confidence: Math.round(Number(c.confidence) * 10000) / 100,
+      };
+    });
+
+    const allYours = await prisma.n3Zone.findMany({
+      where: { comparisonId, source: 'yours' },
+      select: { name: true },
+    });
+    const allAdj = await prisma.n3Zone.findMany({
+      where: { comparisonId, source: 'adjuster' },
+      select: { name: true },
+    });
+
+    const unmatchedE1 = allYours.map(z => z.name).filter(n => !paired.has(n));
+    const unmatchedE2 = allAdj.map(z => z.name).filter(n => !paired.has(n));
+
+    return NextResponse.json({ pairs, unmatchedE1, unmatchedE2 });
+  }
+
+  // ── N2 path: read from n2 state ────────────────────────────────────────────
   const matched = await readZonesMatched(comparisonId);
   if (!matched) {
     return NextResponse.json({ error: 'Match state not found' }, { status: 500 });
