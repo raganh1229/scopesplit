@@ -84,7 +84,6 @@ async function retrieveAiProposedZone(
     },
   });
 
-  const perItemBudget = CANDIDATE_BUDGETS.ai_proposed_zone;
   let pairCount = 0;
   for (const corr of correspondences) {
     const yourZoneIds = corr.yourZones.map(z => z.id);
@@ -94,25 +93,17 @@ async function retrieveAiProposedZone(
     const [yoursItems, adjItems] = await Promise.all([
       prisma.n3LineItem.findMany({
         where: { comparisonId, source: 'yours', zoneId: { in: yourZoneIds } },
-        select: { id: true, sourceLineNumber: true },
-        orderBy: { sourceLineNumber: 'asc' },
+        select: { id: true },
       }),
       prisma.n3LineItem.findMany({
         where: { comparisonId, source: 'adjuster', zoneId: { in: adjZoneIds } },
-        select: { id: true, sourceLineNumber: true },
-        orderBy: { sourceLineNumber: 'asc' },
+        select: { id: true },
       }),
     ]);
 
-    const adjCount = adjItems.length;
-    for (let yi = 0; yi < yoursItems.length; yi++) {
-      const y = yoursItems[yi];
-      const anchor = Math.round((yi / Math.max(yoursItems.length - 1, 1)) * (adjCount - 1));
-      const half = Math.floor(perItemBudget / 2);
-      const lo = Math.max(0, anchor - half);
-      const hi = Math.min(adjCount - 1, lo + perItemBudget - 1);
-      for (let ai = lo; ai <= hi; ai++) {
-        addCandidate(acc, y.id, adjItems[ai].id, 'ai_proposed_zone');
+    for (const y of yoursItems) {
+      for (const a of adjItems) {
+        addCandidate(acc, y.id, a.id, 'ai_proposed_zone');
         pairCount++;
       }
     }
