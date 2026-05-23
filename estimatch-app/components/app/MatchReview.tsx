@@ -76,22 +76,6 @@ export default function MatchReview({
 
   const [warnDismissed, setWarnDismissed] = useState(false);
 
-  function handleUnpair(i: number) {
-    setE1Slots(prev => {
-      const next = [...prev];
-      next.splice(i, 1);
-      next.push(null);
-      return next;
-    });
-    setE2Slots(prev => {
-      const next = [...prev];
-      const e2Name = next[i];
-      next.splice(i, 1);
-      next.push(e2Name);
-      return next;
-    });
-  }
-
   function handleReset() {
     setE1Slots([...initE1]);
     setE2Slots([...initE2]);
@@ -263,7 +247,7 @@ export default function MatchReview({
             <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <div className={styles.warnText}>
-            <strong>Some zone pairings have low confidence.</strong> The AI may have grouped zones incorrectly — review carefully. You can drag zones to fix mismatches, or use the ✕ button to unpair any row.
+            <strong>Some zone pairings have low confidence.</strong> This is common when the two estimates use different zone naming conventions. Line items are matched by content, not zone name — so even low-confidence pairings won't cause missed matches. On the final page, each line item will appear under its zone from <em>your</em> estimate; adjuster-only items will appear under their own zone name.
           </div>
           <button className={styles.warnClose} onClick={() => setWarnDismissed(true)} aria-label="Dismiss">✕</button>
         </div>
@@ -274,7 +258,6 @@ export default function MatchReview({
           <div className={styles.colHead}>Your Estimate</div>
           <div className={styles.colHeadMid} aria-hidden />
           <div className={styles.colHead}>Adjuster&apos;s Estimate</div>
-          <div className={styles.colHeadAction} aria-hidden />
         </div>
 
         <div className={styles.rows}>
@@ -359,19 +342,6 @@ export default function MatchReview({
                   )}
                 </div>
 
-                {/* ── Unpair action ─── */}
-                <div className={styles.rowAction}>
-                  {isPaired && (
-                    <button
-                      className={styles.unpairBtn}
-                      onClick={() => handleUnpair(i)}
-                      title="Unpair these zones — they will be extracted independently"
-                      disabled={confirming || correcting || goingBack}
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
               </div>
             );
           })}
