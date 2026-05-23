@@ -2545,3 +2545,123 @@
   color: var(--text-secondary);
   margin: 0;
 }
+
+/* ── Zone Warning Banner ────────────────────────────────────────────────── */
+.zoneWarningBanner {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  animation: zoneWarningSlideIn 0.3s ease-out;
+}
+
+@keyframes zoneWarningSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.zoneWarningContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+}
+
+.zoneWarningIcon {
+  color: #d97706;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.zoneWarningText {
+  flex: 1;
+}
+
+.zoneWarningText strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 4px;
+}
+
+.zoneWarningText p {
+  margin: 0;
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.4;
+}
+
+.zoneWarningActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.zoneResetBtn {
+  background: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.zoneResetBtn:hover {
+  background: #d97706;
+}
+
+.zoneWarningClose {
+  background: none;
+  border: none;
+  color: #78350f;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.zoneWarningClose:hover {
+  background: rgba(217, 119, 6, 0.1);
+}
+
+/* ── Zone Unpair Checkbox ───────────────────────────────────────────────── */
+.zoneUnpairLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 2px 6px 2px 2px;
+  transition: all 0.2s ease;
+}
+
+.zoneUnpairLabel:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-default);
+}
+
+.zoneUnpairCheckbox {
+  margin: 0;
+  cursor: pointer;
+}
+
+.zoneUnpairText {
+  user-select: none;
+  font-weight: 500;
+}

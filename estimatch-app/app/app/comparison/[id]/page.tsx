@@ -233,6 +233,11 @@ export default function ComparisonDetailPage() {
   const draftZoneNamesRef = useRef<Map<string, string>>(new Map());
   const [draftInserts, setDraftInserts] = useState<Map<string, DraftInsert>>(new Map());
   const draftInsertsRef = useRef<Map<string, DraftInsert>>(new Map());
+  
+  // Zone management state
+  const [unpairedZones, setUnpairedZones] = useState<Set<string>>(new Set());
+  const [originalZones, setOriginalZones] = useState<Zone[]>([]);
+  const [showZoneWarning, setShowZoneWarning] = useState(false);
   const zonesRef = useRef<Zone[]>([]);
   const editingRowIdRef = useRef<string | null>(null);
   const editingOriginalRef = useRef<EditValues | null>(null);
@@ -447,6 +452,109 @@ export default function ComparisonDetailPage() {
       // ignore storage errors
     }
   }, [adjusterCollapsed, diffCollapsed]);
+
+  // Detect low zone confidence and store original zones
+  useEffect(() => {
+    if (zones.length > 0 && originalZones.length === 0) {
+      setOriginalZones([...zones]);
+    }
+    
+    const hasLowConfidence = zones.some(zone => 
+      zone.confidence !== null && zone.confidence > 0 && zone.confidence < 70
+    );
+    setShowZoneWarning(hasLowConfidence);
+  }, [zones, originalZones.length]);
+
+  // Load existing zone management state
+  useEffect(() => {
+    if (!comparisonId || comparison?.status !== 'COMPLETED') return;
+    
+    const loadZoneManagement = async () => {
+      try {
+        const response = await fetch(`/api/comparisons/${comparisonId}/zone-management`);
+        if (response.ok) {
+          const data = await response.json() as { unpairedZones: string[] };
+          setUnpairedZones(new Set(data.unpairedZones));
+        }
+      } catch (error) {
+        console.error('Failed to load zone management state:', error);
+      }
+    };
+    
+    loadZoneManagement();
+  }, [comparisonId, comparison?.status]);
+
+  // Zone management handlers
+  const handleToggleUnpairedZone = async (zoneId: string) => {
+    const newUnpaired = new Set(unpairedZones);
+    const isUnpairing = !newUnpaired.has(zoneId);
+    
+    if (isUnpairing) {
+      newUnpaired.add(zoneId);
+    } else {
+      newUnpaired.delete(zoneId);
+    }
+    
+    // Update UI immediately for responsiveness
+    setUnpairedZones(newUnpaired);
+    
+    try {
+      const response = await fetch(`/api/comparisons/${comparisonId}/zone-management`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          action: 'unpair',
+          zoneIds: [zoneId]
+        }),
+      });
+      
+      if (!response.ok) {
+        // Revert on error
+        setUnpairedZones(prev => {
+          const reverted = new Set(prev);
+          if (isUnpairing) {
+            reverted.delete(zoneId);
+          } else {
+            reverted.add(zoneId);
+          }
+          return reverted;
+        });
+        console.error('Failed to update zone pairing');
+      }
+    } catch (error) {
+      // Revert on error
+      setUnpairedZones(prev => {
+        const reverted = new Set(prev);
+        if (isUnpairing) {
+          reverted.delete(zoneId);
+        } else {
+          reverted.add(zoneId);
+        }
+        return reverted;
+      });
+      console.error('Failed to update zone pairing:', error);
+    }
+  };
+
+  const handleResetZones = async () => {
+    try {
+      const response = await fetch(`/api/comparisons/${comparisonId}/zone-management`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'reset' }),
+      });
+      
+      if (response.ok) {
+        setZones([...originalZones]);
+        setUnpairedZones(new Set());
+        setDraftZoneNames(new Map());
+      } else {
+        console.error('Failed to reset zones');
+      }
+    } catch (error) {
+      console.error('Failed to reset zones:', error);
+    }
+  };
 
   useEffect(() => {
     function updateViewportWidth() {
@@ -2088,12 +2196,51 @@ export default function ComparisonDetailPage() {
             : undefined;
 
           return (
-            <div
-              ref={tableWrapRef}
-              className={`${styles.tableWrap} ${enableTableScroll ? styles.tableWrapScrollMode : ''}`}
-              onScroll={handleTableWrapScroll}
-            >
-              <table className={styles.tbl} style={tableMinWidthPx ? { minWidth: `${tableMinWidthPx}px` } : undefined}>
+            <>
+              {/* Zone Confidence Warning Banner */}
+              {showZoneWarning && (
+                <div className={styles.zoneWarningBanner}>
+                  <div className={styles.zoneWarningContent}>
+                    <div className={styles.zoneWarningIcon}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                      </svg>
+                    </div>
+                    <div className={styles.zoneWarningText}>
+                      <strong>Zone matching may be incorrect</strong>
+                      <p>Different estimates can categorize zones in completely different ways. You can unpair zones below to make them independent — this won't compromise line item matching accuracy.</p>
+                    </div>
+                    <div className={styles.zoneWarningActions}>
+                      <button 
+                        className={styles.zoneResetBtn}
+                        onClick={handleResetZones}
+                        title="Reset to original zone matchings"
+                      >
+                        Reset
+                      </button>
+                      <button 
+                        className={styles.zoneWarningClose}
+                        onClick={() => setShowZoneWarning(false)}
+                        title="Dismiss warning"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <line x1="18" y1="6" x2="6" y2="18"/>
+                          <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div
+                ref={tableWrapRef}
+                className={`${styles.tableWrap} ${enableTableScroll ? styles.tableWrapScrollMode : ''}`}
+                onScroll={handleTableWrapScroll}
+              >
+                <table className={styles.tbl} style={tableMinWidthPx ? { minWidth: `${tableMinWidthPx}px` } : undefined}>
                 <colgroup>
                   {/* Your side: desc, qty, [costs], total */}
                   <col style={{ width: `${yourDescW}%` }} />
@@ -2230,6 +2377,17 @@ export default function ComparisonDetailPage() {
                               <span className={styles.zoneItemCount}>{visibleItems.length}</span>
                               {zone.confidence !== null && zone.confidence > 0 && (
                                 <span className={`${styles.confidenceBadge} ${zone.confidence >= 85 ? styles.confidenceHigh : styles.confidenceMed}`} title={`Zone matching confidence: ${zone.confidence.toFixed(2)}%`}>{zone.confidence.toFixed(2)}%</span>
+                              )}
+                              {showZoneWarning && (
+                                <label className={styles.zoneUnpairLabel} title="Unpair this zone to make it independent">
+                                  <input
+                                    type="checkbox"
+                                    className={styles.zoneUnpairCheckbox}
+                                    checked={unpairedZones.has(zone.id)}
+                                    onChange={() => handleToggleUnpairedZone(zone.id)}
+                                  />
+                                  <span className={styles.zoneUnpairText}>Unpaired</span>
+                                </label>
                               )}
                               {zone.yourName && zone.yourName !== zone.canonicalName && (
                                 <span className={styles.zoneAltName}>{zone.yourName}</span>
@@ -2419,6 +2577,7 @@ export default function ComparisonDetailPage() {
                 </tbody>
               </table>
             </div>
+            </>
           );
         })()}
 

@@ -113,6 +113,7 @@ model Comparison {
   n3MatchDecisions       N3MatchDecision[]
   n3LlmCalls             N3LlmCall[]
   n3ExtractionWarnings   N3ExtractionWarning[]
+  n3ZoneManagement       N3ZoneManagement[]
 
   @@map("comparisons")
 }
@@ -445,6 +446,22 @@ model N3LlmCall {
 
   @@index([comparisonId, createdAt], map: "idx_n3_llm_calls_comparison_created")
   @@map("n3_llm_calls")
+}
+
+// ── N3 Zone Management (user overrides for zone correspondences) ─────────────
+
+model N3ZoneManagement {
+  id           String   @id @default(uuid())
+  comparisonId String   @map("comparison_id")
+  zoneId       String   @map("zone_id")
+  isUnpaired   Boolean  @default(false) @map("is_unpaired")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  comparison Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+
+  @@unique([comparisonId, zoneId], map: "uniq_n3_zone_management_comparison_zone")
+  @@index([comparisonId, isUnpaired], map: "idx_n3_zone_management_comparison_unpaired")
+  @@map("n3_zone_management")
 }
 
 // ── N3 Extraction Warnings (Phase 10) ────────────────────────────────────────
