@@ -219,7 +219,7 @@ export async function proposeCorrespondencesN3(
         },
       });
     }
-  });
+  }, { timeout: 30_000 });
 
   logger.info('[n3/propose-correspondences] n3_zone_correspondences written', {
     comparisonId,

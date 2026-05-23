@@ -47,12 +47,14 @@ export function buildExtractionPrompt(p: ExtractionPromptParams): {
     `EXTRACTION RULES:\n` +
     `1. Extract ONLY numbered line items — items beginning with an integer followed by a period (e.g. "1.", "47.", "203.").\n` +
     `2. SKIP: zone headers, section sub-headers (WALLS, CEILINGS, etc.), dimension rows, Subroom lines, sub-totals, totals, grand totals, and page headers/footers.\n` +
-    `3. Extract ONLY items within the zone "${p.zoneName}". Stop when you encounter a header for a different zone.\n` +
+    `3. Extract ONLY items within the zone "${p.zoneName}". Stop ONLY when you encounter a header for a genuinely different zone (a new room or area name at the same heading level as "${p.zoneName}"). Some zones contain optional section sub-headers (e.g. WALLS, CEILINGS, FLOORING, DECKING, FLASHING, PLUMBING) — these are organizational labels within the zone, not zone boundaries. Continue extracting past them. Other zones have no sub-headers at all — that is equally normal. Never stop early based on a sub-header.\n` +
     `4. Cost values must be exact numbers from the PDF — do not round, estimate, or calculate.\n` +
     `5. If a cost column has no value for an item, return null for that field.\n` +
     `6. If a description spans multiple lines, concatenate all lines into a single string with a space separator.\n` +
-    `7. Do not invent items. If you are not certain an item exists in the PDF, do not include it.\n` +
-    `8. Use the page numbers PRINTED on each page of this sub-document — do not renumber from 1.\n\n` +
+    `7. Every integer-period pattern (e.g. "1.", "47.", "203.") within this zone is a line item and MUST appear in the output — never skip a numbered item. If a specific field value (cost, quantity, unit) is unclear or unreadable, return null for that field. Uncertainty applies to field values, not to item existence.\n` +
+    `8. Use the page numbers PRINTED on each page of this sub-document — do not renumber from 1.\n` +
+    `9. Zones span multiple pages. Continue extracting across every page boundary until you reach a different zone header or the end of this sub-document. Item numbers continue sequentially across pages. If a description is split across a page break, concatenate the parts into one string.\n` +
+    `10. After completing extraction, verify sequential integrity: line items within a zone are numbered sequentially. If you find a gap (e.g. you have 14, 17 but not 15, 16), re-scan the document for those missing numbers and add them. Gaps in the sequence mean missed items — not intentional omissions.\n\n` +
 
     `For each item extract:\n` +
     `- n: item number (integer, as printed in the PDF)\n` +

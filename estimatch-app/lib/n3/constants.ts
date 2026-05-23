@@ -86,7 +86,7 @@ export const ZONE_CONFIDENCE = {
 
 export const COMPONENT_SIZE = {
   SMALL_MAX:  50,    // exact Hungarian assignment
-  MEDIUM_MAX: 250,   // pruned Hungarian assignment
+  MEDIUM_MAX: 350,   // pruned Hungarian assignment (raised from 250 for storm damage claims)
   // > MEDIUM_MAX → 'large': split by strong feature, greedy + repair
 } as const;
 

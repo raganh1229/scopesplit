@@ -110,7 +110,7 @@ export type N3ZoneCorrespondence = {
  * A line item after Phase 8 (extraction) + Phase 9 (normalization).
  * INTERMEDIATE processing shape — NOT the output `LineItem` Prisma model.
  *
- * Phase 11 populates `embeddingVector` via pgvector (OpenAI text-embedding-3-small).
+ * Phase 11 populates `embeddingVector` via pgvector (Voyage AI voyage-3-lite, 512-dim).
  * All financial fields are in dollars (numbers), not strings.
  * §13.1 canonical shape.
  */

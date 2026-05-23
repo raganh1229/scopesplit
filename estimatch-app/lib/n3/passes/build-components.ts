@@ -98,10 +98,17 @@ class UnionFind {
 
 // ── Component size classification ─────────────────────────────────────────────
 
-function classifySize(yoursCount: number, adjCount: number): N3ComponentSize {
-  const total = yoursCount + adjCount;
-  if (total <= COMPONENT_SIZE.SMALL_MAX)  return 'small';
-  if (total <= COMPONENT_SIZE.MEDIUM_MAX) return 'medium';
+function classifySize(yoursCount: number, adjCount: number, totalItemsInEstimate: number): N3ComponentSize {
+  const componentTotal = yoursCount + adjCount;
+  
+  // Dynamic MEDIUM_MAX: scales up for large estimates
+  // Base 350, add 100 for every 200 items over 200
+  // Examples: 200 items → 350 | 400 items → 450 | 2400 items → 1450
+  const excessItems = Math.max(0, totalItemsInEstimate - 200);
+  const dynamicMediumMax = COMPONENT_SIZE.MEDIUM_MAX + Math.ceil(excessItems / 200) * 100;
+  
+  if (componentTotal <= COMPONENT_SIZE.SMALL_MAX) return 'small';
+  if (componentTotal <= dynamicMediumMax) return 'medium';
   return 'large';
 }
 
@@ -164,7 +171,7 @@ export async function buildComponentsN3(
     // Skip degenerate components (items only on one side — shouldn't occur with valid edges)
     if (yoursIds.length === 0 || adjIds.length === 0) continue;
 
-    const size        = classifySize(yoursIds.length, adjIds.length);
+    const size        = classifySize(yoursIds.length, adjIds.length, lineItems.length);
     const isAmbiguous = yoursIds.length > 1 || adjIds.length > 1;
 
     bySize[size]++;

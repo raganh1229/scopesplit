@@ -31,11 +31,65 @@ import prisma from '@/lib/prisma';
 import type { StepLogger } from '@/lib/n3/passes/detect-zones';
 import {
   computeRawScore,
+  computeRawScoreWithWeights,
   computeFinalScore,
   shouldRejectEdge,
 } from '@/lib/n3/normalization';
-import { ZONE_BOOSTS, SCORE_THRESHOLDS } from '@/lib/n3/constants';
+import { ZONE_BOOSTS, SCORE_THRESHOLDS, SCORE_WEIGHTS } from '@/lib/n3/constants';
 import type { N3CandidateScoreFeatures, N3ZoneBoost } from '@/lib/n3/types';
+
+// ── Dynamic weight calculation ─────────────────────────────────────────────────
+//
+// Detects whether item codes or materials are present in the line items.
+// When present, boosts the corresponding feature weights and redistributes
+// from descriptionSemanticSimilarity to maintain sum=1.00.
+//
+// SAFE DEFAULT: When no item codes/materials present, returns SCORE_WEIGHTS
+// unchanged. PDF-only estimates (Sets 11-16) get identical behavior to before.
+
+type LineItemForDetection = {
+  itemCode: string | null;
+  material?: string | null;
+  object?: string | null;
+};
+
+type EffectiveWeights = Record<keyof typeof SCORE_WEIGHTS, number>;
+
+function getEffectiveWeights(items: LineItemForDetection[]): EffectiveWeights {
+  // Detect feature presence: at least one item on EACH side must have data
+  // (otherwise the feature can never produce non-zero similarity)
+  const hasItemCodes = items.some(li => li.itemCode != null && li.itemCode !== '');
+  const hasMaterials = items.some(li => li.material != null && li.object != null);
+
+  // No structured data → use defaults (current behavior, unchanged)
+  if (!hasItemCodes && !hasMaterials) {
+    return SCORE_WEIGHTS;
+  }
+
+  // Calculate boosts and redistribution
+  let itemCodeWeight: number = SCORE_WEIGHTS.itemCodeSimilarity;
+  let materialObjectWeight: number = SCORE_WEIGHTS.materialObjectSimilarity;
+  let semanticWeight: number = SCORE_WEIGHTS.descriptionSemanticSimilarity;
+
+  if (hasItemCodes) {
+    // Item code is highly discriminative when present (exact match = same item)
+    itemCodeWeight = 0.12;  // boost from 0.01 → 0.12 (+0.11)
+    semanticWeight -= 0.11; // pull from semantic similarity
+  }
+
+  if (hasMaterials) {
+    // Material/object catches type variations (Type X vs standard drywall)
+    materialObjectWeight = 0.10;  // boost from 0.01 → 0.10 (+0.09)
+    semanticWeight -= 0.09;        // pull from semantic similarity
+  }
+
+  return {
+    ...SCORE_WEIGHTS,
+    itemCodeSimilarity:            itemCodeWeight,
+    materialObjectSimilarity:      materialObjectWeight,
+    descriptionSemanticSimilarity: semanticWeight,
+  };
+}
 
 // ── Return type ───────────────────────────────────────────────────────────────
 
@@ -175,6 +229,8 @@ export async function scoreCandidatesN3(
       trade: true,
       action: true,
       itemCode: true,
+      material: true,
+      object: true,
       normalizedQuantity: true,
       normalizedUnit: true,
       totalAmount: true,
@@ -236,12 +292,21 @@ export async function scoreCandidatesN3(
     cosineRows.map(r => [r.edge_id, Math.max(0, Math.min(1, Number(r.cosine_sim)))]),
   );
 
+  // ── 4b. Compute effective weights based on data presence ─────────────────
+  const effectiveWeights = getEffectiveWeights(lineItems);
+  const weightsAreCustom =
+    effectiveWeights.itemCodeSimilarity !== SCORE_WEIGHTS.itemCodeSimilarity ||
+    effectiveWeights.materialObjectSimilarity !== SCORE_WEIGHTS.materialObjectSimilarity;
+
   logger.info('[n3/score-candidates] data loaded', {
     comparisonId,
     lineItems: lineItems.length,
     correspondences: correspondences.length,
     edges: edges.length,
     cosineRows: cosineRows.length,
+    dynamicWeights: weightsAreCustom,
+    itemCodeWeight: effectiveWeights.itemCodeSimilarity,
+    materialObjectWeight: effectiveWeights.materialObjectSimilarity,
   });
 
   // ── 5. Score all edges ─────────────────────────────────────────────────────
@@ -276,7 +341,10 @@ export async function scoreCandidatesN3(
     };
 
     const boosts     = buildBoosts(yours.zoneId, adj.zoneId, corrLookup, verifiedYoursZones, verifiedAdjZones);
-    const rawScore   = computeRawScore(features);
+    // Use dynamic weights when item codes/materials present; otherwise identical to computeRawScore(features)
+    const rawScore   = weightsAreCustom
+      ? computeRawScoreWithWeights(features, effectiveWeights)
+      : computeRawScore(features);
     const finalScore = computeFinalScore(rawScore, boosts);
     const isRejected = shouldRejectEdge(finalScore);
 

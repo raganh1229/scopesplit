@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import prisma from '@/lib/prisma';
-import { SCORE_WEIGHTS, SCORE_THRESHOLDS, COMPONENT_SIZE } from '@/lib/n3/constants';
+import { SCORE_WEIGHTS, SCORE_THRESHOLDS } from '@/lib/n3/constants';
 import type {
   N3DashboardMetrics, PhaseSummary, FeatureStats, DecisionDetail,
   Phase4Metrics, Phase6Metrics, Phase8Metrics, Phase9Metrics,
@@ -101,9 +101,10 @@ export async function computePipelineMetrics(comparisonId: string): Promise<N3Da
   try {
     const result = await prisma.$queryRaw<Array<{ count: bigint }>>`
       SELECT COUNT(*)::bigint as count FROM n3_line_items
-      WHERE comparison_id = ${comparisonId}::uuid AND embedding IS NOT NULL`;
+      WHERE comparison_id = ${comparisonId} AND embedding IS NOT NULL`;
     embeddedCount = Number(result[0]?.count ?? 0);
-  } catch {
+  } catch (err) {
+    console.warn('[n3/metrics] Failed to query embedding count:', err);
     embeddedCount = 0;
   }
 
@@ -621,8 +622,9 @@ function buildHealth13(p: Phase13Metrics): PhaseSummary {
 
 function buildHealth14(p: Phase14Metrics): PhaseSummary {
   const flags: string[] = [];
-  if (p.largestComponentSize > COMPONENT_SIZE.MEDIUM_MAX) {
-    flags.push(`largest component ${p.largestComponentSize} > MEDIUM_MAX (${COMPONENT_SIZE.MEDIUM_MAX})`);
+  // With dynamic MEDIUM_MAX scaling, warn only if components were actually classified as 'large'
+  if (p.bySize.large > 0) {
+    flags.push(`${p.bySize.large} large component(s) — using greedy + repair algorithm`);
   }
   if (p.singletonsYours + p.singletonsAdj > 0) {
     flags.push(`${p.singletonsYours + p.singletonsAdj} singleton(s) — items disconnected from graph`);

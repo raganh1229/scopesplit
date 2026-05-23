@@ -117,6 +117,26 @@ export async function persistDecisionsN3(
   });
   const zoneMap = new Map(zones.map(z => [z.id, z]));
 
+  // Build adjuster zoneId → canonical name map using zone correspondences.
+  // This ensures ADDED_BY_ADJUSTER items group under the same canonical zone
+  // as their matched counterparts (e.g. "zone project general conditions" → "general conditions").
+  const correspondences = await prisma.n3ZoneCorrespondence.findMany({
+    where: { comparisonId },
+    include: {
+      yourZones:     { select: { id: true, normalizedName: true } },
+      adjusterZones: { select: { id: true, normalizedName: true } },
+    },
+  });
+  const adjZoneToCanonical = new Map<string, string>();
+  for (const corr of correspondences) {
+    const canonical = corr.yourZones[0]?.normalizedName ?? corr.adjusterZones[0]?.normalizedName ?? null;
+    if (canonical) {
+      for (const az of corr.adjusterZones) {
+        adjZoneToCanonical.set(az.id, canonical);
+      }
+    }
+  }
+
   // ── 4. Detect orphaned items on both sides ─────────────────────────────────
   const claimedAdjIds   = new Set(decisions.flatMap(d => d.adjusterItemIds));
   const claimedYoursIds = new Set(decisions.flatMap(d => d.yourItemIds));
@@ -215,7 +235,7 @@ export async function persistDecisionsN3(
       matchStatus,
       zoneYours:       yoursZone?.name ?? null,
       zoneAdjuster:    adjZone?.name ?? null,
-      zoneCanonical:   yoursZone?.normalizedName ?? adjZone?.normalizedName ?? null,
+      zoneCanonical:   yoursZone?.normalizedName ?? (adj?.zoneId ? adjZoneToCanonical.get(adj.zoneId) : null) ?? adjZone?.normalizedName ?? null,
       zoneConfidence:  null,
       descriptionYours:    yours?.rawDescription ?? null,
       descriptionAdjuster: adjDesc,
@@ -309,7 +329,7 @@ export async function persistDecisionsN3(
       matchStatus: 'ADDED_BY_ADJUSTER',
       zoneYours:       null,
       zoneAdjuster:    adjZone?.name ?? null,
-      zoneCanonical:   adjZone?.normalizedName ?? null,
+      zoneCanonical:   (adj.zoneId ? adjZoneToCanonical.get(adj.zoneId) : null) ?? adjZone?.normalizedName ?? null,
       zoneConfidence:  null,
       descriptionYours:    null,
       descriptionAdjuster: adj.rawDescription,

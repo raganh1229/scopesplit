@@ -995,13 +995,9 @@ export default function ComparisonDetailPage() {
         };
         if (!payload.comparison) return;
 
-        if (payload.comparison.status !== 'PROCESSING') {
-          setIsAwaitingNextPass(false);
-          setIsAwaitingExtractPhase(false);
-          setIsAwaitingLineItemPhase(false);
-        }
-
-        // Fetch review data before setComparison so updates batch in one render.
+        // Fetch review data before updating comparison state so all updates
+        // land in the same React batch — prevents a flash of the results page
+        // while comparison.status is still the old value.
         if (payload.comparison.status === 'AWAITING_ZONE_REVIEW') {
           try {
             const zrRes = await fetch(`/api/comparisons/${comparisonId}/zone-review`);
@@ -1036,6 +1032,16 @@ export default function ComparisonDetailPage() {
           } catch {
             // non-fatal — LineItemReview shows empty counts
           }
+        }
+
+        // Reset isAwaiting* flags here — after all secondary fetches — so this
+        // lands in the same synchronous batch as setComparison. If reset before
+        // the awaits, React may flush them while comparison.status is still
+        // 'PROCESSING', causing the results page to render unpopulated.
+        if (payload.comparison.status !== 'PROCESSING') {
+          setIsAwaitingNextPass(false);
+          setIsAwaitingExtractPhase(false);
+          setIsAwaitingLineItemPhase(false);
         }
 
         setComparison(payload.comparison);

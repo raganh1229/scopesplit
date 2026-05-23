@@ -1,0 +1,3354 @@
+{
+  "comparisonId": "545031bb-8187-4eeb-bfc6-630d128f35a0",
+  "generatedAt": "2026-05-21T23:27:13.977Z",
+  "health": [
+    {
+      "phase": "p4",
+      "label": "Zones",
+      "status": "green",
+      "headline": "16 yours · 16 adj",
+      "flags": []
+    },
+    {
+      "phase": "p6",
+      "label": "Corresps",
+      "status": "green",
+      "headline": "16 corresps · 0 unmatched",
+      "flags": []
+    },
+    {
+      "phase": "p8",
+      "label": "Extract",
+      "status": "green",
+      "headline": "202 + 199 = 401 items",
+      "flags": []
+    },
+    {
+      "phase": "p9",
+      "label": "Normalize",
+      "status": "green",
+      "headline": "100% qty · 71% trade",
+      "flags": []
+    },
+    {
+      "phase": "p11",
+      "label": "Embed",
+      "status": "red",
+      "headline": "0/401 embedded",
+      "flags": [
+        "401 item(s) missing embeddings"
+      ]
+    },
+    {
+      "phase": "p12",
+      "label": "Candidates",
+      "status": "green",
+      "headline": "8038 edges",
+      "flags": []
+    },
+    {
+      "phase": "p13",
+      "label": "Score",
+      "status": "yellow",
+      "headline": "181 hi · 410 pos · 2749 weak · 4698 rej",
+      "flags": [
+        "501 edges within 0.02 of REJECT — fragile",
+        "dead/weak features: specialFlagCompatibility, materialObjectSimilarity, itemCodeSimilarity"
+      ]
+    },
+    {
+      "phase": "p14",
+      "label": "Components",
+      "status": "yellow",
+      "headline": "1 components · largest=401",
+      "flags": [
+        "largest component 401 > MEDIUM_MAX (250)"
+      ]
+    },
+    {
+      "phase": "p15",
+      "label": "Assign",
+      "status": "green",
+      "headline": "194 matched · 0 possible · 8 unmatched",
+      "flags": []
+    },
+    {
+      "phase": "p16",
+      "label": "Group",
+      "status": "green",
+      "headline": "0 groups",
+      "flags": []
+    },
+    {
+      "phase": "p17",
+      "label": "LLM",
+      "status": "green",
+      "headline": "0 acc · 5 rej · $0.0081",
+      "flags": []
+    },
+    {
+      "phase": "p18",
+      "label": "Persist",
+      "status": "green",
+      "headline": "207 items · gap $-25484.69",
+      "flags": []
+    }
+  ],
+  "p4": {
+    "yoursZoneCount": 16,
+    "adjZoneCount": 16,
+    "yoursFormat": null,
+    "adjFormat": null,
+    "yoursPagesCovered": 11,
+    "adjPagesCovered": 10,
+    "emptyZones": 0,
+    "oversizedZones": 0,
+    "flatZones": 0,
+    "zones": [
+      {
+        "side": "adjuster",
+        "name": "ZONE — EMERGENCY SERVICES",
+        "startPage": 2,
+        "endPage": 2,
+        "approxItems": 8
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — ROOF PRIMARY HOUSE",
+        "startPage": 2,
+        "endPage": 3,
+        "approxItems": 27
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — GARAGE ROOF",
+        "startPage": 3,
+        "endPage": 3,
+        "approxItems": 8
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — EXTERIOR SIDING AND TRIM",
+        "startPage": 3,
+        "endPage": 4,
+        "approxItems": 13
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — WINDOWS AND EXTERIOR DOORS",
+        "startPage": 4,
+        "endPage": 4,
+        "approxItems": 12
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — GUTTERS AND DOWNSPOUTS",
+        "startPage": 4,
+        "endPage": 5,
+        "approxItems": 5
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — MASTER SUITE WATER INTRUSION",
+        "startPage": 5,
+        "endPage": 5,
+        "approxItems": 17
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — SECONDARY BEDROOMS WATER INTRUSION",
+        "startPage": 5,
+        "endPage": 6,
+        "approxItems": 17
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — GREAT ROOM ENTRY CEILING",
+        "startPage": 6,
+        "endPage": 7,
+        "approxItems": 10
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — BASEMENT WINDOW INTRUSION",
+        "startPage": 7,
+        "endPage": 7,
+        "approxItems": 10
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — MASTER BATH WATER INTRUSION",
+        "startPage": 7,
+        "endPage": 8,
+        "approxItems": 17
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — HOME OFFICE CEILING STAIN",
+        "startPage": 8,
+        "endPage": 8,
+        "approxItems": 10
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — KITCHEN DINING WATER STAIN",
+        "startPage": 8,
+        "endPage": 9,
+        "approxItems": 15
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — DECK AND COVERED PATIO",
+        "startPage": 9,
+        "endPage": 10,
+        "approxItems": 11
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — HVAC HAIL WIND DAMAGE",
+        "startPage": 10,
+        "endPage": 10,
+        "approxItems": 18
+      },
+      {
+        "side": "adjuster",
+        "name": "ZONE — PROJECT GENERAL CONDITIONS",
+        "startPage": 10,
+        "endPage": 11,
+        "approxItems": 35
+      },
+      {
+        "side": "yours",
+        "name": "EMERGENCY RESPONSE",
+        "startPage": 2,
+        "endPage": 2,
+        "approxItems": 8
+      },
+      {
+        "side": "yours",
+        "name": "MAIN ROOF — PRIMARY HOUSE",
+        "startPage": 2,
+        "endPage": 3,
+        "approxItems": 20
+      },
+      {
+        "side": "yours",
+        "name": "DETACHED GARAGE ROOF",
+        "startPage": 3,
+        "endPage": 4,
+        "approxItems": 8
+      },
+      {
+        "side": "yours",
+        "name": "EXTERIOR FIBER-CEMENT SIDING",
+        "startPage": 4,
+        "endPage": 4,
+        "approxItems": 13
+      },
+      {
+        "side": "yours",
+        "name": "WINDOWS & EXTERIOR DOORS",
+        "startPage": 4,
+        "endPage": 5,
+        "approxItems": 13
+      },
+      {
+        "side": "yours",
+        "name": "GUTTERS, DOWNSPOUTS & DRAINAGE",
+        "startPage": 5,
+        "endPage": 5,
+        "approxItems": 6
+      },
+      {
+        "side": "yours",
+        "name": "MASTER SUITE — WATER INTRUSION",
+        "startPage": 5,
+        "endPage": 6,
+        "approxItems": 18
+      },
+      {
+        "side": "yours",
+        "name": "BEDROOMS 2 & 3 — WATER INTRUSION",
+        "startPage": 6,
+        "endPage": 7,
+        "approxItems": 17
+      },
+      {
+        "side": "yours",
+        "name": "GREAT ROOM & ENTRY — CEILING STAINING",
+        "startPage": 7,
+        "endPage": 7,
+        "approxItems": 9
+      },
+      {
+        "side": "yours",
+        "name": "BASEMENT — WINDOW INTRUSION",
+        "startPage": 7,
+        "endPage": 8,
+        "approxItems": 11
+      },
+      {
+        "side": "yours",
+        "name": "MASTER BATH — WATER INTRUSION",
+        "startPage": 8,
+        "endPage": 9,
+        "approxItems": 17
+      },
+      {
+        "side": "yours",
+        "name": "HOME OFFICE — CEILING STAINING",
+        "startPage": 9,
+        "endPage": 10,
+        "approxItems": 9
+      },
+      {
+        "side": "yours",
+        "name": "KITCHEN & DINING — WATER STAINING",
+        "startPage": 10,
+        "endPage": 10,
+        "approxItems": 30
+      },
+      {
+        "side": "yours",
+        "name": "DECK & COVERED PATIO — HAIL DAMAGE",
+        "startPage": 10,
+        "endPage": 11,
+        "approxItems": 12
+      },
+      {
+        "side": "yours",
+        "name": "HVAC — HAIL & WIND DAMAGE",
+        "startPage": 11,
+        "endPage": 11,
+        "approxItems": 10
+      },
+      {
+        "side": "yours",
+        "name": "GENERAL CONDITIONS",
+        "startPage": 11,
+        "endPage": 12,
+        "approxItems": 17
+      }
+    ]
+  },
+  "p6": {
+    "correspondenceCount": 16,
+    "unmatchedYoursZones": 0,
+    "unmatchedAdjZones": 0,
+    "avgConfidence": 0.9543749999999999,
+    "byType": {
+      "one_to_one": 16,
+      "one_to_many": 0,
+      "many_to_one": 0
+    },
+    "correspondences": [
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "EMERGENCY RESPONSE"
+        ],
+        "adjZones": [
+          "ZONE — EMERGENCY SERVICES"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "MAIN ROOF — PRIMARY HOUSE"
+        ],
+        "adjZones": [
+          "ZONE — ROOF PRIMARY HOUSE"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "DETACHED GARAGE ROOF"
+        ],
+        "adjZones": [
+          "ZONE — GARAGE ROOF"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "EXTERIOR FIBER-CEMENT SIDING"
+        ],
+        "adjZones": [
+          "ZONE — EXTERIOR SIDING AND TRIM"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "WINDOWS & EXTERIOR DOORS"
+        ],
+        "adjZones": [
+          "ZONE — WINDOWS AND EXTERIOR DOORS"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "GUTTERS, DOWNSPOUTS & DRAINAGE"
+        ],
+        "adjZones": [
+          "ZONE — GUTTERS AND DOWNSPOUTS"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "MASTER SUITE — WATER INTRUSION"
+        ],
+        "adjZones": [
+          "ZONE — MASTER SUITE WATER INTRUSION"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "BEDROOMS 2 & 3 — WATER INTRUSION"
+        ],
+        "adjZones": [
+          "ZONE — SECONDARY BEDROOMS WATER INTRUSION"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "GREAT ROOM & ENTRY — CEILING STAINING"
+        ],
+        "adjZones": [
+          "ZONE — GREAT ROOM ENTRY CEILING"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "BASEMENT — WINDOW INTRUSION"
+        ],
+        "adjZones": [
+          "ZONE — BASEMENT WINDOW INTRUSION"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "MASTER BATH — WATER INTRUSION"
+        ],
+        "adjZones": [
+          "ZONE — MASTER BATH WATER INTRUSION"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "HOME OFFICE — CEILING STAINING"
+        ],
+        "adjZones": [
+          "ZONE — HOME OFFICE CEILING STAIN"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "KITCHEN & DINING — WATER STAINING"
+        ],
+        "adjZones": [
+          "ZONE — KITCHEN DINING WATER STAIN"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "DECK & COVERED PATIO — HAIL DAMAGE"
+        ],
+        "adjZones": [
+          "ZONE — DECK AND COVERED PATIO"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "HVAC — HAIL & WIND DAMAGE"
+        ],
+        "adjZones": [
+          "ZONE — HVAC HAIL WIND DAMAGE"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.92,
+        "yoursZones": [
+          "GENERAL CONDITIONS"
+        ],
+        "adjZones": [
+          "ZONE — PROJECT GENERAL CONDITIONS"
+        ]
+      }
+    ]
+  },
+  "p8": {
+    "yoursItemCount": 202,
+    "adjItemCount": 199,
+    "totalItems": 401,
+    "itemsPerZone": {
+      "min": 5,
+      "median": 11.5,
+      "max": 20
+    },
+    "avgExtractionConfidence": 1,
+    "itemsMissingTotal": 0,
+    "itemsMissingQuantity": 0,
+    "itemsLowConfidence": 0,
+    "yoursTotalAmount": 329758.7699999998,
+    "adjTotalAmount": 304274.07999999984,
+    "estimateGap": -25484.689999999944
+  },
+  "p9": {
+    "totalRows": 401,
+    "pctWithQuantity": 1,
+    "pctWithUnit": 1,
+    "pctWithTrade": 0.713216957605985,
+    "pctWithAction": 0.6683291770573566,
+    "pctWithSpecialFlags": 0.04488778054862843,
+    "distinctTrades": 13,
+    "distinctActions": 7,
+    "topTrades": [
+      {
+        "value": "drywall",
+        "count": 47
+      },
+      {
+        "value": "roofing",
+        "count": 41
+      },
+      {
+        "value": "painting",
+        "count": 37
+      },
+      {
+        "value": "doors_windows",
+        "count": 32
+      },
+      {
+        "value": "water_mit",
+        "count": 28
+      }
+    ],
+    "topActions": [
+      {
+        "value": "remove_replace",
+        "count": 99
+      },
+      {
+        "value": "replace",
+        "count": 92
+      },
+      {
+        "value": "paint",
+        "count": 39
+      },
+      {
+        "value": "remove",
+        "count": 23
+      },
+      {
+        "value": "texture",
+        "count": 10
+      }
+    ],
+    "topFlags": [
+      {
+        "value": "permit",
+        "count": 6
+      },
+      {
+        "value": "emergency_service",
+        "count": 6
+      },
+      {
+        "value": "debris_removal",
+        "count": 6
+      }
+    ]
+  },
+  "p11": {
+    "totalRows": 401,
+    "embedded": 0,
+    "missing": 401,
+    "pctEmbedded": 0
+  },
+  "p12": {
+    "totalEdges": 8038,
+    "bySource": {
+      "ai_proposed_zone": 2779,
+      "semantic": 4381,
+      "fuzzy_description": 2732,
+      "total_similarity": 1959
+    },
+    "itemsWithZeroCandidates": 0,
+    "yoursCandidatesHistogram": [
+      0,
+      0,
+      0,
+      15,
+      187
+    ],
+    "adjCandidatesHistogram": [
+      0,
+      0,
+      0,
+      36,
+      163
+    ],
+    "avgCandidatesPerYours": 39.79207920792079,
+    "avgCandidatesPerAdj": 40.391959798994975
+  },
+  "p13": {
+    "scoredCount": 8038,
+    "bucketCounts": {
+      "highConfidence": 181,
+      "possibleMatch": 410,
+      "weakCandidate": 2749,
+      "rejected": 4698
+    },
+    "survivalRate": 0.41552625031102264,
+    "scoreHistogram": [
+      1282,
+      1996,
+      1420,
+      1243,
+      1099,
+      609,
+      162,
+      87,
+      78,
+      62
+    ],
+    "featureStats": [
+      {
+        "name": "zoneCorrespondenceSimilarity",
+        "weight": 0.09,
+        "meanAll": 0.3300485195322251,
+        "meanHighConf": 0.9551933701657436,
+        "meanRejected": 0.0676862494678586,
+        "std": 0.4541205666578232,
+        "min": 0,
+        "max": 0.97,
+        "pctZero": 0.6542672306543916,
+        "weightedContribAll": 0.029704366757900256,
+        "discriminativePower": 0.887507120697885
+      },
+      {
+        "name": "unitPriceSimilarity",
+        "weight": 0.06,
+        "meanAll": 0.3584607523744485,
+        "meanHighConf": 0.9956909823017137,
+        "meanRejected": 0.23053088716962855,
+        "std": 0.35280424192441007,
+        "min": 0.00007719298245614036,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.021507645142466912,
+        "discriminativePower": 0.7651600951320852
+      },
+      {
+        "name": "quantityUnitSimilarity",
+        "weight": 0.12,
+        "meanAll": 0.40487980945539404,
+        "meanHighConf": 0.9735140278552352,
+        "meanRejected": 0.25232189910449915,
+        "std": 0.3849960190763434,
+        "min": 0.00011904761904761905,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.048585577134647284,
+        "discriminativePower": 0.7211921287507361
+      },
+      {
+        "name": "descriptionFuzzySimilarity",
+        "weight": 0.23,
+        "meanAll": 0.1228769480147488,
+        "meanHighConf": 0.718461050919614,
+        "meanRejected": 0.06456724043303846,
+        "std": 0.1471223618281783,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.34262254292112465,
+        "weightedContribAll": 0.028261698043392226,
+        "discriminativePower": 0.6538938104865755
+      },
+      {
+        "name": "tradeActionSimilarity",
+        "weight": 0.14,
+        "meanAll": 0.12304055735257714,
+        "meanHighConf": 0.5801104972375682,
+        "meanRejected": 0.025968497232864964,
+        "std": 0.2726006845451922,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.8207265488927594,
+        "weightedContribAll": 0.017225678029360803,
+        "discriminativePower": 0.5541420000047033
+      },
+      {
+        "name": "descriptionSemanticSimilarity",
+        "weight": 0.19,
+        "meanAll": 0.3961265918203807,
+        "meanHighConf": 0.858537876494377,
+        "meanRejected": 0.3346417929791222,
+        "std": 0.16240717602611457,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.0006220452848967405,
+        "weightedContribAll": 0.07526405244587234,
+        "discriminativePower": 0.5238960835152547
+      },
+      {
+        "name": "sequenceSimilarity",
+        "weight": 0.02,
+        "meanAll": 0.667555362030357,
+        "meanHighConf": 0.9425414364640899,
+        "meanRejected": 0.526657088122606,
+        "std": 0.29239139845591705,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.007464543418760886,
+        "weightedContribAll": 0.013351107240607141,
+        "discriminativePower": 0.4158843483414839
+      },
+      {
+        "name": "totalSimilarity",
+        "weight": 0.11,
+        "meanAll": 0.5725201650851865,
+        "meanHighConf": 0.9439599053423108,
+        "meanRejected": 0.5759794839095392,
+        "std": 0.31035800669776914,
+        "min": 0.006038135593220339,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.06297721815937052,
+        "discriminativePower": 0.36798042143277154
+      },
+      {
+        "name": "specialFlagCompatibility",
+        "weight": 0.02,
+        "meanAll": 0.9617442149788504,
+        "meanHighConf": 0.994475138121547,
+        "meanRejected": 0.951362281822052,
+        "std": 0.13545714169572437,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.001368499626772829,
+        "weightedContribAll": 0.01923488429957701,
+        "discriminativePower": 0.04311285629949502
+      },
+      {
+        "name": "materialObjectSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      },
+      {
+        "name": "itemCodeSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      }
+    ],
+    "borderline": {
+      "nearReject": 501,
+      "nearPossible": 242,
+      "nearHighConf": 28
+    },
+    "boostStats": {
+      "edgesWithBoost": 8038,
+      "avgBoostMagnitude": 0.07214428962428497,
+      "bucketChangedByBoost": 0
+    }
+  },
+  "p14": {
+    "componentCount": 1,
+    "bySize": {
+      "small": 0,
+      "medium": 0,
+      "large": 1
+    },
+    "largestComponentSize": 401,
+    "singletonsYours": 0,
+    "singletonsAdj": 0,
+    "components": [
+      {
+        "idx": 0,
+        "yoursCount": 202,
+        "adjCount": 199,
+        "edgeCount": 0,
+        "size": "large",
+        "isAmbiguous": true,
+        "edgeDensity": 0
+      }
+    ]
+  },
+  "p15": {
+    "decisionCount": 202,
+    "matchedCount": 194,
+    "possibleCount": 0,
+    "unmatchedYours": 8,
+    "unmatchedAdj": 0,
+    "matchedScores": {
+      "min": 0.5873,
+      "mean": 0.8421541237113401,
+      "max": 1
+    },
+    "possibleScores": {
+      "min": 0,
+      "mean": 0,
+      "max": 0
+    },
+    "scoreHistogramMatched": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      13,
+      55,
+      63,
+      62
+    ],
+    "scoreHistogramPossible": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "p16": {
+    "groupedCount": 0,
+    "relinquishedAdj": 0
+  },
+  "p17": {
+    "adjudicatedCount": 5,
+    "acceptedCount": 0,
+    "rejectedCount": 5,
+    "estimatedCostUsd": 0.008124,
+    "durationMs": 7626,
+    "confusionMatrix": {
+      "algoHigh_llmAccept": 0,
+      "algoHigh_llmReject": 0,
+      "algoLow_llmAccept": 0,
+      "algoLow_llmReject": 5
+    },
+    "agreementRate": 1,
+    "reasoningSamples": [
+      {
+        "pairIndex": 0,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Completely different work scopes: contractor item is crown molding R&R in master suite; adjuster item is a carrier documentation review for water stain extent in great room entry ceiling. Different zones, different trades, different actions, different descriptions.",
+        "yoursDesc": "R&R Crown molding - master suite",
+        "adjDesc": "R&R Crown molding - master suite"
+      },
+      {
+        "pairIndex": 1,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Contractor item is R&R of a whole-house humidifier for wind/hail damage; adjuster item is an independent carrier re-inspection under general conditions. Entirely different scopes, trades, and zones.",
+        "yoursDesc": "R&R Whole-house humidifier - wind damage NOTE- Humidifier exterior connection damaged; excluded by carrier.",
+        "adjDesc": "R&R Whole-house humidifier - wind damage NOTE- Humidifier exterior connection damaged; excluded by carrier."
+      },
+      {
+        "pairIndex": 2,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Contractor item is painting basement concrete floor; adjuster item is a carrier scope review for home office ceiling stain. Different zones, different trades, different actions, fundamentally different work.",
+        "yoursDesc": "Paint floor - basement concrete",
+        "adjDesc": "Paint floor - basement concrete"
+      }
+    ]
+  },
+  "p18": {
+    "lineItemCount": 207,
+    "byStatus": {
+      "MATCH": 170,
+      "MODIFIED": 24,
+      "MISSING_FROM_ADJUSTER": 8,
+      "ADDED_BY_ADJUSTER": 5,
+      "GROUPED": 0
+    },
+    "byProvenance": {
+      "auto_high_confidence": 157,
+      "assignment": 40,
+      "llm_adjudication": 5
+    },
+    "totalGap": -25484.690000000002,
+    "yourEstimateTotal": 329758.7699999998,
+    "adjEstimateTotal": 304274.0799999998,
+    "matchedDollars": 187558.17999999993,
+    "matchedDollarPct": 0.5687738949293147
+  },
+  "decisions": [
+    {
+      "id": "94a7177c-1127-4c7a-bbfc-20bc1b9c0285",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Texture match - master bath ceiling",
+      "adjDesc": "Texture match master bath ceiling",
+      "yoursTotal": 102.85,
+      "adjTotal": 102.85,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "50998192-4ba9-4b26-a93c-958598f7502d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint exterior trim - 2 coats",
+      "adjDesc": "Paint exterior trim 2 coats",
+      "yoursTotal": 1770,
+      "adjTotal": 1770,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fcd1ce51-a37c-47a7-b84c-08f6ddd3cdaa",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Texture match - home office ceiling",
+      "adjDesc": "Texture match home office ceiling",
+      "yoursTotal": 266.2,
+      "adjTotal": 266.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a580e982-37a4-4335-b8b1-c3aa0d2ba48f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint ceilings - bedrooms 2 & 3",
+      "adjDesc": "Paint ceilings bedrooms 2 and 3",
+      "yoursTotal": 638.14,
+      "adjTotal": 638.14,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8e43ee2f-e145-4833-b723-5b6a077450ab",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint walls - great room",
+      "adjDesc": "Paint walls great room",
+      "yoursTotal": 1058.22,
+      "adjTotal": 1058.22,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2cf88672-7de7-47d2-b2a9-fa03796686c5",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Prime stain-block & paint - dining ceiling",
+      "adjDesc": "Prime stain-block paint dining ceiling",
+      "yoursTotal": 167.09,
+      "adjTotal": 167.09,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "03d241e6-6dca-469e-b9cd-7a7da3842c4c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Texture match - great room ceiling",
+      "adjDesc": "Texture match great room ceiling",
+      "yoursTotal": 882.64,
+      "adjTotal": 882.64,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d375aac4-4204-4f91-bd0e-43c8e15dfc07",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint fiber-cement siding - 2 coats",
+      "adjDesc": "Paint fiber-cement siding 2 coats",
+      "yoursTotal": 5475.2,
+      "adjTotal": 4837.2,
+      "diff": -638,
+      "llmReasoning": null
+    },
+    {
+      "id": "1a7fcd43-1d94-4a2c-a835-ee6c888d7e42",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint dining walls",
+      "adjDesc": "Paint dining walls",
+      "yoursTotal": 751.9,
+      "adjTotal": 751.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5bd8a49e-14ea-4827-bce9-87a4faa590cb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Texture match - kitchen/dining ceiling",
+      "adjDesc": "Texture match kitchen dining ceiling",
+      "yoursTotal": 467.28,
+      "adjTotal": 467.28,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "797cdc7c-a871-4764-9b51-fbe8cecff99b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Prime stain-block & paint ceiling - great room",
+      "adjDesc": "Prime stain-block paint ceiling great room",
+      "yoursTotal": 946.83,
+      "adjTotal": 946.83,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0c0ab0e8-f340-4251-bf5c-5468689d71f1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Prime stain-block & paint ceiling - entry",
+      "adjDesc": "Prime stain-block paint ceiling entry",
+      "yoursTotal": 167.09,
+      "adjTotal": 167.09,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "18df7762-2002-4063-9cd7-7e33288b9a71",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Drywall texture - master suite ceiling",
+      "adjDesc": "Drywall texture master suite ceiling",
+      "yoursTotal": 493.24,
+      "adjTotal": 493.24,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "99e4ab91-bf1c-40fa-9d6f-841335ba13c2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint ceiling - master suite",
+      "adjDesc": "Paint ceiling master suite",
+      "yoursTotal": 466.34,
+      "adjTotal": 466.34,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9d1ec7d8-648a-4f6e-be57-c3101cd3929d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint walls - home office",
+      "adjDesc": "Paint walls home office",
+      "yoursTotal": 779.74,
+      "adjTotal": 779.74,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e03c3ad3-86fa-4486-ba45-fb6f22b0f08f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Prime & paint walls - master suite",
+      "adjDesc": "Prime paint walls master suite",
+      "yoursTotal": 668.35,
+      "adjTotal": 668.35,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fb4a1fa8-123d-453d-818c-c928a57c5e0b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Paint kitchen walls",
+      "adjDesc": "Paint kitchen walls",
+      "yoursTotal": 946.83,
+      "adjTotal": 946.83,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "23ba22f0-2582-4795-b8cd-2e24197f90c3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 1,
+      "yoursDesc": "Prime stain-block & paint - kitchen ceiling",
+      "adjDesc": "Prime stain-block paint kitchen ceiling",
+      "yoursTotal": 334.18,
+      "adjTotal": 334.18,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a7dbb071-a7c7-4b7d-be8a-6775c7224e30",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9906,
+      "yoursDesc": "Prime stain-block & paint ceiling - home office",
+      "adjDesc": "Prime stain paint ceiling home office",
+      "yoursTotal": 306.33,
+      "adjTotal": 306.33,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5328ce73-3314-4fe9-9d74-8535eb7fbb5c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9782,
+      "yoursDesc": "Antimicrobial - master suite",
+      "adjDesc": "Antimicrobial master suite",
+      "yoursTotal": 737.88,
+      "adjTotal": 737.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b7e4a855-ffe1-4b87-bc85-c4608e14d2a7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9781,
+      "yoursDesc": "Water extraction - master suite",
+      "adjDesc": "Water extraction master suite",
+      "yoursTotal": 773.3,
+      "adjTotal": 773.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fa2f895a-4bc7-4c34-85b6-0871cac1cb21",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9781,
+      "yoursDesc": "Water extraction - master bath",
+      "adjDesc": "Water extraction master bath",
+      "yoursTotal": 172.98,
+      "adjTotal": 172.98,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e092048e-ea1a-4d2e-b85e-e29c29befdcd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9771,
+      "yoursDesc": "HVAC system commissioning - post-repair",
+      "adjDesc": "HVAC commissioning post-repair",
+      "yoursTotal": 342,
+      "adjTotal": 342,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a4495e8f-3a81-4f20-a015-0f4e7848652a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9752,
+      "yoursDesc": "Antimicrobial - basement",
+      "adjDesc": "Antimicrobial basement",
+      "yoursTotal": 1166.88,
+      "adjTotal": 1166.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a239728d-4142-4d27-910e-1acf6912ff5c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9751,
+      "yoursDesc": "Antimicrobial - great room ceiling & walls",
+      "adjDesc": "Antimicrobial great room ceiling walls",
+      "yoursTotal": 1063.92,
+      "adjTotal": 1063.92,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d0586e49-6237-4805-bc1d-4f0c39b422eb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9751,
+      "yoursDesc": "Antimicrobial - home office ceiling",
+      "adjDesc": "Antimicrobial home office ceiling",
+      "yoursTotal": 188.76,
+      "adjTotal": 188.76,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "84fcb1e5-582f-4c2e-910a-5a83b5ecae79",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9751,
+      "yoursDesc": "Water extraction - basement",
+      "adjDesc": "Water extraction basement",
+      "yoursTotal": 1383.8,
+      "adjTotal": 1383.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "35cd46f1-8172-4477-bc09-6a20836f4f18",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9742,
+      "yoursDesc": "Antimicrobial - kitchen & dining ceiling",
+      "adjDesc": "Antimicrobial kitchen dining ceiling",
+      "yoursTotal": 531.96,
+      "adjTotal": 531.96,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1f26bf9e-3ef4-4124-b78b-e575e17b7c49",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.971,
+      "yoursDesc": "Water extraction - bedrooms 2 & 3",
+      "adjDesc": "Water extraction bedrooms 2 and 3",
+      "yoursTotal": 1058.2,
+      "adjTotal": 1058.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fd7b7ce0-2950-41a1-bd19-c8cb22eb565a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9707,
+      "yoursDesc": "Antimicrobial - bedrooms 2 & 3",
+      "adjDesc": "Antimicrobial bedrooms 2 and 3",
+      "yoursTotal": 1029.6,
+      "adjTotal": 1029.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "689de9ad-53fe-40d3-a049-c2b0eca98477",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9698,
+      "yoursDesc": "Window cleaning - post-siding",
+      "adjDesc": "Window cleaning post-siding",
+      "yoursTotal": 564.3,
+      "adjTotal": 564.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "04ff541c-bc62-4f34-bb47-72a19336cde2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9696,
+      "yoursDesc": "Electrical permit",
+      "adjDesc": "Electrical permit",
+      "yoursTotal": 325,
+      "adjTotal": 325,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "30a6b1fc-89bc-4ee7-b124-00825fea4a00",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9696,
+      "yoursDesc": "Roofing permit",
+      "adjDesc": "Roofing permit",
+      "yoursTotal": 485,
+      "adjTotal": 485,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bde6e923-28db-4cf6-b6a5-33ee7c36d696",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.96,
+      "yoursDesc": "Post-construction final clean - whole house",
+      "adjDesc": "Post-construction clean whole house",
+      "yoursTotal": 1755.6,
+      "adjTotal": 1755.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1d4443b3-9acf-4aea-adfe-c0fc24d70819",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9517,
+      "yoursDesc": "Prime & paint - basement walls",
+      "adjDesc": "Paint basement walls",
+      "yoursTotal": 250.63,
+      "adjTotal": 250.63,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7a6ef5db-52f2-48f5-b48a-fd06cd4a8fa5",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9511,
+      "yoursDesc": "Roofing debris haul - primary",
+      "adjDesc": "Roofing debris haul primary",
+      "yoursTotal": 3201,
+      "adjTotal": 2667.5,
+      "diff": -533.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "99216f2e-e5d7-4144-9a00-d90e4a1e7402",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9328,
+      "yoursDesc": "R&R MR drywall - master bath ceiling",
+      "adjDesc": "Replace MR drywall master bath ceiling",
+      "yoursTotal": 386.16,
+      "adjTotal": 386.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "272776bb-044b-4b04-83fe-f7a64fe53f23",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9324,
+      "yoursDesc": "Prime stain-block & paint - master bath",
+      "adjDesc": "Prime paint master bath",
+      "yoursTotal": 480.38,
+      "adjTotal": 480.38,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4824f7b3-6827-48b5-bd11-27802a2fdece",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9311,
+      "yoursDesc": "R&R Fixed window 4x5 - great room",
+      "adjDesc": "Replace 4x5 fixed window great room",
+      "yoursTotal": 2796.6,
+      "adjTotal": 2796.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5dc298c4-c8ea-497d-8d7a-e1a8d979695e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9287,
+      "yoursDesc": "Stain & seal deck frame and joists",
+      "adjDesc": "Stain seal deck frame joists",
+      "yoursTotal": 1163.48,
+      "adjTotal": 1163.48,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "896a9e9a-2c76-4805-b8ed-ae11ba2e66b7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9287,
+      "yoursDesc": "R&R Insulation R-30 - master ceiling",
+      "adjDesc": "Replace R-30 insulation master ceiling",
+      "yoursTotal": 1121,
+      "adjTotal": 1121,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "28131b43-59c9-49b1-80a3-499e955786d2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9263,
+      "yoursDesc": "Sealant - exterior window perimeter, all openings",
+      "adjDesc": "Sealant exterior window perimeter all",
+      "yoursTotal": 1453.76,
+      "adjTotal": 1453.76,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "517122c1-be00-45db-a49f-841af8aef6ab",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9241,
+      "yoursDesc": "Prime & paint - bedroom 3",
+      "adjDesc": "Paint bedroom 3",
+      "yoursTotal": 835.44,
+      "adjTotal": 835.44,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cea10bf5-767a-4111-b4ef-175eef484494",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9238,
+      "yoursDesc": "Prime & paint - bedroom 2",
+      "adjDesc": "Paint bedroom 2",
+      "yoursTotal": 974.68,
+      "adjTotal": 974.68,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "dd28cbb2-b1f4-4e6a-b66c-8de1e2adb995",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9234,
+      "yoursDesc": "R&R Storm door - aluminum full-view",
+      "adjDesc": "Replace aluminum full-view storm door",
+      "yoursTotal": 808.3,
+      "adjTotal": 808.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e91010d9-6ca7-4009-815e-84829894666b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9222,
+      "yoursDesc": "R&R Downspouts 3x4\" - all",
+      "adjDesc": "Replace downspouts 3x4 all",
+      "yoursTotal": 828.36,
+      "adjTotal": 828.36,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e9fd5b7c-a4cb-400a-945d-e17a18732590",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9205,
+      "yoursDesc": "R&R Carpet & pad - bedroom 3",
+      "adjDesc": "Replace carpet pad bedroom 3",
+      "yoursTotal": 1656.72,
+      "adjTotal": 1656.72,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "34240a4d-f742-4b82-80ad-4e67688e032b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.92,
+      "yoursDesc": "R&R Carpet & pad - bedroom 2",
+      "adjDesc": "Replace carpet pad bedroom 2",
+      "yoursTotal": 1932.84,
+      "adjTotal": 1932.84,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8c6a7f67-6f95-4f95-87d4-8a436cb7f091",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9183,
+      "yoursDesc": "R&R Pipe jacks - garage",
+      "adjDesc": "Replace pipe jacks garage",
+      "yoursTotal": 153.4,
+      "adjTotal": 153.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6ccfa5a7-bce8-4839-9310-e98f2f1baf55",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9179,
+      "yoursDesc": "R&R Drywall ceiling - bedroom 2",
+      "adjDesc": "Replace ceiling drywall bedroom 2",
+      "yoursTotal": 1139.88,
+      "adjTotal": 1139.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "88842f5a-7d40-4f31-8a81-e42710c8068f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9177,
+      "yoursDesc": "R&R Drywall ceiling - entry foyer",
+      "adjDesc": "Replace entry foyer ceiling drywall",
+      "yoursTotal": 488.52,
+      "adjTotal": 488.52,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "51399ee5-5cad-44c7-bd3f-a06076b0e081",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.916,
+      "yoursDesc": "R&R Skylight flashing kit",
+      "adjDesc": "Replace skylight flashing kit",
+      "yoursTotal": 672.6,
+      "adjTotal": 672.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1b659cfd-916c-4f2b-bd39-2c577b954751",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9098,
+      "yoursDesc": "R&R Valley flashing - W-metal",
+      "adjDesc": "Replace W-metal valley flashing",
+      "yoursTotal": 641.92,
+      "adjTotal": 641.92,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "03561db8-c6ad-486b-ba0b-7aae1b1557f9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9091,
+      "yoursDesc": "R&R Condenser concrete pad",
+      "adjDesc": "Replace condenser pad concrete",
+      "yoursTotal": 454.3,
+      "adjTotal": 454.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e3ae70e8-67ea-4acc-83cf-b7c04ad80186",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9087,
+      "yoursDesc": "R&R Drywall ceiling - home office",
+      "adjDesc": "Replace ceiling drywall home office",
+      "yoursTotal": 895.62,
+      "adjTotal": 895.62,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "01098983-c396-4c3b-a770-f6e809a3364a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9075,
+      "yoursDesc": "R&R Baseboard - bedrooms 2 & 3",
+      "adjDesc": "Replace baseboard bedrooms 2 and 3",
+      "yoursTotal": 883.58,
+      "adjTotal": 883.58,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "22863141-dfb0-4557-a19b-ec2c9d8a6ec0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9068,
+      "yoursDesc": "R&R Step flashing - dormers",
+      "adjDesc": "Replace step flashing dormers",
+      "yoursTotal": 821.28,
+      "adjTotal": 821.28,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b4b65e1b-1fea-4fad-adbc-3e025eb7328a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9062,
+      "yoursDesc": "R&R Vanity double 60\" - master bath",
+      "adjDesc": "Replace 60 inch double vanity master bath",
+      "yoursTotal": 1398.3,
+      "adjTotal": 1398.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e6edc986-524f-4542-9d64-8c087549fe92",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9053,
+      "yoursDesc": "R&R Drywall ceiling - master suite",
+      "adjDesc": "Replace ceiling drywall master suite",
+      "yoursTotal": 1546.98,
+      "adjTotal": 1546.98,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "15824383-e3ba-4ee8-a27b-0e7d685586d2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9038,
+      "yoursDesc": "R&R Shower valve & trim",
+      "adjDesc": "Replace shower valve trim",
+      "yoursTotal": 572.3,
+      "adjTotal": 572.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "044f1aad-f7ca-494d-8fb2-aca5f27aed26",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9017,
+      "yoursDesc": "Emergency tarp - main roof, 2 squares",
+      "adjDesc": "Emergency roof tarp main",
+      "yoursTotal": 235.2,
+      "adjTotal": 235.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "51524e66-af24-47a4-a6e8-6032c9b61a4d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9009,
+      "yoursDesc": "R&R Drywall ceiling - kitchen",
+      "adjDesc": "Replace ceiling drywall kitchen",
+      "yoursTotal": 977.04,
+      "adjTotal": 977.04,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "48435440-3e12-41e3-ac24-665815fe1f15",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8999,
+      "yoursDesc": "R&R Pipe jack flashing",
+      "adjDesc": "Replace pipe jack flashing",
+      "yoursTotal": 613.6,
+      "adjTotal": 613.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7b2bf5a9-389d-4e25-95b8-d9fc628ea4a0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8941,
+      "yoursDesc": "R&R Gutter apron flashing",
+      "adjDesc": "Replace gutter apron flashing",
+      "yoursTotal": 1453.76,
+      "adjTotal": 1453.76,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8062b8f6-60d8-4322-8a9e-25e59dd88197",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8938,
+      "yoursDesc": "R&R Drywall ceiling - dining",
+      "adjDesc": "Replace ceiling drywall dining",
+      "yoursTotal": 488.52,
+      "adjTotal": 488.52,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c182941a-c27d-4533-a16a-c6f3e44d4649",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8931,
+      "yoursDesc": "R&R Threshold & weatherstrip - all replaced doors",
+      "adjDesc": "Replace threshold weatherstrip all doors",
+      "yoursTotal": 442.5,
+      "adjTotal": 442.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1237c25f-9e10-435e-9b01-f7ed5b86c950",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8929,
+      "yoursDesc": "R&R MR drywall - basement egress wall",
+      "adjDesc": "Replace MR drywall basement egress",
+      "yoursTotal": 817.74,
+      "adjTotal": 817.74,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1fd0224f-e6a4-4172-9cb7-decff2c311b9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8917,
+      "yoursDesc": "R&R Insulation R-30 - master bath ceiling",
+      "adjDesc": "Replace R-30 insulation master bath",
+      "yoursTotal": 250.75,
+      "adjTotal": 250.75,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bc13f14e-1f5b-4cce-a3f8-60257f41b7bc",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8856,
+      "yoursDesc": "Safety equipment & PPE",
+      "adjDesc": "Safety equipment PPE",
+      "yoursTotal": 627,
+      "adjTotal": 627,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "299f0a03-66d4-4320-bfa3-801a62538634",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8856,
+      "yoursDesc": "Moisture clearance report - bedrooms",
+      "adjDesc": "Moisture clearance report bedrooms",
+      "yoursTotal": 822,
+      "adjTotal": 822,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "dbecb0d9-cc21-4eb7-b0a2-50ddc16e3d86",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8856,
+      "yoursDesc": "Photo documentation",
+      "adjDesc": "Photo documentation",
+      "yoursTotal": 533.5,
+      "adjTotal": 533.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e26a8917-ee08-4ea6-8871-eb8319311829",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8856,
+      "yoursDesc": "Temporary power hookup",
+      "adjDesc": "Temporary power hookup",
+      "yoursTotal": 423.5,
+      "adjTotal": 423.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4df1dec4-9b79-46c0-b818-16e3a36a4cde",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8845,
+      "yoursDesc": "R&R Interior window casing - replaced windows",
+      "adjDesc": "Replace interior casing replaced windows",
+      "yoursTotal": 1656.72,
+      "adjTotal": 1656.72,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "428f0092-7266-4769-890c-1e9e67a2cc5a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8838,
+      "yoursDesc": "R&R MR drywall - master bath walls",
+      "adjDesc": "Replace MR drywall master bath walls",
+      "yoursTotal": 1181.18,
+      "adjTotal": 842.38,
+      "diff": -338.80000000000007,
+      "llmReasoning": null
+    },
+    {
+      "id": "2802ddd7-8abb-4c78-b71f-aff35b3e94b7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8791,
+      "yoursDesc": "R&R Interior window sill - replaced windows",
+      "adjDesc": "Replace interior sill replaced windows",
+      "yoursTotal": 802.4,
+      "adjTotal": 802.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "91b56a8f-6709-47bb-ac2e-532838699800",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.877,
+      "yoursDesc": "R&R Drywall ceiling - bedroom 3",
+      "adjDesc": "Replace ceiling drywall bedroom 3",
+      "yoursTotal": 977.04,
+      "adjTotal": 749.34,
+      "diff": -227.69999999999993,
+      "llmReasoning": null
+    },
+    {
+      "id": "d26ff18e-d87f-49b9-b337-d6fe3ae6c811",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8766,
+      "yoursDesc": "R&R Chimney flashing - 2-sided step & counter",
+      "adjDesc": "Replace chimney step counter flashing",
+      "yoursTotal": 808.3,
+      "adjTotal": 808.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "10266f3b-fee7-40e4-b085-6544c049bc17",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.873,
+      "yoursDesc": "R&R Recessed LED - water-damaged",
+      "adjDesc": "Replace recessed LED damaged",
+      "yoursTotal": 814.2,
+      "adjTotal": 814.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fcc59d3f-cc3d-4ec3-a6b8-ec416bee96c7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8726,
+      "yoursDesc": "R&R Baseboard 4\" - master suite",
+      "adjDesc": "Replace 4 inch baseboard master suite",
+      "yoursTotal": 607.46,
+      "adjTotal": 607.46,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cf50ff4e-f55b-4aee-8160-bfc91cbaad89",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8717,
+      "yoursDesc": "R&R Porcelain tile floor - master bath",
+      "adjDesc": "Replace tile floor master bath",
+      "yoursTotal": 1454.35,
+      "adjTotal": 1454.35,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cca0b5be-01f4-474c-98da-c68aeb1e673d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8703,
+      "yoursDesc": "R&R Batt insulation R-15 - basement",
+      "adjDesc": "Replace R-15 basement insulation",
+      "yoursTotal": 318.6,
+      "adjTotal": 318.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8c103b89-3e98-4f0a-a726-8c8202669174",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.868,
+      "yoursDesc": "R&R Egress window 2x3 - basement",
+      "adjDesc": "Replace egress window basement",
+      "yoursTotal": 1616.6,
+      "adjTotal": 1616.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8f2deb79-b241-40df-845b-a2919985bdd3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8668,
+      "yoursDesc": "Antimicrobial - master bath all surfaces",
+      "adjDesc": "Antimicrobial master bath",
+      "yoursTotal": 296.01,
+      "adjTotal": 296.01,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fb12ae2d-8912-492b-9212-bf6caa211113",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8636,
+      "yoursDesc": "R&R Back door - steel insulated 6-panel",
+      "adjDesc": "Replace steel insulated back door",
+      "yoursTotal": 1752.3,
+      "adjTotal": 1752.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a39d4122-7576-4858-b763-dab8ab1068c2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8603,
+      "yoursDesc": "R&R Faucet pair - master bath vanity",
+      "adjDesc": "Replace vanity faucet pair master",
+      "yoursTotal": 436.6,
+      "adjTotal": 436.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0f2c14d1-11f3-4ead-8ac7-36e73eef24ff",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8586,
+      "yoursDesc": "R&R Entry door - fiberglass 3-panel with sidelights",
+      "adjDesc": "Replace fiberglass entry door sidelights",
+      "yoursTotal": 4543,
+      "adjTotal": 4543,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4d77e909-a44c-4242-a861-3d8d4da08b9e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8575,
+      "yoursDesc": "Portable toilet - crew",
+      "adjDesc": "Portable toilet",
+      "yoursTotal": 363,
+      "adjTotal": 363,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e7c244f4-b215-4f6c-a263-87c4531075ef",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8572,
+      "yoursDesc": "R&R AC condenser coil fins - hail-damaged",
+      "adjDesc": "Replace condenser coil fins hail",
+      "yoursTotal": 1752.3,
+      "adjTotal": 1752.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "dc25523a-f32d-41b6-87d0-1de97fa243ef",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8563,
+      "yoursDesc": "R&R Range hood - exterior duct cap hail-damaged",
+      "adjDesc": "Replace range hood exterior duct cap",
+      "yoursTotal": 572.3,
+      "adjTotal": 572.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0b702a1c-a832-48c7-9d78-ece927bf9586",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.852,
+      "yoursDesc": "R&R Architectural shingles - garage",
+      "adjDesc": "Replace shingles garage",
+      "yoursTotal": 8283.6,
+      "adjTotal": 8283.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8b02b2f0-6e32-48e8-8b7d-43fca7e4764e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8514,
+      "yoursDesc": "R&R Downspout extensions / splash blocks",
+      "adjDesc": "Replace downspout extensions blocks",
+      "yoursTotal": 457.84,
+      "adjTotal": 457.84,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8c34f762-2930-45bc-a3ae-904092535d7d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8497,
+      "yoursDesc": "R&R Ice & water shield - eaves & valleys",
+      "adjDesc": "Replace ice water shield eaves valleys",
+      "yoursTotal": 1770,
+      "adjTotal": 1770,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a216c1ce-e4fe-4a4d-83df-36e9ad0a639f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.848,
+      "yoursDesc": "Dumpster 30-yard rental",
+      "adjDesc": "Dumpster 30 yard",
+      "yoursTotal": 2574,
+      "adjTotal": 1930.5,
+      "diff": -643.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "8827ed77-7ad3-4f9e-bb6f-0b3de27fa818",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8461,
+      "yoursDesc": "R&R Drywall walls - bedroom 2",
+      "adjDesc": "Replace wall drywall bedroom 2",
+      "yoursTotal": 1709.82,
+      "adjTotal": 1709.82,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fd5cc893-db6b-46e3-bb17-21c01ba698d1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8434,
+      "yoursDesc": "R&R Skylight - fixed 2x4 tempered",
+      "adjDesc": "Replace 2x4 fixed tempered skylight",
+      "yoursTotal": 3504.6,
+      "adjTotal": 3504.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b9b891b5-c84b-4e63-872d-4f455d44362e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8424,
+      "yoursDesc": "R&R Recessed LED - kitchen, water-damaged",
+      "adjDesc": "Replace recessed LED kitchen",
+      "yoursTotal": 1085.6,
+      "adjTotal": 1085.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f4204bb9-003f-4f58-8ca7-1c6d4219934e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8423,
+      "yoursDesc": "R&R Line set insulation - condenser",
+      "adjDesc": "Replace line set insulation",
+      "yoursTotal": 300.9,
+      "adjTotal": 300.9,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "61d01488-de96-49b9-abb3-593dd697bdec",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8422,
+      "yoursDesc": "R&R Gas meter protective bollard",
+      "adjDesc": "Replace gas meter protective bollard",
+      "yoursTotal": 336.3,
+      "adjTotal": 336.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "939c9cd0-ddff-4eb7-862e-87f9ed3553dd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8407,
+      "yoursDesc": "R&R Window screen - all",
+      "adjDesc": "Replace window screens all",
+      "yoursTotal": 1073.8,
+      "adjTotal": 1073.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c8aa5400-1744-4f66-b6b9-bdf6fb03f5a2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8373,
+      "yoursDesc": "R&R Window well - steel half-round",
+      "adjDesc": "Replace steel window well",
+      "yoursTotal": 672.6,
+      "adjTotal": 672.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2d53e8c6-b481-4772-a0d7-6d14450dfe87",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8335,
+      "yoursDesc": "R&R Seamless gutters 6\" K-style - full perimeter",
+      "adjDesc": "Replace seamless gutters 6 inch full",
+      "yoursTotal": 3587.2,
+      "adjTotal": 3587.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "414d9a04-62f1-4b46-9122-330db3204c20",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8318,
+      "yoursDesc": "R&R Housewrap - all elevations",
+      "adjDesc": "Replace housewrap all elevations",
+      "yoursTotal": 3322.88,
+      "adjTotal": 3322.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "57fae5c9-fff9-4b0d-be4d-127ef665d5e1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8294,
+      "yoursDesc": "Emergency water extraction - bedroom 2 intrusion",
+      "adjDesc": "Emergency water extraction bed 2",
+      "yoursTotal": 651.2,
+      "adjTotal": 651.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "84feb66d-9e5b-492e-9d4d-ac738bc646cf",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8276,
+      "yoursDesc": "R&R Condenser cabinet panels - hail-dented",
+      "adjDesc": "Replace condenser cabinet panels",
+      "yoursTotal": 808.3,
+      "adjTotal": 808.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "439234cb-4aab-45c9-8d7f-81bdfa4605af",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8254,
+      "yoursDesc": "LGR dehumidifier - bedroom wing, per day",
+      "adjDesc": "LGR dehumidifier bed wing daily",
+      "yoursTotal": 787.6,
+      "adjTotal": 787.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "24b611ec-6868-4b97-9574-57f3e5e552c1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8239,
+      "yoursDesc": "Tear off - soffit & fascia, garage",
+      "adjDesc": "Demo soffit fascia garage",
+      "yoursTotal": 325.6,
+      "adjTotal": 325.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a5af9a53-e661-4bb8-84cc-781b467a8018",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8229,
+      "yoursDesc": "R&R Drywall ceiling - great room water stain section",
+      "adjDesc": "Replace drywall ceiling great room stain",
+      "yoursTotal": 1954.08,
+      "adjTotal": 1346.88,
+      "diff": -607.1999999999998,
+      "llmReasoning": null
+    },
+    {
+      "id": "89191754-ecdc-47b3-8e23-681ec6da1276",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8211,
+      "yoursDesc": "Caulk all siding seams & penetrations",
+      "adjDesc": "Caulk siding seams penetrations",
+      "yoursTotal": 821.28,
+      "adjTotal": 821.28,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f3c08bad-89c4-47e8-b07e-ae28b65f45db",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8211,
+      "yoursDesc": "R&R Walk-in closet flooring - engineered",
+      "adjDesc": "Replace closet flooring engineered",
+      "yoursTotal": 1770,
+      "adjTotal": 1420.2,
+      "diff": -349.79999999999995,
+      "llmReasoning": null
+    },
+    {
+      "id": "1a7b9896-f421-4e65-b0c1-7cd14022386d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8189,
+      "yoursDesc": "R&R Patio cover panels - aluminum",
+      "adjDesc": "Replace patio cover aluminum panels",
+      "yoursTotal": 5475.2,
+      "adjTotal": 5475.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f5cc8f9c-aff0-4c3c-aeb2-3a86c9007e2b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8173,
+      "yoursDesc": "R&R Drip edge - garage",
+      "adjDesc": "Replace drip edge garage",
+      "yoursTotal": 545.16,
+      "adjTotal": 545.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2b7dd4f9-fd78-49d7-83c2-0ee21c14c61d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8173,
+      "yoursDesc": "Tear out wet insulation - basement egress wall",
+      "adjDesc": "Demo wet insulation basement egress",
+      "yoursTotal": 191.4,
+      "adjTotal": 191.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3c7a9ae9-fb33-4a8d-9263-cbaf3a3b4051",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8169,
+      "yoursDesc": "R&R Ridge cap - garage",
+      "adjDesc": "Replace ridge cap garage",
+      "yoursTotal": 401.2,
+      "adjTotal": 401.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8ebf214f-ea82-4e95-b956-d708e7edffa4",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8165,
+      "yoursDesc": "R&R Ceiling light - home office",
+      "adjDesc": "Replace ceiling light home office",
+      "yoursTotal": 135.7,
+      "adjTotal": 135.7,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "00b093f1-c1de-4534-bb02-0ee72129c3ee",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8151,
+      "yoursDesc": "R&R Sliding glass door track - debris",
+      "adjDesc": "Replace sliding door track",
+      "yoursTotal": 336.3,
+      "adjTotal": 336.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1a4a7579-64cf-4084-8bdf-050d635c68a8",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8122,
+      "yoursDesc": "Tear out damaged tile floor - master bath",
+      "adjDesc": "Demo tile floor master bath",
+      "yoursTotal": 546.97,
+      "adjTotal": 546.97,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "52a7a55b-9779-4c9e-949f-a02c7f34645b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8119,
+      "yoursDesc": "R&R Synthetic felt - garage",
+      "adjDesc": "Replace synthetic felt garage",
+      "yoursTotal": 686.76,
+      "adjTotal": 686.76,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2b3d775c-b82f-428f-92dd-aa8264a3bddd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8115,
+      "yoursDesc": "Tear out water-damaged drywall - basement egress wall",
+      "adjDesc": "Demo water drywall basement egress",
+      "yoursTotal": 366.3,
+      "adjTotal": 366.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "12269121-fcdd-42ab-b671-7e4e2459e4bb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8092,
+      "yoursDesc": "R&R Hose bib covers / outlets - exterior",
+      "adjDesc": "Replace exterior outlet covers hose bibs",
+      "yoursTotal": 201.78,
+      "adjTotal": 201.78,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b6d161f8-1e10-49c6-b98b-69870eac6e55",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8046,
+      "yoursDesc": "Photo documentation - initial storm survey",
+      "adjDesc": "Initial storm survey documentation",
+      "yoursTotal": 342,
+      "adjTotal": 342,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e450e427-61f3-48ca-9e64-a85f34966150",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8044,
+      "yoursDesc": "Hail size verification - meteorologist report",
+      "adjDesc": "Hail size verification report",
+      "yoursTotal": 582,
+      "adjTotal": 582,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "582eec00-4760-44f0-b3b7-40f7fd946c6e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.803,
+      "yoursDesc": "R&R Ceiling fan - master",
+      "adjDesc": "Replace ceiling fan master",
+      "yoursTotal": 454.3,
+      "adjTotal": 454.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2ecb27e7-bbdf-42f1-a1ed-6aca44f7d51e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8029,
+      "yoursDesc": "R&R Casement window 3x4 - hail-broken",
+      "adjDesc": "Replace 3x4 casement hail-broken",
+      "yoursTotal": 4177.2,
+      "adjTotal": 4177.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d1aa6e4f-12d0-43e1-9746-2b86c7c466a4",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8015,
+      "yoursDesc": "R&R French drain - driveway side damaged by debris",
+      "adjDesc": "Repair French drain driveway side",
+      "yoursTotal": 1062,
+      "adjTotal": 1062,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1ca72cf5-6702-4d34-a1fe-0f3ffb40922f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.801,
+      "yoursDesc": "Tear out damaged wet insulation - master bath ceiling",
+      "adjDesc": "Demo wet insulation master bath",
+      "yoursTotal": 135.58,
+      "adjTotal": 135.58,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2865c4e6-a1fc-4899-a597-aff907baf481",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7989,
+      "yoursDesc": "Tear out damaged baseboard - master suite",
+      "adjDesc": "Demo baseboard master suite",
+      "yoursTotal": 179.08,
+      "adjTotal": 179.08,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "929fc850-923e-4f7e-ad0b-e146e3e8df24",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7971,
+      "yoursDesc": "R&R Drywall walls - master suite",
+      "adjDesc": "Replace wall drywall master suite",
+      "yoursTotal": 1954.08,
+      "adjTotal": 1498.68,
+      "diff": -455.39999999999986,
+      "llmReasoning": null
+    },
+    {
+      "id": "745ccdb8-658b-49b9-ad17-06652b5643f6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7962,
+      "yoursDesc": "R&R Insulation R-30 - home office ceiling",
+      "adjDesc": "Replace R-30 home office ceiling",
+      "yoursTotal": 413,
+      "adjTotal": 413,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ddff4e20-4f0b-40a7-ac63-034df63dd608",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7946,
+      "yoursDesc": "Tear out damaged carpet & pad - master",
+      "adjDesc": "Demo carpet pad master",
+      "yoursTotal": 606.1,
+      "adjTotal": 606.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "47f12f0f-3bb2-495c-8c07-2e4b0ed083e0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7936,
+      "yoursDesc": "Tear out water-damaged drywall - master suite walls",
+      "adjDesc": "Demo water drywall master suite walls",
+      "yoursTotal": 976.8,
+      "adjTotal": 732.6,
+      "diff": -244.19999999999993,
+      "llmReasoning": null
+    },
+    {
+      "id": "11f114c0-dada-4952-af28-e187dbb01693",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7933,
+      "yoursDesc": "R&R Fiber-cement trim board 5/4x4 - windows",
+      "adjDesc": "Replace fiber-cement window trim",
+      "yoursTotal": 3313.44,
+      "adjTotal": 3313.44,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b485399c-d47a-4c16-9e1f-c78e66cec3bd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7914,
+      "yoursDesc": "Tear off - architectural shingles, primary roof",
+      "adjDesc": "Demo architectural shingles primary",
+      "yoursTotal": 3611.52,
+      "adjTotal": 3611.52,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fa565a89-8eab-436c-9d01-e5e5079692f7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7899,
+      "yoursDesc": "Deploy drying equipment - bedroom 2",
+      "adjDesc": "Deploy drying equipment bed 2",
+      "yoursTotal": 462,
+      "adjTotal": 462,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "99b1740a-9f06-475d-9bd6-ee9ecb3f0d7d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7893,
+      "yoursDesc": "Tear out damaged vanity - master bath",
+      "adjDesc": "Demo vanity master bath",
+      "yoursTotal": 203.5,
+      "adjTotal": 203.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "81501f34-6cf4-4147-a860-4c017fc3d41d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7888,
+      "yoursDesc": "Tear out wet insulation - home office ceiling",
+      "adjDesc": "Demo wet insulation home office",
+      "yoursTotal": 223.3,
+      "adjTotal": 223.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f8f1b09b-3fe3-44d1-b543-ee31c7e167cd",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7883,
+      "yoursDesc": "R&R Engineered hardwood - master suite",
+      "adjDesc": "Replace engineered hardwood master suite NOTE- Standard grade 3 inch engineered approved.",
+      "yoursTotal": 5605,
+      "adjTotal": 4497.3,
+      "diff": -1107.6999999999998,
+      "llmReasoning": null
+    },
+    {
+      "id": "97004dd3-5384-497f-91be-aed61fd77815",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.786,
+      "yoursDesc": "R&R Insulation R-30 - kitchen ceiling",
+      "adjDesc": "Replace R-30 kitchen ceiling",
+      "yoursTotal": 708,
+      "adjTotal": 708,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1af8cb42-8576-4765-922d-14939a984c90",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7833,
+      "yoursDesc": "Tear out damaged baseboard - bedrooms 2 & 3",
+      "adjDesc": "Demo baseboard bedrooms 2 and 3",
+      "yoursTotal": 260.48,
+      "adjTotal": 260.48,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "60dfc164-36c9-4ff6-8479-1fe23b629e8e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7815,
+      "yoursDesc": "Tear out wet insulation - kitchen ceiling",
+      "adjDesc": "Demo wet insulation kitchen",
+      "yoursTotal": 382.8,
+      "adjTotal": 382.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e2a926ed-dff4-47f7-9f30-ea6f87c35b19",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7802,
+      "yoursDesc": "Tear off damaged exterior window trim",
+      "adjDesc": "Demo exterior window trim",
+      "yoursTotal": 976.8,
+      "adjTotal": 976.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "02110ab1-f730-4423-a46d-aa0f446f1f5f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7775,
+      "yoursDesc": "Tear out damaged carpet - bedrooms 2 & 3",
+      "adjDesc": "Demo carpet bedrooms 2 and 3",
+      "yoursTotal": 829.4,
+      "adjTotal": 829.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7c36a68b-e83b-4ea5-b3be-cfa67baaed55",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7771,
+      "yoursDesc": "Siding impact density report - certified inspector",
+      "adjDesc": "Siding impact density report",
+      "yoursTotal": 1062,
+      "adjTotal": 1062,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9852b637-1fb6-484d-834e-aad806b28cc7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7739,
+      "yoursDesc": "Moisture mapping - bedroom wing",
+      "adjDesc": "Moisture mapping bed wing",
+      "yoursTotal": 342,
+      "adjTotal": 342,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ff459427-2805-4192-a8ae-f5f8d4f3d230",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7713,
+      "yoursDesc": "R&R Double-hung window 3x5 - hail-dented frame",
+      "adjDesc": "Replace 3x5 double-hung hail-dented",
+      "yoursTotal": 5557.8,
+      "adjTotal": 5557.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "811757fd-0adb-4900-b0e5-7d5febbf5d22",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7688,
+      "yoursDesc": "Air mover - bedroom wing, per day",
+      "adjDesc": "Air mover bed wing daily",
+      "yoursTotal": 472.56,
+      "adjTotal": 354.42,
+      "diff": -118.13999999999999,
+      "llmReasoning": null
+    },
+    {
+      "id": "e041f618-d7ac-4d35-b5ff-19b44c610909",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7686,
+      "yoursDesc": "Emergency board-up - 3 broken windows",
+      "adjDesc": "Emergency window board-up",
+      "yoursTotal": 666,
+      "adjTotal": 666,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ed6f1c08-cb09-4a3b-a780-7cc1fe1df588",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7674,
+      "yoursDesc": "R&R LVP flooring - basement",
+      "adjDesc": "Replace LVP basement",
+      "yoursTotal": 5496.44,
+      "adjTotal": 5496.44,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7851f9cd-98f4-45c6-9e2d-9317bbc68b32",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7669,
+      "yoursDesc": "Tear off - damaged fascia & trim",
+      "adjDesc": "Demo fascia trim primary",
+      "yoursTotal": 569.8,
+      "adjTotal": 569.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "890ae324-4961-4483-a4af-540118fe3150",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7651,
+      "yoursDesc": "Tear off - shingles, garage roof",
+      "adjDesc": "Demo shingles garage",
+      "yoursTotal": 902.88,
+      "adjTotal": 902.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4efe3e76-b9f6-4b8b-ac13-bcc4d05b8867",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7632,
+      "yoursDesc": "R&R Synthetic felt underlayment - primary",
+      "adjDesc": "Replace synthetic felt primary",
+      "yoursTotal": 2747.04,
+      "adjTotal": 2747.04,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "362ac685-88d7-44a1-bc08-7c0a58b88467",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7605,
+      "yoursDesc": "R&R Ridge cap shingles - primary",
+      "adjDesc": "Replace ridge cap primary",
+      "yoursTotal": 1203.6,
+      "adjTotal": 1203.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ddd897ac-6094-476b-a873-fc2bb15aa657",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7561,
+      "yoursDesc": "Tear out water-damaged insulation - master ceiling",
+      "adjDesc": "Demo wet insulation master ceiling",
+      "yoursTotal": 606.1,
+      "adjTotal": 606.1,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6b5ba0ef-d627-4af6-b883-4f549a78ecff",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7558,
+      "yoursDesc": "R&R Bathroom exhaust fan - master",
+      "adjDesc": "Replace bath exhaust fan master",
+      "yoursTotal": 194.7,
+      "adjTotal": 194.7,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "54213922-d9e1-4dbb-9853-c5e8fee6e554",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7558,
+      "yoursDesc": "R&R Insulation R-30 - great room ceiling section",
+      "adjDesc": "Replace insulation great room",
+      "yoursTotal": 1416,
+      "adjTotal": 976,
+      "diff": -440,
+      "llmReasoning": null
+    },
+    {
+      "id": "05522e0a-0152-4b4e-a188-723719ce797a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7555,
+      "yoursDesc": "R&R Insulation R-30 - bedrooms 2 & 3",
+      "adjDesc": "Replace R-30 bedrooms 2 and 3",
+      "yoursTotal": 1534,
+      "adjTotal": 1534,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a88b768e-5344-47f0-86f8-ba3bb196c3b0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7521,
+      "yoursDesc": "R&R Fiber-cement corner trim 4x4 - all corners",
+      "adjDesc": "Replace fiber-cement corner trim",
+      "yoursTotal": 920.4,
+      "adjTotal": 920.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "60d69e44-a846-44e0-993a-e1cca061d257",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7502,
+      "yoursDesc": "R&R Electrical disconnect - exterior",
+      "adjDesc": "Replace exterior disconnect",
+      "yoursTotal": 336.3,
+      "adjTotal": 336.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5a2079a8-0d21-4bb1-8f72-26bcd3234855",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7495,
+      "yoursDesc": "R&R Drip edge - primary all edges",
+      "adjDesc": "Replace drip edge primary",
+      "yoursTotal": 1453.76,
+      "adjTotal": 1453.76,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "679fa2b2-5dd4-4ed5-8e38-92468924d065",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7489,
+      "yoursDesc": "R&R Exterior light fixtures - hail-dented",
+      "adjDesc": "Replace hail-dented exterior lights",
+      "yoursTotal": 873.2,
+      "adjTotal": 873.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a48115c6-1635-4b12-adeb-e41eb33c161f",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7459,
+      "yoursDesc": "R&R Condenser unit - 4-ton, non-repairable NOTE- HVAC tech confirmed non-repairable.",
+      "adjDesc": "Replace 4-ton condenser full unit NOTE- Full replacement pending escalation.",
+      "yoursTotal": 5723,
+      "adjTotal": 4623,
+      "diff": -1100,
+      "llmReasoning": null
+    },
+    {
+      "id": "a98884d8-c221-4973-aff2-e3dd8c92d82d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7448,
+      "yoursDesc": "R&R Deck railing - aluminum powder-coated",
+      "adjDesc": "Replace aluminum deck railing",
+      "yoursTotal": 3228.48,
+      "adjTotal": 3228.48,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3f908591-35e2-4e2f-acfc-121515220a6c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7396,
+      "yoursDesc": "R&R Deck post caps - hail-dented",
+      "adjDesc": "Replace deck post caps",
+      "yoursTotal": 269.04,
+      "adjTotal": 269.04,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "41a83fdb-92d4-473a-be95-3e34bb140829",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7358,
+      "yoursDesc": "Tear off hail-damaged composite deck boards",
+      "adjDesc": "Demo hail-damaged composite deck",
+      "yoursTotal": 1832.6,
+      "adjTotal": 1832.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "500802a4-897d-45d0-a2ca-75833bfafc72",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7344,
+      "yoursDesc": "Tear off damaged fiber-cement siding - all elevations",
+      "adjDesc": "Demo fiber-cement siding all elevations",
+      "yoursTotal": 6512,
+      "adjTotal": 5698,
+      "diff": -814,
+      "llmReasoning": null
+    },
+    {
+      "id": "1fd4dcfb-5c23-4ad7-9a61-4a6041969e0d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7309,
+      "yoursDesc": "R&R Ice & water shield - garage eaves",
+      "adjDesc": "Ice water shield garage",
+      "yoursTotal": 295,
+      "adjTotal": 295,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fc414216-9429-4613-92ba-2ed2527cff1f",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7307,
+      "yoursDesc": "R&R Composite decking - Trex Select",
+      "adjDesc": "Replace composite decking",
+      "yoursTotal": 11634.8,
+      "adjTotal": 11634.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "420736b2-51a9-4ba0-b8be-b521e95359af",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7288,
+      "yoursDesc": "R&R Patio cover frame - powder-coated steel",
+      "adjDesc": "Replace patio cover steel frame",
+      "yoursTotal": 2124,
+      "adjTotal": 1728,
+      "diff": -396,
+      "llmReasoning": null
+    },
+    {
+      "id": "63fb2b09-0788-41a7-8df2-b76e496fb8a3",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7276,
+      "yoursDesc": "R&R Starter course - primary",
+      "adjDesc": "Replace starter course",
+      "yoursTotal": 999.46,
+      "adjTotal": 999.46,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2274ed92-1423-4cba-8bc1-ae2bcf601abb",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7273,
+      "yoursDesc": "General labor",
+      "adjDesc": "General labor hours",
+      "yoursTotal": 4224,
+      "adjTotal": 3168,
+      "diff": -1056,
+      "llmReasoning": null
+    },
+    {
+      "id": "b00dac34-b235-4a48-becf-7117f42febc7",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7246,
+      "yoursDesc": "Tear off hail-damaged patio cover - aluminum",
+      "adjDesc": "Demo hail-damaged patio cover",
+      "yoursTotal": 651.2,
+      "adjTotal": 651.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c0a3b04f-1b4b-4991-9615-17b81079d320",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7243,
+      "yoursDesc": "Refrigerant recover & recharge - R-410A",
+      "adjDesc": "Refrigerant R410A recovery recharge",
+      "yoursTotal": 620.8,
+      "adjTotal": 620.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "29c27a67-2707-419d-9f8c-c02d7d9b792c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7219,
+      "yoursDesc": "Tear out water-damaged ceiling - bedroom 2",
+      "adjDesc": "Demo water ceiling bedroom 2",
+      "yoursTotal": 569.8,
+      "adjTotal": 569.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8f9739d8-37d0-457b-93a4-ff397d733e34",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.721,
+      "yoursDesc": "R&R Architectural shingles 50-yr Class 4 IR - primary NOTE- Original pre-loss Class 4 impact-resistant; carrier approved like-kind.",
+      "adjDesc": "Replace Class 4 IR shingles primary",
+      "yoursTotal": 38798.4,
+      "adjTotal": 33518.4,
+      "diff": -5280,
+      "llmReasoning": null
+    },
+    {
+      "id": "7a545d54-1071-4fea-8e4f-9dd392d93c83",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7177,
+      "yoursDesc": "Tear off - damaged soffit",
+      "adjDesc": "Demo soffit primary",
+      "yoursTotal": 1139.6,
+      "adjTotal": 1139.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bc58fa45-f3c0-42d8-b2ef-b18bd9d53fdf",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7176,
+      "yoursDesc": "Tear out water-damaged LVP - basement",
+      "adjDesc": "Demo water LVP basement",
+      "yoursTotal": 1832.6,
+      "adjTotal": 1832.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "71f360f8-5c01-4fb9-ba30-adaa5a1dfdb1",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7171,
+      "yoursDesc": "Tear off damaged housewrap - all elevations",
+      "adjDesc": "Demo housewrap all elevations",
+      "yoursTotal": 1936,
+      "adjTotal": 1936,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "907839d6-757c-4c58-9193-58bba4c9d766",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7158,
+      "yoursDesc": "R&R Pendant lights - dining, hail-entry damage",
+      "adjDesc": "Replace pendant lights dining",
+      "yoursTotal": 796.5,
+      "adjTotal": 796.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "429ad040-8fe6-4d72-bdd5-96f44925f82f",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7137,
+      "yoursDesc": "Driveway cleaning - debris track",
+      "adjDesc": "Driveway cleaning",
+      "yoursTotal": 290.4,
+      "adjTotal": 290.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b957a664-c4a1-421e-b2f9-eb8383423e41",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7131,
+      "yoursDesc": "R&R Roof ventilation - ridge vent",
+      "adjDesc": "Replace ridge vent",
+      "yoursTotal": 1770,
+      "adjTotal": 1770,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8166c466-6b72-4186-bec4-19e25db158e6",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7081,
+      "yoursDesc": "Tear out water-damaged drywall - master bath ceiling",
+      "adjDesc": "Demo water ceiling master bath",
+      "yoursTotal": 172.98,
+      "adjTotal": 172.98,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6187ab87-4ff0-4446-9973-79b4d50978b8",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6998,
+      "yoursDesc": "Tear out water-damaged drywall - master suite ceiling",
+      "adjDesc": "Demo water ceiling master suite",
+      "yoursTotal": 773.3,
+      "adjTotal": 773.3,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ac500a80-ee8a-4481-bac9-8f94e3fed062",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6905,
+      "yoursDesc": "R&R Exterior deck light fixtures - hail",
+      "adjDesc": "Replace deck exterior lights",
+      "yoursTotal": 436.6,
+      "adjTotal": 436.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "646469b5-f2df-48f3-b94e-bddb1eefb420",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6764,
+      "yoursDesc": "Tear off - felt underlayment, primary roof",
+      "adjDesc": "Demo felt underlayment primary",
+      "yoursTotal": 448.8,
+      "adjTotal": 448.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "26418cc8-303d-4283-928d-13c95b4618c7",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6693,
+      "yoursDesc": "R&R Fiber-cement lap siding 7.5\" exposure - all",
+      "adjDesc": "Replace fiber-cement lap siding all NOTE- Scope per adjuster re-inspection; 2800 SF warranting replacement.",
+      "yoursTotal": 33417.6,
+      "adjTotal": 29523.6,
+      "diff": -3894,
+      "llmReasoning": null
+    },
+    {
+      "id": "4225c972-5060-47c0-850e-8cb5a2343a95",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6626,
+      "yoursDesc": "Tear out water-damaged drywall - master bath walls",
+      "adjDesc": "Demo water walls master bath",
+      "yoursTotal": 529.1,
+      "adjTotal": 366.3,
+      "diff": -162.8,
+      "llmReasoning": null
+    },
+    {
+      "id": "fb1304af-f577-48a7-aaaa-26c58b5afe77",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6607,
+      "yoursDesc": "Tear out water-damaged drywall walls - bed 2",
+      "adjDesc": "Demo water walls bedroom 2",
+      "yoursTotal": 854.7,
+      "adjTotal": 854.7,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1dbbb946-d246-4043-902d-ae646974c54c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6546,
+      "yoursDesc": "Tear off damaged corner trim",
+      "adjDesc": "Demo corner trim",
+      "yoursTotal": 244.2,
+      "adjTotal": 244.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4e4dd9b4-f07b-4684-b212-91098703a47e",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6474,
+      "yoursDesc": "Tear off - damaged ridge cap",
+      "adjDesc": "Demo ridge cap",
+      "yoursTotal": 508.2,
+      "adjTotal": 508.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0bd8a07c-bd42-4710-9b2d-600a6c4e045b",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6375,
+      "yoursDesc": "Tear out stained drywall ceiling - dining",
+      "adjDesc": "Demo stained ceiling dining",
+      "yoursTotal": 244.2,
+      "adjTotal": 162.8,
+      "diff": -81.39999999999998,
+      "llmReasoning": null
+    },
+    {
+      "id": "497ea468-f102-459c-a910-3a57e28ff943",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6302,
+      "yoursDesc": "Tear out stained drywall ceiling - kitchen",
+      "adjDesc": "Demo stained ceiling kitchen",
+      "yoursTotal": 488.4,
+      "adjTotal": 325.6,
+      "diff": -162.79999999999995,
+      "llmReasoning": null
+    },
+    {
+      "id": "cc4b7635-99af-4ffd-a4ec-f6f2d7e11f5f",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6252,
+      "yoursDesc": "Tear out damaged ceiling - bedroom 3",
+      "adjDesc": "Demo water ceiling bedroom 3",
+      "yoursTotal": 488.4,
+      "adjTotal": 366.3,
+      "diff": -122.09999999999997,
+      "llmReasoning": null
+    },
+    {
+      "id": "3cfc162f-8d31-4aaf-956b-d7ff87d0cf9d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6233,
+      "yoursDesc": "Building permit - hail damage restoration",
+      "adjDesc": "Building permit",
+      "yoursTotal": 1850,
+      "adjTotal": 1850,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "68935918-43e1-498b-afbd-2556d91974e1",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6206,
+      "yoursDesc": "Tear out water-stained drywall - home office ceiling",
+      "adjDesc": "Demo stained ceiling home office",
+      "yoursTotal": 447.7,
+      "adjTotal": 284.9,
+      "diff": -162.8,
+      "llmReasoning": null
+    },
+    {
+      "id": "6646e03c-264a-4b23-b8c3-e881c87d5351",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5873,
+      "yoursDesc": "Project superintendent",
+      "adjDesc": "Superintendent hours",
+      "yoursTotal": 13090,
+      "adjTotal": 9350,
+      "diff": -3740,
+      "llmReasoning": null
+    },
+    {
+      "id": "97638c0b-c57e-47cb-92e0-2f756bb89d47",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Landscape debris cleanup",
+      "adjDesc": null,
+      "yoursTotal": 572,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "1257578f-1124-4dc6-907d-6af3130b2a3b",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "R&R Attic power vent - solar NOTE- Pre-loss solar vents on main roof; carrier denied upgrade.",
+      "adjDesc": null,
+      "yoursTotal": 1144.6,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "bd40636b-ac26-4130-94d7-6725d76d1d29",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "R&R Gutter guards - micro-mesh, hail-dented NOTE- Pre-loss micro-mesh guards; excluded as non-standard by carrier.",
+      "adjDesc": null,
+      "yoursTotal": 3209.6,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "bfbf2cd5-6d07-4b80-8efb-49855e1ad7a2",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Crown molding - master suite",
+      "adjDesc": null,
+      "yoursTotal": 882.64,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Completely different work scopes: contractor item is crown molding R&R in master suite; adjuster item is a carrier documentation review for water stain extent in great room entry ceiling. Different zones, different trades, different actions, different descriptions."
+    },
+    {
+      "id": "2e20cdff-083f-4124-900c-cd8eff4ff193",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Whole-house humidifier - wind damage NOTE- Humidifier exterior connection damaged; excluded by carrier.",
+      "adjDesc": null,
+      "yoursTotal": 1044.3,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Contractor item is R&R of a whole-house humidifier for wind/hail damage; adjuster item is an independent carrier re-inspection under general conditions. Entirely different scopes, trades, and zones."
+    },
+    {
+      "id": "715551a0-2080-4fa6-991a-5af2549c5040",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Paint floor - basement concrete",
+      "adjDesc": null,
+      "yoursTotal": 706.11,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Contractor item is painting basement concrete floor; adjuster item is a carrier scope review for home office ceiling stain. Different zones, different trades, different actions, fundamentally different work."
+    },
+    {
+      "id": "5da80c0c-73bd-47d1-8c95-83b42f799765",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Tear off hail-damaged screen panels - patio",
+      "adjDesc": null,
+      "yoursTotal": 561,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Contractor item is tearing off hail-damaged screen panels (6 each, $561); adjuster item is a carrier supplemental scope review for the deck (1 each, $582). While both reference the deck/patio area, the work described is fundamentally different — physical demolition of screen panels vs. an administrative/documentation scope review item."
+    },
+    {
+      "id": "133d2550-498e-4532-ac10-039a88862721",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Window well covers - basement egress NOTE- Window well covers excluded from scope by carrier.",
+      "adjDesc": null,
+      "yoursTotal": 436.6,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Contractor item is R&R of basement window well covers (noted as excluded by carrier); adjuster item is a carrier appraisal report under general conditions. Completely different scopes, zones, and purposes."
+    }
+  ]
+}

@@ -75,7 +75,7 @@ const ANTHROPIC_VERSION = '2023-06-01';
 const ZONE_DETECTION_MAX_TOKENS = 2000;
 const CHUNK_SIZE = 10;
 const CHUNK_OVERLAP = 1;
-const CONCURRENT_CHUNK_CALLS = 5;
+const CONCURRENT_CHUNK_CALLS = 17; // Tier 3
 const FLAT_LIST_THRESHOLD = 2;
 
 // ── Return type ───────────────────────────────────────────────────────────────

@@ -217,6 +217,26 @@ export function computeRawScore(features: N3CandidateScoreFeatures): number {
   return score;
 }
 
+/**
+ * Compute the raw weighted feature sum using a custom weight set.
+ *
+ * Identical to computeRawScore() but accepts a runtime weight override.
+ * Used by Phase 13 to apply data-conditional weight boosting when item
+ * codes or materials are present in the comparison.
+ *
+ * The provided weights MUST sum to 1.00 to maintain the [0, 1] score range.
+ */
+export function computeRawScoreWithWeights(
+  features: N3CandidateScoreFeatures,
+  weights: Record<keyof typeof SCORE_WEIGHTS, number>,
+): number {
+  let score = 0;
+  for (const [key, weight] of Object.entries(weights)) {
+    score += weight * (features[key as keyof N3CandidateScoreFeatures] ?? 0);
+  }
+  return score;
+}
+
 // ── Final score computation (§16.2 + §A.6 option 1) ──────────────────────────
 
 /**
