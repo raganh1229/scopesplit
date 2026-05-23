@@ -69,6 +69,29 @@ export default function MatchReview({
     e1Slots.some((v, i) => v !== initE1[i]) ||
     e2Slots.some((v, i) => v !== initE2[i]);
 
+  const hasLowConfidence = useMemo(
+    () => initialPairs.some(p => p.confidence > 0 && p.confidence < 70),
+    [initialPairs],
+  );
+
+  const [warnDismissed, setWarnDismissed] = useState(false);
+
+  function handleUnpair(i: number) {
+    setE1Slots(prev => {
+      const next = [...prev];
+      next.splice(i, 1);
+      next.push(null);
+      return next;
+    });
+    setE2Slots(prev => {
+      const next = [...prev];
+      const e2Name = next[i];
+      next.splice(i, 1);
+      next.push(e2Name);
+      return next;
+    });
+  }
+
   function handleReset() {
     setE1Slots([...initE1]);
     setE2Slots([...initE2]);
@@ -232,11 +255,26 @@ export default function MatchReview({
         </p>
       </div>
 
+      {hasLowConfidence && !warnDismissed && (
+        <div className={styles.warnBanner}>
+          <svg className={styles.warnIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <div className={styles.warnText}>
+            <strong>Some zone pairings have low confidence.</strong> The AI may have grouped zones incorrectly — review carefully. You can drag zones to fix mismatches, or use the ✕ button to unpair any row.
+          </div>
+          <button className={styles.warnClose} onClick={() => setWarnDismissed(true)} aria-label="Dismiss">✕</button>
+        </div>
+      )}
+
       <div className={styles.tableWrap}>
         <div className={styles.colHeads}>
           <div className={styles.colHead}>Your Estimate</div>
           <div className={styles.colHeadMid} aria-hidden />
           <div className={styles.colHead}>Adjuster&apos;s Estimate</div>
+          <div className={styles.colHeadAction} aria-hidden />
         </div>
 
         <div className={styles.rows}>
@@ -246,6 +284,7 @@ export default function MatchReview({
             const confKey = e1Name && e2Name ? `${e1Name}|${e2Name}` : null;
             const confidence = confKey ? confidenceMap.get(confKey) : undefined;
             const isPaired = e1Name !== null && e2Name !== null;
+            const isLowConf = isPaired && confidence !== undefined && confidence < 70;
             const isHighConf = isPaired && confidence !== undefined && confidence >= 90;
             const isDragOverE1 =
               dragOverIndex?.col === 'e1' &&
@@ -259,7 +298,7 @@ export default function MatchReview({
             return (
               <div
                 key={i}
-                className={`${styles.row} ${isHighConf ? styles.rowHighConf : ''}`}
+                className={`${styles.row} ${isHighConf ? styles.rowHighConf : ''} ${isLowConf ? styles.rowLowConf : ''}`}
               >
                 {/* ── E1 cell ─── */}
                 <div
@@ -317,6 +356,20 @@ export default function MatchReview({
                     </>
                   ) : (
                     <span className={styles.emptyLabel}>—</span>
+                  )}
+                </div>
+
+                {/* ── Unpair action ─── */}
+                <div className={styles.rowAction}>
+                  {isPaired && (
+                    <button
+                      className={styles.unpairBtn}
+                      onClick={() => handleUnpair(i)}
+                      title="Unpair these zones — they will be extracted independently"
+                      disabled={confirming || correcting || goingBack}
+                    >
+                      ✕
+                    </button>
                   )}
                 </div>
               </div>
