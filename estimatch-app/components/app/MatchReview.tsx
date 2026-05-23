@@ -247,7 +247,7 @@ export default function MatchReview({
             <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <div className={styles.warnText}>
-            <strong>Some zone pairings have low confidence.</strong> This is common when the two estimates use different zone naming conventions. Line items are matched by content, not zone name — so even low-confidence pairings won't cause missed matches. On the final page, each line item will appear under its zone from <em>your</em> estimate; adjuster-only items will appear under their own zone name.
+            <strong>Some zone pairings have low confidence.</strong> This is common when contractors and adjusters organize their estimates differently. Don&apos;t worry — every line item is compared by what it describes, not by which zone it&apos;s in, so nothing gets missed. On the final page, items will be grouped under your zone names.
           </div>
           <button className={styles.warnClose} onClick={() => setWarnDismissed(true)} aria-label="Dismiss">✕</button>
         </div>
