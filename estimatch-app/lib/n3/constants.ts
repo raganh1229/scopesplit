@@ -107,6 +107,12 @@ export const GROUP_MATCH = {
 // Post-dedup target: 30–75 per item (large estimates), 10–40 (small estimates).
 // §A.6 §15.4: 30–75 is the POST-DEDUP target; budgets below are PER-DIRECTION.
 
+// Maximum cross-product pairs allowed for a single ai_proposed_zone correspondence.
+// If yoursItems × adjItems exceeds this, the correspondence is skipped and the
+// four global sources (semantic, fuzzy_description, total_similarity, item_code)
+// provide full coverage instead. Prevents DB connection timeouts on large zones.
+export const AI_ZONE_MAX_PAIRS = 7_000;
+
 export const CANDIDATE_BUDGETS: Record<N3RetrievalSource, number> = {
   verified_zone:          30,
   ai_proposed_zone:       20,

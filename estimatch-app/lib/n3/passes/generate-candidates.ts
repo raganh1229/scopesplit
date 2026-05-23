@@ -28,7 +28,7 @@
 import prisma from '@/lib/prisma';
 import type { StepLogger } from '@/lib/n3/passes/detect-zones';
 import type { N3RetrievalSource } from '@/lib/n3/types';
-import { CANDIDATE_BUDGETS } from '@/lib/n3/constants';
+import { CANDIDATE_BUDGETS, AI_ZONE_MAX_PAIRS } from '@/lib/n3/constants';
 
 // ── Return type ───────────────────────────────────────────────────────────────
 
@@ -100,6 +100,18 @@ async function retrieveAiProposedZone(
         select: { id: true },
       }),
     ]);
+
+    const crossProductSize = yoursItems.length * adjItems.length;
+    if (crossProductSize > AI_ZONE_MAX_PAIRS) {
+      logger.info('[n3/generate-candidates] ai_proposed_zone: skipping large correspondence', {
+        comparisonId,
+        yoursCount: yoursItems.length,
+        adjCount: adjItems.length,
+        crossProductSize,
+        limit: AI_ZONE_MAX_PAIRS,
+      });
+      continue;
+    }
 
     for (const y of yoursItems) {
       for (const a of adjItems) {
