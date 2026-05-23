@@ -370,7 +370,7 @@ export default function MatchReview({
             <button
               className={styles.backBtn}
               onClick={handleReset}
-              disabled={goingBack || confirming}
+              disabled={goingBack || confirming || correcting}
             >
               Reset to default
             </button>

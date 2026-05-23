@@ -224,7 +224,7 @@ export default function LineItemReview({
                   type="button"
                   className={source === s ? styles.sourceBtnActive : styles.sourceBtn}
                   onClick={() => handleSourceChange(s)}
-                  disabled={submitting}
+                  disabled={submitting || analyzing}
                 >
                   {s === 'yours' ? 'Yours' : s === 'adjuster' ? 'Adjuster' : 'Both'}
                 </button>
