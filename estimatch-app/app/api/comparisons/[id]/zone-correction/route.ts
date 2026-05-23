@@ -30,7 +30,7 @@ const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 const CORRECTION_MODEL = 'claude-sonnet-4-6';
 const CORRECTION_MAX_TOKENS = 2000;
-const MAX_TOOL_ROUNDS = 3;
+const MAX_TOOL_ROUNDS = 6;
 
 function getApiKey(): string {
   const key = process.env.ANTHROPIC_API_KEY;
@@ -55,7 +55,18 @@ type AnthropicResponseBody = {
 async function callCorrectionAgent(
   messages: AnthropicMessage[],
   apiKey: string,
+  options?: { noTools?: boolean },
 ): Promise<AnthropicResponseBody> {
+  const payload: Record<string, unknown> = {
+    model: CORRECTION_MODEL,
+    max_tokens: CORRECTION_MAX_TOKENS,
+    temperature: 0,
+    system: ZONE_CORRECTION_SYSTEM_PROMPT,
+    messages,
+  };
+  if (!options?.noTools) {
+    payload.tools = [EXAMINE_PDF_PAGES_TOOL];
+  }
   const response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
     headers: {
@@ -63,14 +74,7 @@ async function callCorrectionAgent(
       'x-api-key': apiKey,
       'anthropic-version': ANTHROPIC_VERSION,
     },
-    body: JSON.stringify({
-      model: CORRECTION_MODEL,
-      max_tokens: CORRECTION_MAX_TOKENS,
-      temperature: 0,
-      system: ZONE_CORRECTION_SYSTEM_PROMPT,
-      tools: [EXAMINE_PDF_PAGES_TOOL],
-      messages,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -200,6 +204,14 @@ export async function POST(
     }
 
     if (!n3Result) {
+      const forced = await callCorrectionAgent(n3Messages, n3ApiKey, { noTools: true });
+      const forcedText = forced.content.find(b => b.type === 'text');
+      if (forcedText?.type === 'text') {
+        try { n3Result = JSON.parse(extractJsonFromText(forcedText.text)) as ZoneCorrectionResponse; } catch { /* fall through */ }
+      }
+    }
+
+    if (!n3Result) {
       return NextResponse.json({ error: 'Agent did not produce a correction' }, { status: 500 });
     }
 
@@ -319,6 +331,14 @@ export async function POST(
     }
 
     break;
+  }
+
+  if (!correctionResult) {
+    const forced = await callCorrectionAgent(messages, apiKey, { noTools: true });
+    const forcedText = forced.content.find(b => b.type === 'text');
+    if (forcedText?.type === 'text') {
+      try { correctionResult = JSON.parse(extractJsonFromText(forcedText.text)) as ZoneCorrectionResponse; } catch { /* fall through */ }
+    }
   }
 
   if (!correctionResult) {
