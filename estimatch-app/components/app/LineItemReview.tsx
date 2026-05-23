@@ -36,17 +36,56 @@ export default function LineItemReview({
   const [error,         setError]         = useState<string | null>(null);
   const [creditWarning, setCreditWarning] = useState(false);
 
+  type AnalysisZone = { source: string; zone: string; extracted: number; expected: number; issue: string };
+  type AnalysisResult = {
+    analysis: string;
+    zones_to_check: AnalysisZone[];
+    recommendation: 'reextract' | 'confirm' | 'review_manually';
+    agentMessage: string | null;
+  };
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [analyzing,      setAnalyzing]      = useState(false);
+  const [analysisError,  setAnalysisError]  = useState<string | null>(null);
+
   const maxRows = Math.max(initialYours.length, initialAdj.length);
 
   function handleFeedbackChange(val: string) {
     setFeedbackText(val);
     const looksGeneric = val.trim().length > 10 && !/(zone|section|room)/i.test(val);
     setCreditWarning(looksGeneric && source === 'both');
+    setAnalysisResult(null);
   }
 
   function handleSourceChange(val: 'yours' | 'adjuster' | 'both') {
     setSource(val);
     setCreditWarning(val === 'both' && feedbackText.trim().length > 10);
+    setAnalysisResult(null);
+  }
+
+  async function handleAnalyze(e: React.FormEvent) {
+    e.preventDefault();
+    if (!feedbackText.trim() || analyzing) return;
+    setAnalyzing(true);
+    setAnalysisError(null);
+    setAnalysisResult(null);
+    try {
+      const res = await fetch(`/api/comparisons/${comparisonId}/line-item-review/analyze`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ description: feedbackText.trim() }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({})) as { error?: string };
+        setAnalysisError(body.error ?? `Request failed (${res.status})`);
+        return;
+      }
+      const data = await res.json() as AnalysisResult;
+      setAnalysisResult(data);
+    } catch {
+      setAnalysisError('Network error. Please try again.');
+    } finally {
+      setAnalyzing(false);
+    }
   }
 
   async function handleConfirm() {
@@ -72,8 +111,7 @@ export default function LineItemReview({
     }
   }
 
-  async function handleReextract(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleReextract() {
     if (!feedbackText.trim() || submitting) return;
     setSubmitting(true);
     setError(null);
@@ -176,7 +214,7 @@ export default function LineItemReview({
           <span className={styles.flagHint}>Counts look wrong? Let us know and we&apos;ll re-extract.</span>
         </div>
       ) : (
-        <form className={styles.feedbackSection} onSubmit={handleReextract}>
+        <form className={styles.feedbackSection} onSubmit={handleAnalyze}>
           <div className={styles.sourceRow}>
             <span className={styles.sourceLabel}>Which estimate needs re-extraction?</span>
             <div className={styles.sourceBtns}>
@@ -220,21 +258,51 @@ export default function LineItemReview({
             onChange={e => handleFeedbackChange(e.target.value)}
             placeholder="e.g. Zone 3 (adjuster) is missing approximately 4 items around pages 8–11."
             rows={3}
-            disabled={submitting}
+            disabled={submitting || analyzing}
           />
+
+          {analysisResult && (
+            <div className={styles.aiAnalysis}>
+              <p className={styles.aiAnalysisSummary}>{analysisResult.analysis}</p>
+              {analysisResult.zones_to_check.length > 0 && (
+                <ul className={styles.aiAnalysisZones}>
+                  {analysisResult.zones_to_check.map((z, i) => (
+                    <li key={i}>
+                      <strong>{z.zone}</strong> ({z.source}) 
+                      extracted&nbsp;{z.extracted} / expected&nbsp;{z.expected}&nbsp;&mdash; {z.issue}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {analysisResult.agentMessage && (
+                <p className={styles.aiAgentMessage}>{analysisResult.agentMessage}</p>
+              )}
+            </div>
+          )}
+
+          {analysisError && <div className={styles.errorMessage}>{analysisError}</div>}
+
           <div className={styles.feedbackActions}>
             <button
               type="button"
               className={styles.cancelBtn}
-              onClick={() => { setFeedbackOpen(false); setFeedbackText(''); setCreditWarning(false); }}
-              disabled={submitting}
+              onClick={() => { setFeedbackOpen(false); setFeedbackText(''); setCreditWarning(false); setAnalysisResult(null); setAnalysisError(null); }}
+              disabled={submitting || analyzing}
             >
               Cancel
             </button>
             <button
               type="submit"
+              className={styles.analyzeBtn}
+              disabled={!feedbackText.trim() || analyzing || submitting}
+            >
+              {analyzing ? 'Analyzing…' : 'Analyze with AI'}
+            </button>
+            <button
+              type="button"
               className={styles.submitBtn}
-              disabled={!feedbackText.trim() || submitting}
+              onClick={() => handleReextract()}
+              disabled={!feedbackText.trim() || submitting || analyzing}
             >
               {submitting ? 'Re-extracting…' : 'Re-extract'}
             </button>

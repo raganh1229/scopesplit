@@ -350,6 +350,71 @@
   cursor: not-allowed;
 }
 
+.analyzeBtn {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--btn-primary-text);
+  background: var(--btn-primary-bg);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.analyzeBtn:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+}
+
+.analyzeBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── AI analysis box ─────────────────────────────────────────── */
+
+.aiAnalysis {
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  background: var(--amber-50, #fffbeb);
+  border: 1px solid var(--amber-100, #fde68a);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.aiAnalysisSummary {
+  margin: 0 0 8px;
+  color: var(--amber-700, #b45309);
+  font-weight: 500;
+}
+
+.aiAnalysisZones {
+  margin: 0 0 6px;
+  padding-left: 1.25rem;
+  color: var(--amber-700, #b45309);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.aiAgentMessage {
+  margin: 8px 0 0;
+  color: var(--amber-600, #d97706);
+  font-style: italic;
+}
+
+[data-theme='dark'] .aiAnalysis {
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.2);
+}
+
+[data-theme='dark'] .aiAnalysisSummary,
+[data-theme='dark'] .aiAnalysisZones,
+[data-theme='dark'] .aiAgentMessage {
+  color: #fbbf24;
+}
+
 /* ── Error ───────────────────────────────────────────────────── */
 
 .errorMessage {

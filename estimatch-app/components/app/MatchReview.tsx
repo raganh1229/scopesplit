@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import styles from './MatchReview.module.css';
 
 export type MatchPair = {
@@ -58,6 +58,12 @@ export default function MatchReview({
   const [e1Slots, setE1Slots] = useState<(string | null)[]>(initE1);
   const [e2Slots, setE2Slots] = useState<(string | null)[]>(initE2);
   const [confirming, setConfirming] = useState(false);
+
+  const [corrDescription, setCorrDescription] = useState('');
+  const [correcting, setCorrecting] = useState(false);
+  const [corrAgentMessage, setCorrAgentMessage] = useState<string | null>(null);
+  const [corrError, setCorrError] = useState<string | null>(null);
+  const corrTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isDirty =
     e1Slots.some((v, i) => v !== initE1[i]) ||
@@ -117,6 +123,53 @@ export default function MatchReview({
   function handleDragEnd() {
     setDragFrom(null);
     setDragOverIndex(null);
+  }
+
+  // ── AI correction ─────────────────────────────────────────
+  async function handleCorrect(e: React.FormEvent) {
+    e.preventDefault();
+    if (!corrDescription.trim() || correcting) return;
+    setCorrecting(true);
+    setCorrAgentMessage(null);
+    setCorrError(null);
+    try {
+      const res = await fetch(`/api/comparisons/${comparisonId}/match-review/correction`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ description: corrDescription.trim() }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({})) as { error?: string };
+        setCorrError(body.error ?? `Request failed (${res.status})`);
+        return;
+      }
+      const data = await res.json() as {
+        pairs: Array<{ e1Zones: string[]; e2Zones: string[] }>;
+        unmatchedE1: string[];
+        unmatchedE2: string[];
+        agentMessage: string | null;
+      };
+      if (data.agentMessage) {
+        setCorrAgentMessage(data.agentMessage);
+        setTimeout(() => corrTextareaRef.current?.focus(), 50);
+      } else {
+        const newE1: (string | null)[] = [];
+        const newE2: (string | null)[] = [];
+        for (const pair of data.pairs) {
+          newE1.push(pair.e1Zones.join(' + '));
+          newE2.push(pair.e2Zones.join(' + '));
+        }
+        for (const name of data.unmatchedE1) { newE1.push(name); newE2.push(null); }
+        for (const name of data.unmatchedE2) { newE1.push(null); newE2.push(name); }
+        setE1Slots(newE1);
+        setE2Slots(newE2);
+        setCorrDescription('');
+      }
+    } catch {
+      setCorrError('Network error — please try again.');
+    } finally {
+      setCorrecting(false);
+    }
   }
 
   // ── Back ──────────────────────────────────────────────────
@@ -274,6 +327,32 @@ export default function MatchReview({
 
       {confirmError && <div className={styles.errorMessage}>{confirmError}</div>}
 
+      {corrAgentMessage && (
+        <div className={styles.agentMessage}>{corrAgentMessage}</div>
+      )}
+
+      {corrError && <div className={styles.errorMessage}>{corrError}</div>}
+
+      <form id="match-correction-form" className={styles.correctionSection} onSubmit={handleCorrect}>
+        <label className={styles.correctionLabel} htmlFor="match-correction-input">
+          Describe a pairing issue
+        </label>
+        <p className={styles.correctionHint}>
+          e.g. &ldquo;Master Bedroom and Master Bath should pair with Primary Suite&rdquo; or
+          &ldquo;Exterior zone has no counterpart on the adjuster side&rdquo;
+        </p>
+        <textarea
+          id="match-correction-input"
+          ref={corrTextareaRef}
+          className={styles.correctionTextarea}
+          value={corrDescription}
+          onChange={e => setCorrDescription(e.target.value)}
+          placeholder='Describe what looks wrong with the zone pairings…'
+          rows={2}
+          disabled={correcting || confirming || goingBack}
+        />
+      </form>
+
       <div className={styles.bottomBar}>
         <span className={styles.hint}>
           {e1Slots.filter(Boolean).length} zone
@@ -300,15 +379,23 @@ export default function MatchReview({
             <button
               className={styles.backBtn}
               onClick={handleBack}
-              disabled={goingBack || confirming}
+              disabled={goingBack || confirming || correcting}
             >
               {goingBack ? 'Going back…' : '← Revise zones'}
             </button>
           )}
           <button
+            type="submit"
+            form="match-correction-form"
+            className={styles.correctionSubmitBtn}
+            disabled={!corrDescription.trim() || correcting || confirming || goingBack}
+          >
+            {correcting ? 'Correcting…' : 'Apply correction'}
+          </button>
+          <button
             className={styles.confirmBtn}
             onClick={handleConfirm}
-            disabled={confirming || goingBack}
+            disabled={confirming || goingBack || correcting}
           >
             {confirming ? 'Starting extraction…' : 'Confirm pairings →'}
           </button>

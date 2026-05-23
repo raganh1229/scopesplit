@@ -106,6 +106,7 @@ export async function POST(
     select: {
       userId: true,
       status: true,
+      pipelineVersion: true,
       yourEstimateStoragePath: true,
       adjusterEstimateStoragePath: true,
     },
@@ -130,6 +131,122 @@ export async function POST(
     return NextResponse.json({ error: 'description is required' }, { status: 400 });
   }
   const userDescription = body.description.trim();
+
+  // ── N3 path: read/write n3_zones table directly ────────────────────────────
+  if (comparison.pipelineVersion === 'n3') {
+    const n3Zones = await prisma.n3Zone.findMany({
+      where: { comparisonId },
+      select: { name: true, source: true, startPage: true, endPage: true, approxItems: true },
+      orderBy: [{ source: 'asc' }, { startPage: 'asc' }],
+    });
+
+    const toN2 = (z: { name: string; startPage: number; endPage: number; approxItems: number }): N2DetectedZone => ({
+      name: z.name,
+      startPage: z.startPage,
+      endPage: z.endPage,
+      approxItems: z.approxItems,
+      chunkOffset: 0,
+      endPageChunkOffset: 0,
+    });
+
+    const n3E1 = n3Zones.filter(z => z.source === 'yours').map(toN2);
+    const n3E2 = n3Zones.filter(z => z.source === 'adjuster').map(toN2);
+    const slimN3 = (z: N2DetectedZone) => ({ name: z.name, startPage: z.startPage, endPage: z.endPage, approxItems: z.approxItems });
+
+    const n3ApiKey = getApiKey();
+    const n3UserMsg = buildZoneCorrectionUserMessage({ e1Zones: n3E1.map(slimN3), e2Zones: n3E2.map(slimN3), userDescription });
+    const n3Messages: AnthropicMessage[] = [{ role: 'user', content: n3UserMsg }];
+    let n3Result: ZoneCorrectionResponse | null = null;
+
+    for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+      const agentResponse = await callCorrectionAgent(n3Messages, n3ApiKey);
+
+      if (agentResponse.stop_reason === 'end_turn') {
+        const textBlock = agentResponse.content.find(b => b.type === 'text');
+        if (!textBlock || textBlock.type !== 'text') {
+          return NextResponse.json({ error: 'Agent returned no text response' }, { status: 500 });
+        }
+        try {
+          n3Result = JSON.parse(extractJsonFromText(textBlock.text)) as ZoneCorrectionResponse;
+        } catch {
+          return NextResponse.json({ error: 'Agent returned malformed JSON' }, { status: 500 });
+        }
+        break;
+      }
+
+      if (agentResponse.stop_reason === 'tool_use') {
+        const toolUseBlocks = agentResponse.content.filter(b => b.type === 'tool_use');
+        n3Messages.push({ role: 'assistant', content: agentResponse.content });
+        const toolResults: Array<{ type: 'tool_result'; tool_use_id: string; content: string }> = [];
+        for (const block of toolUseBlocks) {
+          if (block.type !== 'tool_use') continue;
+          if (block.name === 'examine_pdf_pages') {
+            const toolInput = block.input as ExaminePdfPagesInput;
+            const result = await handleExaminePdfPages(
+              toolInput,
+              comparison.yourEstimateStoragePath,
+              comparison.adjusterEstimateStoragePath,
+              n3E1,
+              n3E2,
+              n3ApiKey,
+            );
+            toolResults.push({ type: 'tool_result', tool_use_id: block.id, content: result });
+          }
+        }
+        n3Messages.push({ role: 'user', content: toolResults });
+        continue;
+      }
+      break;
+    }
+
+    if (!n3Result) {
+      return NextResponse.json({ error: 'Agent did not produce a correction' }, { status: 500 });
+    }
+
+    if (!n3Result.agentMessage) {
+      await prisma.$transaction(async tx => {
+        await tx.n3Zone.deleteMany({ where: { comparisonId, source: 'yours' } });
+        await tx.n3Zone.deleteMany({ where: { comparisonId, source: 'adjuster' } });
+        for (const z of n3Result!.e1Zones) {
+          await tx.n3Zone.create({
+            data: {
+              comparisonId,
+              source: 'yours',
+              name: z.name,
+              normalizedName: z.name.toLowerCase().trim(),
+              startPage: z.startPage,
+              endPage: z.endPage,
+              approxItems: z.approxItems,
+              verificationStatus: 'user_corrected',
+            },
+          });
+        }
+        for (const z of n3Result!.e2Zones) {
+          await tx.n3Zone.create({
+            data: {
+              comparisonId,
+              source: 'adjuster',
+              name: z.name,
+              normalizedName: z.name.toLowerCase().trim(),
+              startPage: z.startPage,
+              endPage: z.endPage,
+              approxItems: z.approxItems,
+              verificationStatus: 'user_corrected',
+            },
+          });
+        }
+      });
+    }
+
+    return NextResponse.json({
+      e1Zones: n3Result.e1Zones,
+      e2Zones: n3Result.e2Zones,
+      matchHints: n3Result.matchHints ?? [],
+      confirmedUniqueZones: n3Result.confirmedUniqueZones ?? [],
+      agentMessage: n3Result.agentMessage ?? null,
+    });
+  }
+  // ── End N3 path ───────────────────────────────────────────────────────────────
 
   const corrected = await readZonesCorrected(comparisonId);
   const detected = await readZonesDetected(comparisonId);

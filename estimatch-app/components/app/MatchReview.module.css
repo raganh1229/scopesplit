@@ -338,6 +338,107 @@
   color: var(--text-primary);
 }
 
+/* ── AI correction section ───────────────────────────────────────────────── */
+
+.correctionSection {
+  max-width: 1040px;
+  margin: 0 auto 0;
+  width: 100%;
+}
+
+.correctionLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.correctionHint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.correctionTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 72px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font-stack);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.correctionTextarea:focus {
+  border-color: var(--text-secondary);
+}
+
+.correctionTextarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.correctionTextarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.correctionSubmitBtn {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--btn-primary-text);
+  background: var(--btn-primary-bg);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, opacity 0.15s;
+  flex-shrink: 0;
+  height: 40px;
+}
+
+.correctionSubmitBtn:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+}
+
+.correctionSubmitBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.agentMessage {
+  max-width: 1040px;
+  margin: 0 auto 0;
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--amber-50);
+  border: 1px solid var(--amber-100);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--amber-600);
+  line-height: 1.6;
+}
+
+[data-theme='dark'] .agentMessage {
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+[data-theme='dark'] .correctionTextarea {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
 @media (max-width: 600px) {
   .shell {
     padding: 16px 12px 36px;
