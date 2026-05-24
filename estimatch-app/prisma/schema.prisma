@@ -448,6 +448,7 @@ enum ComparisonStatus {
 
 enum MatchStatus {
   MATCH
+  MATCH_UNVERIFIED
   MODIFIED
   MISSING_FROM_ADJUSTER
   ADDED_BY_ADJUSTER

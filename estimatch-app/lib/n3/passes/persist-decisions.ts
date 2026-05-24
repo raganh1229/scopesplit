@@ -32,13 +32,14 @@ import type { StepLogger } from '@/lib/n3/passes/detect-zones';
 // ── Return type ───────────────────────────────────────────────────────────────
 
 export type PersistDecisionsN3Result = {
-  lineItemCount:   number;
-  matchCount:      number;
-  modifiedCount:   number;
-  missingCount:    number;
-  addedCount:      number;
-  groupedCount:    number;
-  totalGap:        number;
+  lineItemCount:          number;
+  matchCount:             number;
+  matchUnverifiedCount:   number;
+  modifiedCount:          number;
+  missingCount:           number;
+  addedCount:             number;
+  groupedCount:           number;
+  totalGap:               number;
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -93,7 +94,7 @@ export async function persistDecisionsN3(
 
   if (decisions.length === 0) {
     logger.warn('[n3/persist-decisions] no decisions found — nothing to persist', { comparisonId });
-    return { lineItemCount: 0, matchCount: 0, modifiedCount: 0, missingCount: 0, addedCount: 0, groupedCount: 0, totalGap: 0 };
+    return { lineItemCount: 0, matchCount: 0, matchUnverifiedCount: 0, modifiedCount: 0, missingCount: 0, addedCount: 0, groupedCount: 0, totalGap: 0 };
   }
 
   // ── 2. Load N3LineItems with zone ──────────────────────────────────────────
@@ -156,14 +157,15 @@ export async function persistDecisionsN3(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rows: any[] = [];
 
-  let sortOrder    = 0;
-  let matchCount   = 0;
-  let modifiedCount = 0;
-  let missingCount = 0;
-  let addedCount   = 0;
-  let groupedCount = 0;
-  let totalYoursAcc   = 0;
-  let totalAdjAcc     = 0;
+  let sortOrder             = 0;
+  let matchCount            = 0;
+  let matchUnverifiedCount  = 0;
+  let modifiedCount         = 0;
+  let missingCount          = 0;
+  let addedCount            = 0;
+  let groupedCount          = 0;
+  let totalYoursAcc         = 0;
+  let totalAdjAcc           = 0;
 
   // Sort decisions: yours items first, in page/line order
   const sortedDecisions = [...decisions].sort((a, b) => {
@@ -184,17 +186,16 @@ export async function persistDecisionsN3(
     const totalYours = yours ? toNum(yours.totalAmount) : 0;
     const totalAdj   = adj   ? toNum(adj.totalAmount)   : 0;
 
-    const diffAmount = adj && yours
-      ? totalAdj - totalYours
-      : adj   ? totalAdj
-      : yours ? -totalYours
-      : 0;
-
     // MatchStatus classification
-    let matchStatus: 'MATCH' | 'MODIFIED' | 'MISSING_FROM_ADJUSTER' | 'ADDED_BY_ADJUSTER' | 'GROUPED';
+    let matchStatus: 'MATCH' | 'MATCH_UNVERIFIED' | 'MODIFIED' | 'MISSING_FROM_ADJUSTER' | 'ADDED_BY_ADJUSTER' | 'GROUPED';
     switch (decision.decisionType) {
       case 'one_to_one':
-        matchStatus = amountsMatch(yours?.totalAmount, adj?.totalAmount) ? 'MATCH' : 'MODIFIED';
+        // If either total is null we cannot compare prices — mark as price-unverified match
+        if (adj?.totalAmount == null || yours?.totalAmount == null) {
+          matchStatus = 'MATCH_UNVERIFIED';
+        } else {
+          matchStatus = amountsMatch(yours.totalAmount, adj.totalAmount) ? 'MATCH' : 'MODIFIED';
+        }
         break;
       case 'grouped':
         matchStatus = 'GROUPED';
@@ -207,14 +208,26 @@ export async function persistDecisionsN3(
         matchStatus = 'MODIFIED';
     }
 
+    // For MATCH_UNVERIFIED, use yours total as adj proxy so the gap is not inflated by unreadable prices.
+    // diffAmount is null because we have no adj price to compare against.
+    const effectiveAdjForGap = matchStatus === 'MATCH_UNVERIFIED' ? totalYours : totalAdj;
+    const diffAmount: number | null = matchStatus === 'MATCH_UNVERIFIED'
+      ? null
+      : adj && yours
+        ? totalAdj - totalYours
+        : adj   ? totalAdj
+        : yours ? -totalYours
+        : 0;
+
     // Accumulators
     if (yours) totalYoursAcc += totalYours;
-    if (adj)   totalAdjAcc   += totalAdj;
+    if (adj)   totalAdjAcc   += effectiveAdjForGap;
 
     switch (matchStatus) {
-      case 'MATCH':    matchCount++;    break;
-      case 'MODIFIED': modifiedCount++; break;
-      case 'GROUPED':  groupedCount++;  break;
+      case 'MATCH':             matchCount++;            break;
+      case 'MATCH_UNVERIFIED':  matchUnverifiedCount++;  break;
+      case 'MODIFIED':          modifiedCount++;         break;
+      case 'GROUPED':           groupedCount++;          break;
       case 'MISSING_FROM_ADJUSTER': missingCount++; break;
       case 'ADDED_BY_ADJUSTER':     addedCount++;   break;
     }
@@ -255,7 +268,7 @@ export async function persistDecisionsN3(
       opAdjuster: toDecimalOrNull(adj?.opAmount),
       totalYours:  toDecimalOrNull(yours?.totalAmount),
       totalAdjuster: toDecimalOrNull(adj?.totalAmount),
-      diffAmount:  Number(diffAmount.toFixed(2)),
+      diffAmount:  diffAmount !== null ? Number(diffAmount.toFixed(2)) : null,
       category:   null,
       sortOrder:  sortOrder++,
       groupId:    null,
@@ -362,6 +375,7 @@ export async function persistDecisionsN3(
     comparisonId,
     lineItemCount: rows.length,
     matchCount,
+    matchUnverifiedCount,
     modifiedCount,
     missingCount,
     addedCount,
@@ -381,7 +395,7 @@ export async function persistDecisionsN3(
           totalGap:             Number(totalGap.toFixed(2)),
           yourEstimateTotal:    Number(totalYoursAcc.toFixed(2)),
           adjusterEstimateTotal: Number(totalAdjAcc.toFixed(2)),
-          matchCount,
+          matchCount:           matchCount + matchUnverifiedCount,
           modifiedCount,
           missingCount,
           addedCount,
@@ -392,7 +406,7 @@ export async function persistDecisionsN3(
     const code = (err as { code?: string }).code;
     if (code === 'P2025' || code === 'P2003') {
       logger.warn('[n3/persist-decisions] comparison deleted mid-flight — skipping', { comparisonId, code });
-      return { lineItemCount: 0, matchCount: 0, modifiedCount: 0, missingCount: 0, addedCount: 0, groupedCount: 0, totalGap: 0 };
+      return { lineItemCount: 0, matchCount: 0, matchUnverifiedCount: 0, modifiedCount: 0, missingCount: 0, addedCount: 0, groupedCount: 0, totalGap: 0 };
     }
     throw err;
   }
@@ -401,6 +415,7 @@ export async function persistDecisionsN3(
     comparisonId,
     lineItemCount: rows.length,
     matchCount,
+    matchUnverifiedCount,
     modifiedCount,
     missingCount,
     addedCount,
@@ -432,7 +447,8 @@ export async function persistDecisionsN3(
 
       const corrCount = await prisma.n3ZoneCorrespondence.count({ where: { comparisonId } });
 
-      await prisma.n3RunSnapshot.create({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (prisma as any).n3RunSnapshot.create({
         data: {
           comparisonId,
           trigger,
@@ -459,5 +475,5 @@ export async function persistDecisionsN3(
     }
   })();
 
-  return { lineItemCount: rows.length, matchCount, modifiedCount, missingCount, addedCount, groupedCount, totalGap };
+  return { lineItemCount: rows.length, matchCount, matchUnverifiedCount, modifiedCount, missingCount, addedCount, groupedCount, totalGap };
 }

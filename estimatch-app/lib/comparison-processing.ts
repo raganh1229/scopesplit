@@ -192,6 +192,7 @@ function mapMatchStatus(value: unknown): MatchStatus {
   const normalized = value.trim().toUpperCase();
 
   if (normalized === 'MATCH') return MatchStatus.MATCH;
+  if (normalized === 'MATCH_UNVERIFIED') return MatchStatus.MATCH_UNVERIFIED;
   if (normalized === 'MISSING_FROM_ADJUSTER') return MatchStatus.MISSING_FROM_ADJUSTER;
   if (normalized === 'ADDED_BY_ADJUSTER') return MatchStatus.ADDED_BY_ADJUSTER;
   if (normalized === 'GROUPED') return MatchStatus.GROUPED;
@@ -285,12 +286,18 @@ function computeAggregates(lineItems: PersistableLineItem[]) {
 
   for (const item of lineItems) {
     if (item.matchStatus === MatchStatus.MATCH) matchCount += 1;
+    else if (item.matchStatus === MatchStatus.MATCH_UNVERIFIED) matchCount += 1;
     else if (item.matchStatus === MatchStatus.MISSING_FROM_ADJUSTER) missingCount += 1;
     else if (item.matchStatus === MatchStatus.ADDED_BY_ADJUSTER) addedCount += 1;
     else modifiedCount += 1;
 
     yourEstimateTotal += item.totalYours ?? 0;
-    adjusterEstimateTotal += item.totalAdjuster ?? 0;
+    // For MATCH_UNVERIFIED the adj total is null; use yours as proxy so the gap is not inflated.
+    if (item.matchStatus === MatchStatus.MATCH_UNVERIFIED) {
+      adjusterEstimateTotal += item.totalYours ?? 0;
+    } else {
+      adjusterEstimateTotal += item.totalAdjuster ?? 0;
+    }
   }
 
   return {

@@ -104,6 +104,8 @@ export async function runComparisonProcessingStub(
     for (const item of comparison.lineItems) {
       if (item.matchStatus === MatchStatus.MATCH) {
         matchCount += 1;
+      } else if (item.matchStatus === MatchStatus.MATCH_UNVERIFIED) {
+        matchCount += 1;
       } else if (item.matchStatus === MatchStatus.MISSING_FROM_ADJUSTER) {
         missingCount += 1;
       } else if (item.matchStatus === MatchStatus.ADDED_BY_ADJUSTER) {
@@ -113,7 +115,11 @@ export async function runComparisonProcessingStub(
       }
 
       yourTotal += toNumber(item.totalYours) ?? 0;
-      adjusterTotal += toNumber(item.totalAdjuster) ?? 0;
+      if (item.matchStatus === MatchStatus.MATCH_UNVERIFIED) {
+        adjusterTotal += toNumber(item.totalYours) ?? 0;
+      } else {
+        adjusterTotal += toNumber(item.totalAdjuster) ?? 0;
+      }
     }
 
     totalGap = yourTotal - adjusterTotal;

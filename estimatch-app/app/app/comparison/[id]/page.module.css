@@ -131,6 +131,7 @@
 .dashStat { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .dashDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .dotMatch { background: var(--status-match); }
+.dotMatchUnverified { background: var(--status-match-unverified); }
 .dotModified { background: var(--status-modified); }
 .dotMissing { background: var(--status-missing); }
 .dotAdded { background: var(--status-added); }
@@ -249,6 +250,7 @@
 
 /* Dot colors */
 .pill_match .pillDot { background: var(--status-match); }
+.pill_match_unverified .pillDot { background: var(--status-match-unverified); }
 .pill_modified .pillDot { background: var(--status-modified); }
 .pill_missing .pillDot { background: var(--status-missing); }
 .pill_added .pillDot { background: var(--status-added); }
@@ -256,6 +258,8 @@
 /* Active pill */
 .pill_match.pillActive { background: var(--pill-match-bg); color: var(--green-600); }
 .pill_match.pillActive .pillCount { color: var(--green-600); opacity: 0.6; }
+.pill_match_unverified.pillActive { background: var(--pill-match-unverified-bg); color: var(--pill-match-unverified-text); }
+.pill_match_unverified.pillActive .pillCount { color: var(--pill-match-unverified-text); opacity: 0.6; }
 .pill_modified.pillActive { background: var(--pill-modified-bg); color: var(--pill-modified-text); }
 .pill_modified.pillActive .pillCount { color: var(--pill-modified-text); opacity: 0.6; }
 .pill_missing.pillActive { background: var(--pill-missing-bg); color: var(--red-600); }
@@ -1867,6 +1871,7 @@
 }
 
 .printStatusMatch { background: #dcfce7; }
+.printStatusMatchUnverified { background: #e2e8f0; }
 .printStatusModified { background: #fef9c3; }
 .printStatusMissing { background: #fee2e2; }
 .printStatusAdded { background: #dbeafe; }
@@ -2128,6 +2133,7 @@
   .mPill:not(.mPillActive) { opacity: 0.5; }
   .mPillDot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .mPill_match .mPillDot { background: var(--status-match); }
+  .mPill_match_unverified .mPillDot { background: var(--status-match-unverified); }
   .mPill_modified .mPillDot { background: var(--status-modified); }
   .mPill_missing .mPillDot { background: var(--status-missing); }
   .mPill_added .mPillDot { background: var(--status-added); }
@@ -2482,6 +2488,7 @@
   .printZoneTable td,
   .printZoneConfidence,
   .printStatusMatch,
+  .printStatusMatchUnverified,
   .printStatusModified,
   .printStatusMissing,
   .printStatusAdded {

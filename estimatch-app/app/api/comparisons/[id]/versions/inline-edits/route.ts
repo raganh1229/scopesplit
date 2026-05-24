@@ -19,7 +19,8 @@ function recalculateMatchStatus(r: {
   if (hasYours && !hasAdjuster) return 'MISSING_FROM_ADJUSTER';
   if (!hasYours && hasAdjuster) return 'ADDED_BY_ADJUSTER';
 
-  const diff = Math.abs((r.totalYours ?? 0) - (r.totalAdjuster ?? 0));
+  if (r.totalYours === null || r.totalAdjuster === null) return 'MATCH_UNVERIFIED';
+  const diff = Math.abs(r.totalYours - r.totalAdjuster);
   return diff < 0.01 ? 'MATCH' : 'MODIFIED';
 }
 

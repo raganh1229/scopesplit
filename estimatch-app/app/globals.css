@@ -98,6 +98,7 @@
   --status-modified: #BA7517;
   --status-missing: #E24B4A;
   --status-added: #378ADD;
+  --status-match-unverified: #7B8FA3;
 
   /* Pill active backgrounds */
   --pill-match-bg: #EAF3DE;
@@ -105,6 +106,8 @@
   --pill-missing-bg: #FCEBEB;
   --pill-added-bg: #E6F1FB;
   --pill-modified-text: #7A4D0B;
+  --pill-match-unverified-bg: #F1F5F9;
+  --pill-match-unverified-text: #475569;
 
   /* Diff indicators */
   --diff-positive: #A32D2D;
@@ -220,6 +223,7 @@
   --status-modified: #D4912A;
   --status-missing: #E55C5B;
   --status-added: #5AA0E6;
+  --status-match-unverified: #94A3B8;
 
   /* Pill active backgrounds (dark mode) */
   --pill-match-bg: #1C2616;
@@ -227,6 +231,8 @@
   --pill-missing-bg: #2D1B1B;
   --pill-added-bg: #1A2332;
   --pill-modified-text: #D4912A;
+  --pill-match-unverified-bg: #1E293B;
+  --pill-match-unverified-text: #94A3B8;
 
   /* Diff indicators (dark mode) */
   --diff-positive: #E8706F;

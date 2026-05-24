@@ -30,7 +30,7 @@ interface LineItem {
 }
 interface Row {
   id?: string;
-  status: 'match' | 'modified' | 'missing' | 'added';
+  status: 'match' | 'match_unverified' | 'modified' | 'missing' | 'added';
   category: string;
   your: LineItem | null;
   adjuster: LineItem | null;
@@ -101,10 +101,11 @@ function fmt(n: number): string {
   return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-type StatusFilter = 'match' | 'modified' | 'missing' | 'added';
+type StatusFilter = 'match' | 'match_unverified' | 'modified' | 'missing' | 'added';
 
 const statusLabel: Record<StatusFilter, string> = {
   match: 'Matching',
+  match_unverified: 'Price Unverified',
   modified: 'Contradicting',
   missing: 'Missing',
   added: 'Adjuster Added',
@@ -168,7 +169,7 @@ export default function ComparisonDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeFilters, setActiveFilters] = useState<Set<StatusFilter>>(
-    new Set(['match', 'modified', 'missing', 'added'])
+    new Set(['match', 'match_unverified', 'modified', 'missing', 'added'])
   );
   const [search, setSearch] = useState('');
   const [zoneFilter, setZoneFilter] = useState('');
@@ -1109,11 +1110,11 @@ export default function ComparisonDetailPage() {
   };
 
   const handleDiscrepancies = useCallback(() => {
-    const allOn = activeFilters.size === 4;
+    const allOn = activeFilters.size === 5;
     if (allOn) {
-      setActiveFilters(new Set(['modified', 'missing', 'added']));
+      setActiveFilters(new Set(['match_unverified', 'modified', 'missing', 'added']));
     } else {
-      setActiveFilters(new Set(['match', 'modified', 'missing', 'added']));
+      setActiveFilters(new Set(['match', 'match_unverified', 'modified', 'missing', 'added']));
     }
   }, [activeFilters]);
 
@@ -1456,7 +1457,7 @@ export default function ComparisonDetailPage() {
   /* Compute counts and totals */
   const stats = useMemo(() => {
     const allItems = zones.flatMap(z => z.items);
-    const counts = { match: 0, modified: 0, missing: 0, added: 0 };
+    const counts = { match: 0, match_unverified: 0, modified: 0, missing: 0, added: 0 };
     let yourTotal = 0, adjTotal = 0;
     allItems.forEach(r => {
       counts[r.status]++;
@@ -1472,6 +1473,7 @@ export default function ComparisonDetailPage() {
       return {
         counts: {
           match: comparison.matchCount,
+          match_unverified: 0,
           modified: comparison.modifiedCount,
           missing: comparison.missingCount,
           added: comparison.addedCount,
@@ -1803,6 +1805,7 @@ export default function ComparisonDetailPage() {
             <p className={styles.dashStatusTitle}>Line item breakdown</p>
             <div className={styles.dashStatusGrid}>
               <div className={styles.dashStat}><span className={`${styles.dashDot} ${styles.dotMatch}`} /><span className={styles.dashStatCount}>{stats.counts.match}</span><span className={styles.dashStatLabel}> {statusLabel.match.toLowerCase()}</span></div>
+              <div className={styles.dashStat}><span className={`${styles.dashDot} ${styles.dotMatchUnverified}`} /><span className={styles.dashStatCount}>{stats.counts.match_unverified}</span><span className={styles.dashStatLabel}> {statusLabel.match_unverified.toLowerCase()}</span></div>
               <div className={styles.dashStat}><span className={`${styles.dashDot} ${styles.dotModified}`} /><span className={styles.dashStatCount}>{stats.counts.modified}</span><span className={styles.dashStatLabel}> {statusLabel.modified.toLowerCase()}</span></div>
               <div className={styles.dashStat}><span className={`${styles.dashDot} ${styles.dotMissing}`} /><span className={styles.dashStatCount}>{stats.counts.missing}</span><span className={styles.dashStatLabel}> {statusLabel.missing.toLowerCase()}</span></div>
               <div className={styles.dashStat}><span className={`${styles.dashDot} ${styles.dotAdded}`} /><span className={styles.dashStatCount}>{stats.counts.added}</span><span className={styles.dashStatLabel}> {statusLabel.added.toLowerCase()}</span></div>
@@ -1831,7 +1834,7 @@ export default function ComparisonDetailPage() {
         {/* ── Toolbar ── */}
         <div className={styles.toolbar}>
           <div className={styles.pillGroup}>
-            {(['match', 'modified', 'missing', 'added'] as StatusFilter[]).map(f => (
+            {(['match', 'match_unverified', 'modified', 'missing', 'added'] as StatusFilter[]).map(f => (
               <button
                 key={f}
                 className={`${styles.pill} ${styles[`pill_${f}`]} ${activeFilters.has(f) ? styles.pillActive : ''}`}
@@ -1844,7 +1847,7 @@ export default function ComparisonDetailPage() {
             ))}
           </div>
           <button className={styles.discrepLink} onClick={handleDiscrepancies}>
-            {activeFilters.size === 4 ? 'Discrepancies only' : 'Show all'}
+            {activeFilters.size === 5 ? 'Discrepancies only' : 'Show all'}
           </button>
 
           <input
@@ -2262,6 +2265,7 @@ export default function ComparisonDetailPage() {
                         const a = row.adjuster;
                         const bgMap: Record<string, string> = {
                           match: 'var(--green-50)',
+                          match_unverified: 'var(--pill-match-unverified-bg)',
                           modified: 'var(--pill-modified-bg)',
                           missing: 'var(--red-50)',
                           added: 'var(--blue-50)',
@@ -2480,6 +2484,7 @@ export default function ComparisonDetailPage() {
                     const diff = (y?.total ?? 0) - (a?.total ?? 0);
                     const statusClassMap: Record<Row['status'], string> = {
                       match: styles.printStatusMatch,
+                      match_unverified: styles.printStatusMatchUnverified,
                       modified: styles.printStatusModified,
                       missing: styles.printStatusMissing,
                       added: styles.printStatusAdded,
@@ -2576,6 +2581,7 @@ export default function ComparisonDetailPage() {
             <p className={styles.mDashStatusTitle}>Breakdown</p>
             <div className={styles.mDashStatusGrid}>
               <div className={styles.mDashStat}><span className={`${styles.mDashDot} ${styles.dotMatch}`} /><span className={styles.mDashStatCount}>{stats.counts.match}</span><span className={styles.mDashStatLabel}>&nbsp;{statusLabel.match.toLowerCase()}</span></div>
+              <div className={styles.mDashStat}><span className={`${styles.mDashDot} ${styles.dotMatchUnverified}`} /><span className={styles.mDashStatCount}>{stats.counts.match_unverified}</span><span className={styles.mDashStatLabel}>&nbsp;{statusLabel.match_unverified.toLowerCase()}</span></div>
               <div className={styles.mDashStat}><span className={`${styles.mDashDot} ${styles.dotModified}`} /><span className={styles.mDashStatCount}>{stats.counts.modified}</span><span className={styles.mDashStatLabel}>&nbsp;{statusLabel.modified.toLowerCase()}</span></div>
               <div className={styles.mDashStat}><span className={`${styles.mDashDot} ${styles.dotMissing}`} /><span className={styles.mDashStatCount}>{stats.counts.missing}</span><span className={styles.mDashStatLabel}>&nbsp;{statusLabel.missing.toLowerCase()}</span></div>
               <div className={styles.mDashStat}><span className={`${styles.mDashDot} ${styles.dotAdded}`} /><span className={styles.mDashStatCount}>{stats.counts.added}</span><span className={styles.mDashStatLabel}>&nbsp;{statusLabel.added.toLowerCase()}</span></div>
@@ -2603,7 +2609,7 @@ export default function ComparisonDetailPage() {
 
         {/* ── Mobile Filter Pills (shown < 768px) ── */}
         <div className={styles.mToolbar}>
-          {(['match', 'modified', 'missing', 'added'] as StatusFilter[]).map(f => (
+          {(['match', 'match_unverified', 'modified', 'missing', 'added'] as StatusFilter[]).map(f => (
             <button
               key={f}
               className={`${styles.mPill} ${styles[`mPill_${f}`]} ${activeFilters.has(f) ? styles.mPillActive : ''}`}
@@ -2651,6 +2657,38 @@ export default function ComparisonDetailPage() {
                     )}
                     <div className={styles.cardMatch}>
                       <div className={styles.cardMatchRow}><span className={styles.cardRowLabel}>Difference</span><span className={styles.cardRowValueSuccess}>${fmt(Math.abs(diff))}</span></div>
+                    </div>
+                    {row.id && (
+                      <button className={npStyles.cardNoteBtn} onClick={() => openNoteForLineItem({ id: row.id!, descriptionYours: y?.description ?? null, descriptionAdjuster: a?.description ?? null, zoneCanonical: zone.canonicalName })}>
+                        <svg className={npStyles.cardNoteBtnIcon} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 10a1.5 1.5 0 0 1-1.5 1.5H5L2 14V3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5z" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        {(notesByLineItem.get(row.id) ?? 0) > 0 ? <><span className={npStyles.cardNoteBtnBadge}>{notesByLineItem.get(row.id)}</span> Notes</> : 'Add note'}
+                      </button>
+                    )}
+                  </div>
+                );
+              }
+
+              if (row.status === 'match_unverified') {
+                return (
+                  <div key={cardKey} className={styles.card}>
+                    <div className={styles.cardIcon}>
+                      <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="#7B8FA3" /><circle cx="11" cy="7" r="1.25" fill="white" /><path d="M11 10 L11 16" stroke="white" strokeWidth="2" strokeLinecap="round" /></svg>
+                    </div>
+                    {y && (
+                      <div className={`${styles.cardSection} ${styles.cardSectionBordered}`}>
+                        <p className={styles.cardLabel}>Your estimate</p>
+                        <p className={styles.cardDesc}>{y.description}</p>
+                        <span className={styles.zoneBadge}>{zone.canonicalName}</span>
+                        <div className={styles.cardRow}><span className={styles.cardRowLabel}>Quantity</span><span className={styles.cardRowValue}>{y.qty}</span></div>
+                        <div className={styles.cardRow}><span className={styles.cardRowLabel}>Total</span><span className={styles.cardRowValue}>${fmt(y.total)}</span></div>
+                      </div>
+                    )}
+                    <div className={styles.cardBanner} style={{ background: 'var(--pill-match-unverified-bg)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--pill-match-unverified-text, #475569)', fontWeight: 600, fontSize: 13 }}>
+                        <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#7B8FA3" strokeWidth="1.5" /><circle cx="8" cy="5.5" r="0.75" fill="#7B8FA3" /><path d="M8 7.5 L8 11.5" stroke="#7B8FA3" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                        Matched — adjuster price unreadable
+                      </div>
+                      <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>Item exists in adjuster&apos;s estimate but the total could not be extracted from the PDF</p>
                     </div>
                     {row.id && (
                       <button className={npStyles.cardNoteBtn} onClick={() => openNoteForLineItem({ id: row.id!, descriptionYours: y?.description ?? null, descriptionAdjuster: a?.description ?? null, zoneCanonical: zone.canonicalName })}>

@@ -10,7 +10,7 @@ type RouteContext = {
   params: Promise<{ id: string }>;
 };
 
-type UiRowStatus = 'match' | 'modified' | 'missing' | 'added';
+type UiRowStatus = 'match' | 'match_unverified' | 'modified' | 'missing' | 'added';
 
 function toNumber(value: number | bigint | { toString(): string } | null): number | null {
   if (value === null) return null;
@@ -19,6 +19,7 @@ function toNumber(value: number | bigint | { toString(): string } | null): numbe
 
 function mapMatchStatus(status: MatchStatus): UiRowStatus {
   if (status === MatchStatus.MATCH) return 'match';
+  if (status === MatchStatus.MATCH_UNVERIFIED) return 'match_unverified';
   if (status === MatchStatus.MISSING_FROM_ADJUSTER) return 'missing';
   if (status === MatchStatus.ADDED_BY_ADJUSTER) return 'added';
   return 'modified';
