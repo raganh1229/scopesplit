@@ -13,8 +13,15 @@
 //   action              — keyword lookup against the description
 //
 // Fields already populated by Phase 8 (NOT touched here):
-//   normalizedDescription, descriptionTokens, rawDescription, all amount fields,
-//   itemCode, rawQuantity, rawUnit, page/source/zone metadata.
+//   normalizedDescription, descriptionTokens, rawDescription, all amount fields
+//   except unitPrice (derived below when null), itemCode, rawQuantity, rawUnit,
+//   page/source/zone metadata.
+//
+// unitPrice derivation: if Phase 8 did not extract a unit price from the PDF
+// (e.g. the PDF has no unit-price column), Phase 9 derives it as:
+//   unitPrice = totalAmount / normalizedQuantity
+// when both fields are available and normalizedQuantity > 0. If Phase 8 DID
+// extract a value, that value is kept unchanged.
 //
 // material + object are intentionally left null — reserved for a possible
 // future Sonnet-backed NLP pass if Phase 13 feature importance warrants it.
@@ -99,6 +106,7 @@ export type NormalizeLineItemsN3Result = {
   withSpecialFlags: number;
   withTrade: number;
   withAction: number;
+  withDerivedUnitPrice: number;
 };
 
 // ── Main export ───────────────────────────────────────────────────────────────
@@ -123,12 +131,14 @@ export async function normalizeLineItemsN3(
       rawDescription: true,
       rawQuantity: true,
       rawUnit: true,
+      unitPrice: true,
+      totalAmount: true,
     },
   });
 
   if (items.length === 0) {
     logger.warn('[n3/normalize-line-items] No items found — Phase 8 may not have run', { comparisonId });
-    return { totalRows: 0, withQuantity: 0, withUnit: 0, withSpecialFlags: 0, withTrade: 0, withAction: 0 };
+    return { totalRows: 0, withQuantity: 0, withUnit: 0, withSpecialFlags: 0, withTrade: 0, withAction: 0, withDerivedUnitPrice: 0 };
   }
 
   logger.info('[n3/normalize-line-items] Normalizing items', {
@@ -144,6 +154,7 @@ export async function normalizeLineItemsN3(
     specialFlags: string[];
     trade: string | null;
     action: string | null;
+    unitPrice: number | null;
   };
 
   let withQuantity = 0;
@@ -151,6 +162,7 @@ export async function normalizeLineItemsN3(
   let withSpecialFlags = 0;
   let withTrade = 0;
   let withAction = 0;
+  let withDerivedUnitPrice = 0;
 
   const updates: NormUpdate[] = items.map(item => {
     const normalizedQuantity = parseAmount(item.rawQuantity);
@@ -159,11 +171,21 @@ export async function normalizeLineItemsN3(
     const trade = classifyTrade(item.rawDescription);
     const action = classifyAction(item.rawDescription);
 
+    // Use PDF-extracted unit price if present; otherwise derive from totalAmount ÷ normalizedQuantity.
+    const extractedUnitPrice = item.unitPrice != null ? Number(item.unitPrice) : null;
+    const totalAmount = item.totalAmount != null ? Number(item.totalAmount) : null;
+    const unitPrice =
+      extractedUnitPrice ??
+      (totalAmount != null && normalizedQuantity != null && normalizedQuantity > 0
+        ? totalAmount / normalizedQuantity
+        : null);
+
     if (normalizedQuantity !== null) withQuantity++;
     if (normalizedUnit !== null) withUnit++;
     if (specialFlags.length > 0) withSpecialFlags++;
     if (trade !== null) withTrade++;
     if (action !== null) withAction++;
+    if (unitPrice !== null && extractedUnitPrice === null) withDerivedUnitPrice++;
 
     return {
       id: item.id,
@@ -172,6 +194,7 @@ export async function normalizeLineItemsN3(
       specialFlags,
       trade,
       action,
+      unitPrice,
     };
   });
 
@@ -192,6 +215,7 @@ export async function normalizeLineItemsN3(
             specialFlags: u.specialFlags,
             trade: u.trade,
             action: u.action,
+            unitPrice: u.unitPrice,
           },
         }),
       ),
@@ -206,6 +230,7 @@ export async function normalizeLineItemsN3(
     withSpecialFlags,
     withTrade,
     withAction,
+    withDerivedUnitPrice,
   });
 
   return {
@@ -215,5 +240,6 @@ export async function normalizeLineItemsN3(
     withSpecialFlags,
     withTrade,
     withAction,
+    withDerivedUnitPrice,
   };
 }
