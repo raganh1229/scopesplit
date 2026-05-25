@@ -17,10 +17,11 @@
 import { serve } from 'inngest/next';
 import { inngest } from '@/lib/inngest/client';
 import { processComparisonV3 } from '@/lib/n3/inngest/process-comparison-v3';
+import { processComparisonV4 } from '@/lib/n4/pipeline/inngest';
 
 export const maxDuration = 300; // seconds — Vercel Pro ceiling
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [processComparisonV3],
+  functions: [processComparisonV3, processComparisonV4],
 });
