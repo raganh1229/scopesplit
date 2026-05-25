@@ -369,8 +369,12 @@ async function hasNumberedLineItems(pdfBytes: Uint8Array | Buffer): Promise<bool
     const result = await pdfParseModule.default(Buffer.from(pdfBytes));
     const text = result.text ?? '';
     if (text.trim().length < 200) return true;
-    const matches = text.match(/\b[1-9]\d{0,3}\.\s{1,4}[A-Za-z$]/g) ?? [];
-    return matches.length >= 3;
+    // Primary: number + period + any whitespace + letter/$ (tolerates tabs, 5+ spaces)
+    const matches = text.match(/\b[1-9]\d{0,3}\.\s+[A-Za-z$]/g) ?? [];
+    if (matches.length >= 2) return true;
+    // Secondary fallback: bare "N." pattern — pdf-parse may strip trailing spaces
+    const bareMatches = text.match(/\b[1-9]\d{0,3}\./g) ?? [];
+    return bareMatches.length >= 3;
   } catch {
     return true;
   }
