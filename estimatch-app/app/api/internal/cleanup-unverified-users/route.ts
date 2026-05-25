@@ -60,6 +60,7 @@ async function runCleanup() {
   const client = await clerkClient();
   let offset = 0;
   let scanned = 0;
+  let reachedCutoff = false;
   const staleUserIds: string[] = [];
 
   while (true) {
@@ -76,10 +77,15 @@ async function runCleanup() {
     }
 
     scanned += users.length;
+    offset += users.length;
 
     for (const user of users) {
       if (user.createdAt > cutoffTimestamp) {
-        continue;
+        // Users are ordered oldest-first, so all subsequent users on this page
+        // and all further pages are also newer than the cutoff. Stop immediately
+        // to avoid wasted API calls and offset drift on large user lists.
+        reachedCutoff = true;
+        break;
       }
 
       if (hasVerifiedTrialPhone(user)) {
@@ -89,25 +95,50 @@ async function runCleanup() {
       staleUserIds.push(user.id);
     }
 
-    offset += users.length;
-
-    if (users.length < batchSize) {
+    if (reachedCutoff || users.length < batchSize) {
       break;
     }
   }
 
-  for (const clerkId of staleUserIds) {
-    await client.users.deleteUser(clerkId);
-    await prisma.user.deleteMany({ where: { clerkId } });
-  }
+  const deletionResults: {
+    ok: string[];
+    clerkFailed: string[];
+    dbOrphan: string[];
+  } = { ok: [], clerkFailed: [], dbOrphan: [] };
+
+  await Promise.allSettled(
+    staleUserIds.map(async (clerkId) => {
+      try {
+        // 1. Delete from DB first — if this fails, we can retry; Clerk record remains
+        await prisma.user.deleteMany({ where: { clerkId } });
+
+        // 2. Delete from Clerk — if this fails after DB delete, we have a Clerk orphan (non-critical)
+        try {
+          await client.users.deleteUser(clerkId);
+          deletionResults.ok.push(clerkId);
+        } catch (clerkErr) {
+          deletionResults.clerkFailed.push(clerkId);
+          console.error(`[CLEANUP] Clerk delete failed for ${clerkId}:`, clerkErr instanceof Error ? clerkErr.message : String(clerkErr));
+        }
+      } catch (dbErr) {
+        // DB delete failed — Clerk record untouched; log for manual replay
+        deletionResults.dbOrphan.push(clerkId);
+        console.error(`[CLEANUP-ORPHAN] DB delete failed for ${clerkId}:`, dbErr instanceof Error ? dbErr.message : String(dbErr));
+      }
+    })
+  );
 
   return NextResponse.json(
     {
       ok: true,
       cutoffHours: maxAgeHours,
       scanned,
-      deleted: staleUserIds.length,
-      deletedUserIds: staleUserIds,
+      deleted: deletionResults.ok.length,
+      deletedUserIds: deletionResults.ok,
+      clerkFailedCount: deletionResults.clerkFailed.length,
+      clerkFailedIds: deletionResults.clerkFailed,
+      dbOrphanCount: deletionResults.dbOrphan.length,
+      dbOrphanIds: deletionResults.dbOrphan,
     },
     { status: 200 }
   );

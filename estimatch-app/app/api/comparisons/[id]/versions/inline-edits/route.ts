@@ -15,7 +15,8 @@ function recalculateMatchStatus(r: {
   const hasYours = r.totalYours !== null || !!(r.descriptionYours?.trim());
   const hasAdjuster = r.totalAdjuster !== null || !!(r.descriptionAdjuster?.trim());
 
-  if (!hasYours && !hasAdjuster) return r.matchStatus as MatchStatus;
+  // When both sides are blank, mark as unverified (was keeping stale status - #23 fix)
+  if (!hasYours && !hasAdjuster) return 'MATCH_UNVERIFIED';
   if (hasYours && !hasAdjuster) return 'MISSING_FROM_ADJUSTER';
   if (!hasYours && hasAdjuster) return 'ADDED_BY_ADJUSTER';
 

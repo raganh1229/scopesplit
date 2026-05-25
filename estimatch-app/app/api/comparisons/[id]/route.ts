@@ -351,3 +351,47 @@ export async function DELETE(_request: Request, context: RouteContext) {
 
   return NextResponse.json({ ok: true }, { status: 200 });
 }
+
+export async function PATCH(request: Request, context: RouteContext) {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  }
+
+  const { id: comparisonId } = await context.params;
+
+  let body: { name?: unknown };
+  try {
+    body = (await request.json()) as { name?: unknown };
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
+  }
+
+  const name = typeof body.name === 'string' ? body.name.trim() : null;
+  if (!name) {
+    return NextResponse.json({ error: 'Name is required.' }, { status: 400 });
+  }
+  if (name.length > 200) {
+    return NextResponse.json({ error: 'Name must be 200 characters or fewer.' }, { status: 400 });
+  }
+
+  const appUser = await prisma.user.findUnique({ where: { clerkId }, select: { id: true } });
+  if (!appUser) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  }
+
+  const comparison = await prisma.comparison.findFirst({
+    where: { id: comparisonId, userId: appUser.id },
+    select: { id: true },
+  });
+  if (!comparison) {
+    return NextResponse.json({ error: 'Comparison not found.' }, { status: 404 });
+  }
+
+  await prisma.comparison.update({
+    where: { id: comparisonId },
+    data: { name },
+  });
+
+  return NextResponse.json({ ok: true, name }, { status: 200 });
+}

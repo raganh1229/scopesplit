@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import { NextResponse } from 'next/server';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { SubscriptionStatus } from '@/app/generated/prisma/client';
@@ -32,6 +33,16 @@ function isAddonKey(value: string | undefined): value is AddonKey {
   );
 }
 
+function getClientIp(request: Request): string | null {
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return request.headers.get('x-real-ip');
+}
+
+function hashTrialIp(ip: string, salt: string): string {
+  return createHash('sha256').update(`${salt}:${ip}`).digest('hex');
+}
+
 function canUseTrial(status: SubscriptionStatus | null, hasUsedTrial: boolean): boolean {
   if (hasUsedTrial) return false;
   return status === null || status === SubscriptionStatus.EXPIRED || status === SubscriptionStatus.CANCELED;
@@ -46,7 +57,7 @@ type ClerkUserLike = {
   };
 };
 
-async function assertTrialEligibility(clerkId: string) {
+async function assertTrialEligibility(clerkId: string, request: Request) {
   const client = await clerkClient();
   const clerkUser = (await client.users.getUser(clerkId)) as unknown as ClerkUserLike;
 
@@ -61,8 +72,42 @@ async function assertTrialEligibility(clerkId: string) {
     };
   }
 
+  const phoneSearch = await stripe.customers.search({
+    query: `metadata['trial_phone_number']:'${phoneNumber}'`,
+    limit: 1,
+  });
+  if (phoneSearch.data.length > 0) {
+    return {
+      ok: false as const,
+      status: 403,
+      error: 'This phone number has already been used for a free trial.',
+    };
+  }
+
+  const salt = process.env.TRIAL_IP_HASH_SALT;
+  let ipHash: string | null = null;
+  if (salt) {
+    const ip = getClientIp(request);
+    if (ip) {
+      ipHash = hashTrialIp(ip, salt);
+      const ipSearch = await stripe.customers.search({
+        query: `metadata['trial_ip_hash']:'${ipHash}'`,
+        limit: 1,
+      });
+      if (ipSearch.data.length > 0) {
+        return {
+          ok: false as const,
+          status: 403,
+          error: 'A free trial has already been used from this network.',
+        };
+      }
+    }
+  }
+
   return {
     ok: true as const,
+    phoneNumber,
+    ipHash,
   };
 }
 
@@ -117,12 +162,16 @@ export async function POST(request: Request) {
 
       const shouldApplyTrial = body.trial === true && canUseTrial(appUser.subscriptionStatus, appUser.hasUsedTrial);
 
+      let trialMeta: { phoneNumber: string; ipHash: string | null } | null = null;
+
       if (shouldApplyTrial) {
-        const eligibility = await assertTrialEligibility(clerkId);
+        const eligibility = await assertTrialEligibility(clerkId, request);
 
         if (!eligibility.ok) {
           return NextResponse.json({ error: eligibility.error }, { status: eligibility.status });
         }
+
+        trialMeta = { phoneNumber: eligibility.phoneNumber, ipHash: eligibility.ipHash };
       }
 
       if (!stripeCustomerId) {
@@ -169,6 +218,18 @@ export async function POST(request: Request) {
           where: { id: appUser.id },
           data: { hasUsedTrial: true },
         });
+
+        if (trialMeta && stripeCustomerId) {
+          const metadataUpdate: Record<string, string> = {
+            trial_phone_number: trialMeta.phoneNumber,
+          };
+          if (trialMeta.ipHash) {
+            metadataUpdate.trial_ip_hash = trialMeta.ipHash;
+          }
+          await stripe.customers.update(stripeCustomerId, { metadata: metadataUpdate }).catch((err) => {
+            console.error('[TRIAL-ABUSE] Failed to write trial metadata to Stripe customer:', err);
+          });
+        }
       }
 
       return NextResponse.json({ url: session.url }, { status: 200 });

@@ -1,6 +1,8 @@
 import { writeFileSync, appendFileSync } from 'fs';
 
-const TRACE_FILE = 'scripts/pipeline-trace.txt';
+function getTraceFile(comparisonId: string): string {
+  return `scripts/pipeline-trace-${comparisonId}.txt`;
+}
 
 function isEnabled(): boolean {
   // Hard-guard: never write to the local filesystem in production (Vercel's
@@ -10,13 +12,15 @@ function isEnabled(): boolean {
   return process.env.DUMP_PIPELINE_TRACE === 'true';
 }
 
-export function traceReset(): void {
+export function traceReset(comparisonId: string): void {
   if (!isEnabled()) return;
-  writeFileSync(TRACE_FILE, `PIPELINE TRACE — ${new Date().toISOString()}\n\n`);
+  const traceFile = getTraceFile(comparisonId);
+  writeFileSync(traceFile, `PIPELINE TRACE — ${comparisonId} — ${new Date().toISOString()}\n\n`);
 }
 
-export function traceStep(stepName: string, content: string): void {
+export function traceStep(comparisonId: string, stepName: string, content: string): void {
   if (!isEnabled()) return;
+  const traceFile = getTraceFile(comparisonId);
   const section = [
     '════════════════════════════════════════════════════════════════',
     `  ${stepName}`,
@@ -26,5 +30,5 @@ export function traceStep(stepName: string, content: string): void {
     '',
     '',
   ].join('\n');
-  appendFileSync(TRACE_FILE, section);
+  appendFileSync(traceFile, section);
 }

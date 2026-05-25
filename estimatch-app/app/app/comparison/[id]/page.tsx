@@ -188,6 +188,9 @@ export default function ComparisonDetailPage() {
   );
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isRenamingHeader, setIsRenamingHeader] = useState(false);
+  const [renameHeaderValue, setRenameHeaderValue] = useState('');
+  const [renameHeaderSaving, setRenameHeaderSaving] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
   const [llmEditOpen, setLlmEditOpen] = useState(false);
   const [llmEditPrompt, setLlmEditPrompt] = useState('');
@@ -478,6 +481,27 @@ export default function ComparisonDetailPage() {
       setPageMenuOpen(false);
     }
   }, [comparisonId, router]);
+
+  const handleRenameHeader = useCallback(async () => {
+    const trimmed = renameHeaderValue.trim();
+    if (!trimmed || !comparisonId) return;
+    setRenameHeaderSaving(true);
+    try {
+      const res = await fetch(`/api/comparisons/${comparisonId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: trimmed }),
+      });
+      const payload = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(payload.error ?? 'Failed to rename.');
+      setComparison(prev => prev ? { ...prev, name: trimmed } : prev);
+      setIsRenamingHeader(false);
+    } catch {
+      // leave rename mode open so the user can retry
+    } finally {
+      setRenameHeaderSaving(false);
+    }
+  }, [comparisonId, renameHeaderValue]);
 
   const openNoteForLineItem = useCallback((li: NoteLineItemContext) => {
     setNoteTarget(li);
@@ -1723,32 +1747,77 @@ export default function ComparisonDetailPage() {
           </div>
         </div>
         <div className={styles.header}>
-          <h1>{comparison?.name ?? 'Comparison'}</h1>
-          <div className={styles.pageActions} ref={pageMenuRef}>
-            <button
-              className={styles.pageMoreBtn}
-              onClick={() => { setPageMenuOpen(prev => !prev); setConfirmDelete(false); }}
-              aria-label="More options"
-              disabled={isDeleting}
+          {isRenamingHeader ? (
+            <form
+              className={styles.headerRenameForm}
+              onSubmit={(e) => { e.preventDefault(); void handleRenameHeader(); }}
             >
-              {isDeleting ? (
-                <span className={styles.miniSpinner} />
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 16 16"><circle cx="8" cy="3" r="1.2" fill="currentColor" /><circle cx="8" cy="8" r="1.2" fill="currentColor" /><circle cx="8" cy="13" r="1.2" fill="currentColor" /></svg>
-              )}
-            </button>
-            {pageMenuOpen && (
-              <div className={styles.pageDropMenu}>
-                {confirmDelete ? (
-                  <>
-                    <span className={styles.dropConfirmText}>Delete this comparison?</span>
-                    <button className={styles.dropItemDanger} onClick={handleDeleteComparison}>Yes, delete</button>
-                    <button className={styles.dropItem} onClick={() => setConfirmDelete(false)}>Cancel</button>
-                  </>
-                ) : (
-                  <button className={styles.dropItemDanger} onClick={() => setConfirmDelete(true)}>Delete</button>
-                )}
+              <input
+                className={styles.headerRenameInput}
+                value={renameHeaderValue}
+                onChange={(e) => setRenameHeaderValue(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Escape') setIsRenamingHeader(false); }}
+                placeholder="Enter comparison name..."
+                autoFocus
+                maxLength={200}
+                disabled={renameHeaderSaving}
+              />
+            </form>
+          ) : (
+            <h1>{comparison?.name ?? 'Comparison'}</h1>
+          )}
+          <div className={styles.pageActions} ref={pageMenuRef}>
+            {isRenamingHeader ? (
+              <div className={styles.headerRenameActions}>
+                <button
+                  className={styles.headerRenameOkBtn}
+                  onClick={() => void handleRenameHeader()}
+                  disabled={renameHeaderSaving || !renameHeaderValue.trim()}
+                  aria-label="Save name"
+                >
+                  {renameHeaderSaving ? <span className={styles.miniSpinner} /> : <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="1,7 5,11 13,3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                </button>
+                <button
+                  className={styles.headerRenameCxBtn}
+                  onClick={() => setIsRenamingHeader(false)}
+                  disabled={renameHeaderSaving}
+                  aria-label="Cancel rename"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+                </button>
               </div>
+            ) : (
+              <>
+                <button
+                  className={styles.pageMoreBtn}
+                  onClick={() => { setPageMenuOpen(prev => !prev); setConfirmDelete(false); }}
+                  aria-label="More options"
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <span className={styles.miniSpinner} />
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 16 16"><circle cx="8" cy="3" r="1.2" fill="currentColor" /><circle cx="8" cy="8" r="1.2" fill="currentColor" /><circle cx="8" cy="13" r="1.2" fill="currentColor" /></svg>
+                  )}
+                </button>
+                {pageMenuOpen && (
+                  <div className={styles.pageDropMenu}>
+                    {confirmDelete ? (
+                      <>
+                        <span className={styles.dropConfirmText}>Delete this comparison?</span>
+                        <span className={styles.dropConfirmSubtext}>This will not restore your monthly comparison count.</span>
+                        <button className={styles.dropItemDanger} onClick={handleDeleteComparison}>Yes, delete</button>
+                        <button className={styles.dropItem} onClick={() => setConfirmDelete(false)}>Cancel</button>
+                      </>
+                    ) : (
+                      <>
+                        <button className={styles.dropItem} onClick={() => { setPageMenuOpen(false); setIsRenamingHeader(true); setRenameHeaderValue(comparison?.name ?? ''); }}>Rename</button>
+                        <button className={styles.dropItemDanger} onClick={() => setConfirmDelete(true)}>Delete</button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

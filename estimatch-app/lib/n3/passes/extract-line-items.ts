@@ -348,6 +348,34 @@ async function extractLargeZone(
   return { zoneId: zone.id, source: zone.source, items: allItems };
 }
 
+// ── Pre-flight: numbered item detection ───────────────────────────────────────
+
+/**
+ * Returns true if the PDF appears to contain numbered line items (e.g. "1.", "247.").
+ * Uses pdf-parse text extraction — zero API cost, runs before any Sonnet call.
+ *
+ * Returns true (don't block) when:
+ *   - pdf-parse fails (encrypted / scanned PDF — let vision handle it)
+ *   - Extracted text is too short to be reliable (<200 chars — likely scanned)
+ *   - At least 3 numbered item patterns are found
+ *
+ * Returns false (block + throw) only when text is extractable AND has no numbered items.
+ */
+async function hasNumberedLineItems(pdfBytes: Uint8Array | Buffer): Promise<boolean> {
+  try {
+    const pdfParseModule = (await import('pdf-parse')) as unknown as {
+      default: (buf: Buffer) => Promise<{ text: string }>;
+    };
+    const result = await pdfParseModule.default(Buffer.from(pdfBytes));
+    const text = result.text ?? '';
+    if (text.trim().length < 200) return true;
+    const matches = text.match(/\b[1-9]\d{0,3}\.\s{1,4}[A-Za-z$]/g) ?? [];
+    return matches.length >= 3;
+  } catch {
+    return true;
+  }
+}
+
 // ── Main export ───────────────────────────────────────────────────────────────
 
 /**
@@ -369,6 +397,8 @@ export async function extractLineItemsN3(
     select: {
       yourEstimateStoragePath: true,
       adjusterEstimateStoragePath: true,
+      yourEstimateFormat: true,
+      adjusterEstimateFormat: true,
     },
   });
   if (!comparison) {
@@ -402,10 +432,31 @@ export async function extractLineItemsN3(
   const yoursTotalPages = yoursDoc.getPageCount();
   const adjTotalPages = adjDoc.getPageCount();
 
-  // Pull format from Phase 4 detection (stored in the zone table's source — best proxy is first chunk)
-  // Format is not stored in n3_zones; default to 'unknown' and let the prompt handle it gracefully.
-  const yoursFormat: EstimateFormat = 'unknown';
-  const adjFormat: EstimateFormat = 'unknown';
+  // ── Pre-flight: confirm both PDFs contain numbered line items ───────────────
+  const [yoursHasNumbers, adjHasNumbers] = await Promise.all([
+    hasNumberedLineItems(yoursBytes),
+    hasNumberedLineItems(adjBytes),
+  ]);
+  const badSides: string[] = [];
+  if (!yoursHasNumbers) badSides.push('your estimate');
+  if (!adjHasNumbers) badSides.push("the adjuster's estimate");
+  if (badSides.length > 0) {
+    throw new Error(
+      `[n3/extract-line-items] Pre-flight failed: ${badSides.join(' and ')} ` +
+      `do not appear to contain numbered line items (e.g. "1.", "2.", "247."). ` +
+      `Xactimate estimates include numbered items by default — please ensure both files ` +
+      `are exported with line item numbering enabled and re-upload.`
+    );
+  }
+
+  // Format is user-selected at upload time and stored on the Comparison row.
+  const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown']);
+  const yoursFormat: EstimateFormat = VALID_FORMATS.has(comparison.yourEstimateFormat)
+    ? (comparison.yourEstimateFormat as EstimateFormat)
+    : 'unknown';
+  const adjFormat: EstimateFormat = VALID_FORMATS.has(comparison.adjusterEstimateFormat)
+    ? (comparison.adjusterEstimateFormat as EstimateFormat)
+    : 'unknown';
 
   logger.info('[n3/extract-line-items] Building zone call specs', {
     comparisonId,

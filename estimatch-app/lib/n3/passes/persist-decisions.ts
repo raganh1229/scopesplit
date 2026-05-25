@@ -205,7 +205,7 @@ export async function persistDecisionsN3(
         break;
       default:
         // possible (defensive — shouldn't reach here after Phase 17)
-        matchStatus = 'MODIFIED';
+        matchStatus = 'MATCH_UNVERIFIED';
     }
 
     // For MATCH_UNVERIFIED, use yours total as adj proxy so the gap is not inflated by unreadable prices.
@@ -384,11 +384,22 @@ export async function persistDecisionsN3(
   });
 
   // ── 6. Atomic persist ──────────────────────────────────────────────────────
+  // PostgreSQL limits bind parameters to 65,535 per statement. LineItem has
+  // ~35 columns → max safe batch = 65535 / 35 ≈ 1,872 rows. We chunk at 800
+  // (28,000 params) to stay well clear of the ceiling on any schema change.
+  const CHUNK_SIZE = 800;
+  const rowChunks: (typeof rows)[] = [];
+  for (let i = 0; i < rows.length; i += CHUNK_SIZE) {
+    rowChunks.push(rows.slice(i, i + CHUNK_SIZE));
+  }
+
   try {
-    await prisma.$transaction([
-      prisma.lineItem.deleteMany({ where: { comparisonId } }),
-      prisma.lineItem.createMany({ data: rows }),
-      prisma.comparison.update({
+    await prisma.$transaction(async (tx) => {
+      await tx.lineItem.deleteMany({ where: { comparisonId } });
+      for (const chunk of rowChunks) {
+        await tx.lineItem.createMany({ data: chunk });
+      }
+      await tx.comparison.update({
         where: { id: comparisonId },
         data: {
           status:               'COMPLETED',
@@ -400,8 +411,8 @@ export async function persistDecisionsN3(
           missingCount,
           addedCount,
         },
-      }),
-    ]);
+      });
+    });
   } catch (err) {
     const code = (err as { code?: string }).code;
     if (code === 'P2025' || code === 'P2003') {

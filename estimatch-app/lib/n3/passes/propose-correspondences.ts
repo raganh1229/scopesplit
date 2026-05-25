@@ -30,14 +30,19 @@ import type { StepLogger } from '@/lib/n3/passes/detect-zones';
 const SONNET_MODEL = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
-const CORRESPONDENCE_MAX_TOKENS = 1500;
+function computeCorrespondenceMaxTokens(yoursCount: number, adjCount: number): number {
+  // Each correspondence entry: ~40 tokens (key pair + type + confidence + JSON punctuation)
+  // Outer {"correspondences":[...]} wrapper: ~50 tokens
+  // Floor at 1500 to cover small zone lists comfortably.
+  return Math.max(1500, 50 + (yoursCount + adjCount) * 40);
+}
 
 // ── Zod schema for AI response ────────────────────────────────────────────────
 
 const CorrespondenceItemSchema = z.object({
   yourKeys: z.array(z.string().regex(/^Y\d+$/)).min(1),
   adjusterKeys: z.array(z.string().regex(/^A\d+$/)).min(1),
-  type: z.enum(['one_to_one', 'one_to_many', 'many_to_one']),
+  type: z.enum(['one_to_one', 'one_to_many', 'many_to_one', 'many_to_many']),
   confidence: z.number().min(0).max(1),
 });
 
@@ -141,7 +146,7 @@ export async function proposeCorrespondencesN3(
         },
         body: JSON.stringify({
           model: SONNET_MODEL,
-          max_tokens: CORRESPONDENCE_MAX_TOKENS,
+          max_tokens: computeCorrespondenceMaxTokens(yoursZones.length, adjZones.length),
           temperature: 0,
           system: prompts.system,
           messages: [{ role: 'user', content: prompts.user }],

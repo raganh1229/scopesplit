@@ -26,6 +26,44 @@
 }
 @keyframes menuSpin { to { transform: rotate(360deg); } }
 
+.headerRenameForm {
+  flex: 1;
+  margin-right: 8px;
+}
+.headerRenameInput {
+  width: 100%;
+  padding: 4px 10px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 600;
+  font-family: inherit;
+  outline: none;
+}
+.headerRenameInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+.headerRenameInput:disabled { opacity: 0.5; }
+
+.headerRenameActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.headerRenameOkBtn, .headerRenameCxBtn {
+  background: none; border: none; cursor: pointer;
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.headerRenameOkBtn:hover:not(:disabled) { color: var(--green-600); background: var(--green-50); }
+.headerRenameCxBtn:hover:not(:disabled) { color: var(--red-600); background: var(--red-50); }
+.headerRenameOkBtn:disabled, .headerRenameCxBtn:disabled { opacity: 0.4; cursor: default; }
+
 .pageDropMenu {
   position: absolute; top: 100%; right: 0; z-index: 50;
   min-width: 160px; padding: 4px 0;
@@ -46,6 +84,11 @@
 .dropConfirmText {
   display: block; padding: 8px 14px 4px;
   font-size: 12px; font-weight: 600; color: var(--text-secondary);
+}
+.dropConfirmSubtext {
+  display: block; padding: 4px 14px 8px;
+  font-size: 11px; color: var(--text-tertiary);
+  font-style: italic;
 }
 
 .stateBanner {

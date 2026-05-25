@@ -26,6 +26,8 @@ export default function NewComparisonPage() {
   const [comparisonName, setComparisonName] = useState('');
   const [file1, setFile1] = useState<File | null>(null);
   const [file2, setFile2] = useState<File | null>(null);
+  const [format1, setFormat1] = useState<string>('xactimate');
+  const [format2, setFormat2] = useState<string>('xactimate');
   const [processing, setProcessing] = useState(false);
   const [pendingComparisonId, setPendingComparisonId] = useState<string | null>(null);
   const [progressPercent, setProgressPercent] = useState(0);
@@ -81,7 +83,9 @@ export default function NewComparisonPage() {
       const formData = new FormData();
       formData.append('name', comparisonName.trim());
       formData.append('yourEstimate', file1);
+      formData.append('yourEstimateFormat', format1);
       formData.append('adjusterEstimate', file2);
+      formData.append('adjusterEstimateFormat', format2);
 
       const response = await fetch('/api/comparisons', {
         method: 'POST',
@@ -137,7 +141,20 @@ export default function NewComparisonPage() {
       setProgressPercent((prev) => (prev < target ? Math.min(target, prev + 2) : prev));
     }, 1000);
 
+    const POLL_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes — generous for Phase 4 zone detection
+
     async function pollStatus() {
+      if (Date.now() - startedAt > POLL_TIMEOUT_MS) {
+        if (cancelled) return;
+        setErrorMessage(
+          'This is taking longer than expected. Try refreshing — if the issue persists, contact support.'
+        );
+        setPendingComparisonId(null);
+        setProcessing(false);
+        setProgressPercent(0);
+        return;
+      }
+
       try {
         const response = await fetch(`/api/comparisons/${pendingComparisonId}`, {
           method: 'GET',
@@ -244,6 +261,13 @@ export default function NewComparisonPage() {
                     </label>
                   </>
                 )}
+                <div className={styles.formatRow}>
+                  <label className={styles.formatLabel} htmlFor="format1">Estimate format</label>
+                  <select id="format1" className={styles.formatSelect} value={format1} onChange={e => setFormat1(e.target.value)}>
+                    <option value="xactimate">Xactimate</option>
+                    <option value="symbility">Symbility</option>
+                  </select>
+                </div>
               </div>
 
               <div className={styles.uploadCard} onDragOver={e => e.preventDefault()} onDrop={handleDrop(setFile2)}>
@@ -266,6 +290,13 @@ export default function NewComparisonPage() {
                     </label>
                   </>
                 )}
+                <div className={styles.formatRow}>
+                  <label className={styles.formatLabel} htmlFor="format2">Estimate format</label>
+                  <select id="format2" className={styles.formatSelect} value={format2} onChange={e => setFormat2(e.target.value)}>
+                    <option value="xactimate">Xactimate</option>
+                    <option value="symbility">Symbility</option>
+                  </select>
+                </div>
               </div>
             </div>
 

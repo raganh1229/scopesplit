@@ -239,8 +239,34 @@ export async function POST(_request: Request, context: RouteContext) {
     };
   });
 
+  // ── Filter to discrepancy items only (#22) ──
+  // MATCH / MATCH_UNVERIFIED items are agreed-upon — there is nothing for
+  // Claude to analyse or dispute. Only MODIFIED, MISSING_FROM_ADJUSTER, and
+  // ADDED_BY_ADJUSTER items belong in the prompt. Aggregates and zone summaries
+  // above are computed from ALL items so the financial totals stay accurate.
+  // A secondary 300-item safety cap (sorted by |diffAmount|) guards against
+  // extreme edge cases exceeding the model context window.
+  const DISCREPANCY_STATUSES = new Set([
+    'MODIFIED',
+    'MISSING_FROM_ADJUSTER',
+    'ADDED_BY_ADJUSTER',
+  ]);
+  const MAX_DISCREPANCIES_FOR_PROMPT = 300;
+
+  const discrepancyItems = lineItems
+    .filter((li) => DISCREPANCY_STATUSES.has(li.matchStatus))
+    .sort((a, b) => Math.abs(b.diffAmount ?? 0) - Math.abs(a.diffAmount ?? 0));
+
+  const cappedItemCount = discrepancyItems.length > MAX_DISCREPANCIES_FOR_PROMPT
+    ? discrepancyItems.length - MAX_DISCREPANCIES_FOR_PROMPT
+    : 0;
+
+  const itemsForPrompt = cappedItemCount > 0
+    ? discrepancyItems.slice(0, MAX_DISCREPANCIES_FOR_PROMPT)
+    : discrepancyItems;
+
   // ── Build sanitized data payload (NO user PII) ──
-  const sanitizedItems = lineItems.map((li, i) => ({
+  const sanitizedItems = itemsForPrompt.map((li, i) => ({
     row: i + 1,
     status: li.matchStatus,
     zone: sanitize(li.zoneCanonical) ?? 'General',
@@ -293,8 +319,18 @@ export async function POST(_request: Request, context: RouteContext) {
       ...counts,
     },
     zones: zoneSummaries,
-    lineItems: sanitizedItems,
+    discrepancies: sanitizedItems,
     notes: sanitizedNotes.length > 0 ? sanitizedNotes : undefined,
+    ...(cappedItemCount > 0
+      ? {
+          itemsTruncated: {
+            totalDiscrepancies: discrepancyItems.length,
+            shownDiscrepancies: MAX_DISCREPANCIES_FOR_PROMPT,
+            truncatedCount: cappedItemCount,
+            note: 'Only the highest-impact discrepancies by absolute dollar difference are shown. Aggregates and zone summaries above reflect ALL items.',
+          },
+        }
+      : {}),
   };
 
   // ── System prompt ──
@@ -319,13 +355,15 @@ REPORT FORMAT — Generate these sections in this order:
 A markdown table with columns: Metric, Amount. Rows: Your Estimate Total, Adjuster Estimate Total, Gap ($), Gap (%), Total Line Items, Matching, Contradicting, Missing from Adjuster, Added by Adjuster.
 
 ## Key Discrepancies
-Identify the top 5 line items by absolute dollar impact. Present as a markdown table with columns: #, Zone, Description, Your $, Adjuster $, Gap $, % of Total Gap. Below the table, add 1 sentence per row explaining why it matters.
+Identify the top 5 items from the \`discrepancies\` array by absolute dollar impact. Present as a markdown table with columns: #, Zone, Description, Your $, Adjuster $, Gap $, % of Total Gap. Below the table, add 1 sentence per row explaining why it matters.
 
 ## Missing Items
-Items present only in the contractor's estimate (MISSING_FROM_ADJUSTER status). Markdown table with: #, Zone, Description, Your Total $. Below the table, state the aggregate missing total and what percentage of your estimate it represents.
+Items in \`discrepancies\` with status MISSING_FROM_ADJUSTER (present only in the contractor's estimate). Markdown table with: #, Zone, Description, Your Total $. Below the table, state the aggregate missing total and what percentage of your estimate it represents.
 
 ## Adjuster-Added Items
-Items present only in the adjuster's estimate (ADDED_BY_ADJUSTER status). Markdown table with: #, Zone, Description, Adjuster Total $. State the aggregate added total.
+Items in \`discrepancies\` with status ADDED_BY_ADJUSTER (present only in the adjuster's estimate). Markdown table with: #, Zone, Description, Adjuster Total $. State the aggregate added total.
+
+DATA STRUCTURE NOTE: The \`discrepancies\` array contains ONLY the items that differ between the two estimates (MODIFIED, MISSING_FROM_ADJUSTER, ADDED_BY_ADJUSTER). Agreed-upon items are excluded to save space — their totals are captured in \`aggregates\` and \`zones\`.
 
 ## Zone-by-Zone Breakdown
 Summary table with: Zone, Items, Your Total, Adjuster Total, Gap. Below the table, write 1-2 sentences per zone identifying the primary gap driver(s).

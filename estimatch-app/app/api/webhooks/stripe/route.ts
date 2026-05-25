@@ -84,7 +84,7 @@ async function syncSubscription(subscription: {
 }) {
   if (!subscription.customer) return;
 
-  const user = await prisma.user.findFirst({
+  const user = await prisma.user.findUnique({
     where: { stripeCustomerId: subscription.customer },
     select: {
       id: true,

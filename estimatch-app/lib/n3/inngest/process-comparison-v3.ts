@@ -42,6 +42,7 @@ import { detectZonesN3 } from '@/lib/n3/passes/detect-zones';
 import { proposeCorrespondencesN3 } from '@/lib/n3/passes/propose-correspondences';
 import { extractLineItemsN3 } from '@/lib/n3/passes/extract-line-items';
 import { normalizeLineItemsN3 } from '@/lib/n3/passes/normalize-line-items';
+import { validateExtractionN3 } from '@/lib/n3/passes/extraction-validation';
 import { generateEmbeddingsN3 } from '@/lib/n3/passes/generate-embeddings';
 import { generateCandidatesN3 } from '@/lib/n3/passes/generate-candidates';
 import { scoreCandidatesN3 } from '@/lib/n3/passes/score-candidates';
@@ -288,19 +289,9 @@ export const processComparisonV3 = inngest.createFunction(
       });
 
       // ── Step 8: Phase 10 — Extraction Validation ─────────────────────
-      // TODO(Phase 10): Validate normalized items; write N3ExtractionWarning
-      // rows for missing amounts, duplicate line numbers, impossible quantities.
       await step.run('p10-extraction-validation', async () => {
-        const exists = await prisma.comparison.findUnique({
-          where: { id: comparisonId },
-          select: { id: true },
-        });
-        if (!exists) return { step: 'p10-extraction-validation', skipped: true };
-
-        logger.info('[n3] p10-extraction-validation: stub — no warnings written yet', {
-          comparisonId,
-        });
-        return { step: 'p10-extraction-validation', status: 'stub' as const, warningCount: 0 };
+        const result = await validateExtractionN3(comparisonId, logger);
+        return { step: 'p10-extraction-validation', ...result };
       });
 
       // ── Step 9: Phase 11 — Generate Embeddings ────────────────────────
@@ -401,26 +392,28 @@ export const processComparisonV3 = inngest.createFunction(
 
       // ── Step 17: Dump metrics snapshot to disk (dev analysis) ────────────
       await step.run('dump-metrics-snapshot', async () => {
-        try {
-          const { computePipelineMetrics } = await import('@/lib/n3/metrics/compute-metrics');
-          const fs = await import('fs');
-          const path = await import('path');
-          const metrics = await computePipelineMetrics(comparisonId);
-          if (metrics) {
-            const dir = path.resolve(process.cwd(), 'run-results');
-            fs.mkdirSync(dir, { recursive: true });
-            const filename = `${new Date().toISOString().replace(/[:.]/g, '-')}_${comparisonId.slice(0, 8)}.json`;
-            fs.writeFileSync(path.join(dir, filename), JSON.stringify(metrics, null, 2));
-            fs.writeFileSync(path.join(dir, 'latest.json'), JSON.stringify(metrics, null, 2));
-            logger.info('[n3] metrics snapshot written', { file: filename });
+        if (process.env.NODE_ENV !== 'production') {
+          try {
+            const { computePipelineMetrics } = await import('@/lib/n3/metrics/compute-metrics');
+            const fs = await import('fs');
+            const path = await import('path');
+            const metrics = await computePipelineMetrics(comparisonId);
+            if (metrics) {
+              const dir = path.resolve(process.cwd(), 'run-results');
+              fs.mkdirSync(dir, { recursive: true });
+              const filename = `${new Date().toISOString().replace(/[:.]/g, '-')}_${comparisonId.slice(0, 8)}.json`;
+              fs.writeFileSync(path.join(dir, filename), JSON.stringify(metrics, null, 2));
+              fs.writeFileSync(path.join(dir, 'latest.json'), JSON.stringify(metrics, null, 2));
+              logger.info('[n3] metrics snapshot written', { file: filename });
+            }
+          } catch (err) {
+            logger.warn('[n3] metrics snapshot failed (non-fatal)', { err: String(err) });
           }
-        } catch (err) {
-          logger.warn('[n3] metrics snapshot failed (non-fatal)', { err: String(err) });
         }
         return { step: 'dump-metrics-snapshot' };
       });
 
-      logger.info('[n3] process-comparison-v3 completed (all steps stubbed)', {
+      logger.info('[n3] process-comparison-v3 completed', {
         comparisonId,
         finalResult,
       });

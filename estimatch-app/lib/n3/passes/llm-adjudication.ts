@@ -32,14 +32,24 @@ import { SCORE_THRESHOLDS } from '@/lib/n3/constants';
 const SONNET_MODEL      = 'claude-sonnet-4-6';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
-// Output token budget. Each adjudication ruling is ~80 tokens of structured JSON
-// (index + decision + confidence + ≤400-char reasoning). For large batches we must
-// scale max_tokens upward or the response gets truncated and isTruncated retries
-// fail (since input is identical). 2000 is the floor for small batches.
-const MAX_TOKENS_BASE     = 2000;
-const MAX_TOKENS_PER_PAIR = 80;
+// Output token budget.
+// Each adjudication ruling is at most ~130 tokens of structured JSON:
+//   index (~2 t) + decision (~3 t) + confidence (~2 t)
+//   + reasoning (≤400 chars ≈ 100 t) + JSON field names/brackets/commas (~23 t).
+// The outer {"adjudications":[...]} envelope adds a fixed ~50 tokens.
+// Using 80 t/pair underestimates verbose batches; 130 t/pair is the true worst-case.
+// When max_tokens is too small the response is truncated mid-JSON — the isTruncated
+// retry cannot recover because the input is identical on every attempt.
+// Ceiling at 32 768 to bound API cost; Sonnet 4-6 supports up to 64 000 output tokens.
+const MAX_TOKENS_BASE     = 2_000;
+const MAX_TOKENS_PER_PAIR = 130;    // ≤400-char reasoning (~100 t) + JSON structure (~30 t) per pair
+const MAX_TOKENS_ENVELOPE = 50;     // outer {"adjudications":[...]} wrapper
+const MAX_TOKENS_CEIL     = 32_768; // hard cap; well below Sonnet 4-6's 64 000-token output limit
 function computeMaxTokens(pairCount: number): number {
-  return Math.max(MAX_TOKENS_BASE, pairCount * MAX_TOKENS_PER_PAIR);
+  return Math.min(
+    MAX_TOKENS_CEIL,
+    Math.max(MAX_TOKENS_BASE, MAX_TOKENS_ENVELOPE + pairCount * MAX_TOKENS_PER_PAIR),
+  );
 }
 // Claude Sonnet 4-6 pricing (per million tokens, USD)
 const COST_PER_M_INPUT  = 3.0;

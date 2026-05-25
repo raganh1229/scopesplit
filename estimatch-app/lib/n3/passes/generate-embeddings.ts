@@ -59,6 +59,12 @@ async function callVoyageEmbeddings(
     data: Array<{ index: number; embedding: number[] }>;
   };
 
+  if (json.data.length !== texts.length) {
+    throw new Error(
+      `[n3/generate-embeddings] Voyage returned ${json.data.length} vectors for ${texts.length} inputs — partial batch response`,
+    );
+  }
+
   // Return in original order
   return json.data
     .sort((a, b) => a.index - b.index)

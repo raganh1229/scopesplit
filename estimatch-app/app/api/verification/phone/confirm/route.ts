@@ -99,6 +99,30 @@ export async function POST(request: Request) {
 
   const e164 = `${countryCode}${localPhone}`;
 
+  // Check for duplicate phone BEFORE burning the Twilio code (N7 fix)
+  try {
+    const existingUserWithPhone = await prisma.$queryRaw<{ clerkId: string }[]>`
+      SELECT clerk_id AS "clerkId"
+      FROM users
+      WHERE phone_number = ${e164}
+        AND clerk_id <> ${clerkId}
+      LIMIT 1
+    `;
+
+    if (existingUserWithPhone.length > 0) {
+      return NextResponse.json(
+        { error: 'This phone number is already associated with an account.' },
+        { status: 409 }
+      );
+    }
+  } catch (dbErr) {
+    console.error('[PHONE-CONFIRM] Duplicate check query failed:', dbErr);
+    return NextResponse.json(
+      { error: 'Unable to verify phone number. Please try again.' },
+      { status: 500 }
+    );
+  }
+
   try {
     const { accountSid, authToken, verifyServiceSid } = getTwilioConfig();
     const authorization = `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString('base64')}`;
@@ -128,21 +152,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid or expired verification code.' }, { status: 400 });
     }
 
-    const existingUserWithPhone = await prisma.$queryRaw<{ clerkId: string }[]>`
-      SELECT clerk_id AS "clerkId"
-      FROM users
-      WHERE phone_number = ${e164}
-        AND clerk_id <> ${clerkId}
-      LIMIT 1
-    `;
-
-    if (existingUserWithPhone.length > 0) {
-      return NextResponse.json(
-        { error: 'This phone number is already associated with an account.' },
-        { status: 409 }
-      );
-    }
-
     const client = await clerkClient();
 
     const clerkUser = (await client.users.getUser(clerkId)) as unknown as ClerkUserLike;
@@ -158,7 +167,6 @@ export async function POST(request: Request) {
       },
       privateMetadata: {
         trialPhoneNumber: e164,
-        trialPhoneHash: null,
         phoneVerifiedAt: new Date().toISOString(),
       },
     });

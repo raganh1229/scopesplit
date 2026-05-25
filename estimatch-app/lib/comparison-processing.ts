@@ -1309,7 +1309,7 @@ async function callAnthropicForComparisonChunk(params: {
     `Zone candidates detected (adjuster): ${adjZoneCandidates.join(', ') || '[none]'}`,
   ].join('\n');
 
-  traceStep('SONNET 2 (ITEM PAIRING) — INPUT', `SYSTEM PROMPT:\n${systemPrompt}\n\nCONTRACTOR LINES:\n${yourCompactText || '[none]'}\n\nADJUSTER LINES:\n${adjusterCompactText || '[none]'}`);
+  traceStep(params.comparisonId, 'SONNET 2 (ITEM PAIRING) — INPUT', `SYSTEM PROMPT:\n${systemPrompt}\n\nCONTRACTOR LINES:\n${yourCompactText || '[none]'}\n\nADJUSTER LINES:\n${adjusterCompactText || '[none]'}`);
 
   const payload = await callAnthropicWithRetry({
     model: getAnthropicModel(),
@@ -1354,7 +1354,7 @@ async function callAnthropicForComparisonChunk(params: {
     .map((block) => block.text)
     .join('\n');
 
-  traceStep('SONNET 2 (ITEM PAIRING) — RAW RESPONSE', combinedText);
+  traceStep(params.comparisonId, 'SONNET 2 (ITEM PAIRING) — RAW RESPONSE', combinedText);
 
   const compareStopReason =
     (payload as { stop_reason?: string | null }).stop_reason ?? null;
@@ -1548,7 +1548,7 @@ async function extractStageImpl(comparisonId: string): Promise<ExtractedState> {
   const adjusterPdfBytes = await downloadPdfBytes(comparison.adjusterEstimateStoragePath);
 
   const useVisionExtraction = process.env.ENABLE_VISION_EXTRACTION === 'true';
-  traceReset();
+  traceReset(comparisonId);
 
   if (useVisionExtraction) {
     console.log(`[comparison:${comparisonId}] Using Haiku vision extraction...`);
@@ -1668,7 +1668,7 @@ async function reconcileAndPrematchStageImpl(
   const yourDeduped = extracted.yourZonesWithCounts;
   const adjDeduped = extracted.adjZonesWithCounts;
 
-  traceStep('PRE-DEDUP (DISABLED)', [
+  traceStep(comparisonId, 'PRE-DEDUP (DISABLED)', [
     'YOURS ZONES (raw from Haiku):',
     ...extracted.yourZonesWithCounts.map(z => `  ${z.count}x  ${z.name}`),
     '',
@@ -1762,7 +1762,7 @@ async function reconcileAndPrematchStageImpl(
       const desc = p?.description || u.text;
       traceLines.push(`    a${u.lineNumber} [${zone}]: "${desc}"`);
     }
-    traceStep('PREMATCH (DETERMINISTIC)', traceLines.join('\n'));
+    traceStep(comparisonId, 'PREMATCH (DETERMINISTIC)', traceLines.join('\n'));
   }
 
   const prematchRaw = deterministicMatchesToRawLineItems(prematchResult.matches);
@@ -2240,7 +2240,7 @@ async function _runRealProcessing_PRE_REFACTOR(comparisonId: string) {
   assertNotTimedOut('PDF extraction');
 
   const useVisionExtraction = process.env.ENABLE_VISION_EXTRACTION === 'true';
-  traceReset();
+  traceReset(comparisonId);
   let linesToChunkYours: ExtractedLineRecord[];
   let linesToChunkAdjuster: ExtractedLineRecord[];
   let yourParsedMap: Map<number, ParsedScopeFields>;
@@ -2299,7 +2299,7 @@ async function _runRealProcessing_PRE_REFACTOR(comparisonId: string) {
     const yourDeduped = yourZonesWithCounts;
     const adjDeduped = adjZonesWithCounts;
 
-    traceStep('PRE-DEDUP (DISABLED)', [
+    traceStep(comparisonId, 'PRE-DEDUP (DISABLED)', [
       'YOURS ZONES (raw from Haiku):',
       ...yourZonesWithCounts.map(z => `  ${z.count}x  ${z.name}`),
       '',
@@ -2409,7 +2409,7 @@ async function _runRealProcessing_PRE_REFACTOR(comparisonId: string) {
         traceLines.push(`    a${u.lineNumber} [${zone}]: "${desc}"`);
       }
 
-      traceStep('PREMATCH (DETERMINISTIC)', traceLines.join('\n'));
+      traceStep(comparisonId, 'PREMATCH (DETERMINISTIC)', traceLines.join('\n'));
     }
 
     // Convert prematch matches to RawLineItems (with canonical zone + confidence)

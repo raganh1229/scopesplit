@@ -27,6 +27,16 @@ export type AddonKey = 'starter_addon_5' | 'professional_addon_10' | 'business_a
 // (ENTERPRISE is the historical Prisma name for what is exposed to users as
 // the "Business" plan.)
 
+// ── Per-plan monthly prices (cents) ──
+// Single source of truth for plan pricing. Used in change-plan calculations
+// and any place that needs to display or compute plan costs.
+
+export const PLAN_MONTHLY_PRICES_CENTS: Record<PlanKey, number> = {
+  starter: 4999,
+  professional: 9900,
+  business: 24900,
+};
+
 export const PLAN_COMPARISON_LIMITS: Record<'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE', number> = {
   STARTER: 10,
   PROFESSIONAL: 50,

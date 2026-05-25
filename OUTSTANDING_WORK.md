@@ -2,7 +2,7 @@
 
 > **Purpose**: Single source of truth for known follow-up work derived from the Apr 27, 2026 full-application code review (multiple passes, including a Vercel/serverless hardening pass in the evening). Items are scoped to "needs implementation/fix"; routine testing tasks are tracked separately.
 >
-> **Last Updated**: May 20, 2026 — N3 pipeline fully built (all 18 phases) and connected to the Scopesplit UI. Line Item Review gate (Phase 8.5) implemented. Run snapshot logging added. See `N3_BUILD_LEDGER.md` for current N3 status and pending items (Phases 5, 7, 10 UI gates; P8 extraction miss root-cause fix; V2/V3 validation). Previous update: May 3, 2026 (~22:59 EDT) — N1 Inngest conversion **RESOLVED** (all 9 phases complete, empirically verified end-to-end on 1717-item run). Added #32 continuation-extraction hallucination, #33 Stage A page-chunking for >1K-item PDFs, #34 undici dispatcher prod-verification — three hand-offs to N2 (speed / capacity / accuracy).
+> **Last Updated**: May 25, 2026 — Second review pass added N16–N19 (see §Code Review Findings May 25). Stripe trial-abuse code fix added as P0 item #39. Pre-deployment operational checklist integrated from `PRODUCTION_CUTOVER_CHECKLIST.md` into new Pre-Deploy section. Previous update: May 24, 2026 — Comprehensive pre-launch review of full application and N3 pipeline. Six N3 bugs fixed (see §Resolved May 24 2026 below). New P0 items added: Symbility pipeline construction (#36), XLS/XLSX file support (#37). New N3 tracking items added: N3-6 through N3-12 covering HNSW index, createMany batch limit, score recalibration, Phase 10 NLP, large-component greedy, format handoff, and gate verification. Previous update: May 20, 2026 — N3 pipeline fully built (all 18 phases) and connected to the Scopesplit UI. Line Item Review gate (Phase 8.5) implemented. Run snapshot logging added. See `N3_BUILD_LEDGER.md` for current N3 status and pending items. Previous update: May 3, 2026 (~22:59 EDT) — N1 Inngest conversion **RESOLVED** (all 9 phases complete, empirically verified end-to-end on 1717-item run). Added #32 continuation-extraction hallucination, #33 Stage A page-chunking for >1K-item PDFs, #34 undici dispatcher prod-verification — three hand-offs to N2 (speed / capacity / accuracy).
 >
 > **Source**: Multi-pass `/review` of `estimatch-app/` covering all API routes, lib modules, middleware (`proxy.ts`), webhooks, frontend pages, and components. The evening pass specifically evaluated behavior under Vercel serverless constraints (maxDuration, fire-and-forget patterns, read-only filesystem).
 
@@ -17,7 +17,143 @@
 
 ---
 
+## Open Work — Priority Order
+
+> Single source of truth for what remains. Full detail for each item is in the sections below. Resolved items are preserved for reference but not listed here.
+
+### P0 — Must Fix Before Launch
+
+| # | Item | Area |
+|---|------|------|
+| 36 | Symbility pipeline — N3 extraction, zone detection, normalization for Symbility PDFs | N3 pipeline |
+| 37 | XLS/XLSX file support — upload, parse, and extract structured spreadsheet estimates | N3 pipeline + upload |
+| 38 | Loading / progress screens — update all pipeline waiting states with meaningful phase-level status messages | UI |
+| ~~39~~ | ~~Re-enable Stripe trial-abuse enforcement in `checkout/route.ts`~~ — **RESOLVED May 25 2026** (phone + IP reuse checks + metadata writes restored) | Billing / Security |
+
+### P1 — Fix Before Significant Traffic
+
+**N3 Pipeline**
+
+| # | Item |
+|---|------|
+| ~~N3-1~~ | ~~Phase 5 + Phase 7 UI review gates not implemented~~ — **RESOLVED** (gates fully wired, confirmed working May 24 2026) |
+| ~~N3-2~~ | ~~4 line items consistently missed by Phase 8 extraction~~ — **DEFERRED** (will re-audit after full app cleanup) |
+| ~~N3-5~~ | ~~V2/V3 format test sets not yet validated~~ — **RESOLVED** (later sets covered diverse formats; new sets will be generated for future validation) |
+| ~~N3-7~~ | ~~`createMany` batch limit — Phase 18 fails at 1,872+ decisions~~ — **RESOLVED May 24 2026** |
+| N3-8 | Score thresholds need recalibration — moved to **Potential N3 Improvements** |
+| N3-9 | Phase 10 NLP: trade/action classification — moved to **Potential N3 Improvements** |
+| N3-10 | Large-component greedy mislabeled decisions — moved to **Potential N3 Improvements** |
+| ~~N3-11~~ | ~~Phase 4→8 format handoff missing~~ — **RESOLVED May 24 2026** (user selects format at upload; stored on Comparison row; passed to Phase 8) |
+| ~~N3-12~~ | ~~Review gates never tested end-to-end~~ — **RESOLVED** (confirmed working in production across many test runs May 24 2026) |
+
+**App / API**
+
+| # | Item |
+|---|------|
+| ~~7~~ | ~~Comparisons list silently capped at 50 rows~~ — **RESOLVED May 24 2026** (cursor-based pagination + Load More button, mobile-responsive) |
+| ~~9~~ | ~~New-comparison polling has no max duration~~ — **RESOLVED May 24 2026** (10-minute timeout added; shows user-facing message if Phase 4 stalls) |
+| ~~10~~ | ~~Trial-abuse: phone number reusable after account deletion~~ — **NON-ISSUE** (no self-serve account deletion; manual deletions handled by admin only) |
+| ~~11~~ | ~~Middleware makes Clerk API call on every request~~ — **RESOLVED May 24 2026** (reads from JWT session claims; Clerk dashboard configured to embed `publicMetadata`) |
+| ~~12~~ | ~~Bug report `from` address hardcoded~~ — **NON-ISSUE** (`scopesplit.com` verified in Resend; `to` hardcoded to `raganharrison97@gmail.com`) |
+| ~~13~~ | ~~Stripe upgrade prorations don't charge immediately~~ — **RESOLVED May 24 2026** (`always_invoice` + `error_if_incomplete` for upgrades; real prorated amount returned from expanded `latest_invoice`) |
+| ~~26~~ | ~~No way to rename a comparison in the UI~~ — **RESOLVED May 24 2026** (PATCH endpoint + inline edit in comparisons list; Enter saves, Escape cancels; ✓/✗ icon buttons in actions column) |
+| ~~28~~ | ~~Stripe API version pinned to old date — cast suppresses type error~~ — **DEFERRED May 24 2026** (full test matrix + migration checklist moved to `UNIT_TESTS.md`; `as Stripe.LatestApiVersion` cast remains until audit complete) |
+| ~~N6~~ | ~~`cleanup-unverified-users` deletes Clerk before DB with no error handling~~ — **RESOLVED May 24 2026** (DB delete first, then Clerk; Promise.allSettled per user; logs `[CLEANUP-ORPHAN]` for manual replay) |
+| ~~N7~~ | ~~Duplicate-phone check burns Twilio Verify code before duplicate check runs~~ — **RESOLVED May 24 2026** (duplicate check moved BEFORE Twilio verification in `phone/confirm` route) |
+| ~~N10~~ | ~~Failed comparisons leave orphan PDFs in Supabase storage indefinitely~~ — **RESOLVED May 24 2026** (`cleanup-failed-comparison-assets` cron: POST cleans files, GET dry-runs; 7-day grace period) |
+| ~~N16~~ | ~~`finalize-checkout` only resets `comparisonsUsedThisPeriod` on period rollover~~ — **RESOLVED May 25 2026** (`llmEditsUsedThisPeriod` and `executiveSummariesUsedThisPeriod` now zeroed in same update) |
+| ~~N17~~ | ~~`inngest.send` failure after DB transaction leaves zombie PROCESSING comparison + consumed usage slot~~ — **RESOLVED May 25 2026** (catch block deletes comparison row and decrements usage counter) |
+
+### P2 — Cleanup / Tech Debt
+
+| # | Item |
+|---|------|
+| ~~16~~ | ~~`PLAN_MONTHLY_PRICES_CENTS` hardcoded in `change-plan` route~~ — **RESOLVED May 24 2026** (moved to `lib/stripe.ts` as `PLAN_MONTHLY_PRICES_CENTS`) |
+| ~~17~~ | ~~DELETE comparison doesn't refund usage counter (undocumented behavior)~~ — **RESOLVED May 24 2026** (added UI warning: "This will not restore your monthly comparison count.") |
+| ~~22~~ | ~~`executive-summary` can exceed Claude input window on large comparisons~~ — **RESOLVED May 25 2026** (capped to top 500 items by \|diffAmount\|; truncation count surfaced in payload) |
+| ~~23~~ | ~~`recalculateMatchStatus` may keep stale status when both sides blank~~ — **RESOLVED May 24 2026** (returns `MATCH_UNVERIFIED` when both sides blank instead of keeping stale status) |
+| ~~24~~ | ~~Marketing footer / middleware allow-list drift risk~~ — **RESOLVED May 24 2026** (inverted to private-route matcher: protected routes listed, everything else public by default) |
+| ~~N3-3~~ | ~~Phase 10 extraction validation (`N3ExtractionWarning` rows) not implemented~~ — **RESOLVED May 25 2026** (`lib/n3/passes/extraction-validation.ts` implemented; p10 stub replaced in pipeline) |
+| ~~N3-4~~ | ~~Prisma migration history has schema drift~~ — **RESOLVED May 25 2026** (`20260525000000_fix_migration_drift` migration created; run `prisma migrate resolve --applied` then `prisma migrate deploy` — see below) |
+| ~~N11~~ | ~~`trialPhoneHash: null` placeholder in phone confirm~~ — **RESOLVED May 24 2026** (removed placeholder from metadata update) |
+| ~~N12~~ | ~~Offset-based pagination drift in cleanup cron~~ — **RESOLVED May 25 2026** (early-exit when `createdAt > cutoffTimestamp` eliminates unnecessary pages and drift window) |
+| ~~N13~~ | ~~`findFirst` → `findUnique` on `stripeCustomerId`~~ — **RESOLVED May 25 2026** (`@unique` added to schema; `20260525010000_add_stripe_customer_id_unique` migration created; `findUnique` in webhook; run `prisma migrate deploy`) |
+| ~~N18~~ | ~~`UsageLimitError` race in `POST /api/comparisons` returns 403 before file-cleanup block~~ — **RESOLVED May 25 2026** (file cleanup now runs before 403 return) |
+| ~~N19~~ | ~~`/api/billing/(.*)`, `/api/user/(.*)`, `/api/n3/(.*)` missing from `proxy.ts` `isProtectedRoute` matcher~~ — **RESOLVED May 25 2026** (three paths added to block-list) |
+| ~~N15~~ | ~~`debug-trace.ts` trace file race under concurrent dev runs~~ — **RESOLVED May 24 2026** (filename now includes comparisonId: `pipeline-trace-${comparisonId}.txt`) |
+
+### Pre-Deploy — Operational Checklist
+
+> Full detail and rationale for every item below lives in `PRODUCTION_CUTOVER_CHECKLIST.md`. This section is the consolidated task view; the cutover file is the operational runbook. Tick each item off in `PRODUCTION_CUTOVER_CHECKLIST.md` §9 as you go.
+
+**Environment & Secrets**
+
+| # | Item |
+|---|------|
+| PD-1 | Set all production env vars in Vercel: Clerk (`pk_live_`, `sk_live_`, `CLERK_WEBHOOK_SIGNING_SECRET`), Supabase, Prisma `DATABASE_URL`/`DIRECT_URL`, Anthropic, Stripe (`sk_live_`, `pk_live_`, `STRIPE_WEBHOOK_SECRET`, all 6 `STRIPE_PRICE_*`), Resend, Twilio, Inngest (`INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`) |
+| PD-2 | Remove `INNGEST_DEV` from Vercel production env — if present, SDK tries to reach a non-existent local dev server |
+| PD-3 | Set `TRIAL_IP_HASH_SALT`, `DEFER_USER_SYNC_UNTIL_PHONE_VERIFIED=true`, all `UNVERIFIED_ACCOUNT_CLEANUP_*` vars, `CRON_SECRET` |
+| PD-4 | Rotate any secrets exposed during development (chat, screenshots, logs) before go-live |
+| PD-5 | Remove old `STRIPE_CHECKOUT_SUCCESS_URL` / `STRIPE_CHECKOUT_CANCEL_URL` env vars if previously set (replaced by origin-derived URLs) |
+
+**Dashboard Configuration**
+
+| # | Item |
+|---|------|
+| PD-6 | Clerk: create/update webhook endpoint → `https://<domain>/api/webhooks/clerk`, enable `user.created` / `user.updated` / `user.deleted` |
+| PD-7 | Clerk: add production domain to allowed domains; remove stale localhost entries |
+| PD-8 | Stripe: confirm all 6 live products/prices exist (3 plans + 3 add-ons); verify `STRIPE_PRICE_*` values point to live-mode prices |
+| PD-9 | Stripe: create production webhook → `https://<domain>/api/webhooks/stripe`, enable 5 events (`checkout.session.completed`, `customer.subscription.*`, `invoice.payment_failed`) |
+| PD-10 | Inngest Cloud: register `https://<domain>/api/inngest` in Inngest Cloud → Apps → Sync; verify function `Process comparison` appears with all step IDs |
+| PD-11 | Vercel Cron: confirm `vercel.json` cron fires `POST /api/internal/cleanup-unverified-users` daily at 04:00 UTC with `CRON_SECRET` bearer token |
+| PD-12 | Configure Vercel log drain with alert on `"STRIPE_WEBHOOK_UNMAPPED_PRICE"` event string (fires when a paying user fails to get plan access) |
+
+**Vercel / Runtime Checks**
+
+| # | Item |
+|---|------|
+| PD-13 | Confirm `maxDuration` on `/api/inngest` route is `300` (or higher on Pro+Fluid); Stage A extraction can take 5–10 min for large PDFs |
+| PD-14 | Set `ANTHROPIC_EXTRACTION_TIMEOUT_MS=600000` in Vercel (default 180s will fail on PDFs >250 items) |
+| PD-15 | Confirm `ENABLE_REAL_COMPARISON_PROCESSING=true` in Vercel production env |
+| PD-16 | Confirm debug env vars (`DUMP_PIPELINE_TRACE`, `DUMP_HAIKU_ZONES`) are `false` or unset in production |
+
+**Smoke Tests (Required Before Traffic)**
+
+| # | Item |
+|---|------|
+| PD-17 | Clerk webhooks: sign up → `/verify-phone` → confirm `users` row created in DB; update Clerk → confirm sync; delete Clerk user → confirm row deleted |
+| PD-18 | Stripe billing: complete one full checkout → confirm `subscription_tier` + `plan` metadata set; drive plan change via Settings modal; cancel + resume; add-on purchase → `addon_purchases` row |
+| PD-19 | Comparison pipeline: create one real comparison → confirm `PROCESSING → COMPLETED`, line items persist, Inngest Cloud dashboard shows all steps |
+| PD-20 | AI tools: LLM Edit, Executive Summary, Inline Edit all create new versions correctly; hit plan cap to confirm 429; advance `periodResetDate` to confirm reset |
+| PD-21 | Resend: submit bug report (in-app, with screenshot) and contact form (marketing page, signed out); confirm receipt at configured inbox |
+| PD-22 | Cleanup cron: run one manual `POST /api/internal/cleanup-unverified-users` with secret header; confirm response is not `cleanup_disabled` |
+
+---
+
+### Future Work
+
+| # | Item |
+|---|------|
+| 31-deferred | Symbility format compatibility testing — source real PDFs, run through N3, document failures. Prerequisite to #36 construction. |
+
+---
+
+## Full Detail — All Items (Open and Resolved)
+
+---
+
 ## P0 — Pre-launch Blockers
+
+### 39. Re-enable Stripe trial-abuse enforcement **(OPEN)**
+- **File**: `app/api/stripe/checkout/route.ts`
+- **Symptom**: Phone reuse check against Stripe customer metadata, IP hash reuse check (`TRIAL_IP_HASH_SALT`), and metadata writes for `trial_phone_number` / `trial_ip_hash` are **all disabled** with comments noting "temporarily disabled to allow repeated local testing."
+- **Impact**: In production, any user could bypass trial limits by creating a second account with a different email and the same phone number or IP address.
+- **Fix**: Before production, restore all three in `checkout/route.ts`:
+  1. Phone reuse check — query Stripe customer metadata for `trial_phone_number`, compare to verified phone.
+  2. IP hash reuse check — hash the request IP with `TRIAL_IP_HASH_SALT`, compare to `trial_ip_hash` in metadata.
+  3. Metadata writes — on successful trial start, write `trial_phone_number` and `trial_ip_hash` to Stripe customer metadata.
+
+---
 
 ### 1. Contact form is not wired to any backend ~~OPEN~~ — **RESOLVED Apr 27 2026**
 - **File**: `estimatch-app/app/(marketing)/contact/page.tsx`
@@ -58,7 +194,8 @@
   - `app/app/settings/page.tsx` — two new usage rows under the existing Comparisons row.
   - `app/app/comparison/[id]/page.tsx` — surfaces refresh-date in the user-facing error when a 429 is hit.
 
-### 25. Prisma migrations never set up — schema/DB/client drift risk **(P0, OPEN — discovered Apr 28 2026)**
+### 25. Prisma migrations never set up — schema/DB/client drift risk ~~P0~~ — **DEFERRED / NON-ISSUE May 24 2026**
+> Single Supabase instance serves both dev and prod — no environment drift risk. Implement if/when a separate staging or prod instance is provisioned. 10-minute setup at that time.
 - **Files**:
   - `estimatch-app/prisma/schema.prisma` — current schema definition
   - `estimatch-app/prisma/migrations/` — **does not exist**
@@ -86,7 +223,7 @@
 - **Why P0**: without this, the first prod schema change after launch is likely to cause a `P2022` column-not-found outage. Also natural to pair with N1 Phase 2 (which adds the `ComparisonProcessingState` table and should be the first real migration).
 - **Cross-reference**: `PRODUCTION_CUTOVER_CHECKLIST.md` should gain a §4.X item for "Migrations configured + applied to prod DB" before launch.
 
-### 30. PDF extraction prompt is hardcoded for numbered Xactimate output — silently fails on unnumbered formats **(P0, OPEN — discovered Apr 29 2026)**
+### 30. PDF extraction prompt is hardcoded for numbered Xactimate output — silently fails on unnumbered formats ~~OPEN~~ — **RESOLVED May 24 2026**
 - **File**: `estimatch-app/lib/pdf-vision-extract.ts:65-105` (`EXTRACTION_USER_PROMPT`)
 - **Discovery context**: While running N1 Phase 8.6 (large-comparison stress test), uploaded synthetically-generated 67-page PDFs containing ~1000 line items each. Haiku reported `total_count=43` and `total_count=50` for yours/adjuster respectively, with `truncated=false`. Initial assumption was that the PDFs contained only ~50 items; confirmed via `scripts/diagnose-pdf.ts` (added Apr 29) that the PDFs **do** contain ~1000 items in standard table format (description / qty / remove / replace / tax / O&P / total columns) — but with **no numeric prefix** on each row (no "1.", "2.", "247." style numbering).
 - **Symptom — extraction silently degrades**: the prompt opens with *"Extract every numbered line item from this Xactimate estimate PDF. Each item starts with a number followed by a period (e.g. '1.', '2.', '247.')."* On a PDF without numbered prefixes, Haiku does NOT return empty — it instead **hallucinates ~50 items from training data** that don't appear anywhere in the source PDF. Verified by comparing `scripts/haiku-raw-zones-adjuster.json` output (items "Dumpster load", "Supervision / Project Management", "Cleaning Technician") against the actual PDF content (items "Install Refrigerator", "R&R Tile floor covering", "Temporary power usage"). The two are completely disjoint.
@@ -101,92 +238,7 @@
   - All three of Xactimate-numbered, Xactimate-unnumbered, and Symbility produce output that, when spot-checked against the source PDF, contains no fabricated items.
   - `scripts/diagnose-pdf.ts` (added Apr 29 for this debugging) should be retained and used as part of QA when validating new format support.
 - **Cross-references**:
-  - Item #31 (Symbility format testing) is the test plan for one specific instance of the format-tolerance fix.
-  - N1 Phase 8.6 / 8.7 stress tests are blocked on having properly-formatted test data; will be unblocked once Phase 1 baselines are regenerated with numbered output (or this fix lands).
-
-### 31. Symbility format compatibility — must test and verify before launch **(P0, OPEN — Apr 29 2026)**
-- **File**: `estimatch-app/lib/pdf-vision-extract.ts` (extraction prompt) + `scripts/n1-baseline-smoke.ts` (regression coverage harness)
-- **Context**: ScopeSplit's user base spans both Xactimate and Symbility users — these are the two dominant insurance-estimating platforms. Every test, baseline, smoke run, and Phase 8 stress test we have run to date has used Xactimate-formatted output. **We have ZERO live evidence that Symbility PDFs work end-to-end in our pipeline.** This is a major launch risk: any Symbility user uploading on day 1 may hit the same silent-hallucination behavior described in #30, or some other format-mismatch failure.
-- **Symbility format characteristics that differ from Xactimate** (verify these against actual exports before relying on this list):
-  - Different column layout (often has a "Code" column where Xactimate doesn't)
-  - Different zone/room header conventions (Symbility uses "Areas" terminology, sometimes nested differently)
-  - Different total-row formatting at the end of zones
-  - May or may not have numbered line items by default (must verify)
-  - Different tax line presentation (some jurisdictions show tax differently in Symbility output)
-- **What needs to happen pre-launch**:
-  1. **Source representative Symbility PDFs**: at least 3 real-world examples covering small (~50 items), medium (~250 items), and large (~1000 items) cases. Ideally from at least 2 different adjusters/companies to capture format variation.
-  2. **Run them through the existing pipeline** with current extraction prompt. Document what happens: does Haiku extract correctly, partially, hallucinate, or fail? Does prematch find anything? Do Sonnet pairing results look sensible?
-  3. **Per-format fixes**: based on findings from step 2, either (a) extend the existing prompt with Symbility-specific guidance, (b) add a format-detection branch (see #30), or (c) require the user to specify format on upload.
-  4. **Add Symbility cases to baseline coverage**: extend `n1-baseline-smoke.ts` with at least one Symbility comparison so future regressions are caught.
-  5. **Update marketing copy and onboarding** to either explicitly support Symbility (if confirmed working) or explicitly limit support to Xactimate (if not).
-- **Acceptance criteria**:
-  - At least 3 Symbility comparisons processed end-to-end with extracted items spot-checked against source PDFs (no hallucination, ≥95% extraction accuracy).
-  - Aggregates (yours total, adjuster total, gap) within ±2% of values computable by hand from the PDFs.
-  - At least one Symbility case is in the regression suite.
-  - Marketing/landing-page claims about supported formats are factually accurate.
-- **Why P0 (not P1)**: any Symbility user hitting the silent-hallucination path on day 1 will get a "successful comparison" full of fabricated line items, charge against their AI usage cap, and have no way to know the result is garbage. This is a data-correctness + customer-trust failure mode, both of which qualify as P0 launch blockers.
-- **Cross-reference**: blocks the same "non-numbered format" hallucination class as #30. Resolving #30 first (with the anti-hallucination guard) at least bounds the worst case to "clean failure" instead of "fabricated success", at which point Symbility support becomes a P1 enhancement instead of a P0 trust risk.
-
-### 32. Continuation-extraction hallucination — Haiku fabricates items to satisfy its own `total_count` estimate **(P0, OPEN — discovered Apr 29 2026 during N1 P8.6)**
-- **File**: `estimatch-app/lib/pdf-vision-extract.ts` (specifically the continuation logic around `buildContinuationPrompt` and the items-merge after each call)
-- **Discovery context**: During N1 Phase 8.6's empirical stress run (comparison `ff969ae4-e9b1-47eb-b7ff-c737c36ddfae`), the adjuster PDF — which the user reports contains ~600 items — extracted as **1116 items**. First Haiku call returned 713 items + `truncated=true` and self-reported `total_count=1116`; the continuation call then "delivered" the remaining 403 items. Zone-density signature is consistent with fabrication: yours side has ~22 items per zone average, adjuster side has ~45 items per zone average — roughly 2× density across 25 zones.
-- **Symptom**: when Haiku hits `max_tokens=64000` mid-extraction and reports `total_count=N` greater than what it actually streamed, the continuation prompt asks Haiku for items `N+1..total_count`. The model then produces plausible-looking continuation items that match its earlier zone vocabulary but **don't correspond to anything in the source PDF**. This is a different failure mode from the unnumbered-PDF hallucination tracked in #30 — that one happens because Haiku can't anchor at all; this one happens because Haiku self-anchors on an estimate it invented.
-- **Why this is P0**: same reason as #30 — silent fabrication with no error signal, paid AI spend on doomed continuation calls, downstream Sonnet pairing produces a `COMPLETED` comparison full of items the user never wrote. Customer trust + cost + correctness all compromised.
-- **Suspected root cause**: the system prompt currently says `total_count must equal the highest item number in the PDF. Count all numbered items BEFORE extracting to ensure none are skipped.` Haiku interprets this as a *commitment* — once it claims `total_count=1116`, it feels obligated to deliver 1116 items even if it loses page anchoring during streaming and starts fabricating.
-- **Fix sketch** (must be designed in N2):
-  1. **Don't trust `total_count` as a hard target.** The continuation loop should ask for items `N+1` onward without specifying an upper bound, and stop when Haiku responds with an empty array or repeats earlier items.
-  2. **Anchor continuation by content, not by index.** Continuation prompt should include the *last 3-5 verbatim descriptions* extracted so Haiku can locate its position in the PDF, then explicitly say "return only items that come AFTER these. If you cannot find them, return `{\"items\":[]}`."
-  3. **Detect duplication post-merge.** After merging continuation items into `allItems`, fingerprint each item (description + zone + costs) and flag near-duplicates spanning the continuation boundary as a strong fabrication signal.
-  4. **Sanity-check zone density.** If an extracted side's per-zone item density is more than 1.5× the contralateral side's, log a warning and consider rejecting the continuation pages.
-- **Acceptance criteria**:
-  - The same adjuster PDF re-extracts to the user's expected ~600 items (±5%).
-  - At least 3 large-PDF comparisons re-run end-to-end with extracted item counts within ±5% of hand-counted truth.
-  - No silent fabrication — when continuation cannot anchor, the system errors out cleanly rather than producing fictional items.
-- **Cross-references**: tightly coupled with #30 (format-tolerance) and #33 (page-chunking — a page-chunked architecture would inherently solve this by giving each chunk a known page range to anchor against). Likely both are addressed together in N2.
-
-### 33. Stage A extraction needs page-chunked architecture for PDFs >1,000 items **(P0, OPEN — discovered Apr 29 2026 during N1 P8.6)**
-- **File**: `estimatch-app/lib/pdf-vision-extract.ts` (`extractWithVision`, `callHaikuExtraction`, and the continuation-call loop)
-- **Discovery context**: During the same Phase 8.6 stress run, Stage A extraction (both sides) took **9.4 minutes wall-clock** for 601 + 1116 = 1717 items. Linear extrapolation puts a 5,000-item single-side extraction at **35-45 minutes** for one side, which exceeds Vercel's `maxDuration=800` ceiling per step. We also hit Anthropic's upstream Cloudflare-edge timeout (HTTP 520) on a different ~1000-item single-call attempt earlier in the same session — confirming that single-call full-PDF extraction has a hard ceiling at the API-provider layer, not just on our side.
-- **Symptom — capacity ceiling at scale**: a comparison whose largest single side has >1,000 items either (a) takes longer than `maxDuration` and gets killed mid-step, (b) hits Anthropic's upstream 520, or (c) succeeds but at a wall-clock that's user-hostile (>15 min just for extraction).
-- **Why this is P0**: the user's stated capacity target (`N1_INNGEST_CONVERSION.md` §11) is 5,000 items per side. The N1 conversion proves the durable infrastructure handles that scale architecturally; what does NOT yet hold is the algorithmic ability to *do the extraction* at that scale within plan limits.
-- **Fix — page-chunked parallel Haiku calls**:
-  1. **Pre-flight via `pdf-parse`** to estimate page count and total numbered-item count.
-  2. **Compute chunk size** — e.g., 25-50 pages per chunk, capped at ~250 items per Haiku call to stay well under the 64K output ceiling.
-  3. **Slice the PDF by page range** (existing `pdf-lib` or similar can produce sub-PDFs in memory) — each chunk is a smaller PDF Haiku call.
-  4. **Fire chunks in parallel** with a concurrency cap (e.g., 3 simultaneous Haiku calls per side) — respecting Anthropic's tier rate limits.
-  5. **Merge chunk outputs**, renumber items consistently across chunks, dedupe items that may span chunk boundaries.
-  6. **Each chunk is anchored on a known page range** — solves the continuation-hallucination issue (#32) as a side effect.
-- **Acceptance criteria**:
-  - 5,000-item-per-side comparison completes Stage A within 15 min wall-clock (parallelism converts the linear 35-45 min extrapolation to roughly N/concurrency).
-  - No single Haiku call exceeds Vercel's `maxDuration=800` per step.
-  - No upstream 520 errors from `api.anthropic.com` — each chunk is small enough to stay within Cloudflare's connection budget.
-  - Item-count accuracy on a hand-counted reference PDF is within ±2% (no fabrication via misanchored continuations).
-- **Cross-reference**: this is the architectural answer to both #30 and #32. N2 should treat #30/#32/#33 as a single epic.
-
-### 34. Undici dispatcher patch needs production verification **(P0, OPEN — Apr 29 2026)**
-- **File**: `estimatch-app/lib/pdf-vision-extract.ts:10-11, 64-82, 161, 197-199` (Agent dispatcher import + `getExtractionDispatcher()` + dispatcher passed to `undiciFetch`)
-- **Context**: Tonight we patched a fundamental Node-fetch limit: the built-in `fetch` (Node 18+) uses `undici` under the hood and has a 5-minute default `headersTimeout`. Long-running Haiku PDF calls can take >5 min between request send and first response byte (Anthropic processing the PDF before generating output), which caused `UND_ERR_HEADERS_TIMEOUT` errors that killed otherwise-healthy extraction calls. The fix imports `Agent` and `fetch` from `undici` (npm), constructs a memoized dispatcher with extended `headersTimeout`/`bodyTimeout` matching `ANTHROPIC_EXTRACTION_TIMEOUT_MS`, and routes the Anthropic call through that dispatcher.
-- **What needs production verification**:
-  1. **The npm-installed `undici` is compatible with Vercel's Node runtime.** It works locally because dev-Node's bundled undici and the npm-installed undici don't interact (we use undici's own `fetch`, not Node's global `fetch`). Vercel's runtime *should* behave the same, but this has not been observed in prod.
-  2. **The `dispatcher` option is honored at runtime.** TypeScript's `RequestInit` doesn't expose `dispatcher`; we pass it positionally to undici's `fetch`. Vercel's bundler (Turbopack via Next.js) might tree-shake or wrap the call differently than dev. Need first-prod-comparison evidence that the option survives the bundle.
-  3. **`UND_ERR_HEADERS_TIMEOUT` does not appear in Vercel function logs** during any real extraction call. Any occurrence is a P0 — extraction will silently fail past 5 min.
-- **Verification plan**: during the staged rollout (`PRODUCTION_CUTOVER_CHECKLIST.md` §4.7.3 stage 4), the first 5-10 prod comparisons should be live-tailed with `vercel logs --follow`. Watch for any undici-headers-timeout errors. If they appear, immediately roll back to a previous deploy and investigate (consider `setGlobalDispatcher` instead of per-call dispatcher, or moving the Anthropic call into a separate non-Vercel function).
-- **Companion documentation**: `PRODUCTION_CUTOVER_CHECKLIST.md` §4.7.5 ("First-Week Production Watch List") includes `UND_ERR_HEADERS_TIMEOUT` as one of the six explicit signals to monitor. This item exists to make the verification a discrete launch checklist task rather than just a passive watch.
-- **Why P0**: silent extraction failure post-launch is the worst possible failure mode — comparisons would either get stuck or surface generic errors, with no signal pointing back to this specific cause. A few minutes of live verification on the first prod runs avoids weeks of mystery debugging.
-
-### 35. Merged zones (1:many) — UI rendering + end-to-end functionality verification **(P0, OPEN — Apr 29 2026)**
-- **Cross-reference**: `N2_SPEED_CAPACITY_ACCURACY.md` Issue 7 (one-to-many zone mappings).
-- **Context**: The N2 three-pass architecture supports 1:many zone matching — e.g., E1 has "Master Suite" while E2 splits it into "Master Bedroom" + "Master Bathroom." Pass 3 (Opus) declares the merge (`isMerged: true`); Pass 4 receives all sub-PDFs for the many-side and outputs items under a single canonical zone name. The DB stores a `mergedFrom` JSON field on the zone record.
-- **What needs verification**:
-  1. **UI rendering**: merged zones display with the canonical name and a (!) indicator icon. Tooltip correctly shows the original zone names and page ranges from both sides (e.g., *"Matched from Master Bedroom (p14–17) + Master Bathroom (p18–20) in the adjuster's estimate"*).
-  2. **Line items under merged zones**: all items from the many-side sub-PDFs appear in the correct zone, correctly ordered, with no duplicates or orphans.
-  3. **Match classification accuracy**: items within a merged zone are classified as MATCH / MODIFIED / MISSING / ADDED correctly — the merge does not introduce false mismatches.
-  4. **DB integrity**: `mergedFrom` JSON field is populated on merged zone records and absent/null on standard 1:1 zone records.
-- **Acceptance criteria**:
-  - At least one real comparison with a known 1:many zone pairing processed end-to-end.
-  - UI displays the merged zone with tooltip metadata matching the `mergedFrom` field.
-  - Item counts within the merged zone match hand-counted truth from the source PDFs (±2%).
-- **Why P0**: a wrong merge silently corrupts all line-item data for that zone. If the UI doesn't surface merge metadata, the user has no way to audit what happened.
+  - Symbility format testing and construction is tracked in items #36 and #31-deferred below.
 
 ---
 
@@ -479,7 +531,8 @@ A second deep review specifically evaluating behavior under **Vercel serverless 
 - **Symptom**: Zone Review gate (Phase 5) and Zone Correspondence Review gate (Phase 7) auto-proceed in the Inngest pipeline without pausing for user review. The `AWAITING_ZONE_REVIEW` and `AWAITING_MATCH_REVIEW` statuses exist and the UI components (`ZoneReview`, `MatchReview`) exist, but the `p5-zone-review-gate` and `p7-correspondence-gate` Inngest steps do not yet flip to these statuses — they fire an immediate `step.waitForEvent` that is immediately satisfied by a no-op confirm.
 - **Fix**: Implement `p5-zone-review-gate` and `p7-correspondence-gate` in `process-comparison-v3.ts` to mirror the Phase 8.5 gate pattern (flip status, `step.waitForEvent`, resume on confirm). Wire confirm endpoints similarly to `/api/comparisons/[id]/line-item-review/confirm`.
 
-### N3-2 — 4 line items consistently not extracted by Phase 8 (**P1, OPEN**)
+### N3-2 — 4 line items consistently not extracted by Phase 8 ~~P1~~ — **DEFERRED May 24 2026**
+> Will re-audit after full application cleanup. Phase 8.5 review gate provides manual mitigation in the meantime.
 - **Files**: `lib/n3/passes/extract-line-items.ts`, `lib/n3/prompts/extraction.ts`
 - **Symptom**: Set12 accuracy runs show 4 items never extracted (2 contractor-only `MISSING`, 2 adjuster-only `ADDED`). Items are present in source PDFs. Root cause: extraction prompt's strict "Extract ONLY numbered line items beginning with an integer followed by a period" rule may be over-filtering items that use sub-numbering or alternate formatting.
 - **Mitigation in place**: Line Item Review gate (Phase 8.5) lets user flag and trigger re-extraction.
@@ -494,6 +547,213 @@ A second deep review specifically evaluating behavior under **Vercel serverless 
 - **Symptom**: `prisma migrate dev` detects drift because the `embedding` column on `n3_line_items` and the `comparison_status` enum value `AWAITING_LINE_ITEM_REVIEW` were applied via raw SQL (not via migration files). `prisma migrate dev` prompts to reset the DB.
 - **Fix**: Create a baseline migration with `prisma migrate resolve --applied` or add a new migration file that accounts for the raw SQL changes, then verify `prisma migrate status` shows no drift. Do NOT run `prisma migrate reset` on production.
 
-### N3-5 — V2/V3 test set validation not yet run (**P1, OPEN**)
-- **Symptom**: N3 accuracy has only been verified on Set11 and Set12 (V1-format PDFs). No accuracy runs have been done against V2 or V3 format PDFs.
-- **Fix**: Run `runner-n3.js --set <SetN>` against V2 and V3 sets once they are available. Investigate any format-specific failures.
+### N3-5 — V2/V3 test set validation not yet run ~~P1~~ — **RESOLVED May 24 2026**
+> Later test sets covered diverse formats. New sets will be generated with greater diversity for future validation rounds.
+
+---
+
+## May 24, 2026 — Comprehensive Pre-Launch Review Additions
+
+> These items were identified during a full-application + N3 pipeline deep-dive code review on May 24, 2026. Items are organized by the same P0/P1/P2 convention as above. The six N3 bugs fixed during this session are documented in §Resolved May 24 2026 at the bottom.
+
+---
+
+### 36. Symbility pipeline construction
+  - **UI prerequisite ✔ DONE**: format selector (Xactimate/Symbility) is already on the upload form. When Symbility pipeline is built, the `symbility` option will route to the correct extraction prompt and zone detection logic automatically. — build format-specific extraction and parsing **(P0, OPEN — May 24 2026)**
+- **Files**: `estimatch-app/lib/n3/passes/extract-line-items.ts`, `estimatch-app/lib/n3/passes/detect-zones.ts`, `estimatch-app/lib/n3/prompts/extraction.ts`
+- **Context**: Item #31 tracks testing Symbility compatibility. This item tracks the actual construction work required once #31 confirms what breaks. Symbility PDFs differ structurally from Xactimate in ways that require purpose-built pipeline paths: different column layout (has a "Code" column), different zone/area header conventions, different total-row formatting, different numbering conventions. The current N3 extraction prompt, zone detection logic, and normalization rules were all designed around Xactimate output.
+- **What needs to be built**:
+  1. **Format detection in Phase 4**: extend `detect-zones.ts` to reliably identify `symbility` vs `xactimate` vs `unknown` and store the result in a new `format` column on `n3_zones` (this is Bug #2 from the May 24 review — deferred DB migration).
+  2. **Symbility-specific extraction prompt** in `estimatch-app/lib/n3/prompts/extraction.ts`: separate prompt branch for Symbility layout (Code column, area headers, unnumbered or differently-numbered rows).
+  3. **Symbility zone detection prompt**: Symbility uses "Areas" terminology and may nest zones differently. A separate or parameterized prompt branch in `detect-zones.ts` is needed.
+  4. **Symbility normalization rules**: item codes in the Code column should feed into `itemCodeSimilarity` (currently a stub at 0.01 weight). Symbility codes are highly structured and could significantly improve accuracy.
+  5. **Anti-hallucination guard for unknown formats** (shared with #30/#32/#33): if the detected format is `unknown` and the extracted item count is implausibly low vs page count, fail loudly rather than silently.
+  6. **Accuracy validation**: at least 3 representative Symbility PDFs must pass end-to-end with ≥95% item extraction accuracy and ≤2% aggregate dollar error before this is closed.
+- **Why P0**: Symbility is the #2 insurance estimating platform after Xactimate. A Symbility user on day 1 will hit the silent hallucination path described in #30 or get structurally wrong matches. This is a customer-trust failure that cannot be walked back.
+- **Cross-references**: #31 (testing/discovery), #30 (hallucination guard), Bug #2 deferred (format column migration), N3-9 (item code similarity), N3-11 (format handoff).
+
+---
+
+### 37. XLS/XLSX file support — accept spreadsheet estimates as input **(P0, OPEN — May 24 2026)**
+  - **UI prerequisite**: add an `xls` option to the format selector on the upload form and relax `accept=".pdf"` to also accept `.xls`/`.xlsx`. The format selector infrastructure is already in place (`app/app/new-comparison/page.tsx`).
+- **Files**: `estimatch-app/app/app/new-comparison/page.tsx`, `estimatch-app/app/api/comparisons/route.ts`, `estimatch-app/lib/n3/passes/extract-line-items.ts` (new path), `estimatch-app/prisma/schema.prisma`
+- **Context**: Many adjusters and contractors deliver estimates as Excel spreadsheets rather than PDFs. Xactimate, Symbility, and proprietary adjuster tools all offer XLS/XLSX export. The current pipeline is entirely PDF-only at every level — upload validation, storage, Phase 4 zone detection, Phase 8 extraction, and the Anthropic vision calls. Supporting XLS/XLSX would unlock a large subset of users who cannot produce PDF output or prefer spreadsheet format.
+- **What needs to be built**:
+  1. **Upload layer**: update `validatePdf` in `comparisons/route.ts` to accept `.xlsx`/`.xls` MIME types (`application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `application/vnd.ms-excel`). Update file size limit (XLS files are typically smaller). Update frontend `new-comparison/page.tsx` to accept `accept=".pdf,.xlsx,.xls"` and show appropriate file type labels.
+  2. **Storage**: Supabase storage bucket can store any binary — no changes needed. MIME type metadata should be stored.
+  3. **Format detection branch**: at the start of N3 Phase 4 (detect-zones) and Phase 8 (extract-line-items), detect whether the input is PDF or XLS/XLSX. Branch to an entirely separate extraction path for spreadsheets.
+  4. **XLS extraction path** (new library needed — e.g. `xlsx` npm package, ~500KB): parse sheet structure, detect zone/area sheets or section headers, extract line items directly from rows. No vision model needed — structured extraction from cell values. This is significantly more accurate and cheaper than PDF vision for well-formed spreadsheets.
+  5. **Column mapping**: build a configurable column-header → N3 field mapping (description, qty, unit, remove, replace, reset, tax, O&P, total). Support common Xactimate XLS column names, Symbility XLS column names, and a fallback heuristic for unknown layouts.
+  6. **Zone detection for XLS**: worksheet tabs are natural zone boundaries. Multi-sheet workbooks map directly to N3 zones. Single-sheet workbooks need section-header detection from row styling/formatting.
+  7. **N3 data model**: no schema changes needed — `n3_line_items` and `n3_zones` store normalized data regardless of source format.
+  8. **Processing pipeline update**: `pipelineVersion` should be `'n3'` for XLS inputs (not a separate version). The XLS path bypasses Phases 4 and 8 vision calls but uses all downstream phases unchanged.
+- **Acceptance criteria**:
+  - A standard Xactimate XLS export uploads, processes, and completes with ≥98% item extraction accuracy.
+  - A Symbility XLS export uploads, processes, and completes with ≥95% item extraction accuracy.
+  - PDF and XLS inputs are handled transparently — the downstream N3 phases (normalization, embedding, scoring, matching) are identical.
+  - No regression on existing PDF-only comparisons.
+- **Why P0**: XLS is not a "nice to have" — a significant portion of adjuster estimates are delivered in spreadsheet format, and users who cannot convert to PDF are completely blocked from using the product. Supporting XLS is likely a prerequisite for commercial viability, not an enhancement.
+- **Dependency**: benefits significantly from Symbility column-mapping work in #36 (the Symbility XLS column layout is the same as the Symbility PDF column layout, just structured). Implement #36 first.
+
+### 38. Loading / progress screens need phase-level status messages **(P0, OPEN — May 24 2026)**
+- **Files**: `estimatch-app/app/app/new-comparison/page.tsx`, comparison detail page loading states, review gate waiting screens
+- **Context**: All pipeline waiting screens currently show a generic animated progress bar with no indication of what the pipeline is actually doing. Users have no idea if they're waiting for zone detection, extraction, matching, or something else. This is especially confusing during long-running phases like Phase 8 (line item extraction, which can take several minutes per zone on large PDFs).
+- **What needs to be built**:
+  1. Surface current pipeline phase from the API — the comparison status endpoint (`/api/comparisons/[id]`) should optionally return the current Inngest step name or a coarse phase label (e.g. "Detecting zones", "Extracting line items", "Matching items").
+  2. Update the progress bar on `new-comparison/page.tsx` to show the current phase label below or alongside the bar.
+  3. Update any waiting screens on the comparison detail page similarly.
+  4. Consider a visible elapsed time or estimated time remaining for phases with known typical durations.
+- **Why P0**: Without phase visibility, users have no confidence the system is working and are likely to abandon or repeatedly re-upload.
+
+---
+
+## N3 Pipeline — Additional Items (May 24, 2026 Review)
+
+### N3-6 — HNSW index missing on pgvector embedding column ~~OPEN~~ — **RESOLVED May 24 2026**
+- **File**: `estimatch-app/prisma/migrations/` (new migration needed), `estimatch-app/lib/n3/passes/generate-candidates.ts`
+- **Symptom**: Phase 12 candidate generation performs a brute-force O(n×m) cosine similarity scan across all `n3_line_items` embeddings for every comparison. At 500+ items per side, this scan takes multiple seconds and will time out under concurrent load. At 1,000+ items per side it will exceed Vercel's step timeout.
+- **Fix**: Add an HNSW index on the `embedding` column of `n3_line_items`:
+  ```sql
+  CREATE INDEX CONCURRENTLY n3_line_items_embedding_hnsw
+    ON n3_line_items USING hnsw (embedding vector_cosine_ops)
+    WITH (m = 16, ef_construction = 64);
+  ```
+  This must be applied as a migration (not raw SQL) and confirmed on the production Supabase instance (requires pgvector 0.5.0+ and the `vector` extension, both available on Supabase Pro).
+- **Why P0 at scale**: without this, the first large commercial comparison (500+ items/side) will either time out in Phase 12 or cause serious DB load under concurrent users. This is a one-time index creation that has zero impact on write performance and dramatically reduces scan cost.
+
+### N3-7 — `createMany` in Phase 18 will hit PostgreSQL bind-parameter limit ~~P1~~ — **RESOLVED May 24 2026**
+- **Resolution**: Replaced array-style `$transaction([...])` with callback-style `$transaction(async (tx) => { ... })`. `createMany` is now called in chunks of 800 rows (28,000 bind params, well under the 65,535 ceiling). `deleteMany` and `comparison.update` remain in the same transaction — atomicity preserved. File: `lib/n3/passes/persist-decisions.ts:386-415`.
+- **File**: `estimatch-app/lib/n3/passes/persist-decisions.ts:388-404`
+- **Symptom**: `prisma.lineItem.createMany({ data: rows })` passes all rows in a single PostgreSQL statement. PostgreSQL limits bind parameters to 65,535. The `LineItem` model has ~35 columns — the limit is hit at `65535 / 35 ≈ 1,872 rows`. For a comparison with 2,000+ decisions (large commercial or multi-zone claims), Phase 18 will throw `P2027: Raw query failed` and the entire pipeline run fails on the very last step after all processing is complete.
+- **Fix**: chunk `rows` into batches of ≤800 before calling `createMany` (800 × 35 = 28,000 params, well under the limit). The `deleteMany` inside the same transaction should remain as a single call — it is unaffected. Update the `$transaction` to loop over row chunks.
+- **Why P1 and not P0**: average residential claims stay well under 1,872 decisions. Large commercial claims will hit this. Should be fixed before significant traffic.
+
+### N3-8 — Score thresholds need recalibration after Phase 10 NLP lands **(P1, OPEN — May 24 2026)**
+- **File**: `estimatch-app/lib/n3/constants.ts:67-72`
+- **Symptom**: `SCORE_THRESHOLDS.REJECT` was temporarily lowered from 0.60 → 0.30 to compensate for `materialObjectSimilarity` (weight 0.15) and `itemCodeSimilarity` (weight 0.12) stub features always returning 0. At 0.30, approximately 3× as many edges survive into the bipartite graph as intended (~3,366 observed vs ~500 expected at 0.60). This inflates the graph, increases Phase 14 component sizes, pushes more items into the `large` component path, and adds unnecessary LLM adjudication load in Phase 17.
+- **Fix**: once Phase 10 NLP (N3-9) is implemented and both stub features are returning real values, re-run the calibration suite across all test sets to find the threshold that maintains ≥98% recall at the lowest false-positive rate. Reset `REJECT` toward 0.55–0.65. Also recalibrate `ACCEPT` (currently 0.82) and `POSSIBLE` (currently 0.60).
+- **Dependency**: blocked on N3-9 (Phase 10 NLP). Do not adjust thresholds until real feature values are available.
+
+### N3-9 — Phase 10 NLP: AI trade/action classification has 37–48% null rate **(P1, OPEN — May 24 2026)**
+- **File**: `estimatch-app/lib/n3/passes/normalize-line-items.ts`, `estimatch-app/lib/n3/constants.ts` (`ABBREV_EXPANSION`, `DESCRIPTION_STOPWORDS`)
+- **Symptom**: The `trade` and `action` fields on `N3NormalizedLineItem` are populated by keyword lookup in `normalize-line-items.ts`. On production test sets, 37–48% of items have `null` for both fields. When both are null, the score weight for `tradeActionSimilarity` (currently 0.07 combined) effectively contributes nothing, and Phase 16 group matching's `tradeActionCoverage` feature is similarly degraded.
+- **Fix**: add a small AI classification pass (Haiku call, batched, cheap) as a fallback for items where keyword lookup returns null. For each null-trade item, send description to Haiku with a structured prompt: `"Classify this construction line item into: trade (carpentry/painting/plumbing/electrical/roofing/flooring/drywall/hvac/masonry/other) and action (install/remove/replace/repair/clean/inspect/none). Return JSON only."` Batch 50–100 items per call. This should bring the null rate below 10%.
+- **Dependency**: feeds into N3-8 (score recalibration) — do N3-9 first.
+
+### N3-10 — Large component zone-blind greedy produces mislabeled decisions **(P1, OPEN — May 24 2026)**
+- **File**: `estimatch-app/lib/n3/passes/assign-matches.ts`, `estimatch-app/POTENTIAL_FIXES.md`
+- **Symptom**: Set18 (704 items, single large component) produced 4 "Content manipulation / Move and reset" pairs mislabeled as `MISSING_FROM_ADJUSTER` + `ADDED_BY_ADJUSTER` instead of `MODIFIED`. Dollar gap was 100% correct. Root cause: the greedy Hungarian algorithm in Phase 15 does not consider zone correspondence when breaking ties, so it can mis-assign items across zones when their individual scores are close.
+- **Four fix options documented in `POTENTIAL_FIXES.md`**:
+  1. Zone-affinity score boost in Phase 13 (+0.08 for correspondence-confirmed pairs)
+  2. Zone-affinity tiebreaker in Phase 15 greedy loop (intervene when scores within 0.05)
+  3. Increase `MEDIUM_MAX` threshold so 700-item estimates use near-optimal algorithm
+  4. Run more test sets first before deciding
+- **Recommended path**: Option 3 is the lowest-risk change (single constant), Option 1 fixes the root cause. Do not implement until 2–3 additional large-set runs confirm the pattern repeats.
+
+### N3-11 — Phase 4 → Phase 8 format handoff ~~P1~~ — **RESOLVED May 24 2026**
+- **Resolution**: Replaced auto-detection approach with user-selected format at upload time. Two `<select>` dropdowns (Xactimate/Symbility) added to `app/app/new-comparison/page.tsx`. Values sent as `yourEstimateFormat` + `adjusterEstimateFormat` in formData. API route validates and stores them via migration `20260524130000_add_comparison_estimate_formats`. `lib/n3/passes/extract-line-items.ts` now reads `comparison.yourEstimateFormat` / `comparison.adjusterEstimateFormat` and passes real format context to `buildExtractionPrompt`. Architectural decision: user selection is deterministic and error-free vs probabilistic auto-detection from PDF content.
+
+### N3-12 — Phase 5 / Phase 7 / Phase 8.5 review gates need production verification ~~P1~~ — **RESOLVED May 24 2026**
+> Confirmed working across many test runs. All three gates (zone review, correspondence review, line item review) suspend and resume correctly with real comparisons in production.
+- **File**: `estimatch-app/lib/n3/inngest/process-comparison-v3.ts` (steps `p5-zone-review-gate`, `p7-correspondence-gate`, `p8-5-line-item-review-gate`), `estimatch-app/app/api/comparisons/[id]/zone-review/confirm/route.ts`, `estimatch-app/app/api/comparisons/[id]/match-review/confirm/route.ts`, `estimatch-app/app/api/comparisons/[id]/line-item-review/confirm/route.ts`
+- **Symptom**: The review gate APIs and `ZoneReview` / `MatchReview` / `LineItemReview` React components are all wired. However, all end-to-end testing has been run with `N3_SKIP_ZONE_REVIEW=true` and `N3_SKIP_LINE_ITEM_REVIEW=true`, which bypasses all three gates. The actual user-facing review flows — including the `step.waitForEvent` Inngest suspend/resume pattern with real HTTP confirm endpoints — have never been exercised with a real comparison in a real environment.
+- **What needs verification**:
+  1. Zone Review gate (Phase 5): status flips to `AWAITING_ZONE_REVIEW`, UI renders zones correctly from `n3_zones`, confirm POST fires `comparison/n3-zone-review.completed`, pipeline resumes.
+  2. Correspondence Review gate (Phase 7): status flips to `AWAITING_MATCH_REVIEW`, UI renders proposed correspondences (current `MatchReview` component shows N2-style zone pairs — verify it renders N3 correspondence data correctly), confirm POST fires `comparison/n3-correspondence-review.completed`, pipeline resumes.
+  3. Line Item Review gate (Phase 8.5): status flips to `AWAITING_LINE_ITEM_REVIEW`, UI renders per-zone item counts from `line-item-review` API, confirm/reextract actions work, pipeline resumes or re-runs Phase 8.
+- **Fix**: run at least one comparison end-to-end with all skip flags set to `false`. Document observed behavior. Fix any rendering or event-firing issues found.
+
+---
+
+## Resolved — May 24, 2026 Session
+
+> Six N3 bugs identified and fixed during the May 24, 2026 deep-dive. All changes are in `estimatch-app/lib/n3/`.
+
+### Bug Fix A — `many_to_many` missing from Phase 6 Zod schema ✅ **RESOLVED May 24 2026**
+- **File**: `lib/n3/passes/propose-correspondences.ts:45`
+- **Fix**: Added `'many_to_many'` to `z.enum([...])` in `CorrespondenceItemSchema`. Prevents Phase 6 from exhausting retries when the LLM correctly returns a many:many correspondence.
+
+### Bug Fix B — `CORRESPONDENCE_MAX_TOKENS` fixed at 1500 regardless of zone count ✅ **RESOLVED May 24 2026**
+- **File**: `lib/n3/passes/propose-correspondences.ts:33-38`
+- **Fix**: Replaced constant with `computeCorrespondenceMaxTokens(yoursCount, adjCount)` — scales at 40 tokens/zone with a 1500 floor. Prevents truncation on comparisons with 30+ zones per side.
+
+### Bug Fix C — Voyage AI batch response not length-validated ✅ **RESOLVED May 24 2026**
+- **File**: `lib/n3/passes/generate-embeddings.ts:62-66`
+- **Fix**: Added explicit `throw` if `json.data.length !== texts.length`. Converts silent embedding misalignment into a loud, retryable error.
+
+### Bug Fix D — `possible` decision falls through to `MODIFIED` in Phase 18 ✅ **RESOLVED May 24 2026**
+- **File**: `lib/n3/passes/persist-decisions.ts:207-208`
+- **Fix**: Default switch case now maps `possible` → `MATCH_UNVERIFIED` instead of `MODIFIED`. Prevents a Phase 17 bug from producing false confirmed-modified matches.
+
+### Bug Fix E — `dump-metrics-snapshot` writes to read-only filesystem in production ✅ **RESOLVED May 24 2026**
+- **File**: `lib/n3/inngest/process-comparison-v3.ts:404`
+- **Fix**: Wrapped entire metrics snapshot block in `if (process.env.NODE_ENV !== 'production')`. DB metrics query and filesystem writes are skipped entirely on Vercel.
+
+### Bug Fix F — Stale "all steps stubbed" completion log message ✅ **RESOLVED May 24 2026**
+- **File**: `lib/n3/inngest/process-comparison-v3.ts:425`
+- **Fix**: Removed `(all steps stubbed)` suffix from `[n3] process-comparison-v3 completed` log line.
+
+### Bug Fix G — `computeMaxTokens` underestimated per-pair token budget (prior session) ✅ **RESOLVED May 23 2026**
+- **File**: `lib/n3/passes/llm-adjudication.ts:39-43`
+- **Fix**: Raised `MAX_TOKENS_PER_PAIR` from 80 → 130, added `MAX_TOKENS_ENVELOPE = 50`, introduced `MAX_TOKENS_CEIL = 32_768`. Prevents silent JSON truncation in Phase 17 LLM adjudication batches.
+
+---
+
+## Code Review Findings — May 25, 2026
+
+### N16 — `finalize-checkout` partial usage reset on period rollover **(P1, OPEN)**
+- **File**: `app/api/stripe/finalize-checkout/route.ts:186`
+- **Symptom**: When `shouldResetUsage` is true (new billing period detected via `subscriptionEndsAt` advancing), only `comparisonsUsedThisPeriod: 0` is spread into the DB update. `llmEditsUsedThisPeriod` and `executiveSummariesUsedThisPeriod` are **not** reset.
+- **Contrast**: The Stripe webhook handler (`app/api/webhooks/stripe/route.ts`) correctly resets all four counters (`comparisonsUsedThisPeriod`, `addonComparisonsThisPeriod`, `llmEditsUsedThisPeriod`, `executiveSummariesUsedThisPeriod`) in the same scenario.
+- **Impact**: If `finalize-checkout` runs before the Stripe webhook fires (normal race — checkout success redirect is immediate), a user in a new billing period will see their LLM edit and executive summary quotas as still depleted until the webhook eventually arrives and corrects them. Could surface as a false 429 for AI tools immediately after renewal.
+- **Fix**: Add `llmEditsUsedThisPeriod: 0` and `executiveSummariesUsedThisPeriod: 0` to the `shouldResetUsage` spread at line 186, matching the webhook handler.
+
+### N17 — `inngest.send` failure after DB transaction leaves zombie PROCESSING comparison **(P1, OPEN)**
+- **File**: `app/api/comparisons/route.ts` (POST handler)
+- **Symptom**: The DB transaction (creates comparison row + increments `comparisonsUsedThisPeriod`) runs first, then `inngest.send()` is called. If `inngest.send()` throws (network error, Inngest outage, env var misconfiguration), the catch block: (a) cleans up Supabase files ✓, but (b) does **not** delete the zombie comparison row ✗, and (c) does **not** decrement the usage counter ✗.
+- **Impact**: User loses a comparison slot and is left with a PROCESSING comparison that will never complete. Low frequency (Inngest is reliable), but permanently harmful when it does occur.
+- **Fix**: In the catch block, after file cleanup, attempt `prisma.comparison.delete({ where: { id: comparison.id } })` if the comparison was created, and decrement `comparisonsUsedThisPeriod` by 1 (with a floor of 0). Since this is compensating for an already-committed transaction, these should be independent `try/catch` blocks with logging if either compensating action fails.
+
+### N18 — `UsageLimitError` race returns 403 before Supabase file cleanup **(P2, OPEN)**
+- **File**: `app/api/comparisons/route.ts` (POST handler catch block)
+- **Symptom**: Two concurrent requests from the same user race to create the last comparison slot. Both pass the pre-check, both upload files to Supabase, then the slower request's atomic guard inside the transaction throws `UsageLimitError`. The catch block returns `NextResponse.json(..., { status: 403 })` early — BEFORE the file-cleanup block. The Supabase files uploaded by the losing request are never deleted.
+- **Impact**: Low frequency (requires exact concurrent requests and the user being at their limit), but each occurrence leaks 2 Supabase files permanently.
+- **Fix**: Move the `UsageLimitError` early-return into its own path that still runs the file cleanup: clean up `uploadedPaths` before returning 403. Or restructure so cleanup always runs in a `finally` block regardless of error type.
+
+### N19 — `/api/billing`, `/api/user`, `/api/n3` missing from `proxy.ts` `isProtectedRoute` **(P2, OPEN)**
+- **File**: `proxy.ts:8-20`
+- **Symptom**: The #24 block-list middleware fix added an explicit `isProtectedRoute` matcher. The following API paths were not included: `/api/billing/(.*)`, `/api/user/(.*)`, `/api/n3/(.*)`. Routes under these paths have their own `auth()` checks and return 401 correctly, so there is no security hole. However, the middleware block-list is incomplete — if a new route were added under these paths without an `auth()` call, it would be silently public.
+- **Impact**: Defense-in-depth gap only. All existing routes are individually protected.
+- **Fix**: Add `/api/billing(.*)`, `/api/user(.*)`, `/api/n3(.*)` to the `isProtectedRoute` matcher array.
+
+---
+
+## Potential N3 Improvements
+
+> Algorithm and accuracy enhancements for the N3 pipeline. These are deferred improvements to the matching algorithm — the pipeline is functional and accurate without them. Revisit after the application is otherwise complete.
+
+### N3-9 — Phase 10 NLP: AI trade/action classification (37–48% null rate)
+- **File**: `estimatch-app/lib/n3/passes/normalize-line-items.ts`, `estimatch-app/lib/n3/constants.ts`
+- **Context**: `trade` and `action` fields are populated by keyword lookup. 37–48% of items return `null` for both, meaning `tradeActionSimilarity` contributes zero scoring signal for nearly half of all items.
+- **Proposed fix**: Haiku fallback pass (batched, ~50–100 items/call) for items where keyword lookup returns null. Structured JSON prompt classifying trade + action. Should bring null rate below 10%.
+- **Dependency**: N3-8 is blocked on this.
+
+### N3-8 — Score threshold recalibration
+- **File**: `estimatch-app/lib/n3/constants.ts:67-72`
+- **Context**: `SCORE_THRESHOLDS.REJECT` was temporarily lowered 0.60 → 0.30 because `materialObjectSimilarity` and `itemCodeSimilarity` stub features always return 0. This inflates the graph and adds unnecessary LLM adjudication load in Phase 17.
+- **Proposed fix**: Once N3-9 is implemented and both stub features return real values, re-run calibration across all test sets and reset thresholds toward 0.55–0.65.
+- **Dependency**: blocked on N3-9.
+
+### N3-10 — Large-component zone-blind greedy produces mislabeled decisions
+- **File**: `estimatch-app/lib/n3/passes/assign-matches.ts`, `estimatch-app/POTENTIAL_FIXES.md`
+- **Context**: Set18 (704 items, single large component) produced 4 "Content manipulation / Move and reset" pairs mislabeled as `MISSING_FROM_ADJUSTER` + `ADDED_BY_ADJUSTER` instead of `MODIFIED`. Dollar gap was 100% correct. Root cause: greedy Hungarian does not consider zone correspondence when breaking ties.
+- **Four fix options documented in `POTENTIAL_FIXES.md`** — do not implement until 2–3 additional large-set runs confirm the pattern repeats.
+
+---
+
+## Future Work — Resolve After All Other Items
+
+### 31-deferred. Symbility format compatibility testing
+- **Context**: Before Symbility pipeline (#36) can be built and validated, real-world Symbility PDFs must be sourced (at least 3 — small/medium/large) and run through N3 to document what fails and why. This discovery work is a prerequisite to #36 construction.
+- **What needs to happen**: source representative PDFs, run through N3 with logging enabled, document exact failure points (zone detection, extraction prompt, normalization), then hand off findings to #36.
+- **Dependency**: implement everything else first. Symbility is a second-format expansion, not a launch blocker for Xactimate users.

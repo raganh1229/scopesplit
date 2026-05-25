@@ -1,33 +1,37 @@
-import { clerkClient, clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/login(.*)',
-  '/signup(.*)',
-  '/verify(.*)',
-  '/forgot-password(.*)',
-  '/reset-password(.*)',
-  '/faq(.*)',
-  '/contact(.*)',
-  '/privacy(.*)',
-  '/terms(.*)',
-  '/cookies(.*)',
-  '/privacy-choices(.*)',
-  '/security(.*)',
-  '/acceptable-use(.*)',
-  '/billing-refunds(.*)',
-  '/data-processing-addendum(.*)',
+// ── Protected routes (require auth) ──
+// Everything else is public by default. This prevents drift when adding new
+// marketing pages — no need to update this file for each new public page.
+// (#24 fix: inverted from allow-list to block-list approach)
+const isProtectedRoute = createRouteMatcher([
+  '/app(.*)',
   '/subscribe(.*)',
-  '/error(.*)',
-  '/sso-callback(.*)',
+  '/verify-phone(.*)',
+  '/api/comparisons(.*)',
+  '/api/bug-report(.*)',
+  '/api/contact(.*)', // has public handler, but auth routes exist too
+  '/api/settings(.*)',
+  '/api/verification(.*)',
+  '/api/stripe(.*)',
+  '/api/internal(.*)',
+  '/api/notes(.*)',
+  '/api/billing(.*)',
+  '/api/user(.*)',
+  '/api/n3(.*)',
+]);
+
+// ── Public API routes (webhooks, contact form) ──
+// These API routes are explicitly public and skip auth checks
+const isPublicApiRoute = createRouteMatcher([
   '/api/webhooks/clerk(.*)',
   '/api/webhooks/stripe(.*)',
-  '/api/internal/cleanup-unverified-users(.*)',
   '/api/contact(.*)',
   '/api/inngest(.*)',
 ]);
 
+// Route matchers for post-auth redirects (phone verification, plan checks)
 const isAppRoute = createRouteMatcher(['/app(.*)']);
 const isSubscribeRoute = createRouteMatcher(['/subscribe(.*)']);
 const isVerifyPhoneRoute = createRouteMatcher(['/verify-phone(.*)']);
@@ -39,25 +43,20 @@ const isMarketingRoute = createRouteMatcher([
   '/contact(.*)',
 ]);
 
-export default clerkMiddleware(async (auth, request) => {
-  const { userId } = await auth();
+type SessionMeta = { plan?: string; phoneVerifiedForTrial?: boolean };
 
-  if (!isPublicRoute(request)) {
+export default clerkMiddleware(async (auth, request) => {
+  const { userId, sessionClaims } = await auth();
+
+  // Protect private routes (everything else is public by default - #24 fix)
+  if (isProtectedRoute(request) && !isPublicApiRoute(request)) {
     await auth.protect();
   }
 
   if (userId && (isAppRoute(request) || isSubscribeRoute(request) || isVerifyPhoneRoute(request))) {
-    const client = await clerkClient();
-    let user;
-
-    try {
-      user = await client.users.getUser(userId);
-    } catch {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
-
-    const plan = (user.publicMetadata as { plan?: string })?.plan;
-    const phoneVerified = (user.publicMetadata as { phoneVerifiedForTrial?: boolean })?.phoneVerifiedForTrial === true;
+    const meta = (sessionClaims?.metadata ?? {}) as SessionMeta;
+    const plan = meta.plan;
+    const phoneVerified = meta.phoneVerifiedForTrial === true;
 
     if (!phoneVerified && !plan && (isAppRoute(request) || isSubscribeRoute(request))) {
       const returnTo = `${request.nextUrl.pathname}${request.nextUrl.search}`;
@@ -83,15 +82,9 @@ export default clerkMiddleware(async (auth, request) => {
 
   // Subscribed + logged-in users have no business on marketing pages
   if (userId && isMarketingRoute(request)) {
-    try {
-      const client = await clerkClient();
-      const user = await client.users.getUser(userId);
-      const plan = (user.publicMetadata as { plan?: string })?.plan;
-      if (plan) {
-        return NextResponse.redirect(new URL('/app/new-comparison', request.url));
-      }
-    } catch {
-      // On error just let them view the page
+    const meta = (sessionClaims?.metadata ?? {}) as SessionMeta;
+    if (meta.plan) {
+      return NextResponse.redirect(new URL('/app/new-comparison', request.url));
     }
   }
 });

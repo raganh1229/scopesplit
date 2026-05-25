@@ -183,7 +183,13 @@ export async function POST() {
       trialEndsAt,
       subscriptionEndsAt,
       periodResetDate: subscriptionEndsAt,
-      ...(shouldResetUsage ? { comparisonsUsedThisPeriod: 0 } : {}),
+      ...(shouldResetUsage
+        ? {
+            comparisonsUsedThisPeriod: 0,
+            llmEditsUsedThisPeriod: 0,
+            executiveSummariesUsedThisPeriod: 0,
+          }
+        : {}),
     },
   });
 

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { SubscriptionStatus, SubscriptionTier } from '@/app/generated/prisma/client';
 import prisma from '@/lib/prisma';
-import { PLAN_PRICE_IDS, assertConfiguredPrice, mapPriceIdToPlan, stripe, type PlanKey } from '@/lib/stripe';
+import { PLAN_PRICE_IDS, PLAN_MONTHLY_PRICES_CENTS, assertConfiguredPrice, mapPriceIdToPlan, stripe, type PlanKey } from '@/lib/stripe';
 
 const MANAGEABLE_STATUSES = new Set(['trialing', 'active', 'past_due', 'unpaid']);
 
@@ -14,12 +14,6 @@ const PLAN_LIMITS: Record<PlanKey, number> = {
   starter: 10,
   professional: 50,
   business: 200,
-};
-
-const PLAN_MONTHLY_PRICES_CENTS: Record<PlanKey, number> = {
-  starter: 4999,
-  professional: 9900,
-  business: 24900,
 };
 
 function isPlanKey(value: string | undefined): value is PlanKey {
@@ -143,7 +137,7 @@ export async function POST(request: Request) {
     const isUpgrade = targetPlanRank > currentPlanRank;
     const isDowngrade = targetPlanRank < currentPlanRank;
 
-    const prorationBehavior = isDowngrade ? 'none' : 'create_prorations';
+    const prorationBehavior = isDowngrade ? 'none' : 'always_invoice';
 
     const updatedSubscription =
       currentPrice === targetPrice && !subscription.cancel_at_period_end
@@ -151,6 +145,7 @@ export async function POST(request: Request) {
         : await stripe.subscriptions.update(subscription.id, {
             cancel_at_period_end: false,
             proration_behavior: prorationBehavior,
+            ...(isUpgrade ? { payment_behavior: 'error_if_incomplete' as const } : {}),
             items: [{
               id: subscriptionItem.id,
               price: targetPrice,
@@ -158,6 +153,7 @@ export async function POST(request: Request) {
             metadata: {
               selectedPlan: body.plan,
             },
+            ...(isUpgrade ? { expand: ['latest_invoice'] } : {}),
           });
 
     let subscriptionEndsAt = fromUnixSeconds(
@@ -211,6 +207,29 @@ export async function POST(request: Request) {
       },
     });
 
+    // For upgrades, read the actual prorated amount from the invoice Stripe created
+    // via always_invoice. The expanded latest_invoice is present on the updated
+    // subscription only when an upgrade was performed.
+    let amountDueNowCents = 0;
+    if (isUpgrade && currentPrice !== targetPrice) {
+      const expandedInvoice = (updatedSubscription as unknown as {
+        latest_invoice?: { amount_due?: number } | string | null;
+      }).latest_invoice;
+      if (expandedInvoice && typeof expandedInvoice === 'object') {
+        amountDueNowCents = expandedInvoice.amount_due ?? 0;
+      } else if (typeof expandedInvoice === 'string') {
+        try {
+          const invoice = await stripe.invoices.retrieve(expandedInvoice);
+          amountDueNowCents = invoice.amount_due;
+        } catch {
+          amountDueNowCents = Math.max(
+            PLAN_MONTHLY_PRICES_CENTS[body.plan] - PLAN_MONTHLY_PRICES_CENTS[currentPlan],
+            0
+          );
+        }
+      }
+    }
+
     return NextResponse.json(
       {
         plan: body.plan,
@@ -221,9 +240,7 @@ export async function POST(request: Request) {
         comparisonsUsed: appUser.comparisonsUsedThisPeriod,
         effectiveComparisonLimit: isDowngrade ? PLAN_LIMITS[currentPlan] : PLAN_LIMITS[body.plan],
         nextComparisonLimit: PLAN_LIMITS[body.plan],
-        amountDueNowCents: isUpgrade
-          ? Math.max(PLAN_MONTHLY_PRICES_CENTS[body.plan] - PLAN_MONTHLY_PRICES_CENTS[currentPlan], 0)
-          : 0,
+        amountDueNowCents,
         nextChargeAmountCents: PLAN_MONTHLY_PRICES_CENTS[body.plan],
       },
       { status: 200 }

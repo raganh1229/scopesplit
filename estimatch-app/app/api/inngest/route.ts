@@ -1,29 +1,26 @@
 // ─────────────────────────────────────────────────────────────────────────
-// Inngest webhook endpoint (N1 conversion — Phase 5).
+// Inngest webhook endpoint.
 //
 // This is the URL Inngest hits to:
 //   • Discover registered functions (introspection on `PUT`)
 //   • Invoke a step in a registered function (`POST`)
 //   • Health-check the registration (`GET`)
 //
-// Functions are registered by adding them to the `functions` array passed
-// to `serve()`. Phase 5 ships an empty registry to verify the endpoint is
-// reachable; Phase 6 will add the `process-comparison` worker.
+// N3 is the sole active pipeline. N1 and N2 have been deprecated and
+// archived to `DELETED CHANGES/n1-deprecated/` and `n2-deprecated/`.
 //
 // `maxDuration` is set high so individual step lambdas have headroom on
 // Vercel Pro. Inngest invokes one step per HTTP call, so this only needs
-// to cover the longest single stage (Sonnet pairing in Stage C).
+// to cover the longest single N3 phase (Sonnet vision in Phase 8).
 // ─────────────────────────────────────────────────────────────────────────
 
 import { serve } from 'inngest/next';
 import { inngest } from '@/lib/inngest/client';
-import { processComparison } from '@/lib/inngest/functions/process-comparison';
-import { processComparisonV2 } from '@/lib/n2/inngest/process-comparison-v2';
 import { processComparisonV3 } from '@/lib/n3/inngest/process-comparison-v3';
 
 export const maxDuration = 300; // seconds — Vercel Pro ceiling
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [processComparison, processComparisonV2, processComparisonV3],
+  functions: [processComparisonV3],
 });

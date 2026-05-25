@@ -78,6 +78,33 @@
   font-size: 16px; color: var(--text-tertiary); margin-left: 4px; line-height: 1;
 }
 
+.formatRow {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 14px;
+}
+.formatLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: left;
+}
+.formatSelect {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  appearance: auto;
+  transition: border-color 0.15s ease;
+}
+.formatSelect:focus { border-color: var(--blue-400); }
+
 .errorText {
   margin: 0 0 14px;
   color: var(--error-text);

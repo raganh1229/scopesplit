@@ -98,6 +98,80 @@
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.renameInput {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.renameInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+.renameInput:disabled { opacity: 0.5; }
+
+.renameActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.renameOkBtn, .renameCxBtn {
+  background: none; border: none; cursor: pointer;
+  width: 22px; height: 22px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  transition: background 0.1s ease, color 0.1s ease;
+}
+.renameOkBtn:hover:not(:disabled) { color: var(--green-600); background: var(--green-50); }
+.renameCxBtn:hover:not(:disabled) { color: var(--red-600); background: var(--red-50); }
+.renameOkBtn:disabled, .renameCxBtn:disabled { opacity: 0.4; cursor: default; }
+
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+.loadMoreBtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 28px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-default);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.loadMoreBtn:hover:not(:disabled) { background: var(--bg-surface); color: var(--text-primary); }
+.loadMoreBtn:disabled { opacity: 0.5; cursor: default; }
+
+@media (max-width: 600px) {
+  .content { padding: 16px; }
+  .tableHead { display: none; }
+  .tableRow {
+    display: flex; flex-direction: column;
+    gap: 4px; padding: 12px 16px;
+    border-bottom: 0.5px solid var(--border-light);
+  }
+  .rowLink {
+    display: flex; flex-direction: column; gap: 4px;
+    grid-column: unset; padding: 0;
+  }
+  .colName { font-size: 14px; font-weight: 500; }
+  .colDate { font-size: 12px; color: var(--text-tertiary); }
+  .colStatus { margin-top: 2px; }
+  .colGap { font-size: 13px; }
+  .colActions { justify-content: flex-end; margin-top: 4px; }
+  .loadMoreBtn { width: 100%; justify-content: center; }
+}
+
 .dropMenu {
   position: absolute; top: 100%; right: 0; z-index: 50;
   min-width: 160px; padding: 4px 0;

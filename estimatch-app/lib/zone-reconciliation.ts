@@ -307,7 +307,7 @@ async function callClaudeForZoneReconciliation(
 
   const { system, user } = buildZoneReconciliationPrompt(yourZones, adjusterZones);
 
-  traceStep('SONNET 1 (ZONE RECONCILIATION) — INPUT', `SYSTEM PROMPT:\n${system}\n\nUSER PROMPT:\n${user}`);
+  traceStep(comparisonId, 'SONNET 1 (ZONE RECONCILIATION) — INPUT', `SYSTEM PROMPT:\n${system}\n\nUSER PROMPT:\n${user}`);
 
   const startMs = Date.now();
   console.log(
@@ -344,7 +344,7 @@ async function callClaudeForZoneReconciliation(
     .map((b) => b.text)
     .join('\n');
 
-  traceStep('SONNET 1 (ZONE RECONCILIATION) — RAW RESPONSE', rawText);
+  traceStep(comparisonId, 'SONNET 1 (ZONE RECONCILIATION) — RAW RESPONSE', rawText);
 
   const elapsedMs = Date.now() - startMs;
   console.log(

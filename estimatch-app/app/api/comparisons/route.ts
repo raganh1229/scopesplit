@@ -4,7 +4,6 @@ import { SubscriptionTier } from '@/app/generated/prisma/client';
 import prisma from '@/lib/prisma';
 import { supabaseAdmin } from '@/lib/supabase';
 import { inngest } from '@/lib/inngest/client';
-import { isN2Eligible } from '@/lib/n2/n2-routing';
 import { isN3Eligible } from '@/lib/n3/n3-routing';
 import { PLAN_COMPARISON_LIMITS } from '@/lib/stripe';
 
@@ -181,7 +180,7 @@ function formatComparisonTitle(comparison: {
   return `${comparison.yourEstimateFilename} vs ${comparison.adjusterEstimateFilename}`;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const { userId: clerkId } = await auth();
 
   if (!clerkId) {
@@ -207,10 +206,15 @@ export async function GET() {
     );
   }
 
-  const comparisons = await prisma.comparison.findMany({
+  const PAGE_SIZE = 50;
+  const url = new URL(request.url);
+  const cursor = url.searchParams.get('cursor') ?? undefined;
+
+  const rows = await prisma.comparison.findMany({
     where: { userId: appUser.id, status: { notIn: ['AWAITING_ZONE_REVIEW', 'AWAITING_MATCH_REVIEW'] } },
     orderBy: { createdAt: 'desc' },
-    take: 50,
+    take: PAGE_SIZE + 1,
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     select: {
       id: true,
       name: true,
@@ -225,6 +229,10 @@ export async function GET() {
     },
   });
 
+  const hasMore = rows.length > PAGE_SIZE;
+  const comparisons = hasMore ? rows.slice(0, PAGE_SIZE) : rows;
+  const nextCursor = hasMore ? comparisons[comparisons.length - 1].id : null;
+
   return NextResponse.json(
     {
       comparisons: comparisons.map((comparison) => ({
@@ -234,6 +242,7 @@ export async function GET() {
         totalGap: comparison.totalGap !== null ? Number(comparison.totalGap) : null,
         createdAt: comparison.createdAt,
       })),
+      nextCursor,
     },
     { status: 200 }
   );
@@ -301,6 +310,7 @@ export async function POST(request: Request) {
   }
 
   const uploadedPaths: string[] = [];
+  let comparison: { id: string; status: string; createdAt: Date } | null = null;
 
   try {
     const usage = await normalizeAndValidateUsage(appUser);
@@ -311,7 +321,7 @@ export async function POST(request: Request) {
     const adjusterUpload = await uploadSingleFile(clerkId, adjusterEstimate);
     uploadedPaths.push(adjusterUpload.storagePath);
 
-    const comparison = await prisma.$transaction(async (tx) => {
+    comparison = await prisma.$transaction(async (tx) => {
       const usageUpdate = await tx.user.updateMany({
         where: {
           id: appUser.id,
@@ -338,6 +348,10 @@ export async function POST(request: Request) {
         );
       }
 
+      const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown']);
+      const yourFmt = formData.get('yourEstimateFormat');
+      const adjFmt = formData.get('adjusterEstimateFormat');
+
       return tx.comparison.create({
         data: {
           userId: appUser.id,
@@ -347,8 +361,10 @@ export async function POST(request: Request) {
           propertyAddress: readOptionalField(formData, 'propertyAddress'),
           yourEstimateFilename: yourUpload.filename,
           yourEstimateStoragePath: yourUpload.storagePath,
+          yourEstimateFormat: typeof yourFmt === 'string' && VALID_FORMATS.has(yourFmt) ? yourFmt : 'xactimate',
           adjusterEstimateFilename: adjusterUpload.filename,
           adjusterEstimateStoragePath: adjusterUpload.storagePath,
+          adjusterEstimateFormat: typeof adjFmt === 'string' && VALID_FORMATS.has(adjFmt) ? adjFmt : 'xactimate',
         },
         select: {
           id: true,
@@ -358,34 +374,18 @@ export async function POST(request: Request) {
       });
     });
 
-    // Route to N3 first, then N2, then N1 (fallback).
-    // N3_ENABLED=true in .env.local activates the global-candidate pipeline.
-    // N2_ENABLED=true activates the zone-first pipeline.
-    if (await isN3Eligible(comparison.id)) {
-      await inngest.send({
-        name: 'comparison/process-v3.requested',
-        data: {
-          comparisonId: comparison.id,
-          trigger: 'create-route',
-        },
-      });
-    } else if (await isN2Eligible(comparison.id)) {
-      await inngest.send({
-        name: 'comparison/process-v2.requested',
-        data: {
-          comparisonId: comparison.id,
-          trigger: 'create-route',
-        },
-      });
-    } else {
-      await inngest.send({
-        name: 'comparison/process.requested',
-        data: {
-          comparisonId: comparison.id,
-          trigger: 'create-route',
-        },
-      });
+    // N3 is the sole active pipeline — always trigger it.
+    // N1 and N2 have been deprecated (archived to DELETED CHANGES/).
+    if (!(await isN3Eligible(comparison.id))) {
+      throw new Error('N3 pipeline is not eligible for this comparison. Ensure N3_ENABLED=true.');
     }
+    await inngest.send({
+      name: 'comparison/process-v3.requested',
+      data: {
+        comparisonId: comparison.id,
+        trigger: 'create-route',
+      },
+    });
 
     return NextResponse.json(
       {
@@ -400,6 +400,14 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (error instanceof UsageLimitError) {
+      if (uploadedPaths.length > 0) {
+        const { error: cleanupError } = await supabaseAdmin.storage
+          .from(ESTIMATES_BUCKET)
+          .remove(uploadedPaths);
+        if (cleanupError) {
+          console.error('Failed to cleanup uploaded files after usage limit error:', cleanupError);
+        }
+      }
       return NextResponse.json(
         {
           error: error.message,
@@ -419,6 +427,22 @@ export async function POST(request: Request) {
 
       if (cleanupError) {
         console.error('Failed to cleanup uploaded files after comparison error:', cleanupError);
+      }
+    }
+
+    if (comparison) {
+      try {
+        await prisma.comparison.delete({ where: { id: comparison.id } });
+      } catch (deleteErr) {
+        console.error('[COMPARISON-CREATE] Failed to delete zombie comparison:', comparison.id, deleteErr);
+      }
+      try {
+        await prisma.user.update({
+          where: { id: appUser.id },
+          data: { comparisonsUsedThisPeriod: { decrement: 1 } },
+        });
+      } catch (decrementErr) {
+        console.error('[COMPARISON-CREATE] Failed to decrement usage after inngest failure:', decrementErr);
       }
     }
 

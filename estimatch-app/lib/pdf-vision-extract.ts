@@ -376,6 +376,37 @@ function haikuItemToLineRecord(item: HaikuItem, lineNumber: number): ExtractedLi
   };
 }
 
+// ── Pre-flight: numbered item detection ───────────────────────────────────────
+
+/**
+ * Returns true if the PDF appears to contain numbered line items (e.g. "1.", "247.").
+ * Uses pdf-parse text extraction — cheap, no API call required.
+ *
+ * Returns true (don't block) when:
+ *   - pdf-parse fails (encrypted / scanned PDF — let vision handle it)
+ *   - Extracted text is too short to be reliable (<200 chars — likely scanned)
+ *   - At least 3 numbered item patterns are found
+ *
+ * Returns false (block + throw) only when text is extractable AND has no numbered items.
+ */
+async function hasNumberedLineItems(pdfBytes: Buffer): Promise<boolean> {
+  try {
+    const pdfParseModule = (await import('pdf-parse')) as unknown as {
+      default: (buf: Buffer) => Promise<{ text: string }>;
+    };
+    const result = await pdfParseModule.default(pdfBytes);
+    const text = result.text ?? '';
+    // Scanned / image-only PDF — let vision handle it
+    if (text.trim().length < 200) return true;
+    // Match patterns like "1. Remove" or "247. R&R" — digit(s) + period + space + letter/$
+    const matches = text.match(/\b[1-9]\d{0,3}\.\s{1,4}[A-Za-z$]/g) ?? [];
+    return matches.length >= 3;
+  } catch {
+    // pdf-parse failure is non-fatal — let vision attempt extraction
+    return true;
+  }
+}
+
 // ── Gap detection ─────────────────────────────────────────────────────────────
 
 /**
@@ -418,6 +449,16 @@ export async function extractWithVision(
   const pdfBase64 = pdfBytes.toString('base64');
   const tag = `[comparison:${context.comparisonId}]`;
 
+  // ── Pre-flight: confirm PDF contains numbered line items before calling Haiku ─
+  const numberedItemsFound = await hasNumberedLineItems(pdfBytes);
+  if (!numberedItemsFound) {
+    throw new Error(
+      `[VisionExtract] Pre-flight failed (${context.side}): this PDF does not appear to contain ` +
+      `numbered line items (e.g. "1.", "2.", "247."). Xactimate estimates include numbered items ` +
+      `by default — please ensure your estimate is exported with line item numbering enabled and re-upload.`
+    );
+  }
+
   // First extraction call
   const { text, truncated } = await callHaikuExtraction(
     pdfBase64,
@@ -425,7 +466,7 @@ export async function extractWithVision(
     context
   );
 
-  traceStep(`HAIKU RAW RESPONSE — ${context.side.toUpperCase()}`, text);
+  traceStep(context.comparisonId, `HAIKU RAW RESPONSE — ${context.side.toUpperCase()}`, text);
 
   const firstResult = parseHaikuResponse(text);
   let allItems = firstResult.items;
