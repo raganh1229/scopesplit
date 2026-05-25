@@ -26,8 +26,8 @@ export default function NewComparisonPage() {
   const [comparisonName, setComparisonName] = useState('');
   const [file1, setFile1] = useState<File | null>(null);
   const [file2, setFile2] = useState<File | null>(null);
-  const [format1, setFormat1] = useState<string>('xactimate');
-  const [format2, setFormat2] = useState<string>('xactimate');
+  const [format1, setFormat1] = useState<string>('');
+  const [format2, setFormat2] = useState<string>('');
   const [processing, setProcessing] = useState(false);
   const [pendingComparisonId, setPendingComparisonId] = useState<string | null>(null);
   const [progressPercent, setProgressPercent] = useState(0);
@@ -71,6 +71,11 @@ export default function NewComparisonPage() {
 
     if (!file1 || !file2) {
       setErrorMessage('Please upload both PDF files before comparing.');
+      return;
+    }
+
+    if (!format1 || !format2) {
+      setErrorMessage('Please select the estimate format for both files.');
       return;
     }
 
@@ -224,7 +229,7 @@ export default function NewComparisonPage() {
           <>
             <div className={styles.header}>
               <h1>New Comparison</h1>
-              <p>Upload two Xactimate PDF estimates to compare them side by side.</p>
+              <p>Upload two insurance estimate PDFs to compare them side by side.</p>
             </div>
             <div className={styles.nameField}>
               <label className={styles.nameLabel} htmlFor="comparison-name">Comparison Name</label>
@@ -262,8 +267,9 @@ export default function NewComparisonPage() {
                   </>
                 )}
                 <div className={styles.formatRow}>
-                  <label className={styles.formatLabel} htmlFor="format1">Estimate format</label>
+                  <label className={styles.formatLabel} htmlFor="format1">Estimate format <span style={{ color: 'var(--error-text)' }}>*</span></label>
                   <select id="format1" className={styles.formatSelect} value={format1} onChange={e => setFormat1(e.target.value)}>
+                    <option value="" disabled>Select format...</option>
                     <option value="xactimate">Xactimate</option>
                     <option value="symbility">Symbility</option>
                   </select>
@@ -291,8 +297,9 @@ export default function NewComparisonPage() {
                   </>
                 )}
                 <div className={styles.formatRow}>
-                  <label className={styles.formatLabel} htmlFor="format2">Estimate format</label>
+                  <label className={styles.formatLabel} htmlFor="format2">Estimate format <span style={{ color: 'var(--error-text)' }}>*</span></label>
                   <select id="format2" className={styles.formatSelect} value={format2} onChange={e => setFormat2(e.target.value)}>
+                    <option value="" disabled>Select format...</option>
                     <option value="xactimate">Xactimate</option>
                     <option value="symbility">Symbility</option>
                   </select>
@@ -302,7 +309,7 @@ export default function NewComparisonPage() {
 
             {errorMessage ? <p className={styles.errorText}>{errorMessage}</p> : null}
 
-            <button className={styles.compareBtn} disabled={!(comparisonName.trim() && file1 && file2)} onClick={handleCompare}>
+            <button className={styles.compareBtn} disabled={!(comparisonName.trim() && file1 && file2 && format1 && format2)} onClick={handleCompare}>
               <svg viewBox="0 0 24 24" width="18" height="18"><polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" /></svg>
               Compare Estimates
             </button>

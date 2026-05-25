@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { supabaseAdmin } from '@/lib/supabase';
 import { inngest } from '@/lib/inngest/client';
 import { isN3Eligible } from '@/lib/n3/n3-routing';
+import { isN4Enabled } from '@/lib/n4/n4-routing';
 import { PLAN_COMPARISON_LIMITS } from '@/lib/stripe';
 
 // Vercel serverless runtime cap. This POST handler uploads files and triggers
@@ -321,6 +322,10 @@ export async function POST(request: Request) {
     const adjusterUpload = await uploadSingleFile(clerkId, adjusterEstimate);
     uploadedPaths.push(adjusterUpload.storagePath);
 
+    const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown']);
+    const yourFmt = formData.get('yourEstimateFormat');
+    const adjFmt  = formData.get('adjusterEstimateFormat');
+
     comparison = await prisma.$transaction(async (tx) => {
       const usageUpdate = await tx.user.updateMany({
         where: {
@@ -348,10 +353,6 @@ export async function POST(request: Request) {
         );
       }
 
-      const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown']);
-      const yourFmt = formData.get('yourEstimateFormat');
-      const adjFmt = formData.get('adjusterEstimateFormat');
-
       return tx.comparison.create({
         data: {
           userId: appUser.id,
@@ -374,18 +375,35 @@ export async function POST(request: Request) {
       });
     });
 
-    // N3 is the sole active pipeline — always trigger it.
-    // N1 and N2 have been deprecated (archived to DELETED CHANGES/).
-    if (!(await isN3Eligible(comparison.id))) {
-      throw new Error('N3 pipeline is not eligible for this comparison. Ensure N3_ENABLED=true.');
+    // Route to N4 when: flag is on OR either side uses a non-Xactimate format.
+    // N4 supports Xactimate, Symbility, and future formats via plug-and-play extractors.
+    // N3 remains the fallback for pure Xactimate-Xactimate comparisons.
+    const resolvedYourFmt  = typeof yourFmt  === 'string' && VALID_FORMATS.has(yourFmt)  ? yourFmt  : 'xactimate';
+    const resolvedAdjFmt   = typeof adjFmt   === 'string' && VALID_FORMATS.has(adjFmt)   ? adjFmt   : 'xactimate';
+    const useN4 = isN4Enabled()
+      || resolvedYourFmt  !== 'xactimate'
+      || resolvedAdjFmt   !== 'xactimate';
+
+    if (useN4) {
+      await inngest.send({
+        name: 'comparison/process-v4.requested',
+        data: {
+          comparisonId: comparison.id,
+          trigger: 'create-route',
+        },
+      });
+    } else {
+      if (!(await isN3Eligible(comparison.id))) {
+        throw new Error('N3 pipeline is not eligible for this comparison. Ensure N3_ENABLED=true.');
+      }
+      await inngest.send({
+        name: 'comparison/process-v3.requested',
+        data: {
+          comparisonId: comparison.id,
+          trigger: 'create-route',
+        },
+      });
     }
-    await inngest.send({
-      name: 'comparison/process-v3.requested',
-      data: {
-        comparisonId: comparison.id,
-        trigger: 'create-route',
-      },
-    });
 
     return NextResponse.json(
       {
