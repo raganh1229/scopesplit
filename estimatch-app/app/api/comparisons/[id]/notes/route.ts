@@ -104,6 +104,11 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ error: 'Content must be 2000 characters or less.' }, { status: 400 });
     }
 
+    const noteCount = await prisma.comparisonNote.count({ where: { comparisonId: id } });
+    if (noteCount >= 500) {
+      return NextResponse.json({ error: 'Note limit reached for this comparison (500 max).' }, { status: 422 });
+    }
+
     const lineItemId = body.lineItemId ?? null;
 
     if (lineItemId) {

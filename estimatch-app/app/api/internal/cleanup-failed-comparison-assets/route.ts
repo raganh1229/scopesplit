@@ -85,6 +85,14 @@ export async function POST(request: Request) {
       }
     }
 
+    try {
+      await prisma.comparison.delete({ where: { id: comparison.id } });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      result.errors.push(`DB delete failed: ${message}`);
+      console.error(`[CLEANUP-FAILED] DB delete error for ${comparison.id}:`, message);
+    }
+
     results.push(result);
   }
 

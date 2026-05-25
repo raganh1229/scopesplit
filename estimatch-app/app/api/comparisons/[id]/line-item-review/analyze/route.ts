@@ -129,7 +129,11 @@ ${userDescription}
 Analyze the extraction results and return JSON.`;
 
   const apiKey = getApiKey();
-  const response = await fetch(ANTHROPIC_API_URL, {
+  const abortController = new AbortController();
+  const timeoutHandle = setTimeout(() => abortController.abort(), 25_000);
+  let response: Response;
+  try {
+    response = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -143,7 +147,18 @@ Analyze the extraction results and return JSON.`;
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: userMessage }],
     }),
+    signal: abortController.signal,
   });
+  } catch (err) {
+    clearTimeout(timeoutHandle);
+    const isAbort = (err as { name?: string })?.name === 'AbortError';
+    return NextResponse.json(
+      { error: isAbort ? 'AI service timed out. Please try again.' : 'Failed to reach AI service.' },
+      { status: isAbort ? 504 : 502 },
+    );
+  } finally {
+    clearTimeout(timeoutHandle);
+  }
 
   if (!response.ok) {
     return NextResponse.json(

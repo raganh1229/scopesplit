@@ -143,6 +143,28 @@
   /* Typography */
   --font-stack: 'Inter Local', 'Inter', 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Gilroy Local', 'Avenir Next', 'Segoe UI', sans-serif;
+
+  /* ── Aliases (compat shims for components) ── */
+  --border-color: var(--border-default);
+  --surface-secondary: var(--bg-surface);
+  --text-danger: var(--error-text);
+  --danger-color: var(--red-400);
+  --border-focus: var(--blue-400);
+  --foreground: var(--text-primary);
+  --background: var(--bg-page);
+
+  /* ── Missing intermediate color shades ── */
+  --blue-300: #62AAE9;
+  --amber-500: #CF8A12;
+  --amber-700: #6B400C;
+  --yellow-50: #FEFCE8;
+  --yellow-100: #FEF9C3;
+  --yellow-700: #A16207;
+  --green-700: #2F5E10;
+  --red-500: #D14241;
+  --red-700: #8C2727;
+  --teal-50: #E1F5EE;
+  --teal-800: #085041;
 }
 
 /* ============================================
@@ -259,6 +281,19 @@
   --btn-primary-bg: #E5E3DE;
   --btn-primary-text: #171717;
   --btn-primary-hover: #D5D3CE;
+
+  /* ── Missing intermediate color shades (dark mode) ── */
+  --blue-300: #78BAF5;
+  --amber-500: #DFA027;
+  --amber-700: #FAC775;
+  --yellow-50: #2A2116;
+  --yellow-100: #3A2E18;
+  --yellow-700: #E8A83C;
+  --green-700: #7DB83A;
+  --red-500: #E55C5B;
+  --red-700: #F09595;
+  --teal-50: #0D2B22;
+  --teal-800: #5ECFB0;
 }
 
 /* ---- Base Reset ---- */

@@ -235,13 +235,23 @@ export async function persistDecisionsN3(
     // For grouped decisions, collapse adj items into a summary adj description
     let adjDesc: string | null = adj?.rawDescription ?? null;
     let adjQty:  string | null = adj ? formatQty(adj.normalizedQuantity, adj.normalizedUnit) : null;
+    let groupedAdjTotal: number | null = null;
     if (decision.decisionType === 'grouped' && decision.adjusterItemIds.length > 1) {
       const adjItems = decision.adjusterItemIds.map(id => itemMap.get(id)).filter(Boolean) as NonNullable<ReturnType<typeof itemMap.get>>[];
       adjDesc = adjItems.map(a => a.rawDescription).join(' + ');
       adjQty  = adjItems.map(a => formatQty(a.normalizedQuantity, a.normalizedUnit)).filter(Boolean).join(' + ');
-      const adjTotal = adjItems.reduce((s, a) => s + toNum(a.totalAmount), 0);
-      totalAdjAcc += adjTotal - totalAdj;  // replace single adj total with combined
+      groupedAdjTotal = adjItems.reduce((s, a) => s + toNum(a.totalAmount), 0);
+      totalAdjAcc += groupedAdjTotal - totalAdj;  // replace single adj total with combined
     }
+
+    const rowTotalAdj = groupedAdjTotal !== null ? groupedAdjTotal : (adj ? totalAdj : null);
+    const rowDiffAmount: number | null = matchStatus === 'MATCH_UNVERIFIED'
+      ? null
+      : rowTotalAdj !== null && yours
+        ? rowTotalAdj - totalYours
+        : rowTotalAdj !== null ? rowTotalAdj
+        : yours ? -totalYours
+        : 0;
 
     rows.push({
       comparisonId,
@@ -267,8 +277,8 @@ export async function persistDecisionsN3(
       opYours:  toDecimalOrNull(yours?.opAmount),
       opAdjuster: toDecimalOrNull(adj?.opAmount),
       totalYours:  toDecimalOrNull(yours?.totalAmount),
-      totalAdjuster: toDecimalOrNull(adj?.totalAmount),
-      diffAmount:  diffAmount !== null ? Number(diffAmount.toFixed(2)) : null,
+      totalAdjuster: rowTotalAdj !== null ? Number(rowTotalAdj.toFixed(2)) : null,
+      diffAmount:  rowDiffAmount !== null ? Number(rowDiffAmount.toFixed(2)) : null,
       category:   null,
       sortOrder:  sortOrder++,
       groupId:    null,

@@ -1,3 +1,7 @@
+// Vercel serverless runtime cap. Must be >= the max expected wall-clock time
+// for MAX_TOOL_ROUNDS (6) × one Anthropic call (~8s each) + forced fallback.
+export const maxDuration = 60;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/comparisons/[id]/zone-correction
 //

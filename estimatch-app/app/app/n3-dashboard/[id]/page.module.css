@@ -7,15 +7,15 @@
   margin: 0 auto;
   font-family: ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 13px;
-  color: var(--foreground, #111);
-  background: var(--background, #fff);
+  color: var(--text-primary);
+  background: var(--bg-page);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid var(--border-default);
   padding-bottom: 12px;
   margin-bottom: 24px;
 }
@@ -28,15 +28,15 @@
 
 .headerMeta {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .section {
   margin: 32px 0;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-default);
   border-radius: 4px;
   padding: 16px;
-  background: #fafafa;
+  background: var(--bg-surface);
 }
 
 .sectionHeader {
@@ -45,7 +45,7 @@
   gap: 12px;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-default);
 }
 
 .sectionHeader h2 {
@@ -62,19 +62,19 @@
   border-radius: 50%;
 }
 
-.statusGreen  { background: #16a34a; }
-.statusYellow { background: #eab308; }
-.statusRed    { background: #dc2626; }
+.statusGreen  { background: var(--green-600); }
+.statusYellow { background: var(--amber-400); }
+.statusRed    { background: var(--red-400); }
 
 .headline {
-  color: #555;
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
 .flags {
   margin: 8px 0 0;
   padding-left: 20px;
-  color: #b45309;
+  color: var(--amber-600);
   font-size: 12px;
 }
 .flags li { margin: 2px 0; }
@@ -86,16 +86,16 @@
 }
 
 .healthCard {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-default);
   border-radius: 4px;
   padding: 8px 10px;
-  background: #fff;
+  background: var(--bg-primary);
   font-size: 12px;
 }
 
-.healthCard.green  { border-left: 4px solid #16a34a; }
-.healthCard.yellow { border-left: 4px solid #eab308; }
-.healthCard.red    { border-left: 4px solid #dc2626; }
+.healthCard.green  { border-left: 4px solid var(--green-600); }
+.healthCard.yellow { border-left: 4px solid var(--amber-400); }
+.healthCard.red    { border-left: 4px solid var(--red-400); }
 
 .healthCard .label {
   font-weight: 700;
@@ -103,12 +103,12 @@
 }
 
 .healthCard .head {
-  color: #444;
+  color: var(--text-secondary);
 }
 
 .healthCard .flag {
   display: block;
-  color: #b45309;
+  color: var(--amber-600);
   font-size: 11px;
   margin-top: 2px;
 }
@@ -123,11 +123,11 @@
 .kv {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px dotted #ddd;
+  border-bottom: 1px dotted var(--border-subtle);
   padding: 2px 0;
 }
 
-.kv .key   { color: #666; }
+.kv .key   { color: var(--text-secondary); }
 .kv .value { font-weight: 600; }
 
 .table {
@@ -139,13 +139,13 @@
 
 .table th, .table td {
   padding: 4px 8px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-subtle);
   text-align: left;
   vertical-align: top;
 }
 
 .table th {
-  background: #f0f0f0;
+  background: var(--bg-surface);
   font-weight: 700;
   position: sticky;
   top: 0;
@@ -155,7 +155,7 @@
 
 .bar {
   display: inline-block;
-  background: #4f46e5;
+  background: var(--blue-400);
   height: 10px;
   vertical-align: middle;
   border-radius: 2px;
@@ -170,35 +170,35 @@
   margin: 2px 0;
 }
 
-.histogramRow .label { color: #666; }
+.histogramRow .label { color: var(--text-secondary); }
 .histogramRow .count { text-align: right; font-variant-numeric: tabular-nums; }
 
 .featureTable.table th, .featureTable.table td { font-size: 11px; }
 
-.featureTable .deadFeature { background: #fef2f2; }
-.featureTable .strongFeature { background: #f0fdf4; }
+.featureTable .deadFeature { background: var(--red-50); }
+.featureTable .strongFeature { background: var(--green-50); }
 
 .confusionMatrix {
   display: grid;
   grid-template-columns: 120px 100px 100px;
   gap: 1px;
-  background: #ddd;
+  background: var(--border-default);
   margin: 8px 0;
   width: max-content;
 }
 
 .confusionMatrix > div {
-  background: #fff;
+  background: var(--bg-primary);
   padding: 8px 12px;
 }
 
 .confusionMatrix .header {
   font-weight: 700;
-  background: #f0f0f0;
+  background: var(--bg-surface);
 }
 
 .confusionMatrix .diag {
-  background: #f0fdf4;
+  background: var(--green-50);
 }
 
 .decisionTable.table {
@@ -213,16 +213,16 @@
 
 .errorBox {
   padding: 16px;
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
   border-radius: 4px;
-  color: #991b1b;
+  color: var(--error-text);
 }
 
 .backLink {
   display: inline-block;
   margin-bottom: 16px;
-  color: #4f46e5;
+  color: var(--blue-400);
   text-decoration: none;
   font-size: 13px;
 }
@@ -237,9 +237,9 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.tag.match    { background: #dcfce7; color: #166534; }
-.tag.modified { background: #fef3c7; color: #854d0e; }
-.tag.unmatched { background: #fee2e2; color: #991b1b; }
-.tag.grouped { background: #dbeafe; color: #1e40af; }
-.tag.possible { background: #fef9c3; color: #713f12; }
-.tag.one_to_one { background: #dcfce7; color: #166534; }
+.tag.match     { background: var(--green-100); color: var(--green-800); }
+.tag.modified  { background: var(--amber-100); color: var(--amber-800); }
+.tag.unmatched { background: var(--red-100);   color: var(--red-800); }
+.tag.grouped   { background: var(--blue-100);  color: var(--blue-800); }
+.tag.possible  { background: var(--yellow-100); color: var(--amber-700); }
+.tag.one_to_one { background: var(--green-100); color: var(--green-800); }

@@ -43,7 +43,7 @@
   outline: none;
 }
 .headerRenameInput:focus {
-  border-color: #3b82f6;
+  border-color: var(--blue-400);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
 }
 .headerRenameInput:disabled { opacity: 0.5; }
@@ -520,7 +520,7 @@
   margin: 8px 0 0;
   font-size: 12px;
   line-height: 1.4;
-  color: #dc2626;
+  color: var(--error-text);
   font-weight: 500;
 }
 
@@ -1120,7 +1120,7 @@
   padding: 0 16px;
   border-radius: 8px;
   border: none;
-  background: #dc2626;
+  background: var(--red-400);
   color: #fff;
   font-family: var(--font-stack);
   font-size: 13px;

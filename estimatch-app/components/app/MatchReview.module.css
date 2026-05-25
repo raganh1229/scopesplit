@@ -85,7 +85,7 @@
 }
 
 .rowLowConf {
-  background: #fef9c3;
+  background: var(--yellow-100);
 }
 
 [data-theme='dark'] .rowLowConf {
@@ -147,16 +147,16 @@
   align-items: flex-start;
   gap: 10px;
   padding: 12px 14px;
-  background: #fffbeb;
-  border: 1px solid #f59e0b;
+  background: var(--amber-50);
+  border: 1px solid var(--amber-400);
   border-radius: 8px;
   font-size: 13px;
-  color: #78350f;
+  color: var(--amber-700);
 }
 
 .warnIcon {
   flex-shrink: 0;
-  color: #d97706;
+  color: var(--amber-600);
   margin-top: 1px;
 }
 
@@ -173,7 +173,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #92400e;
+  color: var(--amber-700);
   font-size: 13px;
   padding: 2px 4px;
   border-radius: 4px;

@@ -89,8 +89,9 @@ export async function POST(request: Request, context: RouteContext) {
           typeof (r as ZoneRename).newCanonical === 'string'
       )
     : [];
-  if (!body || (inlineEdits.length === 0 && inlineInserts.length === 0 && zoneRenames.length === 0)) {
-    return NextResponse.json({ error: 'A non-empty "edits", "inserts", or "zoneRenames" array is required.' }, { status: 400 });
+  const hasDeletions = Array.isArray(body?.deletions) && body.deletions.length > 0;
+  if (!body || (inlineEdits.length === 0 && inlineInserts.length === 0 && zoneRenames.length === 0 && !hasDeletions)) {
+    return NextResponse.json({ error: 'A non-empty "edits", "inserts", "zoneRenames", or "deletions" array is required.' }, { status: 400 });
   }
 
   const comparison = await prisma.comparison.findFirst({
