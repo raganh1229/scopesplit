@@ -1,0 +1,2201 @@
+{
+  "comparisonId": "4e91ef6b-2894-4b20-8318-a38f84508807",
+  "generatedAt": "2026-05-25T23:48:32.104Z",
+  "health": [
+    {
+      "phase": "p4",
+      "label": "Zones",
+      "status": "green",
+      "headline": "9 yours · 9 adj",
+      "flags": []
+    },
+    {
+      "phase": "p6",
+      "label": "Corresps",
+      "status": "green",
+      "headline": "9 corresps · 0 unmatched",
+      "flags": []
+    },
+    {
+      "phase": "p8",
+      "label": "Extract",
+      "status": "green",
+      "headline": "119 + 118 = 237 items",
+      "flags": []
+    },
+    {
+      "phase": "p9",
+      "label": "Normalize",
+      "status": "green",
+      "headline": "100% qty · 78% trade",
+      "flags": []
+    },
+    {
+      "phase": "p11",
+      "label": "Embed",
+      "status": "green",
+      "headline": "237/237 embedded",
+      "flags": []
+    },
+    {
+      "phase": "p12",
+      "label": "Candidates",
+      "status": "green",
+      "headline": "4758 edges",
+      "flags": []
+    },
+    {
+      "phase": "p13",
+      "label": "Score",
+      "status": "yellow",
+      "headline": "57 hi · 206 pos · 1637 weak · 2858 rej",
+      "flags": [
+        "581 edges within 0.02 of REJECT — fragile",
+        "dead/weak features: specialFlagCompatibility, materialObjectSimilarity, itemCodeSimilarity"
+      ]
+    },
+    {
+      "phase": "p14",
+      "label": "Components",
+      "status": "green",
+      "headline": "2 components · largest=235",
+      "flags": []
+    },
+    {
+      "phase": "p15",
+      "label": "Assign",
+      "status": "green",
+      "headline": "112 matched · 0 possible · 7 unmatched",
+      "flags": []
+    },
+    {
+      "phase": "p16",
+      "label": "Group",
+      "status": "green",
+      "headline": "0 groups",
+      "flags": []
+    },
+    {
+      "phase": "p17",
+      "label": "LLM",
+      "status": "green",
+      "headline": "1 acc · 5 rej · $0.0109",
+      "flags": []
+    },
+    {
+      "phase": "p18",
+      "label": "Persist",
+      "status": "green",
+      "headline": "125 items · gap $-15714.00",
+      "flags": []
+    }
+  ],
+  "p4": {
+    "yoursZoneCount": 9,
+    "adjZoneCount": 9,
+    "yoursFormat": null,
+    "adjFormat": null,
+    "yoursPagesCovered": 9,
+    "adjPagesCovered": 3,
+    "emptyZones": 0,
+    "oversizedZones": 0,
+    "flatZones": 0,
+    "zones": [
+      {
+        "side": "adjuster",
+        "name": ">> PROJECT GENERAL REQUIREMENTS",
+        "startPage": 1,
+        "endPage": 1,
+        "approxItems": 11
+      },
+      {
+        "side": "adjuster",
+        "name": ">> KITCHEN & BREAKFAST NOOK",
+        "startPage": 1,
+        "endPage": 1,
+        "approxItems": 19
+      },
+      {
+        "side": "adjuster",
+        "name": ">> MAIN LIVING AREA",
+        "startPage": 1,
+        "endPage": 2,
+        "approxItems": 20
+      },
+      {
+        "side": "adjuster",
+        "name": ">> DINING & ENTERTAINING AREA",
+        "startPage": 2,
+        "endPage": 2,
+        "approxItems": 13
+      },
+      {
+        "side": "adjuster",
+        "name": ">> GREAT ROOM",
+        "startPage": 2,
+        "endPage": 2,
+        "approxItems": 13
+      },
+      {
+        "side": "adjuster",
+        "name": ">> PRIMARY BEDROOM SUITE",
+        "startPage": 2,
+        "endPage": 3,
+        "approxItems": 19
+      },
+      {
+        "side": "adjuster",
+        "name": ">> PRIMARY BATH",
+        "startPage": 3,
+        "endPage": 3,
+        "approxItems": 7
+      },
+      {
+        "side": "adjuster",
+        "name": ">> ENTRY CORRIDOR & STAIRS",
+        "startPage": 3,
+        "endPage": 3,
+        "approxItems": 8
+      },
+      {
+        "side": "adjuster",
+        "name": ">> GUEST BEDROOM",
+        "startPage": 3,
+        "endPage": 3,
+        "approxItems": 8
+      },
+      {
+        "side": "yours",
+        "name": "GENERAL CONDITIONS",
+        "startPage": 2,
+        "endPage": 3,
+        "approxItems": 11
+      },
+      {
+        "side": "yours",
+        "name": "KITCHEN",
+        "startPage": 3,
+        "endPage": 4,
+        "approxItems": 20
+      },
+      {
+        "side": "yours",
+        "name": "LIVING ROOM",
+        "startPage": 4,
+        "endPage": 5,
+        "approxItems": 19
+      },
+      {
+        "side": "yours",
+        "name": "DINING ROOM",
+        "startPage": 5,
+        "endPage": 6,
+        "approxItems": 13
+      },
+      {
+        "side": "yours",
+        "name": "FAMILY ROOM",
+        "startPage": 6,
+        "endPage": 7,
+        "approxItems": 13
+      },
+      {
+        "side": "yours",
+        "name": "MASTER BEDROOM",
+        "startPage": 7,
+        "endPage": 8,
+        "approxItems": 19
+      },
+      {
+        "side": "yours",
+        "name": "MASTER BATHROOM",
+        "startPage": 8,
+        "endPage": 8,
+        "approxItems": 8
+      },
+      {
+        "side": "yours",
+        "name": "HALLWAY & STAIRWAY",
+        "startPage": 8,
+        "endPage": 9,
+        "approxItems": 8
+      },
+      {
+        "side": "yours",
+        "name": "SECONDARY BEDROOM",
+        "startPage": 9,
+        "endPage": 10,
+        "approxItems": 8
+      }
+    ]
+  },
+  "p6": {
+    "correspondenceCount": 9,
+    "unmatchedYoursZones": 0,
+    "unmatchedAdjZones": 0,
+    "avgConfidence": 0.9222222222222223,
+    "byType": {
+      "one_to_one": 9,
+      "one_to_many": 0,
+      "many_to_one": 0
+    },
+    "correspondences": [
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "GENERAL CONDITIONS"
+        ],
+        "adjZones": [
+          ">> PROJECT GENERAL REQUIREMENTS"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "KITCHEN"
+        ],
+        "adjZones": [
+          ">> KITCHEN & BREAKFAST NOOK"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.9,
+        "yoursZones": [
+          "LIVING ROOM"
+        ],
+        "adjZones": [
+          ">> MAIN LIVING AREA"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "DINING ROOM"
+        ],
+        "adjZones": [
+          ">> DINING & ENTERTAINING AREA"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.85,
+        "yoursZones": [
+          "FAMILY ROOM"
+        ],
+        "adjZones": [
+          ">> GREAT ROOM"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "MASTER BEDROOM"
+        ],
+        "adjZones": [
+          ">> PRIMARY BEDROOM SUITE"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "MASTER BATHROOM"
+        ],
+        "adjZones": [
+          ">> PRIMARY BATH"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.9,
+        "yoursZones": [
+          "HALLWAY & STAIRWAY"
+        ],
+        "adjZones": [
+          ">> ENTRY CORRIDOR & STAIRS"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.9,
+        "yoursZones": [
+          "SECONDARY BEDROOM"
+        ],
+        "adjZones": [
+          ">> GUEST BEDROOM"
+        ]
+      }
+    ]
+  },
+  "p8": {
+    "yoursItemCount": 119,
+    "adjItemCount": 118,
+    "totalItems": 237,
+    "itemsPerZone": {
+      "min": 7,
+      "median": 13,
+      "max": 20
+    },
+    "avgExtractionConfidence": 1,
+    "itemsMissingTotal": 0,
+    "itemsMissingQuantity": 0,
+    "itemsLowConfidence": 0,
+    "yoursTotalAmount": 110616.69999999998,
+    "adjTotalAmount": 94902.7,
+    "estimateGap": -15713.999999999985
+  },
+  "p9": {
+    "totalRows": 237,
+    "pctWithQuantity": 1,
+    "pctWithUnit": 1,
+    "pctWithTrade": 0.7848101265822784,
+    "pctWithAction": 0.4430379746835443,
+    "pctWithSpecialFlags": 0.02109704641350211,
+    "distinctTrades": 13,
+    "distinctActions": 7,
+    "topTrades": [
+      {
+        "value": "drywall",
+        "count": 40
+      },
+      {
+        "value": "painting",
+        "count": 34
+      },
+      {
+        "value": "doors_windows",
+        "count": 30
+      },
+      {
+        "value": "flooring",
+        "count": 28
+      },
+      {
+        "value": "cleaning",
+        "count": 14
+      }
+    ],
+    "topActions": [
+      {
+        "value": "remove_replace",
+        "count": 62
+      },
+      {
+        "value": "paint",
+        "count": 27
+      },
+      {
+        "value": "replace",
+        "count": 5
+      },
+      {
+        "value": "remove",
+        "count": 4
+      },
+      {
+        "value": "install",
+        "count": 4
+      }
+    ],
+    "topFlags": [
+      {
+        "value": "permit",
+        "count": 4
+      },
+      {
+        "value": "emergency_service",
+        "count": 1
+      }
+    ]
+  },
+  "p11": {
+    "totalRows": 237,
+    "embedded": 237,
+    "missing": 0,
+    "pctEmbedded": 1
+  },
+  "p12": {
+    "totalEdges": 4758,
+    "bySource": {
+      "ai_proposed_zone": 1764,
+      "semantic": 2399,
+      "fuzzy_description": 1372,
+      "total_similarity": 1098
+    },
+    "itemsWithZeroCandidates": 0,
+    "yoursCandidatesHistogram": [
+      0,
+      0,
+      0,
+      8,
+      111
+    ],
+    "adjCandidatesHistogram": [
+      0,
+      0,
+      0,
+      19,
+      99
+    ],
+    "avgCandidatesPerYours": 39.983193277310924,
+    "avgCandidatesPerAdj": 40.32203389830509
+  },
+  "p13": {
+    "scoredCount": 4758,
+    "bucketCounts": {
+      "highConfidence": 57,
+      "possibleMatch": 206,
+      "weakCandidate": 1637,
+      "rejected": 2858
+    },
+    "survivalRate": 0.39932744850777635,
+    "scoreHistogram": [
+      595,
+      998,
+      1265,
+      917,
+      564,
+      221,
+      115,
+      52,
+      27,
+      4
+    ],
+    "featureStats": [
+      {
+        "name": "unitPriceSimilarity",
+        "weight": 0.06,
+        "meanAll": 0.3397163956713386,
+        "meanHighConf": 0.9772368725444917,
+        "meanRejected": 0.19972062417364256,
+        "std": 0.3435389577344254,
+        "min": 0.00030270270270270274,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.020382983740280317,
+        "discriminativePower": 0.7775162483708491
+      },
+      {
+        "name": "quantityUnitSimilarity",
+        "weight": 0.12,
+        "meanAll": 0.4207610797153849,
+        "meanHighConf": 0.9883149566382416,
+        "meanRejected": 0.2578522680759566,
+        "std": 0.4087040419630492,
+        "min": 0.00017857142857142857,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.050491329565846184,
+        "discriminativePower": 0.730462688562285
+      },
+      {
+        "name": "zoneCorrespondenceSimilarity",
+        "weight": 0.09,
+        "meanAll": 0.34331651954603654,
+        "meanHighConf": 0.9192982456140358,
+        "meanRejected": 0.20467109867039845,
+        "std": 0.4477284842065498,
+        "min": 0,
+        "max": 0.95,
+        "pctZero": 0.6292559899117276,
+        "weightedContribAll": 0.030898486759143286,
+        "discriminativePower": 0.7146271469436374
+      },
+      {
+        "name": "tradeActionSimilarity",
+        "weight": 0.14,
+        "meanAll": 0.13955443463640388,
+        "meanHighConf": 0.6771929824561409,
+        "meanRejected": 0.023442967109867065,
+        "std": 0.2755772173684669,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.7860445565363599,
+        "weightedContribAll": 0.019537620849096545,
+        "discriminativePower": 0.6537500153462739
+      },
+      {
+        "name": "descriptionFuzzySimilarity",
+        "weight": 0.23,
+        "meanAll": 0.07493910332813203,
+        "meanHighConf": 0.5080092909040278,
+        "meanRejected": 0.0289321459195498,
+        "std": 0.13225971812506299,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.6292559899117276,
+        "weightedContribAll": 0.017235993765470366,
+        "discriminativePower": 0.479077144984478
+      },
+      {
+        "name": "descriptionSemanticSimilarity",
+        "weight": 0.19,
+        "meanAll": 0.37978968847982575,
+        "meanHighConf": 0.7715058871819346,
+        "meanRejected": 0.3245389996836324,
+        "std": 0.1585507347978821,
+        "min": 0.00761940748211187,
+        "max": 0.972778325180117,
+        "pctZero": 0,
+        "weightedContribAll": 0.07216004081116689,
+        "discriminativePower": 0.44696688749830216
+      },
+      {
+        "name": "totalSimilarity",
+        "weight": 0.11,
+        "meanAll": 0.5930118426901044,
+        "meanHighConf": 0.9538667858209747,
+        "meanRejected": 0.5596553428626717,
+        "std": 0.28182279683880096,
+        "min": 0.01818181818181818,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.06523130269591149,
+        "discriminativePower": 0.394211442958303
+      },
+      {
+        "name": "sequenceSimilarity",
+        "weight": 0.02,
+        "meanAll": 0.6762978142076483,
+        "meanHighConf": 0.802280701754386,
+        "meanRejected": 0.6391375087473746,
+        "std": 0.17697671267719575,
+        "min": 0.09999999999999998,
+        "max": 0.95,
+        "pctZero": 0,
+        "weightedContribAll": 0.013525956284152967,
+        "discriminativePower": 0.1631431930070114
+      },
+      {
+        "name": "specialFlagCompatibility",
+        "weight": 0.02,
+        "meanAll": 0.9850777637662883,
+        "meanHighConf": 1,
+        "meanRejected": 0.9793561931420574,
+        "std": 0.08630537250925364,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.0004203446826397646,
+        "weightedContribAll": 0.019701555275325768,
+        "discriminativePower": 0.020643806857942648
+      },
+      {
+        "name": "materialObjectSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      },
+      {
+        "name": "itemCodeSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      }
+    ],
+    "borderline": {
+      "nearReject": 581,
+      "nearPossible": 86,
+      "nearHighConf": 18
+    },
+    "boostStats": {
+      "edgesWithBoost": 4758,
+      "avgBoostMagnitude": 0.07093947036569861,
+      "bucketChangedByBoost": 0
+    }
+  },
+  "p14": {
+    "componentCount": 2,
+    "bySize": {
+      "small": 1,
+      "medium": 1,
+      "large": 0
+    },
+    "largestComponentSize": 235,
+    "singletonsYours": 0,
+    "singletonsAdj": 0,
+    "components": [
+      {
+        "idx": 0,
+        "yoursCount": 1,
+        "adjCount": 1,
+        "edgeCount": 0,
+        "size": "small",
+        "isAmbiguous": false,
+        "edgeDensity": 0
+      },
+      {
+        "idx": 1,
+        "yoursCount": 118,
+        "adjCount": 117,
+        "edgeCount": 0,
+        "size": "medium",
+        "isAmbiguous": true,
+        "edgeDensity": 0
+      }
+    ]
+  },
+  "p15": {
+    "decisionCount": 119,
+    "matchedCount": 112,
+    "possibleCount": 0,
+    "unmatchedYours": 7,
+    "unmatchedAdj": 0,
+    "matchedScores": {
+      "min": 0.5264,
+      "mean": 0.7479178571428575,
+      "max": 0.94
+    },
+    "possibleScores": {
+      "min": 0,
+      "mean": 0,
+      "max": 0
+    },
+    "scoreHistogramMatched": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      33,
+      45,
+      27,
+      4
+    ],
+    "scoreHistogramPossible": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "p16": {
+    "groupedCount": 0,
+    "relinquishedAdj": 0
+  },
+  "p17": {
+    "adjudicatedCount": 6,
+    "acceptedCount": 1,
+    "rejectedCount": 5,
+    "estimatedCostUsd": 0.010884,
+    "durationMs": 9145,
+    "confusionMatrix": {
+      "algoHigh_llmAccept": 0,
+      "algoHigh_llmReject": 0,
+      "algoLow_llmAccept": 1,
+      "algoLow_llmReject": 5
+    },
+    "agreementRate": 0.8333333333333334,
+    "reasoningSamples": [
+      {
+        "pairIndex": 0,
+        "finalScore": 0.5264,
+        "decision": "match",
+        "reasoning": "Both describe 4-inch recessed/can light replacement in the kitchen zone. The description is essentially the same work. Quantity differs (6 vs. 4) and zones are near-synonyms (Kitchen vs. Kitchen & Breakfast Nook), but the trade, action, and unit type align closely enough to suggest the same scope with a quantity dispute.",
+        "yoursDesc": "R&R Recessed lighting fixture - 4\"",
+        "adjDesc": "Can light replacement 4 inch"
+      },
+      {
+        "pairIndex": 1,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Window cellular shades vs. walk-in closet organizer system are fundamentally different items (window treatments vs. storage furniture). Different descriptions, quantities, and totals.",
+        "yoursDesc": "Window treatment - cellular shade",
+        "adjDesc": "Window treatment - cellular shade"
+      },
+      {
+        "pairIndex": 2,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Storage container/pod rental is temporary storage logistics; emergency board-up is a protective service for openings. Completely different scopes of work.",
+        "yoursDesc": "Storage container - 20 ft pod rental",
+        "adjDesc": "Storage container - 20 ft pod rental"
+      },
+      {
+        "pairIndex": 3,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Built-in shelving/bookcase R&R vs. recessed light fixture replacement are fundamentally different trades and scopes. Different zones (Family Room vs. Great Room), different units, and different totals.",
+        "yoursDesc": "Built-in shelving and bookcase - R&R",
+        "adjDesc": "Built-in shelving and bookcase - R&R"
+      }
+    ]
+  },
+  "p18": {
+    "lineItemCount": 125,
+    "byStatus": {
+      "MATCH": 77,
+      "MODIFIED": 35,
+      "MISSING_FROM_ADJUSTER": 7,
+      "ADDED_BY_ADJUSTER": 6,
+      "GROUPED": 0
+    },
+    "byProvenance": {
+      "assignment": 54,
+      "auto_high_confidence": 56,
+      "llm_adjudication": 6,
+      "post_llm_rescue": 2,
+      "zone_repair": 1
+    },
+    "totalGap": -15714,
+    "yourEstimateTotal": 110616.69999999998,
+    "adjEstimateTotal": 94902.69999999998,
+    "matchedDollars": 47378.9,
+    "matchedDollarPct": 0.4283159776055515
+  },
+  "decisions": [
+    {
+      "id": "892ab31e-fe43-4a77-8cb0-942523a52496",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.94,
+      "yoursDesc": "Demo smoke-damaged drywall - ceiling",
+      "adjDesc": "Ceiling drywall demo - smoke damaged",
+      "yoursTotal": 638.4,
+      "adjTotal": 638.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d98ee110-802f-4a88-a86b-625a87ada74c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.9345,
+      "yoursDesc": "5/8\" type X drywall - ceiling",
+      "adjDesc": "Type X drywall ceiling",
+      "yoursTotal": 1083,
+      "adjTotal": 1083,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fd05dbeb-8fff-4ad8-89b0-1b20e9b69dbf",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.915,
+      "yoursDesc": "Paint ceiling - two coats",
+      "adjDesc": "Two coat ceiling paint",
+      "yoursTotal": 193.6,
+      "adjTotal": 193.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "236fd39f-b193-4dcd-9b7f-7cc837ec5707",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.913,
+      "yoursDesc": "Paint ceiling - two coats",
+      "adjDesc": "Two coat ceiling paint",
+      "yoursTotal": 281.6,
+      "adjTotal": 281.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "59380bd1-2e85-4ad9-9be4-154a576f6c66",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8781,
+      "yoursDesc": "Paint ceiling - two coats",
+      "adjDesc": "Ceiling paint application - 2 coats",
+      "yoursTotal": 334.4,
+      "adjTotal": 334.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8600333d-a49a-4727-b2d0-b107bf94e6c2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.876,
+      "yoursDesc": "Demo smoke-damaged drywall - ceiling",
+      "adjDesc": "Ceiling drywall demolition - smoke",
+      "yoursTotal": 571.2,
+      "adjTotal": 571.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e9774d3c-ada7-4133-8b88-aac3dc807cfa",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8646,
+      "yoursDesc": "R&R Interior door - 6-panel - pre-hung",
+      "adjDesc": "Pre-hung 6-panel interior door replacement",
+      "yoursTotal": 525,
+      "adjTotal": 525,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "31a5ea47-6139-4645-be29-fc1c9a31609c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8642,
+      "yoursDesc": "Demo smoke-damaged drywall - ceiling",
+      "adjDesc": "Ceiling drywall removal - smoke damaged",
+      "yoursTotal": 537.6,
+      "adjTotal": 537.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "efb2c054-7928-415e-9141-b7754811ee72",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8619,
+      "yoursDesc": "Demo smoke-damaged drywall - ceiling",
+      "adjDesc": "Ceiling drywall tearout - smoke damaged",
+      "yoursTotal": 369.6,
+      "adjTotal": 369.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "2539541e-5624-407a-819c-807828c6ffa2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8604,
+      "yoursDesc": "R&R Interior door - 6-panel pre-hung",
+      "adjDesc": "Pre-hung 6-panel interior door replacement",
+      "yoursTotal": 525,
+      "adjTotal": 525,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a014f7b6-90c3-4846-a656-702a41da796d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.853,
+      "yoursDesc": "Prime and paint walls - two coats",
+      "adjDesc": "Two-coat paint application - walls",
+      "yoursTotal": 802.4,
+      "adjTotal": 802.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9761766b-5e64-4d3c-9536-93d175f122de",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8472,
+      "yoursDesc": "R&R Bi-fold closet door - double",
+      "adjDesc": "Double bi-fold closet door replacement",
+      "yoursTotal": 650,
+      "adjTotal": 650,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3a52c9ce-2b4f-4f90-aab7-37bd47ef53ad",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8445,
+      "yoursDesc": "Electrical permit",
+      "adjDesc": "Electrical work permit",
+      "yoursTotal": 185,
+      "adjTotal": 185,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6b883595-33bd-4477-b1ad-94082abcf81a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8423,
+      "yoursDesc": "5/8\" type X drywall - ceiling",
+      "adjDesc": "Type X fire-rated drywall - ceiling",
+      "yoursTotal": 798,
+      "adjTotal": 798,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bbab5eff-68da-4b85-a225-698eaf36e757",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8421,
+      "yoursDesc": "R&R Window - double hung - standard",
+      "adjDesc": "Standard double hung window replacement",
+      "yoursTotal": 1170,
+      "adjTotal": 1170,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d5fb5512-0c03-4429-8fef-26ca0de02b41",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.841,
+      "yoursDesc": "1/2\" drywall - ceiling",
+      "adjDesc": "Drywall ceiling replacement",
+      "yoursTotal": 880,
+      "adjTotal": 880,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "02abb6a7-7c9a-4d92-a104-87cd3972d3ff",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8375,
+      "yoursDesc": "R&R Window - double hung - large",
+      "adjDesc": "Double hung window replacement - large",
+      "yoursTotal": 2055,
+      "adjTotal": 2055,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6d07f712-2576-46af-a137-781820bed5f6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.836,
+      "yoursDesc": "Smoke and odor cleaning - tile and surfaces",
+      "adjDesc": "Smoke cleaning - ceramic tile and bath surfaces",
+      "yoursTotal": 99,
+      "adjTotal": 99,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3d8ff4d1-e31b-46ae-ae30-0ba26fafb675",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8359,
+      "yoursDesc": "R&R Vanity mirror - frameless - 60\"",
+      "adjDesc": "Frameless vanity mirror replacement - 60 inch",
+      "yoursTotal": 485,
+      "adjTotal": 485,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4872dc69-5794-4c4c-ae52-166527d95b9c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8319,
+      "yoursDesc": "R&R Window - double hung - standard",
+      "adjDesc": "Standard double hung window replacement",
+      "yoursTotal": 585,
+      "adjTotal": 585,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "57bb0991-4fe3-40b7-ad81-4d6d43d95bb6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8317,
+      "yoursDesc": "R&R Interior door - 6-panel pre-hung",
+      "adjDesc": "Pre-hung 6-panel door replacement",
+      "yoursTotal": 525,
+      "adjTotal": 525,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5aa4a54b-fcf4-4372-b134-a586a9f188da",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8316,
+      "yoursDesc": "R&R Toilet - elongated - standard height",
+      "adjDesc": "Elongated toilet replacement - standard height",
+      "yoursTotal": 485,
+      "adjTotal": 485,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e2c2fda8-c3cb-4a4f-85d2-e0dd32e9eba1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8314,
+      "yoursDesc": "R&R Window - double hung - large",
+      "adjDesc": "Large double hung window replacement",
+      "yoursTotal": 1370,
+      "adjTotal": 1370,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "caa8607d-965d-4090-881f-7b677c9629c1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8309,
+      "yoursDesc": "Paint walls - two coats",
+      "adjDesc": "Two coat wall paint - bathroom",
+      "yoursTotal": 212.4,
+      "adjTotal": 212.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "761a7cf1-31fc-4f08-a359-81612eab230b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8218,
+      "yoursDesc": "R&R Window - double hung - standard",
+      "adjDesc": "Double hung window replacement - standard",
+      "yoursTotal": 1170,
+      "adjTotal": 1170,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1e2d8578-9429-4bdb-85dc-d74950af5286",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8188,
+      "yoursDesc": "Odor blocking sealer and paint - two coats",
+      "adjDesc": "Odor seal and two coat paint - walls",
+      "yoursTotal": 888,
+      "adjTotal": 888,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f171c4e2-c346-4eac-9d25-f8c83cd62055",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8179,
+      "yoursDesc": "Paint ceiling - two coats",
+      "adjDesc": "Ceiling paint - 2 coat application",
+      "yoursTotal": 246.4,
+      "adjTotal": 246.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "da44f00b-66b2-41ca-bab8-94a4b9cdb058",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8146,
+      "yoursDesc": "Paint walls - two coats",
+      "adjDesc": "Two coat paint application",
+      "yoursTotal": 684.4,
+      "adjTotal": 684.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "4284b2fe-5ff2-46bd-a118-c2da3ab0a509",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8108,
+      "yoursDesc": "Paint walls - two coats",
+      "adjDesc": "Two coat wall paint application",
+      "yoursTotal": 719.8,
+      "adjTotal": 719.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d67a6491-77dc-457e-bc08-d520809cb0d2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.809,
+      "yoursDesc": "Demo smoke-damaged drywall - walls",
+      "adjDesc": "Tear out smoke damaged drywall - walls",
+      "yoursTotal": 1142.4,
+      "adjTotal": 974.4,
+      "diff": -168.0000000000001,
+      "llmReasoning": null
+    },
+    {
+      "id": "2c5a50a2-f8b6-4680-ae46-c35141ecd5f4",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8002,
+      "yoursDesc": "R&R Carpet - medium grade",
+      "adjDesc": "Medium grade carpet replacement",
+      "yoursTotal": 840,
+      "adjTotal": 840,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "78efaf64-3393-4cde-8180-4c5937aeee6f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7978,
+      "yoursDesc": "R&R Kitchen sink and faucet - double basin",
+      "adjDesc": "Double basin sink and faucet replacement",
+      "yoursTotal": 885,
+      "adjTotal": 685,
+      "diff": -200,
+      "llmReasoning": null
+    },
+    {
+      "id": "3d4f1b95-844d-4fd8-a094-c60e7ac74ea7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7955,
+      "yoursDesc": "Blown-in insulation top-off - ceiling",
+      "adjDesc": "Ceiling insulation supplement - blown-in",
+      "yoursTotal": 400,
+      "adjTotal": 400,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fa5dd1d5-7b21-43d6-bad0-1622389e0a0c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7896,
+      "yoursDesc": "R&R Baseboard - 3-1/4\" colonial",
+      "adjDesc": "Replace colonial baseboard trim - 3.25 inch",
+      "yoursTotal": 348.5,
+      "adjTotal": 348.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a3459d0d-f175-4002-99ba-33ea49b4a746",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.788,
+      "yoursDesc": "R&R Interior French door - pre-hung",
+      "adjDesc": "Pre-hung French door replacement",
+      "yoursTotal": 1285,
+      "adjTotal": 1285,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0ffc3949-0e30-4f05-8987-a70af1af7c79",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7848,
+      "yoursDesc": "Smoke and soot cleaning - surfaces",
+      "adjDesc": "Smoke residue cleaning - bedroom surfaces",
+      "yoursTotal": 166.4,
+      "adjTotal": 166.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "02b60cd8-67a5-4020-a5e7-f620b261ef21",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7789,
+      "yoursDesc": "Paint walls - two coats",
+      "adjDesc": "Wall paint - 2 coat application",
+      "yoursTotal": 495.6,
+      "adjTotal": 495.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ba73681d-47ec-4861-bd91-eb7008f10129",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7751,
+      "yoursDesc": "1/2\" drywall - ceiling",
+      "adjDesc": "Drywall ceiling replacement - half inch",
+      "yoursTotal": 935,
+      "adjTotal": 935,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b36daf90-974b-4833-a059-6a4e32f8948b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7747,
+      "yoursDesc": "R&R Window casing - colonial",
+      "adjDesc": "Window casing replacement - colonial profile",
+      "yoursTotal": 277.2,
+      "adjTotal": 277.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "dfe9739a-7a04-4935-a5d3-b04f490c158e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7743,
+      "yoursDesc": "1/2\" drywall - ceiling replacement",
+      "adjDesc": "Drywall ceiling - half inch",
+      "yoursTotal": 605,
+      "adjTotal": 605,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c8906996-b547-4eba-ac17-c99d3c77e694",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7738,
+      "yoursDesc": "R&R Upper cabinets - custom grade",
+      "adjDesc": "Replace upper kitchen cabinets - semi-custom",
+      "yoursTotal": 5896,
+      "adjTotal": 4290,
+      "diff": -1606,
+      "llmReasoning": null
+    },
+    {
+      "id": "1f4d6de0-bdea-4c28-94fa-6cbc5367cfae",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7732,
+      "yoursDesc": "R&R Crown molding - 3-1/2\"",
+      "adjDesc": "Crown molding replacement - 3.5 inch",
+      "yoursTotal": 555,
+      "adjTotal": 555,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "45492fac-1e55-4b45-bdc8-f21e6d21b0b6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7732,
+      "yoursDesc": "R&R Carpet - high grade",
+      "adjDesc": "High grade carpet replacement",
+      "yoursTotal": 2088,
+      "adjTotal": 1584,
+      "diff": -504,
+      "llmReasoning": null
+    },
+    {
+      "id": "5cf500dd-9b72-42c7-861e-227f0ec42d09",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7729,
+      "yoursDesc": "Odor blocking sealer and paint - walls",
+      "adjDesc": "Odor seal and two coat paint application",
+      "yoursTotal": 703,
+      "adjTotal": 703,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d196cbe3-f7ed-4c0f-a838-bd9e36864618",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.77,
+      "yoursDesc": "HVAC supply register - cleaning",
+      "adjDesc": "HVAC register and vent cleaning",
+      "yoursTotal": 270,
+      "adjTotal": 180,
+      "diff": -90,
+      "llmReasoning": null
+    },
+    {
+      "id": "7347f2d4-7b57-4baf-bc8b-cd6f93fd0062",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7683,
+      "yoursDesc": "R&R Baseboard - 3-1/4\" colonial",
+      "adjDesc": "Colonial baseboard replacement",
+      "yoursTotal": 314.5,
+      "adjTotal": 314.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "edb73d8d-8c6a-4ecb-b2f9-fd1d15086e60",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7676,
+      "yoursDesc": "Smoke and soot cleaning - hallway surfaces",
+      "adjDesc": "Smoke residue cleaning - corridor surfaces",
+      "yoursTotal": 124.8,
+      "adjTotal": 124.8,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9e401537-ad74-4146-b78a-3aaef675ad2b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7676,
+      "yoursDesc": "Odor blocking primer and sealer",
+      "adjDesc": "Smoke odor blocking sealer - walls",
+      "yoursTotal": 489.6,
+      "adjTotal": 489.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "eee49aa2-53fb-4703-a863-f64d658b3a38",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7661,
+      "yoursDesc": "R&R Carpet - stair runner",
+      "adjDesc": "Stair runner carpet replacement",
+      "yoursTotal": 936,
+      "adjTotal": 748.8,
+      "diff": -187.20000000000005,
+      "llmReasoning": null
+    },
+    {
+      "id": "3b2f15b0-f160-4c06-813f-6f6d00e259b6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7634,
+      "yoursDesc": "Paint ceiling - two coats",
+      "adjDesc": "Two coat ceiling painting",
+      "yoursTotal": 299.2,
+      "adjTotal": 299.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7a341adc-867b-49af-a6c6-cea94c6ad9a0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7623,
+      "yoursDesc": "R&R Bathroom vanity - 60\" double sink - high grade",
+      "adjDesc": "Replace double vanity - 60 inch - standard grade",
+      "yoursTotal": 1685,
+      "adjTotal": 1185,
+      "diff": -500,
+      "llmReasoning": null
+    },
+    {
+      "id": "359ba602-0d96-4309-94d3-0722f77cff44",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7595,
+      "yoursDesc": "R&R Carpet - medium grade",
+      "adjDesc": "Medium grade carpet replacement",
+      "yoursTotal": 1596,
+      "adjTotal": 1260,
+      "diff": -336,
+      "llmReasoning": null
+    },
+    {
+      "id": "2c1d51a6-5801-47d3-92d9-7b0433f46b13",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7581,
+      "yoursDesc": "R&R 1/2\" drywall - walls",
+      "adjDesc": "Drywall replacement - walls - half inch",
+      "yoursTotal": 1029,
+      "adjTotal": 1029,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "75834e48-390a-4988-9e17-9f66ab149306",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7566,
+      "yoursDesc": "R&R Baseboard - 3-1/4\" colonial",
+      "adjDesc": "Baseboard replacement - colonial 3.25 inch",
+      "yoursTotal": 323,
+      "adjTotal": 323,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ebab305f-e99a-423c-81b2-ad5a4cdea49d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7556,
+      "yoursDesc": "R&R Baseboard - 3-1/4\" colonial",
+      "adjDesc": "Colonial baseboard trim replacement",
+      "yoursTotal": 263.5,
+      "adjTotal": 263.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e0b378f7-c727-496f-9462-413dffda52e9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7509,
+      "yoursDesc": "R&R Lower cabinets - custom grade",
+      "adjDesc": "Replace lower kitchen cabinets - semi-custom",
+      "yoursTotal": 5724,
+      "adjTotal": 4230,
+      "diff": -1494,
+      "llmReasoning": null
+    },
+    {
+      "id": "530ca758-2c89-4ea7-8871-cba9ba42b59c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7496,
+      "yoursDesc": "Smoke and soot cleaning - surfaces",
+      "adjDesc": "Smoke residue cleaning - guest room surfaces",
+      "yoursTotal": 230.4,
+      "adjTotal": 230.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "46fa166f-8ee9-4b68-b480-b6daf8bc6991",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7452,
+      "yoursDesc": "R&R Baseboard - 3-1/4\" colonial",
+      "adjDesc": "Colonial baseboard trim replacement",
+      "yoursTotal": 238,
+      "adjTotal": 238,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f58f2156-050d-4a73-be6a-c4145c0f5562",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7406,
+      "yoursDesc": "Demo burnt drywall - ceiling",
+      "adjDesc": "Tear out fire-damaged ceiling drywall",
+      "yoursTotal": 470.4,
+      "adjTotal": 470.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3ab32d17-f30f-4520-a355-65bbd1a8af71",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7377,
+      "yoursDesc": "R&R Baseboard - 3-1/4\" colonial",
+      "adjDesc": "Baseboard trim replacement - 3.25 inch colonial",
+      "yoursTotal": 246.5,
+      "adjTotal": 246.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0c8d90bc-54f1-40cc-ae2c-1aa2e73f1e4c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.737,
+      "yoursDesc": "R&R Smoke detector - hardwired",
+      "adjDesc": "Hardwired smoke detector replacement",
+      "yoursTotal": 176,
+      "adjTotal": 176,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "86314304-8967-4c24-a0de-5ef490c6d7d6",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7341,
+      "yoursDesc": "Odor blocking sealer - walls",
+      "adjDesc": "Smoke odor sealer - wall application",
+      "yoursTotal": 417.6,
+      "adjTotal": 417.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "656959b1-78d1-4a6f-9c01-b3f3e5174b18",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7305,
+      "yoursDesc": "R&R Crown molding - 3-1/2\"",
+      "adjDesc": "Crown molding replacement - 3.5 inch",
+      "yoursTotal": 615,
+      "adjTotal": 480,
+      "diff": -135,
+      "llmReasoning": null
+    },
+    {
+      "id": "578c6e7a-d952-4a88-9cfd-0f975cab1924",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.73,
+      "yoursDesc": "Odor blocking primer and sealer - walls",
+      "adjDesc": "Smoke odor sealer application",
+      "yoursTotal": 302.4,
+      "adjTotal": 302.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1b53eb97-ae41-4a95-a80c-22262936d9cc",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7286,
+      "yoursDesc": "R&R Recessed lighting - 4\"",
+      "adjDesc": "Four inch recessed light replacement",
+      "yoursTotal": 512,
+      "adjTotal": 512,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "dfe4b769-4d3f-46bd-8438-e0e9c8dd6413",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7246,
+      "yoursDesc": "Blown-in insulation - ceiling - R&R",
+      "adjDesc": "Attic ceiling insulation replacement",
+      "yoursTotal": 703,
+      "adjTotal": 703,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c5d14e5b-7ad0-45e1-8a82-cb4cf4927bb4",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7236,
+      "yoursDesc": "R&R Ceramic tile backsplash",
+      "adjDesc": "Kitchen backsplash tile replacement",
+      "yoursTotal": 696,
+      "adjTotal": 551,
+      "diff": -145,
+      "llmReasoning": null
+    },
+    {
+      "id": "368baa32-119f-4e58-92e4-19700be54c96",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7216,
+      "yoursDesc": "R&R Dishwasher - built-in",
+      "adjDesc": "Built-in dishwasher replacement",
+      "yoursTotal": 785,
+      "adjTotal": 785,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a5ba633f-bed0-489d-a911-83c5c69e1163",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7199,
+      "yoursDesc": "1/2\" drywall - walls",
+      "adjDesc": "Half-inch drywall wall installation",
+      "yoursTotal": 1274,
+      "adjTotal": 1176,
+      "diff": -98,
+      "llmReasoning": null
+    },
+    {
+      "id": "4168a055-cc8d-44ad-913c-dc78d1b128ab",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7189,
+      "yoursDesc": "R&R Crown molding - 4\"",
+      "adjDesc": "Crown molding replacement - 4 inch profile",
+      "yoursTotal": 573.5,
+      "adjTotal": 465,
+      "diff": -108.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "4c5348d7-f9fc-484b-8362-ace73b71ffa3",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7142,
+      "yoursDesc": "R&R 1/2\" drywall - walls",
+      "adjDesc": "Half inch drywall wall replacement",
+      "yoursTotal": 931,
+      "adjTotal": 931,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e3e0e53f-f2cd-4b71-932e-ab60b6eb720c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.712,
+      "yoursDesc": "R&R 1/2\" drywall - walls",
+      "adjDesc": "Wall drywall replacement",
+      "yoursTotal": 1421,
+      "adjTotal": 1421,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a22e435e-9ebc-4af3-abea-214503aed433",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7045,
+      "yoursDesc": "Smoke and soot cleaning - surfaces",
+      "adjDesc": "Smoke residue cleaning - cabinet surfaces",
+      "yoursTotal": 173.6,
+      "adjTotal": 173.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b63bedee-9ca5-4855-b736-2490a2d7468f",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7038,
+      "yoursDesc": "R&R 1/2\" drywall - walls",
+      "adjDesc": "Wall drywall replacement - half inch",
+      "yoursTotal": 1176,
+      "adjTotal": 1176,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "731060d4-262a-4c3f-81da-6131344d28fc",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7035,
+      "yoursDesc": "Ceramic tile floor - cleaning and reseal",
+      "adjDesc": "Floor tile cleaning and sealant application",
+      "yoursTotal": 177.6,
+      "adjTotal": 177.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "37c88e58-0d4b-47ea-9479-3df24fe8bfb0",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7023,
+      "yoursDesc": "R&R Ceiling fan with light kit",
+      "adjDesc": "Ceiling fan with light replacement",
+      "yoursTotal": 485,
+      "adjTotal": 485,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b60a3f66-5828-4aef-8094-613ad2099680",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6989,
+      "yoursDesc": "R&R Hardwood flooring",
+      "adjDesc": "Hardwood floor replacement",
+      "yoursTotal": 2475,
+      "adjTotal": 2475,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "34f0224c-66e0-427e-abec-66eb3629a643",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6984,
+      "yoursDesc": "R&R 1/2\" drywall - walls",
+      "adjDesc": "Wall drywall replacement - half inch",
+      "yoursTotal": 1494.5,
+      "adjTotal": 1494.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ed3bc43b-9ba5-4b92-a6a6-96c629982893",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6982,
+      "yoursDesc": "Post-construction cleaning",
+      "adjDesc": "Final construction clean",
+      "yoursTotal": 784,
+      "adjTotal": 784,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ec0b1180-e082-421d-9ea2-2cfcf568f3c2",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6953,
+      "yoursDesc": "1/2\" drywall - walls",
+      "adjDesc": "Drywall wall installation - half inch",
+      "yoursTotal": 1666,
+      "adjTotal": 1421,
+      "diff": -245,
+      "llmReasoning": null
+    },
+    {
+      "id": "f85c0af4-0ee1-4536-a1d9-198fd69c1e84",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6942,
+      "yoursDesc": "R&R Ceiling fan with light kit",
+      "adjDesc": "Ceiling fan - light kit replacement",
+      "yoursTotal": 545,
+      "adjTotal": 395,
+      "diff": -150,
+      "llmReasoning": null
+    },
+    {
+      "id": "4ad1fd45-2333-42e8-833c-c9ada7c797de",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6935,
+      "yoursDesc": "R&R Wall sconce lighting - hallway",
+      "adjDesc": "Hallway wall sconce replacement",
+      "yoursTotal": 555,
+      "adjTotal": 555,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "dc2c4863-245f-40de-90cd-55cce0ba846f",
+      "decisionType": "one_to_one",
+      "decidedBy": "post_llm_rescue",
+      "finalScore": 0.6909,
+      "yoursDesc": "R&R Recessed lighting - 6\"",
+      "adjDesc": "Recessed light fixture replacement - 6 inch",
+      "yoursTotal": 828,
+      "adjTotal": 828,
+      "diff": 0,
+      "llmReasoning": "Recessed lighting R&R vs. fireplace mantel surround restoration are completely different items and trades. Different zones (Family Room vs. Great Room) reinforce the mismatch."
+    },
+    {
+      "id": "fa3be810-3af4-492b-be88-55d3a8c3001c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6907,
+      "yoursDesc": "Prime and paint walls - two coats",
+      "adjDesc": "Wall painting 2 coat primer and finish",
+      "yoursTotal": 613.6,
+      "adjTotal": 566.4,
+      "diff": -47.200000000000045,
+      "llmReasoning": null
+    },
+    {
+      "id": "4dc7adc6-96a4-4c8a-a322-2ecababdc34a",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6896,
+      "yoursDesc": "R&R Ceramic tile flooring",
+      "adjDesc": "Ceramic floor tile - remove and reset",
+      "yoursTotal": 2758,
+      "adjTotal": 2352,
+      "diff": -406,
+      "llmReasoning": null
+    },
+    {
+      "id": "1d926018-daa8-4cdd-bf2c-16b8db1b212e",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6869,
+      "yoursDesc": "Demo fire-damaged drywall - walls",
+      "adjDesc": "Tear out burnt wall drywall",
+      "yoursTotal": 873.6,
+      "adjTotal": 806.4,
+      "diff": -67.20000000000005,
+      "llmReasoning": null
+    },
+    {
+      "id": "36291e7d-bd68-4464-b50c-c0d9f37e80ef",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6863,
+      "yoursDesc": "Detailed cleaning - fire and smoke residue",
+      "adjDesc": "Smoke and soot surface cleaning",
+      "yoursTotal": 1624,
+      "adjTotal": 1232,
+      "diff": -392,
+      "llmReasoning": null
+    },
+    {
+      "id": "14de295c-1937-41d3-ae0d-2a382bbabd73",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6854,
+      "yoursDesc": "R&R Stair handrail - oak",
+      "adjDesc": "Oak stair handrail replacement",
+      "yoursTotal": 912,
+      "adjTotal": 672,
+      "diff": -240,
+      "llmReasoning": null
+    },
+    {
+      "id": "44c2a809-acca-4d50-9931-31e3fb7a4c71",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6814,
+      "yoursDesc": "R&R Carpet pad - high grade",
+      "adjDesc": "Carpet padding replacement",
+      "yoursTotal": 306,
+      "adjTotal": 306,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5f9b5502-7bee-417f-b828-cfa931e0c4a0",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6691,
+      "yoursDesc": "R&R Granite countertop",
+      "adjDesc": "Stone countertop replacement - standard grade",
+      "yoursTotal": 3696,
+      "adjTotal": 2730,
+      "diff": -966,
+      "llmReasoning": null
+    },
+    {
+      "id": "e00197a7-7a39-4f3e-9d7d-16e66e11f714",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6678,
+      "yoursDesc": "Safety barrier - temporary fencing",
+      "adjDesc": "Temporary safety barricade installation",
+      "yoursTotal": 340,
+      "adjTotal": 340,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ee8165c5-cdf4-4311-ba6b-609471e0f98e",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6646,
+      "yoursDesc": "R&R Hardwood flooring",
+      "adjDesc": "Hardwood floor replacement",
+      "yoursTotal": 4275,
+      "adjTotal": 3600,
+      "diff": -675,
+      "llmReasoning": null
+    },
+    {
+      "id": "5e30c418-379d-43e8-987d-b63d460bb5c0",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6628,
+      "yoursDesc": "Temporary power pole - installation",
+      "adjDesc": "Temporary electrical service installation",
+      "yoursTotal": 450,
+      "adjTotal": 450,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f5697621-f753-44d6-bf92-02196b3a725d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.661,
+      "yoursDesc": "Content manipulation - move and reset",
+      "adjDesc": "Furniture move and reset - labor",
+      "yoursTotal": 544,
+      "adjTotal": 440,
+      "diff": -104,
+      "llmReasoning": null
+    },
+    {
+      "id": "551014d0-d6d8-47e4-880e-f8902d7b6735",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6578,
+      "yoursDesc": "R&R Ceiling fan with light kit",
+      "adjDesc": "Ceiling fan and light replacement",
+      "yoursTotal": 485,
+      "adjTotal": 365,
+      "diff": -120,
+      "llmReasoning": null
+    },
+    {
+      "id": "657824a9-7da6-4790-b361-c63202e1edbd",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6535,
+      "yoursDesc": "Odor blocking sealer - walls",
+      "adjDesc": "Odor seal application - walls",
+      "yoursTotal": 439.2,
+      "adjTotal": 439.2,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1ea39fab-6cdb-4284-bae7-b3889e78b05a",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6526,
+      "yoursDesc": "R&R Chandelier - dining fixture",
+      "adjDesc": "Chandelier fixture replacement",
+      "yoursTotal": 785,
+      "adjTotal": 565,
+      "diff": -220,
+      "llmReasoning": null
+    },
+    {
+      "id": "05601eb4-8f1a-4c04-b931-30c5be276e55",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6509,
+      "yoursDesc": "Odor blocking sealer - ceiling",
+      "adjDesc": "Smoke odor seal - ceiling",
+      "yoursTotal": 230.4,
+      "adjTotal": 230.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "03d60595-3d3e-4e1f-bbc7-0dbd379ee99b",
+      "decisionType": "one_to_one",
+      "decidedBy": "post_llm_rescue",
+      "finalScore": 0.6509,
+      "yoursDesc": "R&R Recessed lighting - 4\"",
+      "adjDesc": "Recessed can light replacement - 4 inch",
+      "yoursTotal": 1024,
+      "adjTotal": 768,
+      "diff": -256,
+      "llmReasoning": "Recessed lighting R&R vs. smoke detector replacement are different electrical items with different functions, quantities, and totals. Not the same scope of work."
+    },
+    {
+      "id": "86b8bb5a-fd74-4af6-abc1-55447b30c963",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6482,
+      "yoursDesc": "Air scrubber rental - HEPA filtration",
+      "adjDesc": "HEPA air scrubber - daily rate",
+      "yoursTotal": 1224,
+      "adjTotal": 816,
+      "diff": -408,
+      "llmReasoning": null
+    },
+    {
+      "id": "55521202-62ae-49d2-b694-1209a7969e66",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6476,
+      "yoursDesc": "R&R Range - freestanding",
+      "adjDesc": "Freestanding range replacement",
+      "yoursTotal": 1285,
+      "adjTotal": 985,
+      "diff": -300,
+      "llmReasoning": null
+    },
+    {
+      "id": "bb5638ae-3d51-4a6b-89d9-13404ea6e60d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6474,
+      "yoursDesc": "R&R Exhaust fan with light - 110 CFM",
+      "adjDesc": "Bathroom exhaust fan with light replacement",
+      "yoursTotal": 285,
+      "adjTotal": 225,
+      "diff": -60,
+      "llmReasoning": null
+    },
+    {
+      "id": "1f88026e-137b-4800-8901-002bdb578693",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6417,
+      "yoursDesc": "R&R Ceiling fan with light kit",
+      "adjDesc": "Ceiling fan replacement with light",
+      "yoursTotal": 545,
+      "adjTotal": 385,
+      "diff": -160,
+      "llmReasoning": null
+    },
+    {
+      "id": "af4a0bb5-d8ba-453a-9170-bc488547a9d0",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6414,
+      "yoursDesc": "Dumpster load - 30 cubic yard",
+      "adjDesc": "30 CY roll-off dumpster disposal",
+      "yoursTotal": 1920,
+      "adjTotal": 1280,
+      "diff": -640,
+      "llmReasoning": null
+    },
+    {
+      "id": "9a162fff-afa1-46f1-bdef-4d0da76f0ef4",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6349,
+      "yoursDesc": "Smooth texture finish - ceiling",
+      "adjDesc": "Skim coat ceiling finish",
+      "yoursTotal": 539.6,
+      "adjTotal": 539.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "945fdcb1-2f16-406f-84b1-cc845e0dca5a",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6325,
+      "yoursDesc": "Building permit - fire restoration",
+      "adjDesc": "Building permit - structural and finish",
+      "yoursTotal": 925,
+      "adjTotal": 925,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e1016f64-ab5e-445d-8844-f54dfd715d4d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6323,
+      "yoursDesc": "Texture drywall - smooth finish",
+      "adjDesc": "Skim coat smooth ceiling finish",
+      "yoursTotal": 397.6,
+      "adjTotal": 397.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "007a2656-839f-461d-85d7-559af2d22d65",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6173,
+      "yoursDesc": "R&R Chair rail molding",
+      "adjDesc": "Chair rail replacement",
+      "yoursTotal": 300.7,
+      "adjTotal": 232.8,
+      "diff": -67.89999999999998,
+      "llmReasoning": null
+    },
+    {
+      "id": "f25343c1-23fd-4d95-9a51-8aec577854c7",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6132,
+      "yoursDesc": "Residential project management - supervision",
+      "adjDesc": "Project supervision labor - hourly",
+      "yoursTotal": 6864,
+      "adjTotal": 4992,
+      "diff": -1872,
+      "llmReasoning": null
+    },
+    {
+      "id": "3e1ef8a5-499e-47a6-9305-f3238d137e29",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5963,
+      "yoursDesc": "R&R Range hood - wall mount",
+      "adjDesc": "Kitchen ventilation hood replacement",
+      "yoursTotal": 645,
+      "adjTotal": 645,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a22ca3e6-1098-470c-b67b-1b945eff2cb2",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5891,
+      "yoursDesc": "Dehumidifier - large commercial",
+      "adjDesc": "Commercial dehumidification unit - daily",
+      "yoursTotal": 1330,
+      "adjTotal": 950,
+      "diff": -380,
+      "llmReasoning": null
+    },
+    {
+      "id": "5ae4dfe5-682b-4876-a5da-b7d09d166a6b",
+      "decisionType": "one_to_one",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0.5264,
+      "yoursDesc": "R&R Recessed lighting fixture - 4\"",
+      "adjDesc": "Can light replacement 4 inch",
+      "yoursTotal": 750,
+      "adjTotal": 500,
+      "diff": -250,
+      "llmReasoning": "Both describe 4-inch recessed/can light replacement in the kitchen zone. The description is essentially the same work. Quantity differs (6 vs. 4) and zones are near-synonyms (Kitchen vs. Kitchen & Breakfast Nook), but the trade, action, and unit type align closely enough to suggest the same scope with a quantity dispute."
+    },
+    {
+      "id": "115aea2e-c155-4363-8b7f-c50af02bb7c6",
+      "decisionType": "unmatched",
+      "decidedBy": "zone_repair",
+      "finalScore": 0,
+      "yoursDesc": "Under-cabinet LED lighting strip",
+      "adjDesc": null,
+      "yoursTotal": 847,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "815b9341-51a4-44a6-b940-ca6148ff493a",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "R&R Towel bars and bath accessories - set",
+      "adjDesc": null,
+      "yoursTotal": 185,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "278e3cbb-a4ef-4149-bd40-abd45dd70a22",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Window treatment - cellular shade",
+      "adjDesc": null,
+      "yoursTotal": 570,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Window cellular shades vs. walk-in closet organizer system are fundamentally different items (window treatments vs. storage furniture). Different descriptions, quantities, and totals."
+    },
+    {
+      "id": "a1218fd2-da58-4d84-a45b-9bfef3119c5d",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Storage container - 20 ft pod rental",
+      "adjDesc": null,
+      "yoursTotal": 390,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Storage container/pod rental is temporary storage logistics; emergency board-up is a protective service for openings. Completely different scopes of work."
+    },
+    {
+      "id": "63774084-3fdb-4e42-830a-3a2859442023",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Built-in shelving and bookcase - R&R",
+      "adjDesc": null,
+      "yoursTotal": 2220,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Built-in shelving/bookcase R&R vs. recessed light fixture replacement are fundamentally different trades and scopes. Different zones (Family Room vs. Great Room), different units, and different totals."
+    },
+    {
+      "id": "faa7a842-2c36-423b-9680-e87cf94180b2",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "R&R Pendant light fixture over island",
+      "adjDesc": null,
+      "yoursTotal": 570,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Pendant light fixture R&R (electrical) vs. over-range microwave replacement (appliance) are fundamentally different items and trades, despite sharing the kitchen zone."
+    },
+    {
+      "id": "06527ad3-8b37-4435-ad34-80ac79fd3693",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Window treatment - plantation shutter",
+      "adjDesc": null,
+      "yoursTotal": 770,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Window plantation shutters vs. wainscoting panel restoration are fundamentally different items — window treatments vs. wall paneling. Different trades, descriptions, and scopes."
+    }
+  ]
+}

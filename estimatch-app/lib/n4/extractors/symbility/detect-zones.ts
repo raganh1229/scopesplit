@@ -104,6 +104,7 @@ type ChunkCallSpec = {
   chunk: PdfChunk;
   chunkBytes: Uint8Array;
   isFirstChunk: boolean;
+  isLastChunk: boolean;
   estimatedStartPage: number;
   estimatedEndPage: number;
   totalPages: number;
@@ -111,7 +112,7 @@ type ChunkCallSpec = {
 };
 
 async function processOneChunk(spec: ChunkCallSpec): Promise<ChunkZoneDetectionResult> {
-  const { chunk, chunkBytes, isFirstChunk, estimatedStartPage, estimatedEndPage, totalPages, context } = spec;
+  const { chunk, chunkBytes, isFirstChunk, isLastChunk, estimatedStartPage, estimatedEndPage, totalPages, context } = spec;
 
   return withRetry(
     async () => {
@@ -206,8 +207,10 @@ async function processOneChunk(spec: ChunkCallSpec): Promise<ChunkZoneDetectionR
             };
           })();
 
-      const suspiciouslyEmpty = result.zones.length === 0 && result.approxItemsOnPages >= 5;
-      const suspiciouslyCollapsed = result.zones.length === 1 && result.approxItemsOnPages >= 50;
+      // Last chunk of a Symbility PDF is the Recap/MATERIALS/LABOR tail which has
+      // many items but no zone headers — skip both sanity checks there.
+      const suspiciouslyEmpty = !isLastChunk && result.zones.length === 0 && result.approxItemsOnPages >= 5;
+      const suspiciouslyCollapsed = !isLastChunk && result.zones.length === 1 && result.approxItemsOnPages >= 50;
       if (suspiciouslyEmpty || suspiciouslyCollapsed) {
         throw new AIResponseError(
           `[n4/symbility/detect-zones] ${context}: sanity check failed (zones=${result.zones.length}, items=${result.approxItemsOnPages}) — retrying`,
@@ -232,12 +235,14 @@ async function buildChunkSpecs(
   side: 'yours' | 'adjuster',
 ): Promise<ChunkCallSpec[]> {
   const specs: ChunkCallSpec[] = [];
+  const lastChunkIndex = chunks.length - 1;
   for (const chunk of chunks) {
     const chunkBytes = await slicePages(doc, chunk.startIndex, chunk.endIndex);
     specs.push({
       chunk,
       chunkBytes,
       isFirstChunk: chunk.chunkIndex === 0,
+      isLastChunk: chunk.chunkIndex === lastChunkIndex,
       estimatedStartPage: chunk.startIndex + 1,
       estimatedEndPage: chunk.endIndex + 1,
       totalPages: totalInternalPages,

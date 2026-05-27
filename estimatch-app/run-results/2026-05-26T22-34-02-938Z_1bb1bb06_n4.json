@@ -1,0 +1,1894 @@
+{
+  "comparisonId": "1bb1bb06-b90d-478f-8009-2a56ac1bbd2f",
+  "generatedAt": "2026-05-26T22:34:02.938Z",
+  "health": [
+    {
+      "phase": "p4",
+      "label": "Zones",
+      "status": "yellow",
+      "headline": "7 yours · 7 adj",
+      "flags": [
+        "2 zone(s) span >3 pages"
+      ]
+    },
+    {
+      "phase": "p6",
+      "label": "Corresps",
+      "status": "green",
+      "headline": "7 corresps · 0 unmatched",
+      "flags": []
+    },
+    {
+      "phase": "p8",
+      "label": "Extract",
+      "status": "green",
+      "headline": "99 + 92 = 191 items",
+      "flags": []
+    },
+    {
+      "phase": "p9",
+      "label": "Normalize",
+      "status": "green",
+      "headline": "100% qty · 74% trade",
+      "flags": []
+    },
+    {
+      "phase": "p11",
+      "label": "Embed",
+      "status": "green",
+      "headline": "191/191 embedded",
+      "flags": []
+    },
+    {
+      "phase": "p12",
+      "label": "Candidates",
+      "status": "green",
+      "headline": "3364 edges",
+      "flags": []
+    },
+    {
+      "phase": "p13",
+      "label": "Score",
+      "status": "yellow",
+      "headline": "63 hi · 175 pos · 1089 weak · 2037 rej",
+      "flags": [
+        "316 edges within 0.02 of REJECT — fragile",
+        "dead/weak features: specialFlagCompatibility, materialObjectSimilarity, itemCodeSimilarity"
+      ]
+    },
+    {
+      "phase": "p14",
+      "label": "Components",
+      "status": "green",
+      "headline": "1 components · largest=191",
+      "flags": []
+    },
+    {
+      "phase": "p15",
+      "label": "Assign",
+      "status": "yellow",
+      "headline": "88 matched · 0 possible · 11 unmatched",
+      "flags": [
+        "11 unmatched yours — high"
+      ]
+    },
+    {
+      "phase": "p16",
+      "label": "Group",
+      "status": "green",
+      "headline": "0 groups",
+      "flags": []
+    },
+    {
+      "phase": "p17",
+      "label": "LLM",
+      "status": "green",
+      "headline": "0 acc · 4 rej · $0.0065",
+      "flags": []
+    },
+    {
+      "phase": "p18",
+      "label": "Persist",
+      "status": "green",
+      "headline": "103 items · gap $-3949.46",
+      "flags": []
+    }
+  ],
+  "p4": {
+    "yoursZoneCount": 7,
+    "adjZoneCount": 7,
+    "yoursFormat": null,
+    "adjFormat": null,
+    "yoursPagesCovered": 11,
+    "adjPagesCovered": 11,
+    "emptyZones": 0,
+    "oversizedZones": 2,
+    "flatZones": 0,
+    "zones": [
+      {
+        "side": "adjuster",
+        "name": "ROOFPLAN: Primary Roof Section",
+        "startPage": 5,
+        "endPage": 6,
+        "approxItems": 20
+      },
+      {
+        "side": "adjuster",
+        "name": "ROOFPLAN: Garage Structure Roof",
+        "startPage": 6,
+        "endPage": 7,
+        "approxItems": 13
+      },
+      {
+        "side": "adjuster",
+        "name": "ROOFPLAN: Rear Covered Porch Roof",
+        "startPage": 7,
+        "endPage": 8,
+        "approxItems": 10
+      },
+      {
+        "side": "adjuster",
+        "name": "EXTERIOR PLAN: Gutter System",
+        "startPage": 8,
+        "endPage": 9,
+        "approxItems": 11
+      },
+      {
+        "side": "adjuster",
+        "name": "EXTERIOR PLAN: Front Facade Exterior",
+        "startPage": 9,
+        "endPage": 10,
+        "approxItems": 10
+      },
+      {
+        "side": "adjuster",
+        "name": "FLOORPLAN: Primary Bedroom Suite",
+        "startPage": 10,
+        "endPage": 11,
+        "approxItems": 28
+      },
+      {
+        "side": "adjuster",
+        "name": "FLOORPLAN: Main Living Area",
+        "startPage": 11,
+        "endPage": 15,
+        "approxItems": 14
+      },
+      {
+        "side": "yours",
+        "name": "ROOFPLAN: Main Roof",
+        "startPage": 5,
+        "endPage": 6,
+        "approxItems": 21
+      },
+      {
+        "side": "yours",
+        "name": "ROOFPLAN: Detached Garage Roof",
+        "startPage": 6,
+        "endPage": 7,
+        "approxItems": 14
+      },
+      {
+        "side": "yours",
+        "name": "ROOFPLAN: Back Porch Cover",
+        "startPage": 7,
+        "endPage": 8,
+        "approxItems": 11
+      },
+      {
+        "side": "yours",
+        "name": "EXTERIOR PLAN: Gutters and Downspouts",
+        "startPage": 8,
+        "endPage": 9,
+        "approxItems": 11
+      },
+      {
+        "side": "yours",
+        "name": "EXTERIOR PLAN: Front Exterior Siding",
+        "startPage": 9,
+        "endPage": 10,
+        "approxItems": 12
+      },
+      {
+        "side": "yours",
+        "name": "FLOORPLAN: Master Bedroom",
+        "startPage": 10,
+        "endPage": 11,
+        "approxItems": 30
+      },
+      {
+        "side": "yours",
+        "name": "FLOORPLAN: Living Room",
+        "startPage": 11,
+        "endPage": 15,
+        "approxItems": 15
+      }
+    ]
+  },
+  "p6": {
+    "correspondenceCount": 7,
+    "unmatchedYoursZones": 0,
+    "unmatchedAdjZones": 0,
+    "avgConfidence": 0.9671428571428571,
+    "byType": {
+      "one_to_one": 7,
+      "one_to_many": 0,
+      "many_to_one": 0
+    },
+    "correspondences": [
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "ROOFPLAN: Main Roof"
+        ],
+        "adjZones": [
+          "ROOFPLAN: Primary Roof Section"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "ROOFPLAN: Detached Garage Roof"
+        ],
+        "adjZones": [
+          "ROOFPLAN: Garage Structure Roof"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "ROOFPLAN: Back Porch Cover"
+        ],
+        "adjZones": [
+          "ROOFPLAN: Rear Covered Porch Roof"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "EXTERIOR PLAN: Gutters and Downspouts"
+        ],
+        "adjZones": [
+          "EXTERIOR PLAN: Gutter System"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.95,
+        "yoursZones": [
+          "EXTERIOR PLAN: Front Exterior Siding"
+        ],
+        "adjZones": [
+          "EXTERIOR PLAN: Front Facade Exterior"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "FLOORPLAN: Master Bedroom"
+        ],
+        "adjZones": [
+          "FLOORPLAN: Primary Bedroom Suite"
+        ]
+      },
+      {
+        "type": "one_to_one",
+        "confidence": 0.97,
+        "yoursZones": [
+          "FLOORPLAN: Living Room"
+        ],
+        "adjZones": [
+          "FLOORPLAN: Main Living Area"
+        ]
+      }
+    ]
+  },
+  "p8": {
+    "yoursItemCount": 99,
+    "adjItemCount": 92,
+    "totalItems": 191,
+    "itemsPerZone": {
+      "min": 10,
+      "median": 13.5,
+      "max": 21
+    },
+    "avgExtractionConfidence": 1,
+    "itemsMissingTotal": 0,
+    "itemsMissingQuantity": 0,
+    "itemsLowConfidence": 0,
+    "yoursTotalAmount": 39729.59,
+    "adjTotalAmount": 35780.13,
+    "estimateGap": -3949.459999999999
+  },
+  "p9": {
+    "totalRows": 191,
+    "pctWithQuantity": 1,
+    "pctWithUnit": 1,
+    "pctWithTrade": 0.7382198952879581,
+    "pctWithAction": 0.9162303664921466,
+    "pctWithSpecialFlags": 0.005235602094240838,
+    "distinctTrades": 10,
+    "distinctActions": 6,
+    "topTrades": [
+      {
+        "value": "roofing",
+        "count": 67
+      },
+      {
+        "value": "drywall",
+        "count": 24
+      },
+      {
+        "value": "flooring",
+        "count": 12
+      },
+      {
+        "value": "doors_windows",
+        "count": 11
+      },
+      {
+        "value": "demolition",
+        "count": 8
+      }
+    ],
+    "topActions": [
+      {
+        "value": "replace",
+        "count": 59
+      },
+      {
+        "value": "install",
+        "count": 53
+      },
+      {
+        "value": "remove",
+        "count": 45
+      },
+      {
+        "value": "texture",
+        "count": 8
+      },
+      {
+        "value": "paint",
+        "count": 6
+      }
+    ],
+    "topFlags": [
+      {
+        "value": "debris_removal",
+        "count": 1
+      }
+    ]
+  },
+  "p11": {
+    "totalRows": 191,
+    "embedded": 191,
+    "missing": 0,
+    "pctEmbedded": 1
+  },
+  "p12": {
+    "totalEdges": 3364,
+    "bySource": {
+      "ai_proposed_zone": 1373,
+      "semantic": 1935,
+      "fuzzy_description": 856,
+      "total_similarity": 817
+    },
+    "itemsWithZeroCandidates": 0,
+    "yoursCandidatesHistogram": [
+      0,
+      0,
+      0,
+      26,
+      73
+    ],
+    "adjCandidatesHistogram": [
+      0,
+      0,
+      0,
+      19,
+      73
+    ],
+    "avgCandidatesPerYours": 33.97979797979798,
+    "avgCandidatesPerAdj": 36.56521739130435
+  },
+  "p13": {
+    "scoredCount": 3364,
+    "bucketCounts": {
+      "highConfidence": 63,
+      "possibleMatch": 175,
+      "weakCandidate": 1089,
+      "rejected": 2037
+    },
+    "survivalRate": 0.3944708680142687,
+    "scoreHistogram": [
+      590,
+      703,
+      744,
+      637,
+      358,
+      175,
+      68,
+      53,
+      36,
+      0
+    ],
+    "featureStats": [
+      {
+        "name": "zoneCorrespondenceSimilarity",
+        "weight": 0.09,
+        "meanAll": 0.3951872770511391,
+        "meanHighConf": 0.9680952380952377,
+        "meanRejected": 0.15437898870888617,
+        "std": 0.4759001053062488,
+        "min": 0,
+        "max": 0.97,
+        "pctZero": 0.5918549346016647,
+        "weightedContribAll": 0.035566854934602515,
+        "discriminativePower": 0.8137162493863515
+      },
+      {
+        "name": "quantityUnitSimilarity",
+        "weight": 0.12,
+        "meanAll": 0.3572818164468257,
+        "meanHighConf": 0.9865693138390067,
+        "meanRejected": 0.20723088650818414,
+        "std": 0.371882602084863,
+        "min": 0.0006680562236117791,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.04287381797361908,
+        "discriminativePower": 0.7793384273308226
+      },
+      {
+        "name": "unitPriceSimilarity",
+        "weight": 0.06,
+        "meanAll": 0.3151909053590905,
+        "meanHighConf": 0.9702229643488907,
+        "meanRejected": 0.23406413095847595,
+        "std": 0.32911426804269284,
+        "min": 0.0006721505617258265,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.01891145432154543,
+        "discriminativePower": 0.7361588333904148
+      },
+      {
+        "name": "tradeActionSimilarity",
+        "weight": 0.14,
+        "meanAll": 0.17502972651605378,
+        "meanHighConf": 0.6888888888888892,
+        "meanRejected": 0.08679430535100613,
+        "std": 0.2850529797364687,
+        "min": 0,
+        "max": 1,
+        "pctZero": 0.7095719381688466,
+        "weightedContribAll": 0.024504161712247532,
+        "discriminativePower": 0.602094583537883
+      },
+      {
+        "name": "totalSimilarity",
+        "weight": 0.11,
+        "meanAll": 0.4823884021578744,
+        "meanHighConf": 0.9702486209274814,
+        "meanRejected": 0.47045614818101483,
+        "std": 0.32124123024023793,
+        "min": 0.00178121507954561,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.05306272423736618,
+        "discriminativePower": 0.4997924727464666
+      },
+      {
+        "name": "descriptionSemanticSimilarity",
+        "weight": 0.19,
+        "meanAll": 0.3666843350822912,
+        "meanHighConf": 0.7782935344461617,
+        "meanRejected": 0.3242474741772541,
+        "std": 0.15889220495974943,
+        "min": 0.00878894433843436,
+        "max": 0.915339318374972,
+        "pctZero": 0,
+        "weightedContribAll": 0.06967002366563532,
+        "discriminativePower": 0.4540460602689076
+      },
+      {
+        "name": "descriptionFuzzySimilarity",
+        "weight": 0.23,
+        "meanAll": 0.064084258488242,
+        "meanHighConf": 0.44435771459580964,
+        "meanRejected": 0.025814601587797574,
+        "std": 0.1256575028248789,
+        "min": 0,
+        "max": 0.6666666666666666,
+        "pctZero": 0.6935196195005945,
+        "weightedContribAll": 0.01473937945229566,
+        "discriminativePower": 0.41854311300801206
+      },
+      {
+        "name": "sequenceSimilarity",
+        "weight": 0.02,
+        "meanAll": 0.8102645659928702,
+        "meanHighConf": 0.9816666666666664,
+        "meanRejected": 0.7248355424644081,
+        "std": 0.19402996211884788,
+        "min": 0.21000000000000002,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.016205291319857405,
+        "discriminativePower": 0.2568311242022583
+      },
+      {
+        "name": "specialFlagCompatibility",
+        "weight": 0.02,
+        "meanAll": 0.995243757431629,
+        "meanHighConf": 1,
+        "meanRejected": 0.9933726067746687,
+        "std": 0.04853348782867692,
+        "min": 0.5,
+        "max": 1,
+        "pctZero": 0,
+        "weightedContribAll": 0.01990487514863258,
+        "discriminativePower": 0.006627393225331346
+      },
+      {
+        "name": "materialObjectSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      },
+      {
+        "name": "itemCodeSimilarity",
+        "weight": 0.01,
+        "meanAll": 0,
+        "meanHighConf": 0,
+        "meanRejected": 0,
+        "std": 0,
+        "min": 0,
+        "max": 0,
+        "pctZero": 1,
+        "weightedContribAll": 0,
+        "discriminativePower": 0
+      }
+    ],
+    "borderline": {
+      "nearReject": 316,
+      "nearPossible": 60,
+      "nearHighConf": 15
+    },
+    "boostStats": {
+      "edgesWithBoost": 3364,
+      "avgBoostMagnitude": 0.07105963139120494,
+      "bucketChangedByBoost": 0
+    }
+  },
+  "p14": {
+    "componentCount": 1,
+    "bySize": {
+      "small": 0,
+      "medium": 1,
+      "large": 0
+    },
+    "largestComponentSize": 191,
+    "singletonsYours": 0,
+    "singletonsAdj": 0,
+    "components": [
+      {
+        "idx": 0,
+        "yoursCount": 99,
+        "adjCount": 92,
+        "edgeCount": 0,
+        "size": "medium",
+        "isAmbiguous": true,
+        "edgeDensity": 0
+      }
+    ]
+  },
+  "p15": {
+    "decisionCount": 99,
+    "matchedCount": 88,
+    "possibleCount": 0,
+    "unmatchedYours": 11,
+    "unmatchedAdj": 0,
+    "matchedScores": {
+      "min": 0.5911,
+      "mean": 0.7781056818181817,
+      "max": 0.898
+    },
+    "possibleScores": {
+      "min": 0,
+      "mean": 0,
+      "max": 0
+    },
+    "scoreHistogramMatched": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      10,
+      41,
+      36,
+      0
+    ],
+    "scoreHistogramPossible": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "p16": {
+    "groupedCount": 0,
+    "relinquishedAdj": 0
+  },
+  "p17": {
+    "adjudicatedCount": 4,
+    "acceptedCount": 0,
+    "rejectedCount": 4,
+    "estimatedCostUsd": 0.00645,
+    "durationMs": 5919,
+    "confusionMatrix": {
+      "algoHigh_llmAccept": 0,
+      "algoHigh_llmReject": 0,
+      "algoLow_llmAccept": 0,
+      "algoLow_llmReject": 4
+    },
+    "agreementRate": 1,
+    "reasoningSamples": [
+      {
+        "pairIndex": 0,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Removing aluminum step flashing (roofing demolition, 16 LF) is fundamentally different from a roof deck inspection and engineering report (professional inspection service, 1 each). Different scope, action, and quantity units.",
+        "yoursDesc": "Remove - Flashing, Step, Aluminum, .016",
+        "adjDesc": "Remove - Flashing, Step, Aluminum, .016"
+      },
+      {
+        "pairIndex": 1,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Completely different scopes: replacing crown molding (finish carpentry) vs. mold testing and remediation assessment (environmental/inspection service). Different trade, action, quantity units, and purpose.",
+        "yoursDesc": "Replace - Crown Molding, Wood, 3-1/4\"",
+        "adjDesc": "Replace - Crown Molding, Wood, 3-1/4\""
+      },
+      {
+        "pairIndex": 2,
+        "finalScore": 0,
+        "decision": "no_match",
+        "reasoning": "Replacing aluminum micro-mesh gutter screen guards (material installation, 302 LF) is fundamentally different from a gutter flush and flow test (inspection/maintenance service, 1 LS). Different scope, action, and quantities.",
+        "yoursDesc": "Replace - Gutter Screen Guard, Aluminum Micro-Mesh",
+        "adjDesc": "Replace - Gutter Screen Guard, Aluminum Micro-Mesh"
+      }
+    ]
+  },
+  "p18": {
+    "lineItemCount": 103,
+    "byStatus": {
+      "MATCH": 75,
+      "MODIFIED": 13,
+      "MISSING_FROM_ADJUSTER": 11,
+      "ADDED_BY_ADJUSTER": 4,
+      "GROUPED": 0
+    },
+    "byProvenance": {
+      "auto_high_confidence": 59,
+      "assignment": 36,
+      "llm_adjudication": 4
+    },
+    "totalGap": -3949.4600000000064,
+    "yourEstimateTotal": 39729.59000000001,
+    "adjEstimateTotal": 35780.130000000005,
+    "matchedDollars": 20526.010000000002,
+    "matchedDollarPct": 0.5166428850637521
+  },
+  "decisions": [
+    {
+      "id": "941290b4-a4ec-408d-aadd-ea4bee299273",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.898,
+      "yoursDesc": "Texture Ceiling - Knockdown",
+      "adjDesc": "Ceiling Texture Application - Knockdown Finish",
+      "yoursTotal": 174.08,
+      "adjTotal": 174.08,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "55ac4b12-989f-4047-8e60-03432e4e216b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.898,
+      "yoursDesc": "Texture Ceiling - Knockdown",
+      "adjDesc": "Ceiling Texture Application - Knockdown Finish",
+      "yoursTotal": 217.6,
+      "adjTotal": 217.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0fe47c96-3d6d-4c5c-9e5a-b60d834a2dda",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8909,
+      "yoursDesc": "Tear Out - Drip Edge (Gutter Apron) Aluminum, 5\"",
+      "adjDesc": "Remove - Eave Drip Edge (Gutter Apron) Aluminum 5 Inch",
+      "yoursTotal": 21.89,
+      "adjTotal": 21.89,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d932e3c3-de54-41e5-bd85-20bfe2defbb3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8907,
+      "yoursDesc": "Tear Out - Drip Edge (Gutter Apron) Aluminum, 5\"",
+      "adjDesc": "Remove - Eave Drip Edge (Gutter Apron) Aluminum 5 Inch",
+      "yoursTotal": 18.18,
+      "adjTotal": 18.18,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7be94a98-1485-47bb-bbe8-69effa7c45e5",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8854,
+      "yoursDesc": "Tear Out - Downspout, Aluminum, 2x3\"",
+      "adjDesc": "Remove - Aluminum Downspout, 2x3 Inch",
+      "yoursTotal": 27.52,
+      "adjTotal": 27.52,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "03873a20-344b-4bb9-97f3-8bb013c33d3a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8835,
+      "yoursDesc": "Replace - Ridge Cap Shingles, Laminated",
+      "adjDesc": "Install - Ridge Cap Shingles, Laminated",
+      "yoursTotal": 248.63,
+      "adjTotal": 248.63,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ef08767b-b6a4-4af9-836a-a7cefcc14475",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8833,
+      "yoursDesc": "Replace - Ridge Cap Shingles, Laminated",
+      "adjDesc": "Install - Ridge Cap Shingles, Laminated",
+      "yoursTotal": 51.74,
+      "adjTotal": 51.74,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f53e3f3a-fbd0-4cd5-9e47-f2d015e89ec2",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8825,
+      "yoursDesc": "Replace - Ridge Cap Shingles, Laminated",
+      "adjDesc": "Install - Ridge Cap Shingles, Laminated",
+      "yoursTotal": 67.91,
+      "adjTotal": 67.91,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "28ab5262-8d9f-4c50-b94f-2b91d2bf45be",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8632,
+      "yoursDesc": "Replace - Downspout Elbow, Aluminum, 2x3\"",
+      "adjDesc": "Install - Aluminum Downspout Elbow, 2x3 Inch",
+      "yoursTotal": 58,
+      "adjTotal": 58,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c6878a87-7be2-4f43-9411-6ae96256437b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.861,
+      "yoursDesc": "Replace - Downspout Extension, Aluminum, 2x3\"",
+      "adjDesc": "Install - Aluminum Downspout Extension, 2x3 Inch",
+      "yoursTotal": 49.6,
+      "adjTotal": 49.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "153161f2-f6b9-46da-bd0f-2fb1663f3fc7",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8571,
+      "yoursDesc": "Detach and Reset Window Blind",
+      "adjDesc": "Window Blind Detach and Reinstall",
+      "yoursTotal": 57.5,
+      "adjTotal": 57.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ee15fbe8-40aa-4e38-8d62-feed2a273c25",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.857,
+      "yoursDesc": "Detach and Reset Window Blind",
+      "adjDesc": "Window Blind Detach and Reinstall",
+      "yoursTotal": 86.25,
+      "adjTotal": 86.25,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "3ec96d32-89f6-4e07-81ba-5428c9eb66ba",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8522,
+      "yoursDesc": "Detach and Reset Light Fixture",
+      "adjDesc": "Light Fixture Detach and Reinstall",
+      "yoursTotal": 85,
+      "adjTotal": 85,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1be3914c-8d47-465c-8f5c-4e0e15879beb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8515,
+      "yoursDesc": "Tear Out - Drip Edge (Gutter Apron) Aluminum, Pre-Finish Color, 5\"",
+      "adjDesc": "Remove - Eave Drip Edge (Gutter Apron) Aluminum 5 Inch",
+      "yoursTotal": 65.69,
+      "adjTotal": 65.69,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7d56a073-9591-4e73-a650-d8b411b4727d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8453,
+      "yoursDesc": "Replace - Drip Edge (Gutter Apron) Aluminum, 5\"",
+      "adjDesc": "Install - Eave Drip Edge (Gutter Apron) Aluminum 5 Inch",
+      "yoursTotal": 98.03,
+      "adjTotal": 98.03,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "33a9c8b9-ffc4-4dd2-8212-57c4840743c4",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8448,
+      "yoursDesc": "Replace - Drip Edge (Gutter Apron) Aluminum, 5\"",
+      "adjDesc": "Install - Eave Drip Edge (Gutter Apron) Aluminum 5 Inch",
+      "yoursTotal": 81.41,
+      "adjTotal": 81.41,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "92499ec6-a4b9-4434-91b5-76db5e6bd2b9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8415,
+      "yoursDesc": "Replace - Gutter Outlet, Aluminum, 5\"",
+      "adjDesc": "Install - Aluminum Gutter Outlet, 5 Inch",
+      "yoursTotal": 78,
+      "adjTotal": 78,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a9920f17-9078-47f7-b730-06168b07803f",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8396,
+      "yoursDesc": "Replace - Downspout, Aluminum, 2x3\"",
+      "adjDesc": "Install - Aluminum Downspout, 2x3 Inch",
+      "yoursTotal": 146.5,
+      "adjTotal": 146.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "59d44800-2e10-4449-ae8d-e336ec4c3eb1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8386,
+      "yoursDesc": "Texture Walls - Knockdown",
+      "adjDesc": "Wall Texture Application - Knockdown Finish",
+      "yoursTotal": 222.56,
+      "adjTotal": 222.56,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "028be7cc-11e8-4573-b710-b07805ee364e",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8385,
+      "yoursDesc": "Texture Walls - Knockdown",
+      "adjDesc": "Wall Texture Application - Knockdown Finish",
+      "yoursTotal": 266.24,
+      "adjTotal": 266.24,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "135e4c15-0d12-45bb-a989-bf6dbf866717",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8326,
+      "yoursDesc": "Tear Out - Drywall Ceiling",
+      "adjDesc": "Remove - Drywall Ceiling Assembly",
+      "yoursTotal": 107.52,
+      "adjTotal": 107.52,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b5b979d8-516d-40f9-8911-56d38b98f3c6",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8325,
+      "yoursDesc": "Tear Out - Drywall Ceiling",
+      "adjDesc": "Remove - Drywall Ceiling Assembly",
+      "yoursTotal": 134.4,
+      "adjTotal": 134.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c6b849db-970e-4a2d-a434-ead58d084159",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8316,
+      "yoursDesc": "Tear Out - Carpet and Pad",
+      "adjDesc": "Remove - Carpet and Underlayment Pad",
+      "yoursTotal": 97.28,
+      "adjTotal": 97.28,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1284021c-6f69-469c-bf86-7e50c09e324a",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8293,
+      "yoursDesc": "Tear Out - Drywall Wall",
+      "adjDesc": "Remove - Drywall Wall Assembly",
+      "yoursTotal": 215.04,
+      "adjTotal": 215.04,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "61c0448b-6b08-46b3-a0c9-b535da267d3d",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.829,
+      "yoursDesc": "Tear Out - Drywall Wall",
+      "adjDesc": "Remove - Drywall Wall Assembly",
+      "yoursTotal": 179.76,
+      "adjTotal": 179.76,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "96952de1-fd86-4c94-9b85-75db0978fc5c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8287,
+      "yoursDesc": "Tear Out - Ridge Vent Composite/PVC",
+      "adjDesc": "Remove - Ridge Vent, PVC/Composite",
+      "yoursTotal": 3.91,
+      "adjTotal": 3.91,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "40533e3c-0fbc-4fd2-a7e3-e0758d3b2b46",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8286,
+      "yoursDesc": "Tear Out - Ridge Vent Composite/PVC",
+      "adjDesc": "Remove - Ridge Vent, PVC/Composite",
+      "yoursTotal": 14.33,
+      "adjTotal": 14.33,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5aec3c61-9bad-4233-ba8a-b7e75414bd38",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8283,
+      "yoursDesc": "Tear Out - Window Trim (Casing) Exterior",
+      "adjDesc": "Remove - Exterior Window Casing",
+      "yoursTotal": 50,
+      "adjTotal": 50,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "34e2d780-e826-4dd3-a84a-2196bb3170bc",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8267,
+      "yoursDesc": "Replace - Pipe Boot Flashing, 1-1/2\" to 3\"",
+      "adjDesc": "Install - Pipe Flashing Boot, 2-3 Inch",
+      "yoursTotal": 77.5,
+      "adjTotal": 77.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "788e056d-a9c4-4ef0-8811-b49bcd78e577",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.826,
+      "yoursDesc": "Sand and Finish Hardwood Floor",
+      "adjDesc": "Hardwood Floor Sanding and Finish Application",
+      "yoursTotal": 912,
+      "adjTotal": 912,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b907cd87-e39a-4fab-a551-04f7c2ae8376",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8167,
+      "yoursDesc": "Replace - Window Trim (Casing) Exterior Vinyl",
+      "adjDesc": "Install - Vinyl Exterior Window Casing",
+      "yoursTotal": 195,
+      "adjTotal": 195,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "26908d19-45f7-4d35-b4e9-724959b7532c",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8144,
+      "yoursDesc": "Replace - Flashing, Chimney Counter, Aluminum",
+      "adjDesc": "Install - Chimney Counter Flashing, Aluminum",
+      "yoursTotal": 195,
+      "adjTotal": 145,
+      "diff": -50,
+      "llmReasoning": null
+    },
+    {
+      "id": "743e0011-6699-46c0-99ee-8d9eafd23695",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8058,
+      "yoursDesc": "Tear Out - Gutter, Aluminum, Box 5\"",
+      "adjDesc": "Remove - Aluminum K-Style Gutter, 5 Inch",
+      "yoursTotal": 193.54,
+      "adjTotal": 193.54,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8f15197f-6c50-46d7-a807-030589283fbe",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8025,
+      "yoursDesc": "Replace - Ridge Vent Composite/PVC",
+      "adjDesc": "Install - Ridge Vent, PVC/Composite",
+      "yoursTotal": 159.78,
+      "adjTotal": 159.78,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "0ac582a7-339f-4a47-9d65-de4af24d6ef3",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8025,
+      "yoursDesc": "Replace - Ridge Vent Composite/PVC",
+      "adjDesc": "Install - Ridge Vent, PVC/Composite",
+      "yoursTotal": 43.64,
+      "adjTotal": 43.64,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cb28e458-2d28-4fc8-a148-d2c051e6ee69",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.8003,
+      "yoursDesc": "Replace - Drip Edge (Gutter Apron) Aluminum, Pre-Finish Color, 5\"",
+      "adjDesc": "Install - Eave Drip Edge (Gutter Apron) Aluminum 5 Inch",
+      "yoursTotal": 294.21,
+      "adjTotal": 294.21,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "89dde4b5-2201-4ebf-8a92-a242b2f60a2b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7878,
+      "yoursDesc": "Replace - Recessed Light Fixture",
+      "adjDesc": "Install - Recessed Can Light Fixture",
+      "yoursTotal": 580,
+      "adjTotal": 448,
+      "diff": -132,
+      "llmReasoning": null
+    },
+    {
+      "id": "812d1039-198e-4cd0-8d3b-ed6da9946985",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7865,
+      "yoursDesc": "Tear Out - Drip Edge (Rake Only) Aluminum, Pre-Finish Color",
+      "adjDesc": "Remove - Rake Drip Edge, Aluminum Pre-Finished",
+      "yoursTotal": 27.39,
+      "adjTotal": 27.39,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b2fce03b-eb3e-4ad4-822d-a14f7daf98c1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7863,
+      "yoursDesc": "Tear Out - Shingles, Laminated/Architectural Good",
+      "adjDesc": "Remove - Asphalt Shingles, Architectural Grade",
+      "yoursTotal": 1439.95,
+      "adjTotal": 1439.95,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ae5c3821-4943-4fb6-8159-5a88549515bc",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7863,
+      "yoursDesc": "Tear Out - Drip Edge (Rake Only) Aluminum, Pre-Finish Color",
+      "adjDesc": "Remove - Rake Drip Edge, Aluminum Pre-Finished",
+      "yoursTotal": 100.35,
+      "adjTotal": 100.35,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8e47582e-67b1-49f6-a393-6971e3f85c8b",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7862,
+      "yoursDesc": "Tear Out - Drip Edge (Rake Only) Aluminum, Pre-Finish Color",
+      "adjDesc": "Remove - Rake Drip Edge, Aluminum Pre-Finished",
+      "yoursTotal": 18.18,
+      "adjTotal": 18.18,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "31b7f72e-f7d3-4d40-aeb7-d03e464c39a0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7856,
+      "yoursDesc": "Tear Out - Shingles, Laminated/Architectural Good",
+      "adjDesc": "Remove - Asphalt Shingles, Architectural Grade",
+      "yoursTotal": 384.44,
+      "adjTotal": 384.44,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "96ebb516-2069-4dfd-9ec3-2f56b4c98eae",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7851,
+      "yoursDesc": "Tear Out - Shingles, Laminated/Architectural Good",
+      "adjDesc": "Remove - Asphalt Shingles, Architectural Grade",
+      "yoursTotal": 191.91,
+      "adjTotal": 191.91,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "07c6d016-bbc1-4f4b-92b0-c935c317b0be",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7831,
+      "yoursDesc": "Tear Out - Hardwood Floor",
+      "adjDesc": "Remove - Hardwood Flooring",
+      "yoursTotal": 217.6,
+      "adjTotal": 217.6,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c467209f-39ba-4833-9855-41185ebb84e1",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7821,
+      "yoursDesc": "Replace - Flashing, Step, Aluminum, .016",
+      "adjDesc": "Install - Step Flashing, Aluminum, Standard Weight",
+      "yoursTotal": 179.09,
+      "adjTotal": 179.09,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "51b9838b-8376-4e37-9b09-a3aed226fec0",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7797,
+      "yoursDesc": "Replace - Hardwood Floor, 3/4\"",
+      "adjDesc": "Install - Solid Hardwood Floor, 3/4 Inch",
+      "yoursTotal": 2974.4,
+      "adjTotal": 2974.4,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "fbb80cbd-1ece-4df6-a623-a4b5c5155320",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7796,
+      "yoursDesc": "Replace - Siding, Vinyl, .044 Gauge",
+      "adjDesc": "Install - Vinyl Siding .044 Gauge",
+      "yoursTotal": 2148.02,
+      "adjTotal": 1952.75,
+      "diff": -195.26999999999998,
+      "llmReasoning": null
+    },
+    {
+      "id": "7f8bb9eb-a802-4f2a-aa4f-55dda3e71e57",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7759,
+      "yoursDesc": "Replace - Drywall Ceiling, 1/2\"",
+      "adjDesc": "Install - Drywall Ceiling Board, 1/2 Inch",
+      "yoursTotal": 585.98,
+      "adjTotal": 585.98,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "e188b7e5-6765-4cdc-9ef8-145316446258",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7758,
+      "yoursDesc": "Replace - Drywall Ceiling, 1/2\"",
+      "adjDesc": "Install - Drywall Ceiling Board, 1/2 Inch",
+      "yoursTotal": 732.48,
+      "adjTotal": 732.48,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b9c85d7e-2291-4709-8053-3fd16d65a172",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7743,
+      "yoursDesc": "Replace - Starter Strip Shingles",
+      "adjDesc": "Install - Starter Course Shingles",
+      "yoursTotal": 190.91,
+      "adjTotal": 190.91,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d47ce25f-d51a-4a3e-bab2-4f3216947023",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7734,
+      "yoursDesc": "Replace - Starter Strip Shingles",
+      "adjDesc": "Install - Starter Course Shingles",
+      "yoursTotal": 52.82,
+      "adjTotal": 52.82,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "8177e2e7-3161-4b78-8974-c23365488295",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7715,
+      "yoursDesc": "Replace - Drywall Wall, 1/2\"",
+      "adjDesc": "Install - Drywall Wall Board, 1/2 Inch",
+      "yoursTotal": 979.69,
+      "adjTotal": 979.69,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a185efa6-c208-4761-8fe6-18b3e31acefc",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7713,
+      "yoursDesc": "Replace - Drywall Wall, 1/2\"",
+      "adjDesc": "Install - Drywall Wall Board, 1/2 Inch",
+      "yoursTotal": 1171.97,
+      "adjTotal": 1171.97,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6b2c918d-f72f-45ab-b37e-c321b960a6b9",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7697,
+      "yoursDesc": "Tear Out - Siding, Vinyl, Horizontal",
+      "adjDesc": "Remove - Horizontal Vinyl Siding",
+      "yoursTotal": 217.73,
+      "adjTotal": 217.73,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "a62924d9-c021-4c53-be8f-430602bd0949",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7649,
+      "yoursDesc": "Replace - Gutter, Aluminum, Box 5\"",
+      "adjDesc": "Install - Aluminum K-Style Gutter, 5 Inch",
+      "yoursTotal": 1028.76,
+      "adjTotal": 979.78,
+      "diff": -48.98000000000002,
+      "llmReasoning": null
+    },
+    {
+      "id": "378a0183-e0c0-4828-98e2-c2ec31f0bbb5",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7617,
+      "yoursDesc": "Replace - Gutter End Cap 5\"",
+      "adjDesc": "Install - Aluminum Gutter End Cap, 5 Inch",
+      "yoursTotal": 85,
+      "adjTotal": 67.5,
+      "diff": -17.5,
+      "llmReasoning": null
+    },
+    {
+      "id": "17832c67-a483-42e6-a84c-53349110b032",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7601,
+      "yoursDesc": "Detach and Reset Ceiling Fan",
+      "adjDesc": "Ceiling Fan Detach and Reinstall",
+      "yoursTotal": 68.5,
+      "adjTotal": 68.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "5ed5c37c-4852-41f0-be71-0213fa0cc1fb",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7559,
+      "yoursDesc": "Replace - Fascia Board, Aluminum, 1x6",
+      "adjDesc": "Install - Aluminum Fascia Cover, 6 Inch",
+      "yoursTotal": 290.49,
+      "adjTotal": 290.49,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c3cd0a42-a06b-403b-99a0-7873054f3123",
+      "decisionType": "one_to_one",
+      "decidedBy": "auto_high_confidence",
+      "finalScore": 0.7538,
+      "yoursDesc": "Replace - Soffit Board, Aluminum Vented",
+      "adjDesc": "Install - Vented Aluminum Soffit Panel",
+      "yoursTotal": 314.58,
+      "adjTotal": 237.54,
+      "diff": -77.03999999999999,
+      "llmReasoning": null
+    },
+    {
+      "id": "3002d7eb-ea5d-47dc-8af4-d2b11e7c76eb",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7465,
+      "yoursDesc": "Replace - Corner Post, Vinyl, 4\"",
+      "adjDesc": "Install - Vinyl Corner Post, 4 Inch",
+      "yoursTotal": 115,
+      "adjTotal": 115,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "31c28c9c-0a3d-4f8a-b6dd-b28a23bb11d4",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7432,
+      "yoursDesc": "Replace - Carpet Pad",
+      "adjDesc": "Install - Carpet Underlayment Pad",
+      "yoursTotal": 184.89,
+      "adjTotal": 147.91,
+      "diff": -36.97999999999999,
+      "llmReasoning": null
+    },
+    {
+      "id": "c8b2a921-ac03-497a-af70-be138f3f35b8",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7336,
+      "yoursDesc": "Replace - Drip Edge (Rake Only) Aluminum, Pre-Finish Color",
+      "adjDesc": "Install - Rake Drip Edge, Aluminum Pre-Finished",
+      "yoursTotal": 533.43,
+      "adjTotal": 533.43,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "9ae9c363-eafe-4d00-b7b3-93c66a53fd15",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7336,
+      "yoursDesc": "Replace - Drip Edge (Rake Only) Aluminum, Pre-Finish Color",
+      "adjDesc": "Install - Rake Drip Edge, Aluminum Pre-Finished",
+      "yoursTotal": 145.61,
+      "adjTotal": 145.61,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f04f8013-bcb5-4554-b868-bc550a25e66c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7335,
+      "yoursDesc": "Replace - Drip Edge (Rake Only) Aluminum, Pre-Finish Color",
+      "adjDesc": "Install - Rake Drip Edge, Aluminum Pre-Finished",
+      "yoursTotal": 96.62,
+      "adjTotal": 96.62,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "d93cc3f4-5e2e-4167-9382-353f425e1ca4",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7299,
+      "yoursDesc": "Replace - Ice/Water Shield Single Layer",
+      "adjDesc": "Install - Ice and Water Barrier, Single Layer",
+      "yoursTotal": 35.13,
+      "adjTotal": 35.13,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7d780170-cb8e-49cb-8fb5-9851421e99e5",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7295,
+      "yoursDesc": "Replace - Ice/Water Shield Single Layer",
+      "adjDesc": "Install - Ice and Water Barrier, Single Layer",
+      "yoursTotal": 16.88,
+      "adjTotal": 16.88,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "bda943d6-517f-451f-a01f-97fbe77b47d2",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7277,
+      "yoursDesc": "Replace - Carpet",
+      "adjDesc": "Install - Carpet, Standard Grade",
+      "yoursTotal": 981.32,
+      "adjTotal": 981.32,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "c1a93572-6994-4674-ba88-aaca27654009",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7273,
+      "yoursDesc": "Replace - Shingles, Laminated/Architectural Good",
+      "adjDesc": "Install - Asphalt Shingles, Architectural Grade",
+      "yoursTotal": 8045.07,
+      "adjTotal": 7313.99,
+      "diff": -731.0799999999999,
+      "llmReasoning": null
+    },
+    {
+      "id": "2b890298-a4cc-4910-9d1f-d0eab0fd3fa8",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7272,
+      "yoursDesc": "Replace - Shingles, Laminated/Architectural Good",
+      "adjDesc": "Install - Asphalt Shingles, Architectural Grade",
+      "yoursTotal": 1071.63,
+      "adjTotal": 974.78,
+      "diff": -96.85000000000014,
+      "llmReasoning": null
+    },
+    {
+      "id": "9c8643d5-5683-4380-9869-3bbab89aca56",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7269,
+      "yoursDesc": "Replace - Shingles, Laminated/Architectural Good",
+      "adjDesc": "Install - Asphalt Shingles, Architectural Grade",
+      "yoursTotal": 2149.52,
+      "adjTotal": 1952.69,
+      "diff": -196.82999999999993,
+      "llmReasoning": null
+    },
+    {
+      "id": "c690cec9-e05e-4c39-8952-f2a41b5a141a",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7244,
+      "yoursDesc": "Paint Trim - Window and Door Casing",
+      "adjDesc": "Trim Paint Application - Casings",
+      "yoursTotal": 117.76,
+      "adjTotal": 58.88,
+      "diff": -58.88,
+      "llmReasoning": null
+    },
+    {
+      "id": "acf2baa3-ed29-4243-86a0-46f9b412470a",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7186,
+      "yoursDesc": "Paint Walls - 2 Coats",
+      "adjDesc": "Wall Painting - 2-Coat Application",
+      "yoursTotal": 291.04,
+      "adjTotal": 291.04,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "08839d6b-222b-46f5-b840-5ed516394024",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7185,
+      "yoursDesc": "Paint Walls - 2 Coats",
+      "adjDesc": "Wall Painting - 2-Coat Application",
+      "yoursTotal": 348.16,
+      "adjTotal": 348.16,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "7700f642-e0e0-4d5a-adc7-28fea2022dbe",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7148,
+      "yoursDesc": "Haul Debris and Dispose of Siding Materials",
+      "adjDesc": "Siding Material Disposal and Hauling",
+      "yoursTotal": 145,
+      "adjTotal": 145,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "48e25627-a53a-42a5-8cd3-9b4f131da6be",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.7103,
+      "yoursDesc": "Replace - Splash Block",
+      "adjDesc": "Install - Concrete Splash Block",
+      "yoursTotal": 90,
+      "adjTotal": 90,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "6cad755a-d731-4421-9401-f2a37d5a8c3d",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.705,
+      "yoursDesc": "Replace - Ice/Water Shield Single Layer",
+      "adjDesc": "Install - Ice and Water Barrier, Single Layer",
+      "yoursTotal": 130.38,
+      "adjTotal": 111.3,
+      "diff": -19.08,
+      "llmReasoning": null
+    },
+    {
+      "id": "af1c91a0-81fb-4dd8-9421-57e26544a1aa",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.701,
+      "yoursDesc": "Replace - Synthetic Underlayment",
+      "adjDesc": "Install - Synthetic Felt Underlayment",
+      "yoursTotal": 753.33,
+      "adjTotal": 753.33,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b59e2d7f-9594-4733-87a9-1815ac506da9",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6787,
+      "yoursDesc": "Tear Out - Height Allowance, Roof Covering, 2 Story",
+      "adjDesc": "Remove - Height Surcharge, 2-Story Structure",
+      "yoursTotal": 258.47,
+      "adjTotal": 258.47,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "863c2425-f810-47c3-86c5-4319f2895700",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6717,
+      "yoursDesc": "Replace - Frieze Board, Aluminum, 1x6",
+      "adjDesc": "Install - Aluminum Frieze Cover, 6 Inch",
+      "yoursTotal": 223.56,
+      "adjTotal": 223.56,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "109d9f35-98f2-486d-8b54-b577b613e1df",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6709,
+      "yoursDesc": "Roof Deck Fastener Re-nail, Per Code",
+      "adjDesc": "Deck Board Re-fastening Per Building Code",
+      "yoursTotal": 433.08,
+      "adjTotal": 433.08,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "ede16728-4601-4bd6-8b97-9f9decbf896e",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6601,
+      "yoursDesc": "Replace - Felt, 15LB",
+      "adjDesc": "Install - Roofing Felt Underlayment 15LB",
+      "yoursTotal": 593.21,
+      "adjTotal": 593.21,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "1c97e584-f836-4812-918e-298e7f3b4e3c",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6597,
+      "yoursDesc": "Replace - Felt, 15LB",
+      "adjDesc": "Install - Roofing Felt Underlayment 15LB",
+      "yoursTotal": 79.06,
+      "adjTotal": 79.06,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "24c95e49-083a-4dee-99c9-0a5cbe000943",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6595,
+      "yoursDesc": "Replace - Felt, 15LB",
+      "adjDesc": "Install - Roofing Felt Underlayment 15LB",
+      "yoursTotal": 158.38,
+      "adjTotal": 158.38,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b2c079db-2e42-4b4c-b2da-c4df7dbe949a",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6562,
+      "yoursDesc": "Seal All Miters and End Caps",
+      "adjDesc": "Miter and End Cap Sealant Application",
+      "yoursTotal": 95,
+      "adjTotal": 95,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "54cf570e-f1ac-453e-b072-33765d56c7b1",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6486,
+      "yoursDesc": "Replace - Height Allowance, Roof Covering, 2 Story",
+      "adjDesc": "Install - Height Surcharge, 2-Story Structure",
+      "yoursTotal": 372.61,
+      "adjTotal": 372.61,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "f1cc3910-6968-4473-99c6-45d8292145a9",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6268,
+      "yoursDesc": "Caulk All Siding Penetrations and Joints",
+      "adjDesc": "Penetration and Joint Caulking - Siding",
+      "yoursTotal": 68.5,
+      "adjTotal": 68.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "b75b4875-5bc6-4151-abd0-99c73087fbd1",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.6238,
+      "yoursDesc": "Replace - Attic Vent, Low Profile (Turtle Type)",
+      "adjDesc": "Install - Low Profile Attic Ventilator",
+      "yoursTotal": 165,
+      "adjTotal": 124,
+      "diff": -41,
+      "llmReasoning": null
+    },
+    {
+      "id": "0643674d-7114-40a1-92bb-43b524230bc0",
+      "decisionType": "one_to_one",
+      "decidedBy": "assignment",
+      "finalScore": 0.5911,
+      "yoursDesc": "Seal Around All Roof Penetrations",
+      "adjDesc": "Perimeter Penetration Sealant Application",
+      "yoursTotal": 68.5,
+      "adjTotal": 68.5,
+      "diff": 0,
+      "llmReasoning": null
+    },
+    {
+      "id": "cf3dfb92-4aec-4605-93fb-49633b295205",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Screen, Prefabricated 4 SF",
+      "adjDesc": null,
+      "yoursTotal": 136.8,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "7042e60f-3662-4623-b298-7726f14116bb",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Pipe Boot Flashing, 1-1/2\" to 3\"",
+      "adjDesc": null,
+      "yoursTotal": 38.75,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "dfa52dc4-d11a-4f75-95c5-8eed758a4fca",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Baseboard, 3-1/4\", Painted",
+      "adjDesc": null,
+      "yoursTotal": 228,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "85c33dcc-039e-43ee-818f-e3ec85b351d5",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Ice/Water Shield Double Layer",
+      "adjDesc": null,
+      "yoursTotal": 578.79,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "592da8df-d562-4ada-82c7-a94b8ce4c3a1",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Pipe Roof Jack, 2 Inch",
+      "adjDesc": null,
+      "yoursTotal": 24.5,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "558b8200-bcd7-49fc-973b-14491d40dfbf",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Replace - J-Channel, Vinyl",
+      "adjDesc": null,
+      "yoursTotal": 155.21,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "d93890dc-5a01-4707-8918-3fe2cb970553",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Remove - Flashing, Step, Aluminum, .016",
+      "adjDesc": null,
+      "yoursTotal": 27.04,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Removing aluminum step flashing (roofing demolition, 16 LF) is fundamentally different from a roof deck inspection and engineering report (professional inspection service, 1 each). Different scope, action, and quantity units."
+    },
+    {
+      "id": "06d14821-69ad-489d-aeba-c6cd96ea36d4",
+      "decisionType": "unmatched",
+      "decidedBy": "assignment",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Insulation, Batt, R-30, 10\"",
+      "adjDesc": null,
+      "yoursTotal": 473.6,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": null
+    },
+    {
+      "id": "9978bbbe-f89e-4713-9a7c-77d77c1c1d40",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Crown Molding, Wood, 3-1/4\"",
+      "adjDesc": null,
+      "yoursTotal": 310.4,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Completely different scopes: replacing crown molding (finish carpentry) vs. mold testing and remediation assessment (environmental/inspection service). Different trade, action, quantity units, and purpose."
+    },
+    {
+      "id": "d6eb6e6e-161d-4fdf-9876-45fa3f045ded",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Gutter Screen Guard, Aluminum Micro-Mesh",
+      "adjDesc": null,
+      "yoursTotal": 740.88,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Replacing aluminum micro-mesh gutter screen guards (material installation, 302 LF) is fundamentally different from a gutter flush and flow test (inspection/maintenance service, 1 LS). Different scope, action, and quantities."
+    },
+    {
+      "id": "6924adf8-cc3b-48ad-95e5-f5ea8ad35c5b",
+      "decisionType": "unmatched",
+      "decidedBy": "llm_adjudication",
+      "finalScore": 0,
+      "yoursDesc": "Replace - Window/Door Casing, Wood",
+      "adjDesc": null,
+      "yoursTotal": 274,
+      "adjTotal": null,
+      "diff": null,
+      "llmReasoning": "Replacing wood window/door casing (finish carpentry) is entirely different from indoor air quality testing post-remediation (environmental testing service). Different trade action, purpose, and quantity units despite a loose zone similarity."
+    }
+  ]
+}

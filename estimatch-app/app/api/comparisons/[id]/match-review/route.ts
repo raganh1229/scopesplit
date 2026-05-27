@@ -44,8 +44,8 @@ export async function GET(
     );
   }
 
-  // ── N3 path: read from n3_zone_correspondences table ─────────────────────
-  if (comparison.pipelineVersion === 'n3') {
+  // ── N3/N4 path: read from n3_zone_correspondences table ──────────────────
+  if (comparison.pipelineVersion === 'n3' || comparison.pipelineVersion === 'n4') {
     const corrs = await prisma.n3ZoneCorrespondence.findMany({
       where: { comparisonId },
       include: {

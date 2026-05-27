@@ -46,8 +46,8 @@ export async function GET(
     approxItems: z.approxItems,
   });
 
-  // ── N3 path: read from n3_zones table ────────────────────────────────────
-  if (comparison.pipelineVersion === 'n3') {
+  // ── N3/N4 path: read from n3_zones table ─────────────────────────────────
+  if (comparison.pipelineVersion === 'n3' || comparison.pipelineVersion === 'n4') {
     const zones = await prisma.n3Zone.findMany({
       where: { comparisonId },
       select: { name: true, source: true, startPage: true, endPage: true, approxItems: true },

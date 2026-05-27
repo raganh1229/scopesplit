@@ -55,8 +55,8 @@ export async function POST(
     return NextResponse.json({ ok: true, skipped: true, reason: 'not-awaiting-match-review' });
   }
 
-  // ── N3 path ───────────────────────────────────────────────────────────────
-  if (comparison.pipelineVersion === 'n3') {
+  // ── N3/N4 path ───────────────────────────────────────────────────────────
+  if (comparison.pipelineVersion === 'n3' || comparison.pipelineVersion === 'n4') {
     await prisma.comparison.update({
       where: { id: comparisonId },
       data: { status: 'PROCESSING' },
