@@ -10,7 +10,7 @@
 
 // ── Enums / Literals ──────────────────────────────────────────────────────────
 
-export type EstimateFormat = 'xactimate' | 'symbility' | 'unknown';
+export type EstimateFormat = 'xactimate' | 'symbility' | 'unknown' | 'xls';
 
 export type RoutingDecision =
   | 'zoned-zoned'

@@ -14,11 +14,13 @@
 import type { Extractor, EstimateFormat } from './types';
 import { xactimateExtractor } from './xactimate';
 import { symbilityExtractor } from './symbility';
+import { xlsExtractor } from './xls';
 
 export const EXTRACTORS: Record<EstimateFormat, Extractor> = {
   xactimate: xactimateExtractor,
   symbility: symbilityExtractor,
   unknown:   xactimateExtractor, // fallback — treat unknown format as Xactimate
+  xls:       xlsExtractor,
 };
 
 /**

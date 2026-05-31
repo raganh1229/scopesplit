@@ -94,6 +94,8 @@ model Comparison {
   name                        String?                    @map("name")
   inngestRunId                String?                    @map("inngest_run_id")
   pipelineVersion             String                     @default("n1") @map("pipeline_version")
+  xlsColumnMapYours           Json?                      @map("xls_column_map_yours")
+  xlsColumnMapAdj             Json?                      @map("xls_column_map_adj")
   notes                       ComparisonNote[]
   processingState             ComparisonProcessingState?
   versions                    ComparisonVersion[]

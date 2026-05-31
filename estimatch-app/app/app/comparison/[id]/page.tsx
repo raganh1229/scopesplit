@@ -217,6 +217,8 @@ export default function ComparisonDetailPage() {
   const [isAwaitingNextPass, setIsAwaitingNextPass] = useState(false);
   const [isAwaitingExtractPhase, setIsAwaitingExtractPhase] = useState(false);
   const [isAwaitingLineItemPhase, setIsAwaitingLineItemPhase] = useState(false);
+  const [awaitingPercent, setAwaitingPercent] = useState(0);
+  const [awaitingElapsed, setAwaitingElapsed] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [rowNoteMenu, setRowNoteMenu] = useState<{ x: number; y: number; rowKey: string; target: NoteLineItemContext; row: Row; isZoneRow?: boolean; zoneId?: string } | null>(null);
   const [editingRowKey, setEditingRowKey] = useState<string | null>(null);
@@ -1081,6 +1083,26 @@ export default function ComparisonDetailPage() {
     return () => clearInterval(id);
   }, [comparison?.status, comparisonId]);
 
+  // Progress ticker for post-review waiting screens
+  useEffect(() => {
+    const isAny = isAwaitingNextPass || isAwaitingExtractPhase || isAwaitingLineItemPhase;
+    if (!isAny) {
+      setAwaitingPercent(0);
+      setAwaitingElapsed(0);
+      return;
+    }
+    setAwaitingPercent(8);
+    setAwaitingElapsed(0);
+    const startedAt = Date.now();
+    const ticker = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+      const target = Math.min(94, 10 + elapsed * 0.6);
+      setAwaitingElapsed(elapsed);
+      setAwaitingPercent(prev => (prev < target ? Math.min(target, prev + 1.5) : prev));
+    }, 1000);
+    return () => clearInterval(ticker);
+  }, [isAwaitingNextPass, isAwaitingExtractPhase, isAwaitingLineItemPhase]);
+
   const availableCosts = useMemo(() => {
     if (zones.length === 0) {
       return costColumns;
@@ -1633,7 +1655,21 @@ export default function ComparisonDetailPage() {
         <div className={styles.n2LoadingOverlay}>
           <div className={styles.n2LoadingSpinner} />
           <h2 className={styles.n2LoadingHeadline}>Matching zones across estimates…</h2>
-          <p className={styles.n2LoadingSub}>This may take a moment.</p>
+          <div className={styles.n2ProgressWrap}>
+            <div className={styles.n2ProgressTrack}>
+              <div className={styles.n2ProgressFill} style={{ width: `${awaitingPercent}%` }} />
+            </div>
+            <div className={styles.n2ProgressMeta}>
+              <span>{Math.round(awaitingPercent)}%</span>
+              <span>{awaitingElapsed < 60 ? `${awaitingElapsed}s elapsed` : `${Math.floor(awaitingElapsed / 60)}m ${awaitingElapsed % 60}s elapsed`}</span>
+            </div>
+          </div>
+          <p className={styles.n2LoadingDisclaimer}>
+            Your confirmed zones are being cross-referenced to pair matching rooms and areas between both estimates. This typically takes 1–3 minutes.
+          </p>
+          <p className={styles.n2LoadingNote}>
+            Larger estimates may take up to 10–15 minutes. You&apos;ll have a chance to review and confirm the matched zones before line items are extracted.
+          </p>
         </div>
       </>
     );
@@ -1701,7 +1737,21 @@ export default function ComparisonDetailPage() {
         <div className={styles.n2LoadingOverlay}>
           <div className={styles.n2LoadingSpinner} />
           <h2 className={styles.n2LoadingHeadline}>Extracting and matching line items…</h2>
-          <p className={styles.n2LoadingSub}>This may take a moment.</p>
+          <div className={styles.n2ProgressWrap}>
+            <div className={styles.n2ProgressTrack}>
+              <div className={styles.n2ProgressFill} style={{ width: `${awaitingPercent}%` }} />
+            </div>
+            <div className={styles.n2ProgressMeta}>
+              <span>{Math.round(awaitingPercent)}%</span>
+              <span>{awaitingElapsed < 60 ? `${awaitingElapsed}s elapsed` : `${Math.floor(awaitingElapsed / 60)}m ${awaitingElapsed % 60}s elapsed`}</span>
+            </div>
+          </div>
+          <p className={styles.n2LoadingDisclaimer}>
+            Line items are being read from both estimates, organized by zone, and matched against each other. This is typically the longest step in the process.
+          </p>
+          <p className={styles.n2LoadingNote}>
+            Depending on the size of your estimates, this step can take anywhere from 2–15 minutes. Please keep this tab open — results will load automatically when ready.
+          </p>
         </div>
       </>
     );
@@ -1714,8 +1764,22 @@ export default function ComparisonDetailPage() {
         <TrialBanner />
         <div className={styles.n2LoadingOverlay}>
           <div className={styles.n2LoadingSpinner} />
-          <h2 className={styles.n2LoadingHeadline}>Matching line items…</h2>
-          <p className={styles.n2LoadingSub}>This may take a moment.</p>
+          <h2 className={styles.n2LoadingHeadline}>Scoring and finalizing line item matches…</h2>
+          <div className={styles.n2ProgressWrap}>
+            <div className={styles.n2ProgressTrack}>
+              <div className={styles.n2ProgressFill} style={{ width: `${awaitingPercent}%` }} />
+            </div>
+            <div className={styles.n2ProgressMeta}>
+              <span>{Math.round(awaitingPercent)}%</span>
+              <span>{awaitingElapsed < 60 ? `${awaitingElapsed}s elapsed` : `${Math.floor(awaitingElapsed / 60)}m ${awaitingElapsed % 60}s elapsed`}</span>
+            </div>
+          </div>
+          <p className={styles.n2LoadingDisclaimer}>
+            Each line item is being scored and ranked to determine matches, partial matches, and discrepancies between the two estimates.
+          </p>
+          <p className={styles.n2LoadingNote}>
+            This final step usually completes within 2–5 minutes. Your full comparison results will load automatically when ready.
+          </p>
         </div>
       </>
     );

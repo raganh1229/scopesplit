@@ -120,13 +120,31 @@ function buildStoragePath(clerkId: string, filename: string): string {
   return `${clerkId}/${Date.now()}-${crypto.randomUUID()}-${safeFilename}`;
 }
 
-function validatePdf(file: File): string | null {
-  if (file.type !== 'application/pdf') {
-    return `File "${file.name}" is not a PDF.`;
-  }
+const XLS_MIME_TYPES = new Set([
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+  'application/vnd.ms-excel',                                          // .xls
+  'text/csv',                                                          // .csv
+  'application/csv',
+  'application/octet-stream',                                          // generic binary — extension check below
+]);
 
+const XLS_EXTENSIONS = new Set(['.xlsx', '.xls', '.csv']);
+
+function validateEstimateFile(file: File, format: string): string | null {
   if (file.size > MAX_FILE_SIZE_BYTES) {
     return `File "${file.name}" exceeds 20MB limit.`;
+  }
+
+  if (format === 'xls') {
+    const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+    if (!XLS_MIME_TYPES.has(file.type) && !XLS_EXTENSIONS.has(ext)) {
+      return `File "${file.name}" must be an Excel or CSV file (.xlsx, .xls, .csv).`;
+    }
+    return null;
+  }
+
+  if (file.type !== 'application/pdf') {
+    return `File "${file.name}" is not a PDF.`;
   }
 
   return null;
@@ -150,7 +168,7 @@ async function uploadSingleFile(clerkId: string, file: File) {
   const { error } = await supabaseAdmin.storage
     .from(ESTIMATES_BUCKET)
     .upload(storagePath, arrayBuffer, {
-      contentType: 'application/pdf',
+      contentType: file.type || 'application/octet-stream',
       upsert: false,
     });
 
@@ -295,17 +313,22 @@ export async function POST(request: Request) {
 
   if (!(yourEstimate instanceof File) || !(adjusterEstimate instanceof File)) {
     return NextResponse.json(
-      { error: 'Both PDF files are required.' },
+      { error: 'Both estimate files are required.' },
       { status: 400 }
     );
   }
 
-  const yourEstimateError = validatePdf(yourEstimate);
+  const yourFmtEarly  = formData.get('yourEstimateFormat');
+  const adjFmtEarly   = formData.get('adjusterEstimateFormat');
+  const yourFmtStr  = typeof yourFmtEarly  === 'string' ? yourFmtEarly.trim()  : 'xactimate';
+  const adjFmtStr   = typeof adjFmtEarly   === 'string' ? adjFmtEarly.trim()   : 'xactimate';
+
+  const yourEstimateError = validateEstimateFile(yourEstimate, yourFmtStr);
   if (yourEstimateError) {
     return NextResponse.json({ error: yourEstimateError }, { status: 400 });
   }
 
-  const adjusterEstimateError = validatePdf(adjusterEstimate);
+  const adjusterEstimateError = validateEstimateFile(adjusterEstimate, adjFmtStr);
   if (adjusterEstimateError) {
     return NextResponse.json({ error: adjusterEstimateError }, { status: 400 });
   }
@@ -322,7 +345,7 @@ export async function POST(request: Request) {
     const adjusterUpload = await uploadSingleFile(clerkId, adjusterEstimate);
     uploadedPaths.push(adjusterUpload.storagePath);
 
-    const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown']);
+    const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown', 'xls']);
     const yourFmt = formData.get('yourEstimateFormat');
     const adjFmt  = formData.get('adjusterEstimateFormat');
 

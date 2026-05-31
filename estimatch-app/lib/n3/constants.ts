@@ -65,10 +65,11 @@ export const ZONE_BOOSTS = {
 // real item-code data is present in production comparisons.
 
 export const SCORE_THRESHOLDS = {
-  HIGH_CONFIDENCE: 0.75,   // auto-resolve without LLM if no competing edge (was 0.90 pre-calibration)
-  POSSIBLE_MATCH:  0.55,   // requires human review (was 0.75 pre-calibration)
-  WEAK_CANDIDATE:  0.30,   // above this → enters sparse graph; below → REJECT (was 0.60 pre-calibration)
-  REJECT:          0.30,   // same as WEAK_CANDIDATE; explicit alias for filter logic (was 0.60 pre-calibration)
+  HIGH_CONFIDENCE:    0.75,   // auto-resolve without LLM if no competing edge (was 0.90 pre-calibration)
+  POSSIBLE_MATCH:     0.55,   // requires human review (was 0.75 pre-calibration)
+  POSSIBLE_MATCH_XLS: 0.65,   // XLS: scores compress due to 0% unit fill + dead features; widen LLM review band
+  WEAK_CANDIDATE:     0.30,   // above this → enters sparse graph; below → REJECT (was 0.60 pre-calibration)
+  REJECT:             0.30,   // same as WEAK_CANDIDATE; explicit alias for filter logic (was 0.60 pre-calibration)
 } as const;
 
 // ── Zone verification confidence (§7, Page 7) ─────────────────────────────────

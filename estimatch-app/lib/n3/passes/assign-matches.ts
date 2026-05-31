@@ -18,9 +18,15 @@
 //
 // decisionType mapping (post-calibration thresholds):
 //   finalScore ≥ 0.75 → one_to_one, decidedBy auto_high_confidence
-//   finalScore ≥ 0.55 → one_to_one, decidedBy assignment
-//   finalScore ≥ 0.30 → possible,   decidedBy assignment
+//   finalScore ≥ 0.55 → one_to_one, decidedBy assignment          (non-XLS)
+//   finalScore ≥ 0.65 → one_to_one, decidedBy assignment          (XLS — raised threshold)
+//   finalScore ≥ 0.30 → possible,   decidedBy assignment          → routed to p17 LLM
 //   finalScore = 0    → unmatched,  decidedBy assignment
+//
+// XLS rationale: 0% unit fill and two dead features (specialFlagCompatibility,
+// materialObjectSimilarity) compress XLS scores ~0.10 below PDF equivalents.
+// Raising the auto-confirm floor to 0.65 ensures borderline XLS pairs receive
+// LLM review rather than being silently confirmed as one_to_one.
 //
 // Architecture refs: N3.md §Phase 15, §17.3, §A.4.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -104,9 +110,12 @@ function hungarianMin(cost: number[][]): number[] {
 
 // ── Decision type helpers ─────────────────────────────────────────────────────
 
-function decisionType(finalScore: number): string {
-  if (finalScore >= SCORE_THRESHOLDS.POSSIBLE_MATCH) return 'one_to_one';
-  return 'possible';   // >= REJECT but < POSSIBLE_MATCH
+function decisionType(finalScore: number, format?: string | null): string {
+  const threshold = format === 'xls'
+    ? SCORE_THRESHOLDS.POSSIBLE_MATCH_XLS
+    : SCORE_THRESHOLDS.POSSIBLE_MATCH;
+  if (finalScore >= threshold) return 'one_to_one';
+  return 'possible';   // >= REJECT but < threshold
 }
 
 function decidedBy(finalScore: number): string {
@@ -120,6 +129,13 @@ export async function assignMatchesN3(
   comparisonId: string,
   logger: StepLogger,
 ): Promise<AssignMatchesN3Result> {
+
+  // ── 0. Fetch comparison format (used for format-specific score thresholds) ──
+  const comparison = await prisma.comparison.findUnique({
+    where: { id: comparisonId },
+    select: { yourEstimateFormat: true },
+  });
+  const estimateFormat = comparison?.yourEstimateFormat ?? null;
 
   // ── 1. Load components ─────────────────────────────────────────────────────
   const components = await prisma.n3MatchComponent.findMany({
@@ -223,7 +239,7 @@ export async function assignMatchesN3(
         assignedAdjCols.add(j);
         const edge = edgeLookup.get(`${yours[i]}__${adj[j]}`);
         const fs   = edge?.finalScore ?? 0;
-        const dtype = decisionType(fs);
+        const dtype = decisionType(fs, estimateFormat);
         if (dtype === 'possible') possibleCount++;
         else matchedCount++;
 
@@ -330,7 +346,7 @@ export async function assignMatchesN3(
       // Mutual best AND score >= POSSIBLE_MATCH → rescue
       const fs = yBest.score;
       const edge = edgeLookup.get(`${yoursId}__${yBest.adjId}`)!;
-      d.decisionType    = decisionType(fs);
+      d.decisionType    = decisionType(fs, estimateFormat);
       d.adjusterItemIds = [yBest.adjId];
       d.finalScore      = fs;
       d.topEdgeId       = edge.id;
@@ -414,7 +430,7 @@ export async function assignMatchesN3(
         d1.finalScore      = bestScore;
         d1.topEdgeId       = bestEdgeId;
         d1.decidedBy       = 'zone_repair';
-        d1.decisionType    = decisionType(bestScore);
+        d1.decisionType    = decisionType(bestScore, estimateFormat);
         zoneRepairCount++;
         continue;
       }
@@ -449,16 +465,14 @@ export async function assignMatchesN3(
       d1.finalScore      = bestScore;
       d1.topEdgeId       = bestEdgeId;
       d1.decidedBy       = 'zone_repair';
-      d1.decisionType    = decisionType(bestScore);
+      d1.decisionType    = decisionType(bestScore, estimateFormat);
 
       d2.adjusterItemIds = swapScore > 0 ? [curAdjId] : [];
       d2.finalScore      = swapScore;
       d2.topEdgeId       = swapEdge?.id ?? null;
       d2.decidedBy       = 'zone_repair';
-      d2.decisionType    = swapScore >= SCORE_THRESHOLDS.POSSIBLE_MATCH
-        ? 'one_to_one'
-        : swapScore >= SCORE_THRESHOLDS.REJECT
-        ? 'possible'
+      d2.decisionType    = swapScore > 0
+        ? decisionType(swapScore, estimateFormat)
         : 'unmatched';
 
       adjToIdx.set(bestAdjId, i);

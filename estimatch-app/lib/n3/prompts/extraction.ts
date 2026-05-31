@@ -12,12 +12,14 @@
 // Architecture refs: N3.md §16.1, §16.2 (extraction_confidence, unit_price_similarity)
 // ─────────────────────────────────────────────────────────────────────────────
 
+import type { EstimateFormat } from '@/lib/n2/schemas/types';
+
 export type ExtractionPromptParams = {
   zoneName: string;
   startPage: number;
   endPage: number;
   side: 'contractor' | 'adjuster';
-  format: 'xactimate' | 'symbility' | 'unknown';
+  format: EstimateFormat;
 };
 
 /**

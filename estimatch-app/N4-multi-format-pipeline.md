@@ -246,17 +246,20 @@ Each phase ends with a **gate** that must pass before the next phase begins. Gat
 - Manually flip flag for a single test comparison; verify it runs through N4.
 - Once verified, flip flag globally.
 
-### Phase 5 (Future, when CSV is prioritized) — N5 CSV Extractor
+### Phase 5 — XLS/CSV Extractor (Xactimate Spreadsheet Export)
+
+**Scope:** See Section 12 (architecture) and Section 13 (phased development plan) for full detail.
+
 **Build:**
-- `lib/n4/extractors/csv/index.ts` — implements the same `Extractor` interface
-- `lib/n4/extractors/csv/parse-csv.ts` — deterministic CSV → `n3_zones` + `n3_line_items` rows. No AI calls.
-- `lib/n4/extractors/csv/schema.ts` — defines the expected CSV column schema (zone, description, qty, unit, unit_price, total, optional tax, optional op)
-- Register in `registry.ts`
-- Enable CSV option in upload UI
+- `lib/n4/extractors/xls/` — full extractor folder (index, detect-zones, extract-items, parse-workbook, column-map)
+- `lib/n2/schemas/types.ts` — add `'xls'` to `EstimateFormat`
+- `lib/n4/extractors/registry.ts` — register `xlsExtractor`
+- Upload route — update file validation + Supabase `contentType` + `VALID_FORMATS` set
+- Upload UI — add "Xactimate (Excel/CSV)" dropdown option
 
 **No orchestrator or pipeline changes required.** That is the point of the plug-and-play architecture.
 
-**Gate 5 — CSV accuracy:** ≥95% on labeled CSV-CSV pairs and ≥90% on CSV-Xactimate / CSV-Symbility mixed.
+**Gate 5 — XLS accuracy:** ≥95% item extraction accuracy on labeled XLS test fixtures; zones detected correctly; pipeline completes end-to-end to COMPLETED status.
 
 ---
 
@@ -326,3 +329,319 @@ No orchestrator changes. No shared phase changes. No N3 changes. No Inngest func
 - All files in `lib/n3/`
 - All files in `lib/n2/`
 - All Prisma schema files (no schema changes — `Comparison.{your|adjuster}EstimateFormat` columns already exist)
+
+---
+
+## 12. XLS/CSV Extractor — Xactimate Spreadsheet Export
+
+### 12.1 Overview
+
+The XLS extractor adds native spreadsheet upload as a true plug-and-play lego piece. It lives entirely in `lib/n4/extractors/xls/` and implements the same `Extractor` interface as the PDF extractors. Zero changes to the orchestrator, Inngest function, or any phase from P9 onward.
+
+**Key property: Zero AI in P4 and P8.** Unlike the PDF extractors which require Anthropic vision calls to detect zones and extract items, XLS/CSV parsing is fully deterministic. The column schema is machine-readable, making extraction:
+- **Faster** — synchronous parsing, no AI round-trips
+- **Cheaper** — no Anthropic API costs for P4/P8
+- **More reliable** — no hallucination risk, no retry logic needed for parsing
+
+### 12.2 Supported File Types
+
+| Extension | MIME Type | Notes |
+|---|---|---|
+| `.xlsx` | `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` | Primary target — Xactimate export default |
+| `.xls` | `application/vnd.ms-excel` | Legacy Excel format |
+| `.csv` | `text/csv` | Flat CSV, single-zone assumption unless zone column present |
+
+All three are parsed by the `xlsx` (SheetJS) library. No native bindings required.
+
+### 12.3 Folder Structure
+
+```
+lib/n4/extractors/xls/
+├── index.ts            Exports xlsExtractor implementing Extractor
+├── detect-zones.ts     P4: zone column scan → n3_zones rows
+├── extract-items.ts    P8: column map → n3_line_items rows
+├── parse-workbook.ts   Downloads file, finds header row, returns typed rows
+└── column-map.ts       Alias table + column presence detection
+```
+
+### 12.4 Zone Detection Strategy — P4 (`detectZones`)
+
+**Zero AI required.** The Xactimate XLS export encodes zones in the `Group Code` / `Group Description` columns directly.
+
+#### Primary Path — Zone Column Present
+
+1. Download file bytes from Supabase storage (same `supabaseAdmin.storage.download` pattern as PDF extractors)
+2. Parse workbook with `xlsx` library; locate the active/first sheet
+3. Scan first 10 rows to find the header row (row where a cell matches a known column alias)
+4. Locate a zone column using the alias lookup table:
+
+   | Alias checked | Priority |
+   |---|---|
+   | `Group Code` | 1 — canonical Xactimate export column |
+   | `Group Description` | 2 — human-readable fallback |
+   | `Room` | 3 — generic alias |
+   | `Location` | 3 — generic alias |
+   | `Area` | 3 — generic alias |
+   | `Zone` | 3 — generic alias |
+
+5. Group all data rows by the zone column value → one `n3_zones` row per unique value
+6. `startPage` / `endPage` fields repurposed as `startRow` / `endRow` (same integer columns, semantically different — row indices instead of page numbers; no downstream code re-reads them after P8)
+7. `approxItems` = count of rows for that zone
+8. `flat = false`, `detectedFormat = 'xls'`
+
+#### Fallback Path — No Zone Column Found
+
+1. Same header detection as above
+2. No zone column found → synthesize a single **General** zone containing all data rows
+3. `flat = true`, `zoneCount = 1`
+4. **No error thrown** — the pipeline's flat-list path is already proven correct (identical to the PDF flat-list fallback used by `synthesizeGeneralZone`)
+
+#### Multi-Sheet XLSX Fallback
+
+If no zone column is found on the active sheet AND the workbook has multiple sheets (each named after a room/area):
+- Treat each sheet as a separate zone (sheet name = zone name)
+- Collect all rows across sheets
+- `flat = false`
+- This is the secondary zone encoding convention used by some Xactimate XLS variants
+
+#### Idempotency
+
+Identical to PDF extractors: `prisma.n3Zone.deleteMany({ where: { comparisonId, source: side } })` before `createMany`. Safe to retry.
+
+### 12.5 Line Item Extraction — P8 (`extractLineItems`)
+
+Re-downloads the file, re-parses the workbook, reads `n3_zones` rows (using `startPage`/`endPage` as `startRow`/`endRow`), and maps each spreadsheet row in range to an `n3_line_items` row.
+
+**Zero AI required.**
+
+#### Column Mapping: Xactimate XLS → `n3_line_items`
+
+| `n3_line_items` field | XLS Column | Notes |
+|---|---|---|
+| `rawDescription` | `Desc` | Direct string copy |
+| `normalizedDescription` | computed | `normalizeDescription(Desc)` — same function as PDF extractors |
+| `descriptionTokens` | computed | `tokenizeDescription(normalizedDescription)` |
+| `rawQuantity` | `Qty` | String cast of numeric cell |
+| `rawUnit` | `null` | Not present in this XLS export schema |
+| `normalizedUnit` | `null` | Null — P9 normalization will leave it null |
+| `unitPrice` | `Unit Cost` | Parse float |
+| `removeAmount` | `null` | Not broken out in this XLS export (only item total is exported) |
+| `replaceAmount` | `null` | Not broken out in this XLS export |
+| `resetAmount` | `null` | Not applicable |
+| `taxAmount` | `Sales Tax` | Parse float |
+| `opAmount` | `null` | Not present in this XLS export |
+| `totalAmount` | `RCV` | See §12.6 for rationale |
+| `itemCode` | `Cat` | Xactimate category code (e.g. `FCC`, `RFG`) |
+| `sourceLineNumber` | row index | 1-based sequential index within zone |
+| `pageNumber` | `1` | Fixed — no pages in spreadsheet; P18 sort still works correctly |
+| `specialFlags` | `[]` | Empty; `Coverage` column reserved for future flag mapping |
+| `extractionConfidence` | `1.0` | Always 1.0 — deterministic parse, no AI uncertainty |
+
+#### Idempotency + `reextractSource`
+
+Identical pattern to PDF extractors:
+```ts
+const deleteFilter = reextractSource && reextractSource !== 'both'
+  ? { comparisonId, source: reextractSource }
+  : { comparisonId, source: side };
+
+await prisma.$transaction([
+  prisma.n3LineItem.deleteMany({ where: deleteFilter }),
+  prisma.n3LineItem.createMany({ data: lineItemRows }),
+]);
+```
+The `reextractSource` parameter from the Line Item Review gate (Phase 8.5) must be honored exactly as in the PDF extractors so the reextract flow works correctly for XLS comparisons.
+
+### 12.6 Why `RCV` (not `Item Amount`) for `totalAmount`
+
+`RCV = Item Amount + Sales Tax`. The PDF-based Xactimate extractor captures the line total as rendered in the PDF, which is the post-tax total. Using `RCV` aligns XLS extraction with PDF extraction behavior so:
+- Cross-format XLS↔Xactimate-PDF comparisons score correctly
+- `diffAmount` is computed against apples-to-apples totals
+- The `comparableSubtotal` normalization (P9) produces the correct pre-tax value: `RCV − taxAmount = Item Amount`
+
+Verification: `1418.11 qty × $4.94/unit = $7,005.46 (Item Amount)` + `$347.15 (Sales Tax)` = `$7,352.61 (RCV)` ✓
+
+### 12.7 What Is Null and Why — Final View Impact
+
+The following `n3_line_items` fields are null for all XLS-sourced items because they are not present in the Xactimate XLS export schema:
+
+| Field | Null? | Final view column | Impact |
+|---|---|---|---|
+| `removeAmount` | ✓ | Remove (Yours / Adjuster) | Blank — expected; data not in export |
+| `replaceAmount` | ✓ | Replace (Yours / Adjuster) | Blank — expected |
+| `opAmount` | ✓ | O&P (Yours / Adjuster) | Blank — expected |
+| `rawUnit` / `normalizedUnit` | ✓ | Unit suffix in Qty column | Qty shows numeric value only, no unit |
+
+**No new columns are added to the final comparison view.** The existing columns (`Total`, `Tax`, `Diff`, `Zone`, `Description`, `Qty`, `Status`) are fully populated. The `Remove`, `Replace`, and `O&P` columns will be blank for XLS-sourced items, which is correct and honest — those breakdowns are simply not available in this export format.
+
+### 12.8 Existing Files That Must Be Updated (Upload Route)
+
+Three targeted changes to `app/api/comparisons/route.ts` — **no orchestrator, no Inngest, no N3 touches**:
+
+#### Change 1 — `VALID_FORMATS` set (line 325)
+```ts
+// Before
+const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown']);
+// After
+const VALID_FORMATS = new Set(['xactimate', 'symbility', 'unknown', 'xls']);
+```
+**Critical:** Without this change, an `xls` format selection silently falls back to `'xactimate'`. The xactimate extractor then tries to PDF-parse the XLS bytes → guaranteed crash.
+
+#### Change 2 — `validatePdf` → `validateEstimateFile`
+The current function hard-rejects any non-`application/pdf` MIME type. It must be extended to also accept `.xlsx`, `.xls`, `.csv` MIME types. The function should be renamed to `validateEstimateFile(file, format)` and branch on `format`.
+
+#### Change 3 — `uploadSingleFile` content type
+The current function hardcodes `contentType: 'application/pdf'` in the Supabase upload call. This must pass the actual file MIME type so the stored object is semantically correct and can be downloaded with the right content type header.
+
+**N4 auto-routing already handles XLS correctly** (lines 381–385): since `resolvedYourFmt !== 'xactimate'` when format is `'xls'`, the comparison is automatically sent to N4. No routing changes needed.
+
+### 12.9 New Dependency
+
+One new package: `xlsx` (SheetJS) — pure JavaScript, zero native bindings, no server-side compatibility issues.
+
+```bash
+npm install xlsx
+```
+
+No Prisma schema changes. No new DB tables. No Inngest changes. No N3 changes.
+
+### 12.10 `detectedFormat` Signal
+
+The XLS extractor's `detectZones` returns `detectedFormat: 'xls'`. The orchestrator logs this as a sanity-check signal. No downstream logic gates on `detectedFormat` — it is informational only. No code changes needed for this.
+
+---
+
+## 13. XLS/CSV Extractor — Development Phases
+
+Each phase ends with a gate. Gates are non-negotiable before the next phase begins.
+
+### Phase XLS-1 — Framework Wiring + Scaffolding
+
+**Scope (changes to existing files — additive only):**
+- `lib/n2/schemas/types.ts` — add `'xls'` to `EstimateFormat` union
+- `lib/n4/extractors/xls/index.ts` — stub extractor (throws `NotImplemented` from both methods)
+- `lib/n4/extractors/registry.ts` — register `xls: xlsExtractor`
+- `package.json` — add `xlsx` dependency (`npm install xlsx`)
+
+**Why stub first:** The registry entry must exist before any upload UI change goes live. If `'xls'` is in the DB but not in the registry, `resolveExtractor` silently falls back to xactimateExtractor and tries to PDF-parse XLS bytes → crash. Register the stub first; it throws a clear error instead of silently misrouting.
+
+**Gate XLS-1:** TypeScript compiles with zero errors after `EstimateFormat` addition. Existing xactimate and symbility extractor behavior is byte-identical (verified with a regression run against a known comparison).
+
+---
+
+### Phase XLS-2 — Workbook Parsing Layer
+
+**Scope (new files only):**
+- `lib/n4/extractors/xls/parse-workbook.ts`
+  - `downloadXlsBytes(storagePath)` — same Supabase download pattern as PDF extractors
+  - `parseWorkbook(bytes, filename)` — detects `.xlsx`/`.xls`/`.csv` by extension, returns `{ headers: string[], rows: Record<string, unknown>[], sheets: string[] }`
+  - `findHeaderRow(rawRows)` — scans first 10 rows, returns index of row matching known header aliases
+  - `toTypedRows(raw, headerIdx)` — returns array of `Record<string, string | number | null>` keyed by header name
+- `lib/n4/extractors/xls/column-map.ts`
+  - `ZONE_COLUMN_ALIASES` — ordered list of aliases for zone grouping column
+  - `REQUIRED_COLUMNS` — `['Desc']` minimum (fail if missing — surface clear user error)
+  - `findZoneColumn(headers)` — returns first matching alias or `null`
+  - `findColumn(headers, aliases)` — generic column finder used by extract-items
+
+**Gate XLS-2:** Unit test against a real Xactimate XLS export file:
+- All data rows parsed correctly
+- Header row detected at correct index
+- `Group Code` column identified as zone column
+- `Desc`, `Qty`, `Unit Cost`, `RCV`, `Sales Tax`, `Cat` columns all found
+- No data rows lost, no phantom rows added
+
+---
+
+### Phase XLS-3 — `detectZones` Implementation
+
+**Scope (new file):**
+- `lib/n4/extractors/xls/detect-zones.ts`
+  - Full implementation of zone detection as described in §12.4
+  - Calls `downloadXlsBytes` + `parseWorkbook` + `findZoneColumn`
+  - Groups rows by zone → writes `n3_zones` (with `startPage`/`endPage` as `startRow`/`endRow`)
+  - Flat fallback: synthesize General zone when no zone column found
+  - Multi-sheet fallback: one zone per sheet when no zone column and multiple sheets
+  - Per-side idempotent DB write
+  - Returns `{ zoneCount, flat, detectedFormat: 'xls' }`
+- Update stub in `index.ts` to call real implementation
+
+**Gate XLS-3:** Run P4 in isolation on a test XLS file with known zones. Verify:
+- Correct number of `n3_zones` rows written
+- Zone names match `Group Description` values from the spreadsheet
+- `approxItems` count is accurate per zone
+- Flat fallback triggers on a single-zone/no-header-zone file
+
+---
+
+### Phase XLS-4 — `extractLineItems` Implementation
+
+**Scope (new file):**
+- `lib/n4/extractors/xls/extract-items.ts`
+  - Full implementation as described in §12.5
+  - Re-downloads file, re-parses workbook
+  - Reads `n3_zones` rows; uses `startPage`/`endPage` as `startRow`/`endRow` for slice
+  - Column mapping per §12.5 table
+  - Applies `normalizeDescription` + `tokenizeDescription` (same imports as PDF extractors)
+  - Honors `reextractSource` parameter identically to PDF extractors
+  - Per-side idempotent DB write
+  - Returns `{ itemCount }`
+- Update stub in `index.ts` to call real implementation
+
+**Gate XLS-4:** Run P4 + P8 in isolation on the test XLS file. Verify:
+- Item count matches row count in source file
+- `rawDescription` matches `Desc` column exactly
+- `totalAmount` = `RCV` column value (float, 2dp)
+- `taxAmount` = `Sales Tax` column value
+- `unitPrice` = `Unit Cost` column value
+- `itemCode` = `Cat` column value
+- `removeAmount`, `replaceAmount`, `opAmount` are all `null`
+- `pageNumber` = 1 for all items
+- `sourceLineNumber` = 1-based row index within zone
+- Duplicate rows absent
+
+---
+
+### Phase XLS-5 — Upload Flow + UI
+
+**Scope (changes to existing files — targeted, additive):**
+
+**`app/api/comparisons/route.ts`:**
+- Add `'xls'` to `VALID_FORMATS` set
+- Rename `validatePdf` → `validateEstimateFile(file, format)`:
+  - PDF formats (`xactimate`, `symbility`, `unknown`): enforce `application/pdf` MIME type
+  - XLS format: enforce `.xlsx` / `.xls` / `.csv` extension + corresponding MIME types
+  - File size limit stays at 20MB for all formats
+- Update `uploadSingleFile` to pass actual file MIME type to Supabase `contentType`
+
+**Upload UI component:**
+- Add "Xactimate (Excel / CSV)" option to the format dropdown for both sides
+- No other UI changes
+
+**Gate XLS-5:** End-to-end manual test:
+1. Upload a real Xactimate XLS file via UI with format = "Xactimate (Excel / CSV)"
+2. Verify `Comparison.yourEstimateFormat = 'xls'` written to DB
+3. Verify N4 pipeline is triggered (auto-routing fires because format ≠ `'xactimate'`)
+4. Verify P4 + P8 complete without error
+5. Verify pipeline reaches COMPLETED status
+
+---
+
+### Phase XLS-6 — End-to-End Accuracy Gate
+
+**Scope:** No code changes — testing only.
+
+**Test fixture:**
+- Take a real Xactimate XLS export with known zones and items
+- Manually create a cheatsheet (zone list + item list with descriptions, totals)
+- Run as a self-comparison (same XLS on both sides) — expected result: 100% MATCH
+- Run as a cross-comparison (XLS contractor vs XLS adjuster with known differences) — verify MODIFIED/MISSING/ADDED classifications
+
+**Pass condition:**
+- ≥95% item extraction accuracy (items extracted / items in source file)
+- All zones detected correctly (zone count and names match cheatsheet)
+- Pipeline completes to COMPLETED status on both test fixtures
+- `totalYours` / `totalAdjuster` on the Comparison row match the known totals from the XLS file
+- `Remove` / `Replace` / `O&P` columns blank in final view (expected — data not in export)
+- `Tax` and `Total` columns correctly populated
+
+**Fail handling:** Debug at the phase level (P4 or P8 isolation) using the per-phase gates from XLS-3 and XLS-4 before re-running end-to-end.

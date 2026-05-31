@@ -1,12 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import MobileAppBar from '@/components/app/MobileAppBar';
 import TrialBanner from '@/components/app/TrialBanner';
 import styles from './page.module.css';
 
 const ZONE_DETECTION_HEADLINE = 'Compiling zones from your estimates...';
+
+const XLS_MIME_TYPES_CLIENT = new Set([
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-excel',
+  'text/csv',
+  'application/csv',
+]);
+const XLS_EXTENSIONS_CLIENT = new Set(['.xlsx', '.xls', '.csv']);
+
+function isValidEstimateFile(file: File, format: string): boolean {
+  if (format === 'xls') {
+    const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+    return XLS_MIME_TYPES_CLIENT.has(file.type) || XLS_EXTENSIONS_CLIENT.has(ext);
+  }
+  return file.type === 'application/pdf';
+}
+
+function acceptAttr(format: string): string {
+  return format === 'xls' ? '.xlsx,.xls,.csv' : '.pdf';
+}
+
+function fileHint(format: string, side: string): string {
+  return format === 'xls'
+    ? `Drag & drop ${side} Excel/CSV here, or`
+    : `Drag & drop ${side} PDF here, or`;
+}
 
 function formatDate(value: string | null | undefined): string {
   if (!value) return 'your next billing refresh date';
@@ -33,32 +59,50 @@ export default function NewComparisonPage() {
   const [progressPercent, setProgressPercent] = useState(0);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [qualifiesVisible, setQualifiesVisible] = useState(false);
+  const [qualifiesFlash, setQualifiesFlash] = useState(0);
+  const qualifiesRef = useRef<HTMLDivElement>(null);
 
-  const handleDrop = (setter: (file: File) => void) => (e: React.DragEvent) => {
+  const handleQualifiesClick = () => {
+    setQualifiesVisible(true);
+    setQualifiesFlash(f => f + 1);
+  };
+
+  useEffect(() => {
+    if (qualifiesFlash === 0) return;
+    const timer = setTimeout(() => {
+      qualifiesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+    return () => clearTimeout(timer);
+  }, [qualifiesFlash]);
+
+  const handleDrop = (setter: (file: File) => void, format: string) => (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-
     if (!file) return;
-
-    if (file.type !== 'application/pdf') {
-      setErrorMessage('Only PDF files are allowed.');
+    if (!isValidEstimateFile(file, format)) {
+      setErrorMessage(
+        format === 'xls'
+          ? 'Please upload an Excel or CSV file (.xlsx, .xls, .csv).'
+          : 'Only PDF files are allowed.',
+      );
       return;
     }
-
     setErrorMessage(null);
     setter(file);
   };
 
-  const handleFile = (setter: (file: File) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (setter: (file: File) => void, format: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (!file) return;
-
-    if (file.type !== 'application/pdf') {
-      setErrorMessage('Only PDF files are allowed.');
+    if (!isValidEstimateFile(file, format)) {
+      setErrorMessage(
+        format === 'xls'
+          ? 'Please upload an Excel or CSV file (.xlsx, .xls, .csv).'
+          : 'Only PDF files are allowed.',
+      );
       return;
     }
-
     setErrorMessage(null);
     setter(file);
   };
@@ -70,7 +114,7 @@ export default function NewComparisonPage() {
     }
 
     if (!file1 || !file2) {
-      setErrorMessage('Please upload both PDF files before comparing.');
+      setErrorMessage('Please upload both estimate files before comparing.');
       return;
     }
 
@@ -225,11 +269,17 @@ export default function NewComparisonPage() {
       <MobileAppBar title="New Comparison" />
       <TrialBanner />
       <div className={styles.content}>
-        {!processing ? (
+        {!processing && (
           <>
             <div className={styles.header}>
               <h1>New Comparison</h1>
-              <p>Upload two insurance estimate PDFs to compare them side by side.</p>
+              <p>Upload two insurance estimate PDFs or spreadsheets to compare them side by side.</p>
+              <p className={styles.headerNote}>
+                A file type must be specified before uploading.{' '}
+                <button type="button" className={styles.qualifiesLink} onClick={handleQualifiesClick}>
+                  What Qualifies?
+                </button>
+              </p>
             </div>
             <div className={styles.nameField}>
               <label className={styles.nameLabel} htmlFor="comparison-name">Comparison Name</label>
@@ -246,63 +296,79 @@ export default function NewComparisonPage() {
             </div>
 
             <div className={styles.uploaders}>
-              <div className={styles.uploadCard} onDragOver={e => e.preventDefault()} onDrop={handleDrop(setFile1)}>
-                <div className={styles.uploadIcon}>
-                  <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                </div>
+              {/* ── Your Estimate card ── */}
+              <div className={styles.uploadCard} onDragOver={e => { if (format1) e.preventDefault(); }} onDrop={format1 ? handleDrop(setFile1, format1) : undefined}>
                 <div className={styles.uploadLabel}>Your Estimate</div>
-                {file1 ? (
-                  <div className={styles.fileName}>
-                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-                    {file1.name}
-                    <button onClick={() => setFile1(null)} className={styles.removeBtn}>&times;</button>
-                  </div>
-                ) : (
-                  <>
-                    <p className={styles.uploadHint}>Drag &amp; drop your PDF here, or</p>
-                    <label className={styles.browseBtn}>
-                      Browse files
-                      <input type="file" accept=".pdf" hidden onChange={handleFile(setFile1)} />
-                    </label>
-                  </>
-                )}
+
                 <div className={styles.formatRow}>
                   <label className={styles.formatLabel} htmlFor="format1">Estimate format <span style={{ color: 'var(--error-text)' }}>*</span></label>
-                  <select id="format1" className={styles.formatSelect} value={format1} onChange={e => setFormat1(e.target.value)}>
+                  <select id="format1" className={styles.formatSelect} value={format1} onChange={e => { setFormat1(e.target.value); setFile1(null); }}>
                     <option value="" disabled>Select format...</option>
-                    <option value="xactimate">Xactimate</option>
-                    <option value="symbility">Symbility</option>
+                    <option value="xactimate">Xactimate (PDF)</option>
+                    <option value="symbility">Symbility (PDF)</option>
+                    <option value="xls">Xactimate (Excel / CSV)</option>
                   </select>
+                </div>
+
+                <div className={`${styles.dropZone} ${!format1 ? styles.dropZoneDisabled : ''}`}>
+                  <div className={styles.uploadIcon}>
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                  </div>
+                  {file1 ? (
+                    <div className={styles.fileName}>
+                      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                      {file1.name}
+                      <button onClick={() => setFile1(null)} className={styles.removeBtn}>&times;</button>
+                    </div>
+                  ) : (
+                    <>
+                      <p className={styles.uploadHint}>
+                        {format1 ? fileHint(format1, 'your') : 'Select a format above, then drop your file here, or'}
+                      </p>
+                      <label className={`${styles.browseBtn} ${!format1 ? styles.browseBtnDisabled : ''}`}>
+                        Browse files
+                        {format1 && <input type="file" accept={acceptAttr(format1)} hidden onChange={handleFile(setFile1, format1)} />}
+                      </label>
+                    </>
+                  )}
                 </div>
               </div>
 
-              <div className={styles.uploadCard} onDragOver={e => e.preventDefault()} onDrop={handleDrop(setFile2)}>
-                <div className={styles.uploadIcon}>
-                  <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
-                </div>
+              {/* ── Adjuster Estimate card ── */}
+              <div className={styles.uploadCard} onDragOver={e => { if (format2) e.preventDefault(); }} onDrop={format2 ? handleDrop(setFile2, format2) : undefined}>
                 <div className={styles.uploadLabel}>Adjuster&apos;s Estimate</div>
-                {file2 ? (
-                  <div className={styles.fileName}>
-                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-                    {file2.name}
-                    <button onClick={() => setFile2(null)} className={styles.removeBtn}>&times;</button>
-                  </div>
-                ) : (
-                  <>
-                    <p className={styles.uploadHint}>Drag &amp; drop adjuster&apos;s PDF here, or</p>
-                    <label className={styles.browseBtn}>
-                      Browse files
-                      <input type="file" accept=".pdf" hidden onChange={handleFile(setFile2)} />
-                    </label>
-                  </>
-                )}
+
                 <div className={styles.formatRow}>
                   <label className={styles.formatLabel} htmlFor="format2">Estimate format <span style={{ color: 'var(--error-text)' }}>*</span></label>
-                  <select id="format2" className={styles.formatSelect} value={format2} onChange={e => setFormat2(e.target.value)}>
+                  <select id="format2" className={styles.formatSelect} value={format2} onChange={e => { setFormat2(e.target.value); setFile2(null); }}>
                     <option value="" disabled>Select format...</option>
-                    <option value="xactimate">Xactimate</option>
-                    <option value="symbility">Symbility</option>
+                    <option value="xactimate">Xactimate (PDF)</option>
+                    <option value="symbility">Symbility (PDF)</option>
+                    <option value="xls">Xactimate (Excel / CSV)</option>
                   </select>
+                </div>
+
+                <div className={`${styles.dropZone} ${!format2 ? styles.dropZoneDisabled : ''}`}>
+                  <div className={styles.uploadIcon}>
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                  </div>
+                  {file2 ? (
+                    <div className={styles.fileName}>
+                      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                      {file2.name}
+                      <button onClick={() => setFile2(null)} className={styles.removeBtn}>&times;</button>
+                    </div>
+                  ) : (
+                    <>
+                      <p className={styles.uploadHint}>
+                        {format2 ? fileHint(format2, "adjuster's") : 'Select a format above, then drop your file here, or'}
+                      </p>
+                      <label className={`${styles.browseBtn} ${!format2 ? styles.browseBtnDisabled : ''}`}>
+                        Browse files
+                        {format2 && <input type="file" accept={acceptAttr(format2)} hidden onChange={handleFile(setFile2, format2)} />}
+                      </label>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -316,7 +382,60 @@ export default function NewComparisonPage() {
 
             <p className={styles.aiDisclaimer}>Results are generated by AI and may not be perfectly accurate. Please review all line items carefully before making decisions.</p>
           </>
-        ) : (
+        )}
+
+        {/* ── What Qualifies? inline section ── */}
+        {qualifiesVisible && (
+          <div ref={qualifiesRef} className={styles.qualifiesWrap}>
+            <div key={qualifiesFlash} className={styles.qualifiesSection}>
+              <div className={styles.qualifiesSectionHeader}>
+                <h2 className={styles.qualifiesSectionTitle}>What Qualifies?</h2>
+                <button type="button" className={styles.qualifiesCloseBtn} onClick={() => setQualifiesVisible(false)} aria-label="Close">
+                  <svg viewBox="0 0 24 24" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                </button>
+              </div>
+
+              <div className={styles.qualifiesGrid}>
+                <div className={styles.qualifiesCard}>
+                  <div className={styles.qualifiesCardBadge} data-type="pdf">
+                    <svg viewBox="0 0 24 24" width="12" height="12"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                    PDF Estimates
+                  </div>
+                  <ul className={styles.qualifiesList}>
+                    <li><strong>Line items must be numbered</strong> — sequential numbering is required to identify and match scope items across both estimates.</li>
+                    <li><strong>Zones are strongly encouraged</strong> — grouping by room or area (e.g. &ldquo;Kitchen&rdquo;, &ldquo;Roof&rdquo;) significantly improves accuracy.</li>
+                    <li><strong>Complete line item data</strong> — description, quantity, unit cost, and total all improve scoring confidence.</li>
+                    <li><strong>Supported:</strong> Xactimate PDF and Symbility PDF exports.</li>
+                  </ul>
+                </div>
+
+                <div className={styles.qualifiesCard}>
+                  <div className={styles.qualifiesCardBadge} data-type="xls">
+                    <svg viewBox="0 0 24 24" width="12" height="12"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M3 15h18M9 3v18" /></svg>
+                    Excel / CSV
+                  </div>
+                  <ul className={styles.qualifiesList}>
+                    <li><strong>Description column is required</strong> — e.g. &ldquo;Desc&rdquo;, &ldquo;Description&rdquo;, &ldquo;Item Description&rdquo;.</li>
+                    <li>
+                      <strong>Recommended columns:</strong>
+                      <ul className={styles.qualifiesSubList}>
+                        <li><strong>Zone / Group Code</strong> — room or area grouping</li>
+                        <li><strong>Quantity</strong> and <strong>Unit Cost</strong></li>
+                        <li><strong>Total / RCV</strong> — used to compute the dollar gap</li>
+                        <li><strong>Item Code / Category</strong> — for scoring</li>
+                      </ul>
+                    </li>
+                    <li><strong>Column names can vary</strong> — AI automatically identifies non-standard names like &ldquo;Extended Price&rdquo; or &ldquo;Scope of Work&rdquo;.</li>
+                    <li><strong>File types:</strong> .xlsx, .xls, .csv</li>
+                    <li><strong>Formula cells:</strong> save as &ldquo;values only&rdquo; before uploading for best results.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {processing && (
           <div className={styles.processingState}>
             <div className={styles.spinner} />
             <h2 className={styles.processingHeadline}>
