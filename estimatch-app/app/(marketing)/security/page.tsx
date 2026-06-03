@@ -31,7 +31,7 @@ export default function SecurityPage() {
           <section className={styles.section}>
             <h2>Report a security issue</h2>
             <p>
-              If you believe you found a vulnerability, contact us immediately through the <a href="/contact">Contact page</a>
+              If you believe you found a vulnerability, contact us immediately through the <a href="/contact">Contact page</a>{' '}
               and include reproduction details.
             </p>
           </section>

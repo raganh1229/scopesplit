@@ -39,7 +39,7 @@ export default function DataProcessingAddendumPage() {
           <section className={styles.section}>
             <h2>Requesting a signed DPA</h2>
             <p>
-              To request a signed DPA for your organization, contact us through the <a href="/contact">Contact page</a>
+              To request a signed DPA for your organization, contact us through the <a href="/contact">Contact page</a>{' '}
               with your legal entity name and billing email.
             </p>
           </section>

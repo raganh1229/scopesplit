@@ -36,7 +36,7 @@ export default function BillingRefundsPage() {
           <section className={styles.section}>
             <h2>Questions about charges</h2>
             <p>
-              If you believe a charge is incorrect, contact support through our <a href="/contact">Contact page</a>
+              If you believe a charge is incorrect, contact support through our <a href="/contact">Contact page</a>{' '}
               with your account email and invoice details.
             </p>
           </section>
