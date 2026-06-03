@@ -36,7 +36,7 @@ export default function PrivacyChoicesPage() {
           <section className={styles.section}>
             <h2>Submit a request</h2>
             <p>
-              Use our <a href="/contact">Contact page</a> and include &quot;Privacy Request&quot; in your message subject.
+              Use our <a href="/contact">Contact page</a>{' '}and include &quot;Privacy Request&quot; in your message subject.
             </p>
           </section>
         </div>
