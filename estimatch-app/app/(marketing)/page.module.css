@@ -1013,6 +1013,25 @@
   color: var(--text-secondary);
 }
 
+.pricingEnterpriseNote {
+  max-width: 900px;
+  margin: 8px auto 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.pricingEnterpriseLink {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pricingEnterpriseLink:hover {
+  opacity: 0.7;
+}
+
 /* CTA Banner */
 .ctaBanner { max-width: 1120px; margin: 0 auto; padding: 0 24px 80px; }
 .ctaBannerInner {

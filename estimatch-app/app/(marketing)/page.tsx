@@ -181,6 +181,11 @@ export default function HomePage() {
           <p className={styles.pricingAddonNote}>
             Additional comparisons can be purchased at any tier without needing to upgrade.
           </p>
+          <p className={styles.pricingEnterpriseNote}>
+            Need an enterprise license for multiple users or custom pricing?{' '}
+            <a href="/contact" className={styles.pricingEnterpriseLink}>Contact us</a>{' '}
+            to discuss a plan that fits your team.
+          </p>
         </section>
         <div className={styles.ctaBanner}>
           <div className={styles.ctaBannerInner}>
