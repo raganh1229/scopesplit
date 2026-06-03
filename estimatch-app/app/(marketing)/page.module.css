@@ -1061,7 +1061,7 @@
 .ctaBannerInner p {
   position: relative;
   font-size: 16px; color: rgba(255,255,255,0.6);
-  line-height: 1.7;
+  line-height: 1.55;
   margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto;
 }
 .btnWhite {
