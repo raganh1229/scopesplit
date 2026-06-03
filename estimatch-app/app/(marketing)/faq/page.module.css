@@ -73,4 +73,5 @@
   .faqContainer { padding: 0 20px 48px; }
   .faqQuestion { line-height: 1.45; align-items: flex-start; }
   .faqChevron { margin-top: 2px; }
+  .faqCta p { line-height: 1.65; }
 }
