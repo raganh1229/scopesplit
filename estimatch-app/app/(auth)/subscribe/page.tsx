@@ -21,7 +21,7 @@ const tiers: Tier[] = [
   {
     key: 'starter',
     name: 'Starter',
-    price: '$49.99',
+    price: '$59',
     limit: '10 comparisons per month',
     features: [
       'AI-powered line-item matching',
@@ -34,8 +34,8 @@ const tiers: Tier[] = [
   {
     key: 'professional',
     name: 'Professional',
-    price: '$99',
-    limit: '50 comparisons per month',
+    price: '$179',
+    limit: '35 comparisons per month',
     featured: true,
     features: [
       'Everything in Starter',
@@ -48,8 +48,8 @@ const tiers: Tier[] = [
   {
     key: 'business',
     name: 'Business',
-    price: '$249',
-    limit: '200 comparisons per month',
+    price: '$349',
+    limit: '100 comparisons per month',
     features: [
       'Everything in Professional',
       'Maximum volume',

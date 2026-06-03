@@ -26,12 +26,12 @@ const ADDON_OPTIONS: Record<SubscriptionTier, { key: string; label: string; pric
   PROFESSIONAL: {
     key: 'professional_addon_10',
     label: '10 extra comparisons',
-    priceLabel: '$39.99 one-time',
+    priceLabel: '$64.99 one-time',
   },
   ENTERPRISE: {
     key: 'business_addon_10',
     label: '10 extra comparisons',
-    priceLabel: '$34.99 one-time',
+    priceLabel: '$44.99 one-time',
   },
 };
 

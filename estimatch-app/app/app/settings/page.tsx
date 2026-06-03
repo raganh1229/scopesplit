@@ -76,9 +76,9 @@ const PLAN_LABELS: Record<NonNullable<BillingSummary['plan']>, string> = {
 };
 
 const PLAN_COPY: Record<NonNullable<BillingSummary['plan']>, string> = {
-  starter: '$49.99/month · Up to 10 comparisons',
-  professional: '$99/month · Up to 50 comparisons',
-  business: '$249/month · Up to 200 comparisons',
+  starter: '$59/month · Up to 10 comparisons',
+  professional: '$179/month · Up to 35 comparisons',
+  business: '$349/month · Up to 100 comparisons',
 };
 
 const PLAN_ORDER: AvailablePlan[] = ['starter', 'professional', 'business'];

@@ -27,7 +27,7 @@ const faqData = [
     section: 'Pricing & Billing',
     items: [
       { q: 'Is there a free trial?', a: 'Yes! Every new account gets a 7-day free trial with up to 3 comparisons. No credit card is required to start. You can cancel anytime during the trial at no cost.' },
-      { q: 'What plans do you offer?', a: 'We offer three plans: Starter ($49.99/month, 10 comparisons), Professional ($99/month, 50 comparisons), and Business ($249/month, 200 comparisons). All plans include the same features — the difference is the number of comparisons you can run each month.' },
+      { q: 'What plans do you offer?', a: 'We offer three plans: Starter ($59/month, 10 comparisons), Professional ($179/month, 35 comparisons), and Business ($349/month, 100 comparisons). All plans include the same features — the difference is the number of comparisons you can run each month.' },
       { q: 'Can I purchase additional comparisons if I run out?', a: 'Yes. You can purchase additional comparison packs on your current tier without upgrading your monthly plan.' },
       { q: 'Can I change or cancel my plan?', a: 'Absolutely. You can upgrade, downgrade, or cancel your plan at any time from the Settings page. If you cancel, you\'ll retain access until the end of your current billing period. Upgrades take effect immediately with prorated billing.' },
     ]

@@ -12,8 +12,8 @@ type ChangePlanRequestBody = {
 
 const PLAN_LIMITS: Record<PlanKey, number> = {
   starter: 10,
-  professional: 50,
-  business: 200,
+  professional: 35,
+  business: 100,
 };
 
 function isPlanKey(value: string | undefined): value is PlanKey {

@@ -139,7 +139,7 @@ export default function HomePage() {
           <div className={styles.pricingGrid}>
             <div className={styles.pricingCard}>
               <div className={styles.pricingTier}>Starter</div>
-              <div className={styles.pricingPrice}>$49.99<span>/mo</span></div>
+              <div className={styles.pricingPrice}>$59<span>/mo</span></div>
               <div className={styles.pricingLimit}>10 comparisons per month</div>
               <ul className={styles.pricingFeatures}>
                 <li>AI-powered line-item matching</li>
@@ -153,8 +153,8 @@ export default function HomePage() {
             <div className={`${styles.pricingCard} ${styles.pricingCardFeatured}`}>
               <div className={styles.pricingPopular}>Most Popular</div>
               <div className={styles.pricingTier}>Professional</div>
-              <div className={styles.pricingPrice}>$99<span>/mo</span></div>
-              <div className={styles.pricingLimit}>50 comparisons per month</div>
+              <div className={styles.pricingPrice}>$179<span>/mo</span></div>
+              <div className={styles.pricingLimit}>35 comparisons per month</div>
               <ul className={styles.pricingFeatures}>
                 <li>Everything in Starter</li>
                 <li>Priority support</li>
@@ -166,8 +166,8 @@ export default function HomePage() {
             </div>
             <div className={styles.pricingCard}>
               <div className={styles.pricingTier}>Business</div>
-              <div className={styles.pricingPrice}>$249<span>/mo</span></div>
-              <div className={styles.pricingLimit}>200 comparisons per month</div>
+              <div className={styles.pricingPrice}>$349<span>/mo</span></div>
+              <div className={styles.pricingLimit}>100 comparisons per month</div>
               <ul className={styles.pricingFeatures}>
                 <li>Everything in Professional</li>
                 <li>Maximum volume</li>

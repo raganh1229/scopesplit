@@ -1,4 +1,13 @@
 import Stripe from 'stripe';
+import {
+  type PlanKey,
+  PLAN_MONTHLY_PRICES_CENTS,
+  PLAN_COMPARISON_LIMITS,
+  PLAN_LLM_EDIT_LIMITS,
+  PLAN_EXECUTIVE_SUMMARY_LIMITS,
+} from '@/lib/plan-constants';
+
+export { PlanKey, PLAN_MONTHLY_PRICES_CENTS, PLAN_COMPARISON_LIMITS, PLAN_LLM_EDIT_LIMITS, PLAN_EXECUTIVE_SUMMARY_LIMITS };
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
@@ -17,43 +26,7 @@ export const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2025-03-31.basil' as Stripe.LatestApiVersion,
 });
 
-export type PlanKey = 'starter' | 'professional' | 'business';
 export type AddonKey = 'starter_addon_5' | 'professional_addon_10' | 'business_addon_10';
-
-// ── Per-plan monthly usage caps ──
-// Single source of truth. Comparisons, LLM Bulk Edits, and Executive Summaries
-// all reset together when the billing period rolls over. Indexed by the
-// Prisma SubscriptionTier enum string so callers can index without converting.
-// (ENTERPRISE is the historical Prisma name for what is exposed to users as
-// the "Business" plan.)
-
-// ── Per-plan monthly prices (cents) ──
-// Single source of truth for plan pricing. Used in change-plan calculations
-// and any place that needs to display or compute plan costs.
-
-export const PLAN_MONTHLY_PRICES_CENTS: Record<PlanKey, number> = {
-  starter: 4999,
-  professional: 9900,
-  business: 24900,
-};
-
-export const PLAN_COMPARISON_LIMITS: Record<'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE', number> = {
-  STARTER: 10,
-  PROFESSIONAL: 50,
-  ENTERPRISE: 200,
-};
-
-export const PLAN_LLM_EDIT_LIMITS: Record<'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE', number> = {
-  STARTER: 20,
-  PROFESSIONAL: 100,
-  ENTERPRISE: 400,
-};
-
-export const PLAN_EXECUTIVE_SUMMARY_LIMITS: Record<'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE', number> = {
-  STARTER: 10,
-  PROFESSIONAL: 50,
-  ENTERPRISE: 200,
-};
 
 // ── Per-addon grant amounts ──
 // Comparison add-on purchases grant extra comparisons in the current period.
