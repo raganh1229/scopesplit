@@ -71,4 +71,6 @@
   .pageHeader { padding: 40px 20px 24px; }
   .pageHeader h1 { font-size: 28px; }
   .faqContainer { padding: 0 20px 48px; }
+  .faqQuestion { line-height: 1.45; align-items: flex-start; }
+  .faqChevron { margin-top: 2px; }
 }
