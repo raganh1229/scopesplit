@@ -51,11 +51,11 @@
   font-size: 12px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1px;
   color: var(--blue-600);
-  margin: 52px 0 16px;
+  margin: 42px 0 16px;
   padding-bottom: 10px;
   border-bottom: 0.5px solid var(--border-light);
 }
-.faqSectionTitle:first-child { margin-top: 0; }
+.faqSectionTitle:first-child { margin-top: 21px; }
 
 .faqItem {
   background: var(--bg-primary);

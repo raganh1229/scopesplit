@@ -15,8 +15,9 @@
 .faqSectionTitle {
   font-size: 12px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1px;
-  color: var(--blue-600); margin: 52px 0 16px;
+  color: var(--blue-600); margin: 42px 0 16px;
 }
+.faqSectionTitle:first-child { margin-top: 21px; }
 .faqItem {
   background: var(--bg-primary);
   border: 0.5px solid var(--border-default);
