@@ -34,8 +34,7 @@ export default function CancelSubscriptionPage() {
         throw new Error(payload.error ?? 'Unable to cancel subscription.');
       }
 
-      router.push('/app/settings');
-      router.refresh();
+      router.push('/app/settings?cancelled=1');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to cancel subscription.');
       setIsSubmitting(false);

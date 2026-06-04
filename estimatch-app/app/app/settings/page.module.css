@@ -79,6 +79,37 @@
   color: var(--error-text);
 }
 
+.cancellationBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 0.5px solid var(--amber-200);
+  background: var(--amber-50);
+  margin-bottom: 28px;
+}
+
+.cancellationBannerIcon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--amber-600);
+}
+
+.cancellationBannerTitle {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--amber-600);
+}
+
+.cancellationBannerBody {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
 .trialUsageNotice {
   display: flex;
   align-items: flex-start;

@@ -319,6 +319,13 @@ function SettingsContent() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (searchParams.get('cancelled') === '1') {
+      setActiveTab('Plan & Billing');
+      void loadBillingSummary({ force: true });
+    }
+  }, [searchParams]);
+
   function openManageSubscription() {
     // Opens the in-app tier-selector modal. If the user has already scheduled
     // a cancellation, prompt them to keep their subscription first instead of
@@ -611,6 +618,21 @@ function SettingsContent() {
                   </button>
                 </div>
               </div>
+              {isCancellationScheduled && billingSummary?.plan && (
+                <div className={styles.cancellationBanner}>
+                  <span className={styles.cancellationBannerIcon} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  </span>
+                  <div>
+                    <p className={styles.cancellationBannerTitle}>Your subscription has been cancelled</p>
+                    <p className={styles.cancellationBannerBody}>
+                      You will lose access to ScopeSplit on <strong>{formatDate(billingSummary.subscriptionEndsAt)}</strong>. You have{' '}
+                      <strong>{Math.max(0, (billingSummary.comparisonLimit ?? 0) - billingSummary.comparisonsUsed)} comparison{Math.max(0, (billingSummary.comparisonLimit ?? 0) - billingSummary.comparisonsUsed) !== 1 ? 's' : ''}</strong>{' '}
+                      remaining this period. To continue using ScopeSplit, click <strong>Manage Subscription</strong> above to resubscribe.
+                    </p>
+                  </div>
+                </div>
+              )}
               <div className={styles.group}>
                 <div className={styles.groupTitle}>Usage this month</div>
                 <div className={styles.row}>
