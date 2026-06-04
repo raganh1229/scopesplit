@@ -15,7 +15,7 @@
 .faqSectionTitle {
   font-size: 12px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1px;
-  color: var(--blue-600); margin: 32px 0 16px;
+  color: var(--blue-600); margin: 52px 0 16px;
 }
 .faqItem {
   background: var(--bg-primary);
