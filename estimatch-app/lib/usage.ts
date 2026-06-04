@@ -4,6 +4,10 @@ import {
   PLAN_EXECUTIVE_SUMMARY_LIMITS,
   PLAN_LLM_EDIT_LIMITS,
 } from '@/lib/stripe';
+import {
+  TRIAL_LLM_EDIT_LIMIT,
+  TRIAL_EXECUTIVE_SUMMARY_LIMIT,
+} from '@/lib/plan-constants';
 
 // ── UsageKind ──
 // Quota-bearing user actions that share the billing-period reset lifecycle.
@@ -152,10 +156,13 @@ export function assertWithinLimit(
   kind: UsageKind,
   tier: SubscriptionTier,
   used: number,
-  refreshDate: Date | null
+  refreshDate: Date | null,
+  isTrialing = false
 ): { limit: number } {
   const config = USAGE_KIND_CONFIG[kind];
-  const limit = config.planLimit[tier];
+  const planLimit = config.planLimit[tier];
+  const trialCap = kind === 'llmEdit' ? TRIAL_LLM_EDIT_LIMIT : TRIAL_EXECUTIVE_SUMMARY_LIMIT;
+  const limit = isTrialing ? Math.min(planLimit, trialCap) : planLimit;
   if (used >= limit) {
     throw new UsageLimitError(kind, used, limit, refreshDate);
   }

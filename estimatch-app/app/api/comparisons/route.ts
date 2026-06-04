@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { SubscriptionTier } from '@/app/generated/prisma/client';
+import { SubscriptionStatus, SubscriptionTier } from '@/app/generated/prisma/client';
 import prisma from '@/lib/prisma';
 import { supabaseAdmin } from '@/lib/supabase';
 import { inngest } from '@/lib/inngest/client';
 import { isN3Eligible } from '@/lib/n3/n3-routing';
 import { isN4Enabled } from '@/lib/n4/n4-routing';
 import { PLAN_COMPARISON_LIMITS } from '@/lib/stripe';
+import { TRIAL_COMPARISON_LIMIT } from '@/lib/plan-constants';
 
 // Vercel serverless runtime cap. This POST handler uploads files and triggers
 // downstream processing, so we lift the default (10s on Hobby / 15s on Pro) up
@@ -57,6 +58,7 @@ async function resetAddonComparisonsThisPeriod(userId: string) {
 async function normalizeAndValidateUsage(appUser: {
   id: string;
   subscriptionTier: SubscriptionTier | null;
+  subscriptionStatus: SubscriptionStatus | null;
   comparisonsUsedThisPeriod: number;
   periodResetDate: Date | null;
   trialEndsAt: Date | null;
@@ -66,8 +68,11 @@ async function normalizeAndValidateUsage(appUser: {
     throw new Error('Active subscription required.');
   }
 
+  const isTrialing = appUser.subscriptionStatus === SubscriptionStatus.TRIALING;
   let addonComparisonsThisPeriod = await getAddonComparisonsThisPeriod(appUser.id);
-  let limit = PLAN_COMPARISON_LIMITS[appUser.subscriptionTier] + addonComparisonsThisPeriod;
+  let limit = isTrialing
+    ? TRIAL_COMPARISON_LIMIT
+    : PLAN_COMPARISON_LIMITS[appUser.subscriptionTier] + addonComparisonsThisPeriod;
   const now = new Date();
   let used = appUser.comparisonsUsedThisPeriod;
   let refreshDate = appUser.periodResetDate ?? appUser.subscriptionEndsAt ?? appUser.trialEndsAt ?? null;
@@ -94,7 +99,7 @@ async function normalizeAndValidateUsage(appUser: {
       addonComparisonsThisPeriod = 0;
     }
 
-    limit = PLAN_COMPARISON_LIMITS[appUser.subscriptionTier] + addonComparisonsThisPeriod;
+    limit = isTrialing ? TRIAL_COMPARISON_LIMIT : PLAN_COMPARISON_LIMITS[appUser.subscriptionTier] + addonComparisonsThisPeriod;
   } else if (!appUser.periodResetDate && refreshDate) {
     await prisma.user.update({
       where: { id: appUser.id },
@@ -279,6 +284,7 @@ export async function POST(request: Request) {
     select: {
       id: true,
       subscriptionTier: true,
+      subscriptionStatus: true,
       comparisonsUsedThisPeriod: true,
       periodResetDate: true,
       trialEndsAt: true,
@@ -456,6 +462,7 @@ export async function POST(request: Request) {
           used: error.used,
           limit: error.limit,
           refreshDate: error.refreshDate,
+          isTrial: appUser.subscriptionStatus === SubscriptionStatus.TRIALING,
         },
         { status: 403 }
       );

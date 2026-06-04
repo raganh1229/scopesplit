@@ -8,6 +8,11 @@ import {
   PLAN_LLM_EDIT_LIMITS,
   stripe,
 } from '@/lib/stripe';
+import {
+  TRIAL_COMPARISON_LIMIT,
+  TRIAL_LLM_EDIT_LIMIT,
+  TRIAL_EXECUTIVE_SUMMARY_LIMIT,
+} from '@/lib/plan-constants';
 
 type PlanName = 'starter' | 'professional' | 'business' | null;
 
@@ -202,11 +207,12 @@ export async function GET() {
   }
 
   const tier = appUser.subscriptionTier;
+  const isTrialing = appUser.subscriptionStatus === 'TRIALING';
   const comparisonLimit = tier
-    ? PLAN_COMPARISON_LIMITS[tier] + addonComparisonsThisPeriod
+    ? (isTrialing ? TRIAL_COMPARISON_LIMIT : PLAN_COMPARISON_LIMITS[tier] + addonComparisonsThisPeriod)
     : null;
-  const llmEditLimit = tier ? PLAN_LLM_EDIT_LIMITS[tier] : null;
-  const executiveSummaryLimit = tier ? PLAN_EXECUTIVE_SUMMARY_LIMITS[tier] : null;
+  const llmEditLimit = tier ? (isTrialing ? TRIAL_LLM_EDIT_LIMIT : PLAN_LLM_EDIT_LIMITS[tier]) : null;
+  const executiveSummaryLimit = tier ? (isTrialing ? TRIAL_EXECUTIVE_SUMMARY_LIMIT : PLAN_EXECUTIVE_SUMMARY_LIMITS[tier]) : null;
   const planName = tier ? PLAN_NAMES[tier] : null;
   const pendingDowngradePlan = appUser.pendingTierDowngrade ? PLAN_NAMES[appUser.pendingTierDowngrade] : null;
   const addonOption = tier ? ADDON_OPTIONS[tier] : null;

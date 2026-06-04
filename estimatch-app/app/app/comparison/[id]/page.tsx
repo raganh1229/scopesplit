@@ -712,16 +712,22 @@ export default function ComparisonDetailPage() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        if (data?.code === 'USAGE_LIMIT_REACHED' && data?.refreshDate) {
-          const refresh = new Date(data.refreshDate);
-          const refreshLabel = Number.isNaN(refresh.getTime())
-            ? null
-            : refresh.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-          throw new Error(
-            refreshLabel
-              ? `${data.error} Your quota resets on ${refreshLabel}.`
-              : data.error
-          );
+        if (data?.code === 'USAGE_LIMIT_REACHED') {
+          if (data?.isTrial) {
+            window.dispatchEvent(new CustomEvent('trial-limit-reached', { detail: { kind: 'llmEdit', limit: data?.limit ?? 2 } }));
+            throw new Error(data?.error ?? 'You have reached your trial bulk edit limit.');
+          }
+          if (data?.refreshDate) {
+            const refresh = new Date(data.refreshDate);
+            const refreshLabel = Number.isNaN(refresh.getTime())
+              ? null
+              : refresh.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            throw new Error(
+              refreshLabel
+                ? `${data.error} Your quota resets on ${refreshLabel}.`
+                : data.error
+            );
+          }
         }
         throw new Error(data?.error ?? 'Failed to apply edits.');
       }
@@ -755,16 +761,22 @@ export default function ComparisonDetailPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        if (data?.code === 'USAGE_LIMIT_REACHED' && data?.refreshDate) {
-          const refresh = new Date(data.refreshDate);
-          const refreshLabel = Number.isNaN(refresh.getTime())
-            ? null
-            : refresh.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-          throw new Error(
-            refreshLabel
-              ? `${data.error} Your quota resets on ${refreshLabel}.`
-              : data.error
-          );
+        if (data?.code === 'USAGE_LIMIT_REACHED') {
+          if (data?.isTrial) {
+            window.dispatchEvent(new CustomEvent('trial-limit-reached', { detail: { kind: 'executiveSummary', limit: data?.limit ?? 2 } }));
+            throw new Error(data?.error ?? 'You have reached your trial executive summary limit.');
+          }
+          if (data?.refreshDate) {
+            const refresh = new Date(data.refreshDate);
+            const refreshLabel = Number.isNaN(refresh.getTime())
+              ? null
+              : refresh.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            throw new Error(
+              refreshLabel
+                ? `${data.error} Your quota resets on ${refreshLabel}.`
+                : data.error
+            );
+          }
         }
         throw new Error(data?.error ?? 'Failed to generate summary.');
       }

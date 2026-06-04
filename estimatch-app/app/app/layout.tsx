@@ -1,5 +1,6 @@
 import Sidebar from '@/components/app/Sidebar';
 import EmailOptInToast from '@/components/app/EmailOptInToast';
+import TrialLimitBanner from '@/components/app/TrialLimitBanner';
 import { ThemeProvider } from '@/lib/theme-context';
 import styles from './layout.module.css';
 
@@ -16,6 +17,7 @@ export default function AppLayout({
           {children}
         </div>
         <EmailOptInToast />
+        <TrialLimitBanner />
       </div>
     </ThemeProvider>
   );

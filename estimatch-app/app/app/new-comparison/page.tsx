@@ -147,11 +147,16 @@ export default function NewComparisonPage() {
         used?: number;
         limit?: number;
         refreshDate?: string | null;
+        isTrial?: boolean;
         comparison?: { id: string };
       };
 
       if (!response.ok) {
         if (payload.code === 'USAGE_LIMIT_REACHED') {
+          if (payload.isTrial) {
+            window.dispatchEvent(new CustomEvent('trial-limit-reached', { detail: { kind: 'comparison', limit: payload.limit ?? 4 } }));
+            throw new Error('You have reached your trial comparison limit.');
+          }
           const used = typeof payload.used === 'number' ? payload.used : 0;
           const limit = typeof payload.limit === 'number' ? payload.limit : 0;
           throw new Error(

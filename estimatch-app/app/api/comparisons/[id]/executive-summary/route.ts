@@ -57,6 +57,7 @@ export async function POST(_request: Request, context: RouteContext) {
   const { id: comparisonId } = await context.params;
 
   // ── Usage gate ──
+  const isTrialing = appUser.subscriptionStatus === 'TRIALING';
   let usageRefreshDate: Date | null = null;
   let usageEffectiveLimit = 0;
   try {
@@ -66,19 +67,23 @@ export async function POST(_request: Request, context: RouteContext) {
       'executiveSummary',
       appUser.subscriptionTier,
       rolled.executiveSummariesUsedThisPeriod,
-      rolled.periodResetDate
+      rolled.periodResetDate,
+      isTrialing
     );
     usageEffectiveLimit = limit;
   } catch (err) {
     if (err instanceof UsageLimitError) {
       return NextResponse.json(
         {
-          error: `You have used ${err.used}/${err.limit} executive summaries for this period.`,
+          error: isTrialing
+            ? `Your trial allows a maximum of ${err.limit} executive summaries.`
+            : `You have used ${err.used}/${err.limit} executive summaries for this period.`,
           code: 'USAGE_LIMIT_REACHED',
           kind: 'executiveSummary',
           used: err.used,
           limit: err.limit,
           refreshDate: err.refreshDate,
+          isTrial: isTrialing,
         },
         { status: 429 }
       );
@@ -465,12 +470,15 @@ Generate the executive summary report for this estimate comparison.`;
   if (!incremented) {
     return NextResponse.json(
       {
-        error: 'Executive summary limit reached for this billing period.',
+        error: isTrialing
+          ? `Your trial allows a maximum of ${usageEffectiveLimit} executive summaries.`
+          : 'Executive summary limit reached for this billing period.',
         code: 'USAGE_LIMIT_REACHED',
         kind: 'executiveSummary',
         used: usageEffectiveLimit,
         limit: usageEffectiveLimit,
         refreshDate: usageRefreshDate,
+        isTrial: isTrialing,
       },
       { status: 429 }
     );

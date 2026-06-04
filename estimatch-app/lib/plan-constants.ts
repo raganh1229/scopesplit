@@ -36,3 +36,9 @@ export const PLAN_EXECUTIVE_SUMMARY_LIMITS: Record<'STARTER' | 'PROFESSIONAL' | 
   PROFESSIONAL: 15,
   ENTERPRISE: 50,
 };
+
+// ── Trial period usage caps ──
+// Applied when subscriptionStatus === 'TRIALING', regardless of plan tier.
+export const TRIAL_COMPARISON_LIMIT = 4;
+export const TRIAL_LLM_EDIT_LIMIT = 2;
+export const TRIAL_EXECUTIVE_SUMMARY_LIMIT = 2;

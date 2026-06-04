@@ -107,6 +107,7 @@ export async function POST(request: Request, context: RouteContext) {
   // Roll the billing period if needed, then verify the user has a slot left
   // before spending an Anthropic API call. AI-tool quotas are flat per-tier
   // monthly caps with no add-on extension path.
+  const isTrialing = appUser.subscriptionStatus === 'TRIALING';
   let usageRefreshDate: Date | null = null;
   let usageEffectiveLimit = 0;
   try {
@@ -116,19 +117,23 @@ export async function POST(request: Request, context: RouteContext) {
       'llmEdit',
       appUser.subscriptionTier,
       rolled.llmEditsUsedThisPeriod,
-      rolled.periodResetDate
+      rolled.periodResetDate,
+      isTrialing
     );
     usageEffectiveLimit = limit;
   } catch (err) {
     if (err instanceof UsageLimitError) {
       return NextResponse.json(
         {
-          error: `You have used ${err.used}/${err.limit} LLM bulk edits for this period.`,
+          error: isTrialing
+            ? `Your trial allows a maximum of ${err.limit} bulk edits.`
+            : `You have used ${err.used}/${err.limit} LLM bulk edits for this period.`,
           code: 'USAGE_LIMIT_REACHED',
           kind: 'llmEdit',
           used: err.used,
           limit: err.limit,
           refreshDate: err.refreshDate,
+          isTrial: isTrialing,
         },
         { status: 429 }
       );
@@ -464,12 +469,15 @@ Safety:
   if (!incremented) {
     return NextResponse.json(
       {
-        error: 'LLM bulk edit limit reached for this billing period.',
+        error: isTrialing
+          ? `Your trial allows a maximum of ${usageEffectiveLimit} bulk edits.`
+          : 'LLM bulk edit limit reached for this billing period.',
         code: 'USAGE_LIMIT_REACHED',
         kind: 'llmEdit',
         used: usageEffectiveLimit,
         limit: usageEffectiveLimit,
         refreshDate: usageRefreshDate,
+        isTrial: isTrialing,
       },
       { status: 429 }
     );
