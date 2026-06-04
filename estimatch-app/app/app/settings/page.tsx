@@ -793,7 +793,10 @@ function SettingsContent() {
                           The card on file has been charged the difference of {formatCurrencyFromCents(latestPlanChange.amountDueNowCents)}. You will be charged {formatCurrencyFromCents(latestPlanChange.nextChargeAmountCents)} on {latestChangeDate}.
                         </p>
                         <p className={styles.resultLine}>
-                          You now have {latestPlanChange.effectiveComparisonLimit} comparisons to use before {latestChangeDate}.
+                          {billingSummary?.status === 'TRIALING'
+                            ? <>Your {PLAN_LABELS[latestPlanChange.plan]} plan ({latestPlanChange.effectiveComparisonLimit} comparisons/month) activates when your trial ends on {latestChangeDate}.</>
+                            : <>You now have {latestPlanChange.effectiveComparisonLimit} comparisons to use before {latestChangeDate}.</>
+                          }
                         </p>
                       </>
                     )}
