@@ -191,13 +191,17 @@ export async function POST(request: Request) {
       );
     }
 
+    const updatedStripeStatus = updatedSubscription.status;
+    const newPrismaStatus =
+      updatedStripeStatus === 'trialing' ? SubscriptionStatus.TRIALING : SubscriptionStatus.ACTIVE;
+
     await prisma.user.update({
       where: { id: appUser.id },
       data: {
         subscriptionTier: isDowngrade ? appUser.subscriptionTier : toPrismaTier(body.plan),
         pendingTierDowngrade: isDowngrade ? toPrismaTier(body.plan) : null,
         pendingTierEffectiveAt: isDowngrade ? subscriptionEndsAt : null,
-        subscriptionStatus: SubscriptionStatus.ACTIVE,
+        subscriptionStatus: newPrismaStatus,
         ...(subscriptionEndsAt
           ? {
               subscriptionEndsAt,
