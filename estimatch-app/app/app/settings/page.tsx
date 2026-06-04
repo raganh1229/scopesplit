@@ -388,6 +388,7 @@ function SettingsContent() {
 
       setShowKeepSubscriptionPrompt(false);
       await loadBillingSummary({ force: true });
+      window.dispatchEvent(new CustomEvent('billing-summary-updated'));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to keep subscription.';
       setBillingError(message);

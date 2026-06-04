@@ -58,53 +58,50 @@ export default function TrialBanner() {
   const [visible, setVisible] = useState(false);
   const [billingSummary, setBillingSummary] = useState<BillingSummary | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadTrialState() {
-      try {
-        const now = Date.now();
-        const cached = billingSummaryCache;
-        const payload =
-          cached && now - cached.fetchedAt < BILLING_SUMMARY_CACHE_TTL_MS
-            ? cached.value
-            : await (async () => {
-                const response = await fetch('/api/billing/summary');
-
-                if (!response.ok) {
-                  if (!cancelled) setVisible(false);
-                  return null;
-                }
-
-                const freshPayload = (await response.json()) as BillingSummary;
-                billingSummaryCache = {
-                  fetchedAt: Date.now(),
-                  value: freshPayload,
-                };
-                return freshPayload;
-              })();
-
-        if (!payload) {
-          return;
-        }
-        const nextDays = getDaysRemaining(payload.trialEndsAt);
-        const isTrialing = payload.status === 'TRIALING';
-
-        if (!cancelled) {
-          setBillingSummary(payload);
-          setDaysRemaining(nextDays);
-          setVisible(isTrialing && nextDays > 0);
-        }
-      } catch {
-        if (!cancelled) setVisible(false);
+  async function loadTrialState(force = false) {
+    try {
+      if (force) {
+        billingSummaryCache = null;
       }
+      const now = Date.now();
+      const cached = billingSummaryCache;
+      const payload =
+        cached && now - cached.fetchedAt < BILLING_SUMMARY_CACHE_TTL_MS
+          ? cached.value
+          : await (async () => {
+              const response = await fetch('/api/billing/summary');
+              if (!response.ok) {
+                setVisible(false);
+                return null;
+              }
+              const freshPayload = (await response.json()) as BillingSummary;
+              billingSummaryCache = { fetchedAt: Date.now(), value: freshPayload };
+              return freshPayload;
+            })();
+
+      if (!payload) return;
+      const nextDays = getDaysRemaining(payload.trialEndsAt);
+      const isTrialing = payload.status === 'TRIALING';
+      setBillingSummary(payload);
+      setDaysRemaining(nextDays);
+      setVisible(isTrialing && nextDays > 0);
+    } catch {
+      setVisible(false);
     }
+  }
 
+  useEffect(() => {
     void loadTrialState();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return () => {
-      cancelled = true;
-    };
+  useEffect(() => {
+    function handleUpdate() {
+      void loadTrialState(true);
+    }
+    window.addEventListener('billing-summary-updated', handleUpdate);
+    return () => window.removeEventListener('billing-summary-updated', handleUpdate);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!visible) return null;
