@@ -790,7 +790,7 @@ function SettingsContent() {
                       <>
                         <h3>Your account has been upgraded to {PLAN_LABELS[latestPlanChange.plan]} tier</h3>
                         <p>
-                          The card on file has been charged the difference of {formatCurrencyFromCents(latestPlanChange.amountDueNowCents)}.
+                          The card on file has been charged the difference of {formatCurrencyFromCents(latestPlanChange.amountDueNowCents)}. You will be charged {formatCurrencyFromCents(latestPlanChange.nextChargeAmountCents)} on {latestChangeDate}.
                         </p>
                         <p className={styles.resultLine}>
                           You now have {latestPlanChange.effectiveComparisonLimit} comparisons to use before {latestChangeDate}.
