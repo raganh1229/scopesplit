@@ -705,13 +705,18 @@ function SettingsContent() {
                       {billingSummary?.addonOption?.priceLabel ?? 'Add-on options are tied to an active plan.'}
                     </div>
                   </div>
-                  <button
-                    className={styles.btn}
-                    onClick={openAddonCheckout}
-                    disabled={!billingSummary?.addonOption || addonLoading}
+                  <span
+                    className={styles.addonBtnWrapper}
+                    data-tooltip={billingSummary?.status === 'TRIALING' ? 'Extra comparisons cannot be purchased during the trial period.' : undefined}
                   >
-                    {addonLoading ? 'Opening…' : 'Purchase add-on'}
-                  </button>
+                    <button
+                      className={styles.btn}
+                      onClick={openAddonCheckout}
+                      disabled={!billingSummary?.addonOption || addonLoading || billingSummary?.status === 'TRIALING'}
+                    >
+                      {addonLoading ? 'Opening…' : 'Purchase add-on'}
+                    </button>
+                  </span>
                 </div>
               </div>
               {!isCancellationScheduled && (

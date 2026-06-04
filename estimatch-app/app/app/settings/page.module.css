@@ -79,6 +79,29 @@
   color: var(--error-text);
 }
 
+.addonBtnWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.addonBtnWrapper[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 7px);
+  right: 0;
+  width: 230px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: var(--surface-raised, #2a2a2a);
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: normal;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
 .cancellationBanner {
   display: flex;
   align-items: flex-start;
