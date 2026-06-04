@@ -7,6 +7,7 @@ type BillingSummary = {
   status: 'TRIALING' | 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'EXPIRED' | null;
   trialEndsAt: string | null;
   plan: 'starter' | 'professional' | 'business' | null;
+  cancelAtPeriodEnd: boolean;
 };
 
 const PLAN_LABELS: Record<NonNullable<BillingSummary['plan']>, string> = {
@@ -111,6 +112,7 @@ export default function TrialBanner() {
 
   const tierLabel = billingSummary?.plan ? `${PLAN_LABELS[billingSummary.plan]} tier` : 'your selected tier';
   const enrollmentDate = formatDate(billingSummary?.trialEndsAt ?? null);
+  const isCancelled = billingSummary?.cancelAtPeriodEnd ?? false;
 
   return (
     <div className={styles.banner}>
@@ -120,7 +122,10 @@ export default function TrialBanner() {
           Free trial &mdash; <strong>{daysRemaining} day{daysRemaining !== 1 ? 's' : ''} remaining</strong>
         </span>
         <span className={styles.dot} aria-hidden="true">•</span>
-        <span className={styles.notice}>You will be enrolled in {tierLabel} on {enrollmentDate}.</span>
+        {isCancelled
+          ? <span className={styles.notice}>Your access to ScopeSplit will be terminated on {enrollmentDate}.</span>
+          : <span className={styles.notice}>You will be enrolled in {tierLabel} on {enrollmentDate}.</span>
+        }
       </div>
     </div>
   );
