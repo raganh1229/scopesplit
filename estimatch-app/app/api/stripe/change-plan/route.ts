@@ -112,6 +112,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'No Stripe customer found for this account.' }, { status: 400 });
   }
 
+  let didPreWritePendingDowngrade = false;
+
   try {
     const subscription = await findManageableSubscription(appUser.stripeCustomerId);
 
@@ -138,6 +140,28 @@ export async function POST(request: Request) {
     const isDowngrade = targetPlanRank < currentPlanRank;
 
     const prorationBehavior = isDowngrade ? 'none' : 'always_invoice';
+
+    // For downgrades: write pendingTierDowngrade to Prisma BEFORE calling Stripe.
+    // stripe.subscriptions.update() immediately fires a customer.subscription.updated
+    // webhook which calls syncSubscription. That function reads pendingTierDowngrade
+    // to decide whether to preserve the higher tier. If the webhook arrives before
+    // the post-Stripe Prisma write (a common race), it sees pendingTierDowngrade=null
+    // and immediately overwrites subscriptionTier to the lower tier, making the
+    // downgrade arrow disappear. Pre-writing here guarantees the webhook always
+    // sees the correct pending state regardless of delivery timing.
+    if (isDowngrade) {
+      const earlyPeriodEnd = fromUnixSeconds(
+        readUnixSecondsCandidate(subscription, 'current_period_end', 'currentPeriodEnd')
+      );
+      await prisma.user.update({
+        where: { id: appUser.id },
+        data: {
+          pendingTierDowngrade: toPrismaTier(body.plan),
+          pendingTierEffectiveAt: earlyPeriodEnd,
+        },
+      });
+      didPreWritePendingDowngrade = true;
+    }
 
     const updatedSubscription =
       currentPrice === targetPrice && !subscription.cancel_at_period_end
@@ -250,6 +274,17 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
+    // If we pre-wrote a pending downgrade but the Stripe call subsequently failed,
+    // roll back those fields so the DB is not left in an inconsistent state.
+    if (didPreWritePendingDowngrade) {
+      await prisma.user.update({
+        where: { id: appUser.id },
+        data: { pendingTierDowngrade: null, pendingTierEffectiveAt: null },
+      }).catch(() => {
+        // Best-effort rollback — log but do not mask the original error.
+        console.error('change-plan: failed to roll back pre-written pending downgrade for user', appUser.id);
+      });
+    }
     const message = error instanceof Error ? error.message : 'Unable to change subscription plan.';
     return NextResponse.json({ error: message }, { status: 500 });
   }

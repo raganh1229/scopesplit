@@ -322,6 +322,8 @@ function SettingsContent() {
   useEffect(() => {
     if (searchParams.get('cancelled') === '1') {
       setActiveTab('Plan & Billing');
+      setShowTierSelector(false);
+      setShowKeepSubscriptionPrompt(false);
       void loadBillingSummary({ force: true });
     }
   }, [searchParams]);
