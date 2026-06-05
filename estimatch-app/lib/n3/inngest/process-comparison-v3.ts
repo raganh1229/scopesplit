@@ -37,6 +37,7 @@
 import type { GetFunctionInput } from 'inngest';
 import { inngest } from '@/lib/inngest/client';
 import prisma from '@/lib/prisma';
+import { SubscriptionStatus } from '@/app/generated/prisma/client';
 import type { N3ProcessRequestedEvent } from '@/lib/n3/n3-routing';
 import { detectZonesN3 } from '@/lib/n3/passes/detect-zones';
 import { proposeCorrespondencesN3 } from '@/lib/n3/passes/propose-correspondences';
@@ -431,6 +432,29 @@ export const processComparisonV3 = inngest.createFunction(
           });
         } catch {
           // Comparison may have been deleted — ignore Prisma not-found errors
+        }
+        // Trialing users get their slot back on failure so a botched comparison
+        // does not count against their 4-comparison trial limit.
+        try {
+          const row = await prisma.comparison.findUnique({
+            where: { id: comparisonId },
+            select: { userId: true },
+          });
+          if (row?.userId) {
+            await prisma.user.updateMany({
+              where: {
+                id: row.userId,
+                subscriptionStatus: SubscriptionStatus.TRIALING,
+                comparisonsUsedThisPeriod: { gt: 0 },
+              },
+              data: { comparisonsUsedThisPeriod: { decrement: 1 } },
+            });
+          }
+        } catch (refundErr) {
+          logger.warn('[n3] failed to refund trial comparison slot', {
+            comparisonId,
+            err: String(refundErr),
+          });
         }
         logger.error('[n3] comparison flipped to FAILED after exhausted retries', {
           comparisonId,
