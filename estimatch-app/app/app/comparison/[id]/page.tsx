@@ -1647,10 +1647,27 @@ export default function ComparisonDetailPage() {
           comparisonId={comparisonId}
           initialE1Zones={n2ReviewZones?.e1 ?? []}
           initialE2Zones={n2ReviewZones?.e2 ?? []}
-          onConfirmed={() => {
-            setComparison(prev => prev ? { ...prev, status: 'PROCESSING' } : prev);
-            setN2ReviewZones(null);
-            setIsAwaitingNextPass(true);
+          onConfirmed={async ({ reEntry }) => {
+            if (reEntry) {
+              // Pipeline is already past the zone-review gate and blocked at
+              // the match-review gate. Skip the PROCESSING spinner entirely:
+              // fetch existing match data and show MatchReview immediately.
+              setN2ReviewZones(null);
+              try {
+                const mrRes = await fetch(`/api/comparisons/${comparisonId}/match-review`);
+                if (mrRes.ok) {
+                  const mrData = await mrRes.json() as { pairs: MatchPair[]; unmatchedE1: string[]; unmatchedE2: string[] };
+                  setN2MatchData(mrData);
+                }
+              } catch {
+                // non-fatal — MatchReview will show empty lists
+              }
+              setComparison(prev => prev ? { ...prev, status: 'AWAITING_MATCH_REVIEW' } : prev);
+            } else {
+              setComparison(prev => prev ? { ...prev, status: 'PROCESSING' } : prev);
+              setN2ReviewZones(null);
+              setIsAwaitingNextPass(true);
+            }
           }}
           onExit={handleGateExitRequest}
         />

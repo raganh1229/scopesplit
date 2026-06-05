@@ -7,9 +7,9 @@
 // the zone correction screen.
 //
 // The next time the user confirms zone review, zone-review/confirm detects
-// re-entry (n2:zones_matched already exists) and re-runs matchZones inline
-// instead of firing the zone-review.completed event, then directly sets
-// status back to AWAITING_MATCH_REVIEW for the user to confirm again.
+// re-entry (n3_zone_correspondences already exist) and flips status directly
+// to AWAITING_MATCH_REVIEW without firing the zone-review event again, so the
+// Inngest pipeline remains waiting at the match-review gate undisturbed.
 //
 // Auth: Clerk + DB ownership check.
 // ─────────────────────────────────────────────────────────────────────────────

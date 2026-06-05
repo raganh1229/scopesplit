@@ -14,7 +14,7 @@ type Props = {
   comparisonId: string;
   initialE1Zones: ReviewZone[];
   initialE2Zones: ReviewZone[];
-  onConfirmed: () => void;
+  onConfirmed: (data: { reEntry: boolean }) => void;
   onExit?: () => void;
 };
 
@@ -148,7 +148,8 @@ export default function ZoneReview({
         setConfirming(false);
         return;
       }
-      onConfirmed();
+      const data = await res.json() as { ok: boolean; reEntry?: boolean };
+      onConfirmed({ reEntry: data.reEntry ?? false });
     } catch {
       setCorrectionError('Network error — please try again.');
       setConfirming(false);

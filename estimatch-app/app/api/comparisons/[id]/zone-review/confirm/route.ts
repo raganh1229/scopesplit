@@ -38,6 +38,23 @@ export async function POST(
 
   // ── N3/N4 path ─────────────────────────────────────────────────────────────
   if (comparison.pipelineVersion === 'n3' || comparison.pipelineVersion === 'n4') {
+    // Re-entry detection: if zone correspondences already exist the pipeline
+    // already consumed the zone-review event and is now blocked at the
+    // match-review gate. Firing the event again would orphan it and leave
+    // status stuck at PROCESSING forever (spinner deadlock).
+    // Instead: flip status directly to AWAITING_MATCH_REVIEW and tell the
+    // frontend to skip the spinner and show MatchReview immediately.
+    const existingCorrespondences = await prisma.n3ZoneCorrespondence.count({
+      where: { comparisonId },
+    });
+    if (existingCorrespondences > 0) {
+      await prisma.comparison.update({
+        where: { id: comparisonId },
+        data: { status: 'AWAITING_MATCH_REVIEW' },
+      });
+      return NextResponse.json({ ok: true, skipped: false, reEntry: true });
+    }
+
     await prisma.comparison.update({
       where: { id: comparisonId },
       data: { status: 'PROCESSING' },
