@@ -2,7 +2,7 @@
 
 > **Purpose**: Single source of truth for known follow-up work derived from the Apr 27, 2026 full-application code review (multiple passes, including a Vercel/serverless hardening pass in the evening). Items are scoped to "needs implementation/fix"; routine testing tasks are tracked separately.
 >
-> **Last Updated**: May 25, 2026 — Second review pass added N16–N19 (see §Code Review Findings May 25). Stripe trial-abuse code fix added as P0 item #39. Pre-deployment operational checklist integrated from `PRODUCTION_CUTOVER_CHECKLIST.md` into new Pre-Deploy section. Previous update: May 24, 2026 — Comprehensive pre-launch review of full application and N3 pipeline. Six N3 bugs fixed (see §Resolved May 24 2026 below). New P0 items added: Symbility pipeline construction (#36), XLS/XLSX file support (#37). New N3 tracking items added: N3-6 through N3-12 covering HNSW index, createMany batch limit, score recalibration, Phase 10 NLP, large-component greedy, format handoff, and gate verification. Previous update: May 20, 2026 — N3 pipeline fully built (all 18 phases) and connected to the Scopesplit UI. Line Item Review gate (Phase 8.5) implemented. Run snapshot logging added. See `N3_BUILD_LEDGER.md` for current N3 status and pending items. Previous update: May 3, 2026 (~22:59 EDT) — N1 Inngest conversion **RESOLVED** (all 9 phases complete, empirically verified end-to-end on 1717-item run). Added #32 continuation-extraction hallucination, #33 Stage A page-chunking for >1K-item PDFs, #34 undici dispatcher prod-verification — three hand-offs to N2 (speed / capacity / accuracy).
+> **Last Updated**: Jun 3, 2026 — **APP LIVE AT scopesplit.com (Vercel).** All P0 blockers resolved (#36 Symbility pipeline, #37 XLS/XLSX support, #38 Loading/progress screens — all via N4 multi-format pipeline). N4 fully completed, supports Xactimate/Symbility/CSV comparison. All Pre-Deploy checklist items (PD-1 through PD-22) completed. Currently in **active testing phase**. Previous update: May 25, 2026 — Second review pass added N16–N19. Stripe trial-abuse code fix added as P0 item #39 (resolved same day). Pre-deployment operational checklist integrated from `PRODUCTION_CUTOVER_CHECKLIST.md` into new Pre-Deploy section. Previous update: May 24, 2026 — Comprehensive pre-launch review of full application and N3 pipeline. Six N3 bugs fixed. New P0 items added: #36, #37, #38. N3 tracking items N3-6 through N3-12 added. Previous update: May 20, 2026 — N3 pipeline fully built (all 18 phases) and connected to the Scopesplit UI. Previous update: May 3, 2026 — N1 Inngest conversion **RESOLVED** (all 9 phases complete).
 >
 > **Source**: Multi-pass `/review` of `estimatch-app/` covering all API routes, lib modules, middleware (`proxy.ts`), webhooks, frontend pages, and components. The evening pass specifically evaluated behavior under Vercel serverless constraints (maxDuration, fire-and-forget patterns, read-only filesystem).
 
@@ -25,9 +25,9 @@
 
 | # | Item | Area |
 |---|------|------|
-| 36 | Symbility pipeline — N3 extraction, zone detection, normalization for Symbility PDFs | N3 pipeline |
-| 37 | XLS/XLSX file support — upload, parse, and extract structured spreadsheet estimates | N3 pipeline + upload |
-| 38 | Loading / progress screens — update all pipeline waiting states with meaningful phase-level status messages | UI |
+| ~~36~~ | ~~Symbility pipeline — N3 extraction, zone detection, normalization for Symbility PDFs~~ — **RESOLVED Jun 3 2026** (implemented via N4 multi-format pipeline) | N3 pipeline |
+| ~~37~~ | ~~XLS/XLSX file support — upload, parse, and extract structured spreadsheet estimates~~ — **RESOLVED Jun 3 2026** (CSV/XLS support implemented in N4) | N3 pipeline + upload |
+| ~~38~~ | ~~Loading / progress screens — update all pipeline waiting states with meaningful phase-level status messages~~ — **RESOLVED Jun 3 2026** (phase-level status messages implemented) | UI |
 | ~~39~~ | ~~Re-enable Stripe trial-abuse enforcement in `checkout/route.ts`~~ — **RESOLVED May 25 2026** (phone + IP reuse checks + metadata writes restored) | Billing / Security |
 
 ### P1 — Fix Before Significant Traffic
@@ -82,51 +82,51 @@
 | ~~N19~~ | ~~`/api/billing/(.*)`, `/api/user/(.*)`, `/api/n3/(.*)` missing from `proxy.ts` `isProtectedRoute` matcher~~ — **RESOLVED May 25 2026** (three paths added to block-list) |
 | ~~N15~~ | ~~`debug-trace.ts` trace file race under concurrent dev runs~~ — **RESOLVED May 24 2026** (filename now includes comparisonId: `pipeline-trace-${comparisonId}.txt`) |
 
-### Pre-Deploy — Operational Checklist
+### Pre-Deploy — Operational Checklist ✅ COMPLETE (Jun 3 2026)
 
-> Full detail and rationale for every item below lives in `PRODUCTION_CUTOVER_CHECKLIST.md`. This section is the consolidated task view; the cutover file is the operational runbook. Tick each item off in `PRODUCTION_CUTOVER_CHECKLIST.md` §9 as you go.
+> **STATUS: ALL ITEMS COMPLETE. App is live at scopesplit.com.** Full detail and rationale for every item below lives in `PRODUCTION_CUTOVER_CHECKLIST.md`.
 
-**Environment & Secrets**
-
-| # | Item |
-|---|------|
-| PD-1 | Set all production env vars in Vercel: Clerk (`pk_live_`, `sk_live_`, `CLERK_WEBHOOK_SIGNING_SECRET`), Supabase, Prisma `DATABASE_URL`/`DIRECT_URL`, Anthropic, Stripe (`sk_live_`, `pk_live_`, `STRIPE_WEBHOOK_SECRET`, all 6 `STRIPE_PRICE_*`), Resend, Twilio, Inngest (`INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`) |
-| PD-2 | Remove `INNGEST_DEV` from Vercel production env — if present, SDK tries to reach a non-existent local dev server |
-| PD-3 | Set `TRIAL_IP_HASH_SALT`, `DEFER_USER_SYNC_UNTIL_PHONE_VERIFIED=true`, all `UNVERIFIED_ACCOUNT_CLEANUP_*` vars, `CRON_SECRET` |
-| PD-4 | Rotate any secrets exposed during development (chat, screenshots, logs) before go-live |
-| PD-5 | Remove old `STRIPE_CHECKOUT_SUCCESS_URL` / `STRIPE_CHECKOUT_CANCEL_URL` env vars if previously set (replaced by origin-derived URLs) |
-
-**Dashboard Configuration**
+**Environment & Secrets** ✅
 
 | # | Item |
 |---|------|
-| PD-6 | Clerk: create/update webhook endpoint → `https://<domain>/api/webhooks/clerk`, enable `user.created` / `user.updated` / `user.deleted` |
-| PD-7 | Clerk: add production domain to allowed domains; remove stale localhost entries |
-| PD-8 | Stripe: confirm all 6 live products/prices exist (3 plans + 3 add-ons); verify `STRIPE_PRICE_*` values point to live-mode prices |
-| PD-9 | Stripe: create production webhook → `https://<domain>/api/webhooks/stripe`, enable 5 events (`checkout.session.completed`, `customer.subscription.*`, `invoice.payment_failed`) |
-| PD-10 | Inngest Cloud: register `https://<domain>/api/inngest` in Inngest Cloud → Apps → Sync; verify function `Process comparison` appears with all step IDs |
-| PD-11 | Vercel Cron: confirm `vercel.json` cron fires `POST /api/internal/cleanup-unverified-users` daily at 04:00 UTC with `CRON_SECRET` bearer token |
-| PD-12 | Configure Vercel log drain with alert on `"STRIPE_WEBHOOK_UNMAPPED_PRICE"` event string (fires when a paying user fails to get plan access) |
+| ~~PD-1~~ | ~~Set all production env vars in Vercel: Clerk, Supabase, Prisma, Anthropic, Stripe, Resend, Twilio, Inngest~~ — **DONE** |
+| ~~PD-2~~ | ~~Remove `INNGEST_DEV` from Vercel production env~~ — **DONE** |
+| ~~PD-3~~ | ~~Set `TRIAL_IP_HASH_SALT`, `DEFER_USER_SYNC_UNTIL_PHONE_VERIFIED=true`, cleanup vars, `CRON_SECRET`~~ — **DONE** |
+| ~~PD-4~~ | ~~Rotate exposed development secrets~~ — **DONE** |
+| ~~PD-5~~ | ~~Remove old `STRIPE_CHECKOUT_SUCCESS_URL` / `STRIPE_CHECKOUT_CANCEL_URL` env vars~~ — **DONE** |
 
-**Vercel / Runtime Checks**
+**Dashboard Configuration** ✅
 
 | # | Item |
 |---|------|
-| PD-13 | Confirm `maxDuration` on `/api/inngest` route is `300` (or higher on Pro+Fluid); Stage A extraction can take 5–10 min for large PDFs |
-| PD-14 | Set `ANTHROPIC_EXTRACTION_TIMEOUT_MS=600000` in Vercel (default 180s will fail on PDFs >250 items) |
-| PD-15 | Confirm `ENABLE_REAL_COMPARISON_PROCESSING=true` in Vercel production env |
-| PD-16 | Confirm debug env vars (`DUMP_PIPELINE_TRACE`, `DUMP_HAIKU_ZONES`) are `false` or unset in production |
+| ~~PD-6~~ | ~~Clerk: production webhook endpoint → `https://scopesplit.com/api/webhooks/clerk`~~ — **DONE** |
+| ~~PD-7~~ | ~~Clerk: production domain added, stale localhost entries removed~~ — **DONE** |
+| ~~PD-8~~ | ~~Stripe: all 6 live products/prices confirmed; `STRIPE_PRICE_*` pointing to live-mode~~ — **DONE** |
+| ~~PD-9~~ | ~~Stripe: production webhook → `https://scopesplit.com/api/webhooks/stripe`, 5 events enabled~~ — **DONE** |
+| ~~PD-10~~ | ~~Inngest Cloud: `https://scopesplit.com/api/inngest` registered; function registered with all step IDs~~ — **DONE** |
+| ~~PD-11~~ | ~~Vercel Cron: `vercel.json` cron confirmed firing cleanup daily at 04:00 UTC~~ — **DONE** |
+| ~~PD-12~~ | ~~Vercel log drain configured with alert on `"STRIPE_WEBHOOK_UNMAPPED_PRICE"`~~ — **DONE** |
 
-**Smoke Tests (Required Before Traffic)**
+**Vercel / Runtime Checks** ✅
 
 | # | Item |
 |---|------|
-| PD-17 | Clerk webhooks: sign up → `/verify-phone` → confirm `users` row created in DB; update Clerk → confirm sync; delete Clerk user → confirm row deleted |
-| PD-18 | Stripe billing: complete one full checkout → confirm `subscription_tier` + `plan` metadata set; drive plan change via Settings modal; cancel + resume; add-on purchase → `addon_purchases` row |
-| PD-19 | Comparison pipeline: create one real comparison → confirm `PROCESSING → COMPLETED`, line items persist, Inngest Cloud dashboard shows all steps |
-| PD-20 | AI tools: LLM Edit, Executive Summary, Inline Edit all create new versions correctly; hit plan cap to confirm 429; advance `periodResetDate` to confirm reset |
-| PD-21 | Resend: submit bug report (in-app, with screenshot) and contact form (marketing page, signed out); confirm receipt at configured inbox |
-| PD-22 | Cleanup cron: run one manual `POST /api/internal/cleanup-unverified-users` with secret header; confirm response is not `cleanup_disabled` |
+| ~~PD-13~~ | ~~`maxDuration` on `/api/inngest` confirmed at appropriate value for Pro+Fluid~~ — **DONE** |
+| ~~PD-14~~ | ~~`ANTHROPIC_EXTRACTION_TIMEOUT_MS=600000` set in Vercel~~ — **DONE** |
+| ~~PD-15~~ | ~~`ENABLE_REAL_COMPARISON_PROCESSING=true` confirmed in production env~~ — **DONE** |
+| ~~PD-16~~ | ~~Debug env vars (`DUMP_PIPELINE_TRACE`, `DUMP_HAIKU_ZONES`) unset in production~~ — **DONE** |
+
+**Smoke Tests** ✅
+
+| # | Item |
+|---|------|
+| ~~PD-17~~ | ~~Clerk webhooks: sign up → `/verify-phone` → DB row verified; update/delete sync verified~~ — **DONE** |
+| ~~PD-18~~ | ~~Stripe billing: full checkout → plan metadata set; plan change; cancel + resume; add-on purchase~~ — **DONE** |
+| ~~PD-19~~ | ~~Comparison pipeline: real comparison confirmed `PROCESSING → COMPLETED`; Inngest Cloud shows all steps~~ — **DONE** |
+| ~~PD-20~~ | ~~AI tools: LLM Edit, Executive Summary, Inline Edit verified; 429 cap confirmed; period reset confirmed~~ — **DONE** |
+| ~~PD-21~~ | ~~Resend: bug report (with screenshot) and contact form emails confirmed delivered~~ — **DONE** |
+| ~~PD-22~~ | ~~Cleanup cron: manual POST with secret header succeeded~~ — **DONE** |
 
 ---
 
@@ -134,7 +134,7 @@
 
 | # | Item |
 |---|------|
-| 31-deferred | Symbility format compatibility testing — source real PDFs, run through N3, document failures. Prerequisite to #36 construction. |
+| ~~31-deferred~~ | ~~Symbility format compatibility testing~~ — **SUPERSEDED by N4** (N4 pipeline implements full Symbility support; separate N3 discovery work is no longer needed) |
 
 ---
 
@@ -558,7 +558,8 @@ A second deep review specifically evaluating behavior under **Vercel serverless 
 
 ---
 
-### 36. Symbility pipeline construction
+### 36. Symbility pipeline construction ~~P0, OPEN~~ — **RESOLVED Jun 3 2026 via N4**
+  - **Resolution**: Implemented via the N4 multi-format pipeline (`lib/n4/`). N4 supports Xactimate, Symbility, and CSV formats with format-specific extraction, zone detection, and normalization paths. Format selector on the upload form routes to the correct N4 extraction logic. Accuracy validated across all three formats.
   - **UI prerequisite ✔ DONE**: format selector (Xactimate/Symbility) is already on the upload form. When Symbility pipeline is built, the `symbility` option will route to the correct extraction prompt and zone detection logic automatically. — build format-specific extraction and parsing **(P0, OPEN — May 24 2026)**
 - **Files**: `estimatch-app/lib/n3/passes/extract-line-items.ts`, `estimatch-app/lib/n3/passes/detect-zones.ts`, `estimatch-app/lib/n3/prompts/extraction.ts`
 - **Context**: Item #31 tracks testing Symbility compatibility. This item tracks the actual construction work required once #31 confirms what breaks. Symbility PDFs differ structurally from Xactimate in ways that require purpose-built pipeline paths: different column layout (has a "Code" column), different zone/area header conventions, different total-row formatting, different numbering conventions. The current N3 extraction prompt, zone detection logic, and normalization rules were all designed around Xactimate output.
@@ -574,7 +575,10 @@ A second deep review specifically evaluating behavior under **Vercel serverless 
 
 ---
 
-### 37. XLS/XLSX file support — accept spreadsheet estimates as input **(P0, OPEN — May 24 2026)**
+### 37. CSV/XLS/XLSX file support — accept spreadsheet estimates as input ~~P0, OPEN~~ — **RESOLVED Jun 3 2026 via N4**
+- **Resolution**: Implemented via the N4 multi-format pipeline. CSV (and XLS/XLSX) uploads are accepted, parsed via structured row extraction (no vision model required), column-mapped to N3 normalized fields, and fed into the downstream matching pipeline. Upload validation updated to accept spreadsheet MIME types. No regression on PDF-only comparisons confirmed.
+
+### 37-original. XLS/XLSX file support — accept spreadsheet estimates as input **(P0, OPEN — May 24 2026)**
   - **UI prerequisite**: add an `xls` option to the format selector on the upload form and relax `accept=".pdf"` to also accept `.xls`/`.xlsx`. The format selector infrastructure is already in place (`app/app/new-comparison/page.tsx`).
 - **Files**: `estimatch-app/app/app/new-comparison/page.tsx`, `estimatch-app/app/api/comparisons/route.ts`, `estimatch-app/lib/n3/passes/extract-line-items.ts` (new path), `estimatch-app/prisma/schema.prisma`
 - **Context**: Many adjusters and contractors deliver estimates as Excel spreadsheets rather than PDFs. Xactimate, Symbility, and proprietary adjuster tools all offer XLS/XLSX export. The current pipeline is entirely PDF-only at every level — upload validation, storage, Phase 4 zone detection, Phase 8 extraction, and the Anthropic vision calls. Supporting XLS/XLSX would unlock a large subset of users who cannot produce PDF output or prefer spreadsheet format.
@@ -595,7 +599,10 @@ A second deep review specifically evaluating behavior under **Vercel serverless 
 - **Why P0**: XLS is not a "nice to have" — a significant portion of adjuster estimates are delivered in spreadsheet format, and users who cannot convert to PDF are completely blocked from using the product. Supporting XLS is likely a prerequisite for commercial viability, not an enhancement.
 - **Dependency**: benefits significantly from Symbility column-mapping work in #36 (the Symbility XLS column layout is the same as the Symbility PDF column layout, just structured). Implement #36 first.
 
-### 38. Loading / progress screens need phase-level status messages **(P0, OPEN — May 24 2026)**
+### 38. Loading / progress screens need phase-level status messages ~~P0, OPEN~~ — **RESOLVED Jun 3 2026**
+- **Resolution**: Phase-level status messages implemented. `/api/comparisons/[id]` now returns the current pipeline phase label. `new-comparison/page.tsx` progress bar shows real-time phase descriptions (e.g. "Detecting zones", "Extracting line items", "Matching items"). Elapsed time visible. All waiting screens updated.
+
+### 38-original. Loading / progress screens need phase-level status messages **(P0, OPEN — May 24 2026)**
 - **Files**: `estimatch-app/app/app/new-comparison/page.tsx`, comparison detail page loading states, review gate waiting screens
 - **Context**: All pipeline waiting screens currently show a generic animated progress bar with no indication of what the pipeline is actually doing. Users have no idea if they're waiting for zone detection, extraction, matching, or something else. This is especially confusing during long-running phases like Phase 8 (line item extraction, which can take several minutes per zone on large PDFs).
 - **What needs to be built**:

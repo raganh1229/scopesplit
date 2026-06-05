@@ -2,7 +2,7 @@
 
 > **Purpose**: This document captures the entire development context for the ScopeSplit application. It should be referenced at the start of every new AI conversation to restore full project awareness.
 >
-> **Last Updated**: April 28, 2026 (N1 Inngest conversion — Phases 1–7 of 9 complete; see `N1_INNGEST_CONVERSION.md`)
+> **Last Updated**: Jun 3, 2026 — **APP LIVE AT https://scopesplit.com (Vercel).** All P0 blockers resolved. N4 multi-format pipeline complete (Xactimate/Symbility/CSV). All pre-deploy checklist items done. Currently in active testing phase. Previous: April 28, 2026 (N1 Inngest conversion complete).
 >
 > **Related Documents**:
 > - `DATABASE_TECHNICAL_DOCS.md` — Deep technical reference for Supabase + Prisma (connection details, schema, client usage, troubleshooting)
@@ -37,9 +37,9 @@
 | Styling | CSS Modules (no Tailwind, no component library) |
 | Database | Supabase (PostgreSQL) via Prisma ORM v7 |
 | File Storage | Supabase Storage (for PDF uploads) |
-| Hosting | TBD (not yet deployed) |
-| Payment | Stripe Checkout + Webhooks + Customer Portal (locally integrated; production cutover pending) |
-| Background jobs | Inngest v4 (`inngest@^4.2.5`) — multi-step worker for the comparison-processing pipeline. See `N1_INNGEST_CONVERSION.md`. **Phases 1–7 of 9 complete (Apr 28 2026)**: `POST /api/comparisons` enqueues `comparison/process.requested`; the durable `processComparison` worker (4 `step.run()` invocations + per-`comparisonId` concurrency cap + 4-retry policy + terminal `mark-failed` step) executes the 4-stage pipeline independent of the request lifecycle. Verified end-to-end against the `small-set8` baseline. Phase 8 (edge-case + 5K-line stress testing) and Phase 9 (final docs sweep) pending. |
+| Hosting | Vercel — **live at https://scopesplit.com** (deployed Jun 3, 2026) |
+| Payment | Stripe Checkout + Webhooks + in-app plan-change modal (**production live** — live keys, webhooks, and all billing flows verified) |
+| Background jobs | Inngest v4 (`inngest@^4.2.5`) — multi-step worker for the comparison-processing pipeline. See `N1_INNGEST_CONVERSION.md`. **All 9 phases complete.** `POST /api/comparisons` enqueues `comparison/process.requested`; the durable `processComparison` worker (4 `step.run()` invocations + per-`comparisonId` concurrency cap + 4-retry policy + terminal `mark-failed` step) executes the 4-stage pipeline independent of the request lifecycle. Running in Inngest Cloud in production. |
 
 ### Why Legacy Clerk Hooks
 Clerk v7 introduced a Signal-based API. The classic `useSignIn`/`useSignUp` hooks with `.create()`, `.prepareEmailAddressVerification()`, etc. are only available via `@clerk/nextjs/legacy`. All auth pages import from there.
@@ -606,7 +606,13 @@ Defined in `statusLabel` map in `app/app/comparison/[id]/page.tsx`. Internal enu
 
 ---
 
-## 11. Comparison Engine Architecture (as of April 19, 2026)
+## 11. Comparison Engine Architecture (as of April 19, 2026; N4 complete Jun 3, 2026)
+
+### Pipeline Generations
+- **N1** — Direct Claude pass on full PDF text (legacy, Inngest-wrapped, complete)
+- **N2** — Zone-aware multi-pass + deterministic prematch (paused, `N2_PAUSED_FOR_N3=true`)
+- **N3** — Active production pipeline: 18-phase pipeline with global-candidate retrieval + scored assignment, Voyage AI embeddings, LLM adjudication. Controlled by `N3_ENABLED=true`. Fully built and production-verified.
+- **N4** — **COMPLETE (Jun 3, 2026).** Multi-format pipeline supporting **Xactimate, Symbility, and CSV** comparison. Resolves P0 blockers #36, #37, #38. Lives in `lib/n4/`.
 
 ### Current State: Claude-Only Processing
 
@@ -617,7 +623,7 @@ The comparison engine sends **all line items to Claude in a single API call**. C
 
 > **Prematch is DISABLED** — `lib/deterministic-prematch.ts` is preserved but bypassed. Its utility functions (`parseLineToFields`, `costsAllMatch`, `quantitiesEqual`, `parseAllLinesWithZones`, `isZoneCandidate`) are still actively imported for server-side cost resolution.
 
-> **Scope**: Xactimate-to-Xactimate only. Cross-platform formats (Symbility, CoreLogic, handwritten) will use a separate script.
+> **Scope**: Xactimate, Symbility, and CSV formats supported via N4. N3 handles Xactimate PDF comparisons.
 
 ### Architecture
 
@@ -824,9 +830,9 @@ The AI (Claude) pipeline sends **all lines in a single API call** with Claude pe
 5. ~~**Stripe Integration**~~ — ✅ **DONE (local)**: Checkout + webhooks + Customer Portal wired and tested in test mode.
 6. ~~**Usage Limit Enforcement**~~ — ✅ **DONE** (April 22, 2026). Usage enforcement includes base plan limit + add-on credits, with period rollover resets.
 7. ~~**Add-on Credit Ledger**~~ — ✅ **DONE** (April 22, 2026). `addon_purchases` table for idempotent tracking; `addon_comparisons_this_period` field for per-period credits; grants only on verified Stripe payment.
-8. **Production Billing Cutover** — Replace Stripe test keys/prices/webhook secret with live values and configure production webhook endpoints.
-9. **Deployment** — Configure production Clerk/Supabase/Stripe keys and webhook URLs using `PRODUCTION_CUTOVER_CHECKLIST.md`, then deploy to hosting provider.
-10. **Unverified Account Cleanup Scheduling** — Configure a daily scheduler (Vercel Cron/GitHub Actions/external) to call `POST /api/internal/cleanup-unverified-users` with secret header.
+8. ~~**Production Billing Cutover**~~ — ✅ **DONE** (Jun 3, 2026). Live Stripe keys, webhooks, and all billing flows verified in production.
+9. ~~**Deployment**~~ — ✅ **DONE** (Jun 3, 2026). App deployed to https://scopesplit.com on Vercel. All production env vars, webhooks, and smoke tests complete per `PRODUCTION_CUTOVER_CHECKLIST.md`.
+10. ~~**Unverified Account Cleanup Scheduling**~~ — ✅ **DONE** (Jun 3, 2026). Vercel Cron configured via `vercel.json`, fires daily at 04:00 UTC.
 
 ### Production-Launch Actions (Stripe/Clerk/Supabase/Anthropic/Resend)
 Before go-live, complete all of the following:

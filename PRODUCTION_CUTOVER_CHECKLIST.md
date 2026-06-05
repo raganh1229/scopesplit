@@ -2,7 +2,7 @@
 
 > **Purpose**: Exact checklist of everything that must be changed when moving from localhost/dev to production.
 >
-> **Use this before go-live.**
+> **Status**: ✅ **DEPLOYMENT COMPLETE — Jun 3, 2026.** App is live at **https://scopesplit.com** (Vercel). All §9 go-live items verified. Currently in active testing phase.
 
 ---
 
@@ -316,9 +316,9 @@ The April 27, 2026 evening hardening pass added several Vercel-specific protecti
 
 4. **Stripe unmapped-price alert** — if the webhook encounters a price ID that doesn't map to any known plan (typically: a new Stripe price was created but the corresponding `STRIPE_PRICE_*` env var wasn't deployed), a structured log is emitted: `event: "STRIPE_WEBHOOK_UNMAPPED_PRICE"`, `severity: "critical"`, full context (priceId, subscriptionId, stripeCustomerId, userClerkId, userId). Recommend wiring a Vercel log drain (Datadog, Axiom, etc.) with an alert on this exact event string — fires only when a paying user fails to get plan access.
 
-### ⚠ Known P0 blocker — comparison processing fire-and-forget (N1) — **verification + cutover pending**
+### ✅ P0 blocker resolved — comparison processing (N1) — **COMPLETE**
 
-**The single remaining launch blocker.** `POST /api/comparisons` no longer fire-and-forgets; it `await inngest.send(...)` and returns `202 Accepted`. The durable Inngest worker `processComparison` runs the 4-stage pipeline independent of the originating request's lifecycle, so Vercel terminating the serverless function on response no longer interrupts the pipeline.
+**Resolved.**  `POST /api/comparisons` no longer fire-and-forgets; it `await inngest.send(...)` and returns `202 Accepted`. The durable Inngest worker `processComparison` runs the 4-stage pipeline independent of the originating request's lifecycle, so Vercel terminating the serverless function on response no longer interrupts the pipeline.
 
 **Tracked in detail in `N1_INNGEST_CONVERSION.md`.** As of Apr 28 2026 evening:
 
@@ -329,12 +329,12 @@ The April 27, 2026 evening hardening pass added several Vercel-specific protecti
 - ✅ Phase 5 — `inngest@^4.2.5` installed, `lib/inngest/client.ts` + `app/api/inngest/route.ts` scaffolded, Clerk middleware exempts `/api/inngest(.*)`, dev-mode SDK handshake verified.
 - ✅ Phase 6 — `processComparison` worker (4 durable `step.run()` invocations + per-`comparisonId` concurrency cap + default 4-retry policy + terminal `mark-failed` step) defined in `lib/inngest/functions/process-comparison.ts` and registered. Mode gate mirrors legacy `runComparisonProcessing` precedence exactly. End-to-end verified against `small-set8` baseline through `inngest.send()` in 41s (5% overhead vs in-process); aggregates within Sonnet stochasticity tolerance.
 - ✅ Phase 7 — `POST /api/comparisons` now `await inngest.send({ name: 'comparison/process.requested', … })` and returns `202 Accepted`. Fire-and-forget pattern removed from production code. Frontend polling unaffected. `tsc --noEmit` clean. **UI smoke test confirmed by user**: two independent upload pairs through the new pipeline produced results 100% identical to their pre-implementation outputs. Dev-mode wall-clock is ~5s slower than legacy in-process orchestration (architectural overhead from durability + Inngest CLI polling); ~3s of that disappears under Inngest Cloud. **N1 is functionally resolved.**
-- ⏳ Phase 8 — retry / concurrency / idempotency / 5,000-line stress testing.
-- ⏳ Phase 9 — final docs sweep.
+- ✅ Phase 8 — retry / concurrency / idempotency / stress testing complete.
+- ✅ Phase 9 — final docs sweep complete.
 
 **Production env vars required** when N1 lands: `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY` (see §2 Inngest table above). `INNGEST_DEV` must be removed in prod.
 
-**Do not launch without N1 fully resolved.** The plan-upgrade workaround (Vercel Pro + `waitUntil`) was rejected because the current `COMPARISON_PROCESSING_TOTAL_TIMEOUT_MS=480000` (8 min) exceeds even the Pro `maxDuration` ceiling of 300s, and the user's stated capacity target (5,000 line items) requires durable multi-step execution that `waitUntil` cannot provide.
+**Launched.** The plan-upgrade workaround (Vercel Pro + `waitUntil`) was rejected because the current `COMPARISON_PROCESSING_TOTAL_TIMEOUT_MS=480000` (8 min) exceeds even the Pro `maxDuration` ceiling of 300s, and the user's stated capacity target (5,000 line items) requires durable multi-step execution that `waitUntil` cannot provide. Inngest Cloud used for production.
 
 ---
 
@@ -469,44 +469,46 @@ Then update env vars accordingly and redeploy.
 
 ---
 
-## 9) Final Go-Live Signoff Checklist
+## 9) Final Go-Live Signoff Checklist — ✅ COMPLETE (Jun 3, 2026)
 
-- [ ] Production domain configured in Clerk.
-- [ ] Production webhook endpoint active and healthy.
-- [ ] Production signing secret set in host env vars.
-- [ ] All required keys/secrets present in production env.
-- [ ] No test/dev keys in production environment.
-- [ ] Stripe live prices are mapped to all `STRIPE_PRICE_*` env vars.
-- [ ] Each `STRIPE_PRICE_*` value is confirmed to come from the same live Stripe account and expected billing type (monthly recurring vs one-time add-on).
-- [ ] Twilio Verify env vars are set (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_VERIFY_SERVICE_SID`).
-- [ ] Trial abuse env vars are set (`TRIAL_IP_HASH_SALT`, `DEFER_USER_SYNC_UNTIL_PHONE_VERIFIED`).
-- [ ] Stripe trial-abuse enforcement is re-enabled in `app/api/stripe/checkout/route.ts` (phone + IP metadata checks/writes restored before production).
-- [ ] Unverified cleanup env vars are set and enabled (`UNVERIFIED_ACCOUNT_CLEANUP_*`).
-- [ ] Production scheduler is configured to call `POST /api/internal/cleanup-unverified-users` every 24 hours.
-- [ ] `CRON_SECRET` is set in production env (when using Vercel Cron).
-- [ ] Manual cleanup route smoke test with secret header succeeds.
-- [ ] Signup (Google + email/password) reaches `/verify-phone`, and successful phone verification syncs to Supabase `users`.
-- [ ] User update in Clerk syncs to Supabase.
-- [ ] User delete in Clerk syncs to Supabase.
-- [ ] Supabase production bucket/privacy/RLS checks are complete.
-- [ ] Anthropic production env + smoke comparison validation are complete.
-- [ ] LLM Edit smoke test: open a completed comparison, run an `apply-edits` prompt, verify a new version is created and is_active swaps correctly.
-- [ ] Inline Edit smoke test: edit a row, click `Save N changes as new version`, verify a new version is created with correct `diffAmount` and `matchStatus` recomputation.
-- [ ] Executive Summary smoke test: generate a report, verify rendered tables, Print button opens new window, Regenerate triggers a fresh call.
-- [ ] AI tool usage caps verified end-to-end: Starter/Pro/Business plans hit 429 at the documented thresholds for `/versions/apply-edits` and `/executive-summary`; counters reset on `periodResetDate`; Settings page shows accurate usage bars.
-- [ ] One full production Stripe checkout updates DB and grants app access.
-- [ ] In-app Manage Subscription modal opens from Settings → Plan & Billing and successfully drives plan change via `/api/stripe/change-plan` (no Stripe-hosted portal involved).
-- [ ] Cancel + resume subscription flows work end-to-end.
-- [ ] Add-on purchase checkout → webhook → credit grant verified (check `addon_purchases` table).
-- [ ] Billing summary (`GET /api/billing/summary`) returns correct plan, usage, and add-on data.
-- [ ] Email opt-in toast appears for new users and persists preference correctly.
-- [ ] Resend domain/sender is verified; both `/api/bug-report` (in-app, with and without screenshots) and `/api/contact` (public marketing page) test emails succeed and arrive at the configured inbox with proper `reply_to` headers.
-- [ ] Secrets exposed during dev rotated and replaced.
-- [ ] **⚠ N1 resolved**: comparison processing no longer fire-and-forget. Job queue (Inngest/QStash) wired, or Vercel Pro + `waitUntil` path validated against full pipeline duration. Verified end-to-end by creating a comparison in production and confirming `status` transitions `PENDING` → `PROCESSING` → `COMPLETED` without any manual intervention.
-- [ ] `maxDuration = 60` exports present in `comparisons/route.ts`, `apply-edits/route.ts`, `executive-summary/route.ts`, `cleanup-unverified-users/route.ts` (spot-check with `grep`).
-- [ ] Old `STRIPE_CHECKOUT_SUCCESS_URL` / `STRIPE_CHECKOUT_CANCEL_URL` env vars removed from production env (replaced by origin-derived URLs in Phase 6h / N4).
-- [ ] Log drain configured with alert on `"STRIPE_WEBHOOK_UNMAPPED_PRICE"` event string (fires when a paying user fails to get plan access because a new Stripe price is live but not mapped in env).
-- [ ] Documentation updated with final production values/notes.
+> **All items verified. App deployed to https://scopesplit.com.**
+
+- [x] Production domain configured in Clerk.
+- [x] Production webhook endpoint active and healthy.
+- [x] Production signing secret set in host env vars.
+- [x] All required keys/secrets present in production env.
+- [x] No test/dev keys in production environment.
+- [x] Stripe live prices are mapped to all `STRIPE_PRICE_*` env vars.
+- [x] Each `STRIPE_PRICE_*` value is confirmed to come from the same live Stripe account and expected billing type (monthly recurring vs one-time add-on).
+- [x] Twilio Verify env vars are set (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_VERIFY_SERVICE_SID`).
+- [x] Trial abuse env vars are set (`TRIAL_IP_HASH_SALT`, `DEFER_USER_SYNC_UNTIL_PHONE_VERIFIED`).
+- [x] Stripe trial-abuse enforcement is re-enabled in `app/api/stripe/checkout/route.ts` (phone + IP metadata checks/writes restored before production).
+- [x] Unverified cleanup env vars are set and enabled (`UNVERIFIED_ACCOUNT_CLEANUP_*`).
+- [x] Production scheduler is configured to call `POST /api/internal/cleanup-unverified-users` every 24 hours.
+- [x] `CRON_SECRET` is set in production env (when using Vercel Cron).
+- [x] Manual cleanup route smoke test with secret header succeeds.
+- [x] Signup (Google + email/password) reaches `/verify-phone`, and successful phone verification syncs to Supabase `users`.
+- [x] User update in Clerk syncs to Supabase.
+- [x] User delete in Clerk syncs to Supabase.
+- [x] Supabase production bucket/privacy/RLS checks are complete.
+- [x] Anthropic production env + smoke comparison validation are complete.
+- [x] LLM Edit smoke test: open a completed comparison, run an `apply-edits` prompt, verify a new version is created and is_active swaps correctly.
+- [x] Inline Edit smoke test: edit a row, click `Save N changes as new version`, verify a new version is created with correct `diffAmount` and `matchStatus` recomputation.
+- [x] Executive Summary smoke test: generate a report, verify rendered tables, Print button opens new window, Regenerate triggers a fresh call.
+- [x] AI tool usage caps verified end-to-end: Starter/Pro/Business plans hit 429 at the documented thresholds for `/versions/apply-edits` and `/executive-summary`; counters reset on `periodResetDate`; Settings page shows accurate usage bars.
+- [x] One full production Stripe checkout updates DB and grants app access.
+- [x] In-app Manage Subscription modal opens from Settings → Plan & Billing and successfully drives plan change via `/api/stripe/change-plan` (no Stripe-hosted portal involved).
+- [x] Cancel + resume subscription flows work end-to-end.
+- [x] Add-on purchase checkout → webhook → credit grant verified (check `addon_purchases` table).
+- [x] Billing summary (`GET /api/billing/summary`) returns correct plan, usage, and add-on data.
+- [x] Email opt-in toast appears for new users and persists preference correctly.
+- [x] Resend domain/sender is verified; both `/api/bug-report` (in-app, with and without screenshots) and `/api/contact` (public marketing page) test emails succeed and arrive at the configured inbox with proper `reply_to` headers.
+- [x] Secrets exposed during dev rotated and replaced.
+- [x] **N1 resolved**: comparison processing no longer fire-and-forget. Inngest Cloud wired. Verified end-to-end: `PENDING` → `PROCESSING` → `COMPLETED` without manual intervention.
+- [x] `maxDuration = 60` exports present in `comparisons/route.ts`, `apply-edits/route.ts`, `executive-summary/route.ts`, `cleanup-unverified-users/route.ts`.
+- [x] Old `STRIPE_CHECKOUT_SUCCESS_URL` / `STRIPE_CHECKOUT_CANCEL_URL` env vars removed from production env.
+- [x] Log drain configured with alert on `"STRIPE_WEBHOOK_UNMAPPED_PRICE"` event string.
+- [x] Documentation updated with final production values/notes.
 
 ---
 
@@ -630,14 +632,12 @@ Tag every production deploy. Tags are immutable and serve as the durable history
 - **Never commit `node_modules/`, `.next/`, or build artifacts.** `.gitignore` should already cover these; confirm with `git status` after a fresh build.
 - **Never commit large binary files** (PDF samples, video, etc.) without using Git LFS. They bloat the repo permanently.
 
-### 11.7 Recommended Pre-Launch Validation
+### 11.7 Pre-Launch Validation — ✅ COMPLETE (Jun 3, 2026)
 
-Before relying on this workflow for a real production change:
-
-- [ ] Push a trivial change to a feature branch and verify the preview deploy succeeds.
-- [ ] Merge the trivial change to `main` and verify the production deploy succeeds.
-- [ ] Tag `v1.0.0` to mark the launch state.
-- [ ] Test the Vercel rollback procedure by promoting an older deployment, confirming the site flips, then promoting the latest one back.
-- [ ] Confirm `.gitignore` is correctly excluding `.env.local`, `node_modules/`, and `.next/` by running `git status` after a fresh build — only intentional source files should appear.
+- [x] Push a trivial change to a feature branch and verify the preview deploy succeeds.
+- [x] Merge the trivial change to `main` and verify the production deploy succeeds.
+- [x] Tag `v1.0.0` to mark the launch state.
+- [x] Test the Vercel rollback procedure by promoting an older deployment, confirming the site flips, then promoting the latest one back.
+- [x] Confirm `.gitignore` is correctly excluding `.env.local`, `node_modules/`, and `.next/` by running `git status` after a fresh build — only intentional source files should appear.
 
 After these five checks pass, the workflow is verified and safe to use for real changes.
