@@ -1,8 +1,8 @@
-// Vercel serverless runtime cap. Must be >= the max expected wall-clock time
-// for MAX_TOOL_ROUNDS (6) × one Anthropic call + PDF vision overhead per round.
-// Production vision calls (examine_pdf_pages) average 20-30s each; 180s gives
-// comfortable headroom for up to 6 tool-use rounds without timing out.
-export const maxDuration = 180;
+// Vercel serverless runtime cap. 300s = Vercel Pro ceiling.
+// Each examine_pdf_pages round involves a Supabase download + Anthropic vision
+// call; PDFs are pre-loaded once before the loop (see below) to avoid repeated
+// downloads, but the vision calls themselves can take 20-30s each.
+export const maxDuration = 300;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/comparisons/[id]/zone-correction
@@ -19,6 +19,7 @@ export const maxDuration = 180;
 import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { supabaseAdmin } from '@/lib/supabase';
 import { readZonesDetected, readZonesCorrected, writeN2Stage, N2_STAGE_ZONES_CORRECTED } from '@/lib/n2/utils/n2-state';
 import {
   ZONE_CORRECTION_SYSTEM_PROMPT,
@@ -164,6 +165,17 @@ export async function POST(
     const slimN3 = (z: N2DetectedZone) => ({ name: z.name, startPage: z.startPage, endPage: z.endPage, approxItems: z.approxItems });
 
     const n3ApiKey = getApiKey();
+
+    // Pre-download both PDFs once so repeated examine_pdf_pages tool calls
+    // within the same agent session reuse the buffer instead of re-fetching.
+    const [e1Download, e2Download] = await Promise.all([
+      supabaseAdmin.storage.from('estimates').download(comparison.yourEstimateStoragePath),
+      supabaseAdmin.storage.from('estimates').download(comparison.adjusterEstimateStoragePath),
+    ]);
+    const n3PdfBuffers: { e1?: Uint8Array; e2?: Uint8Array } = {};
+    if (e1Download.data) n3PdfBuffers.e1 = new Uint8Array(await e1Download.data.arrayBuffer());
+    if (e2Download.data) n3PdfBuffers.e2 = new Uint8Array(await e2Download.data.arrayBuffer());
+
     const n3UserMsg = buildZoneCorrectionUserMessage({ e1Zones: n3E1.map(slimN3), e2Zones: n3E2.map(slimN3), userDescription });
     const n3Messages: AnthropicMessage[] = [{ role: 'user', content: n3UserMsg }];
     let n3Result: ZoneCorrectionResponse | null = null;
@@ -199,6 +211,7 @@ export async function POST(
               n3E1,
               n3E2,
               n3ApiKey,
+              n3PdfBuffers,
             );
             toolResults.push({ type: 'tool_result', tool_use_id: block.id, content: result });
           }

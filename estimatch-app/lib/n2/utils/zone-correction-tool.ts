@@ -85,20 +85,29 @@ export async function handleExaminePdfPages(
   e1Zones: N2DetectedZone[],
   e2Zones: N2DetectedZone[],
   anthropicApiKey: string,
+  preloadedBuffers?: { e1?: Uint8Array; e2?: Uint8Array },
 ): Promise<string> {
   const storagePath = input.pdf === 'e1' ? e1StoragePath : e2StoragePath;
   const zones = input.pdf === 'e1' ? e1Zones : e2Zones;
 
-  const { data, error } = await supabaseAdmin.storage
-    .from(ESTIMATES_BUCKET)
-    .download(storagePath);
+  let pdfBytes: Uint8Array;
+  const preloaded = input.pdf === 'e1' ? preloadedBuffers?.e1 : preloadedBuffers?.e2;
 
-  if (error || !data) {
-    return JSON.stringify({ error: `Could not download PDF: ${error?.message ?? 'unknown'}` });
+  if (preloaded) {
+    pdfBytes = preloaded;
+  } else {
+    const { data, error } = await supabaseAdmin.storage
+      .from(ESTIMATES_BUCKET)
+      .download(storagePath);
+
+    if (error || !data) {
+      return JSON.stringify({ error: `Could not download PDF: ${error?.message ?? 'unknown'}` });
+    }
+
+    const buffer = await data.arrayBuffer();
+    pdfBytes = new Uint8Array(buffer);
   }
 
-  const buffer = await data.arrayBuffer();
-  const pdfBytes = new Uint8Array(buffer);
   const doc = await loadPdf(pdfBytes);
   const totalPages = doc.getPageCount();
 
