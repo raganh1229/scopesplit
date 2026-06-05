@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useClerk } from '@clerk/nextjs';
 import TopNav from '@/components/marketing/TopNav';
 import styles from './page.module.css';
 
@@ -33,6 +34,7 @@ export default function VerifyPhonePage() {
 function VerifyPhoneContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { session } = useClerk();
   const [countryCode, setCountryCode] = useState('+1');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
@@ -119,6 +121,11 @@ function VerifyPhoneContent() {
       }
 
       setSuccess('Phone verified. Redirecting...');
+      // Reload the Clerk session so the updated publicMetadata
+      // (phoneVerifiedForTrial: true) is written to the JWT cookie
+      // before we navigate. Without this the middleware reads stale
+      // session claims and redirects back to /verify-phone.
+      await session?.reload();
       router.replace(returnTo);
     } catch (verifyError) {
       const message = verifyError instanceof Error ? verifyError.message : 'Unable to verify code.';
