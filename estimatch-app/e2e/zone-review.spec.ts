@@ -16,7 +16,7 @@ const mockComparison = {
     id: COMPARISON_ID,
     title: 'Zone Review E2E Test',
     status: 'AWAITING_ZONE_REVIEW',
-    pipelineVersion: 'n2',
+    pipelineVersion: 'n4',
     yourEstimateFilename: 'contractor.pdf',
     adjusterEstimateFilename: 'adjuster.pdf',
     createdAt: new Date().toISOString(),

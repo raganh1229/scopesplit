@@ -19,7 +19,6 @@ const isProtectedRoute = createRouteMatcher([
   '/api/notes(.*)',
   '/api/billing(.*)',
   '/api/user(.*)',
-  '/api/n3(.*)',
 ]);
 
 // ── Public API routes (webhooks, contact form) ──

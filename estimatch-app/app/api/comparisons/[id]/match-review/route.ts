@@ -12,7 +12,6 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { readZonesMatched } from '@/lib/n2/utils/n2-state';
 
 export async function GET(
   _request: NextRequest,
@@ -85,21 +84,5 @@ export async function GET(
     return NextResponse.json({ pairs, unmatchedE1, unmatchedE2 });
   }
 
-  // ── N2 path: read from n2 state ────────────────────────────────────────────
-  const matched = await readZonesMatched(comparisonId);
-  if (!matched) {
-    return NextResponse.json({ error: 'Match state not found' }, { status: 500 });
-  }
-
-  return NextResponse.json({
-    pairs: matched.matched.map(pair => ({
-      e1Zones: pair.e1Zones.map(z => z.zone),
-      e2Zones: pair.e2Zones.map(z => z.zone),
-      canonical: pair.canonical,
-      isMerged: pair.isMerged,
-      confidence: pair.confidence,
-    })),
-    unmatchedE1: matched.unmatchedE1.map(z => z.zone),
-    unmatchedE2: matched.unmatchedE2.map(z => z.zone),
-  });
+  return NextResponse.json({ error: 'Unsupported pipeline version' }, { status: 409 });
 }

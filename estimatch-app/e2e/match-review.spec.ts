@@ -17,7 +17,7 @@ const mockComparison = {
     id: COMPARISON_ID,
     title: 'E2E Test Comparison',
     status: 'AWAITING_MATCH_REVIEW',
-    pipelineVersion: 'n2',
+    pipelineVersion: 'n4',
     yourEstimateFilename: 'contractor.pdf',
     adjusterEstimateFilename: 'adjuster.pdf',
     createdAt: new Date().toISOString(),

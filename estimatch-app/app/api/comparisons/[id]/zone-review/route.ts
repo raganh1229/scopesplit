@@ -11,7 +11,6 @@
 import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { readZonesDetected, readZonesCorrected } from '@/lib/n2/utils/n2-state';
 
 export async function GET(
   _request: NextRequest,
@@ -59,17 +58,5 @@ export async function GET(
     });
   }
 
-  // ── N2 path: read from n2 state ───────────────────────────────────────────
-  const corrected = await readZonesCorrected(comparisonId);
-  const detected = await readZonesDetected(comparisonId);
-  const source = corrected ?? detected;
-
-  if (!source) {
-    return NextResponse.json({ error: 'Zone detection state not found' }, { status: 500 });
-  }
-
-  return NextResponse.json({
-    e1Zones: source.e1Zones.map(slim),
-    e2Zones: source.e2Zones.map(slim),
-  });
+  return NextResponse.json({ error: 'Unsupported pipeline version' }, { status: 409 });
 }

@@ -1,7 +1,7 @@
 /**
- * Unit tests for the match-review API routes.
+ * Unit tests for the match-review API routes (N3/N4 production paths).
  *
- * All external dependencies (Clerk auth, Prisma, n2-state) are mocked via
+ * All external dependencies (Clerk auth, Prisma, Inngest) are mocked via
  * vi.mock() so no database or network calls occur.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -17,13 +17,9 @@ vi.mock('@/lib/prisma', () => ({
   default: {
     user: { findUnique: vi.fn() },
     comparison: { findUnique: vi.fn(), update: vi.fn() },
+    n3ZoneCorrespondence: { findMany: vi.fn() },
+    n3Zone: { findMany: vi.fn() },
   },
-}));
-
-vi.mock('@/lib/n2/utils/n2-state', () => ({
-  readZonesMatched: vi.fn(),
-  writeN2Stage: vi.fn(),
-  N2_STAGE_ZONES_MATCHED: 'n2:zones_matched',
 }));
 
 vi.mock('@/lib/inngest/client', () => ({
@@ -34,7 +30,6 @@ vi.mock('@/lib/inngest/client', () => ({
 
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
-import { readZonesMatched, writeN2Stage } from '@/lib/n2/utils/n2-state';
 import { inngest } from '@/lib/inngest/client';
 import { GET } from '@/app/api/comparisons/[id]/match-review/route';
 import { POST } from '@/app/api/comparisons/[id]/match-review/confirm/route';
@@ -45,30 +40,19 @@ const COMPARISON_ID = 'cmp-test-123';
 const USER_ID = 'clerk-user-abc';
 const DB_USER_ID = 'db-user-xyz';
 
-const mockZonesMatched = {
-  matched: [
-    {
-      e1Zones: [{ zone: 'Kitchen', pages: [1, 5] }],
-      e2Zones: [{ zone: 'Kitchen', pages: [3, 7] }],
-      canonical: 'Kitchen',
-      isMerged: false,
-      confidence: 95,
-    },
-  ],
-  unmatchedE1: [{ zone: 'Garage', pages: [13, 16] }],
-  unmatchedE2: [],
-  e1Format: 'xactimate' as const,
-  e2Format: 'xactimate' as const,
-  routingDecision: 'standard' as const,
-  e1ZoneMeta: { 'Kitchen_p1': { startPage: 1, endPage: 5, approxItems: 20, chunkOffset: 0, endPageChunkOffset: 0 } },
-  e2ZoneMeta: { 'Kitchen_p3': { startPage: 3, endPage: 7, approxItems: 18, chunkOffset: 0, endPageChunkOffset: 0 } },
-};
+const mockN3Correspondences = [
+  {
+    confidence: 0.95,
+    yourZones: [{ name: 'Kitchen' }],
+    adjusterZones: [{ name: 'Kitchen' }],
+  },
+];
 
 function makeRequest(path: string, body?: unknown): NextRequest {
   return new NextRequest(`http://localhost:3000${path}`, {
-    method: body ? 'POST' : 'GET',
+    method: body !== undefined ? 'POST' : 'GET',
     headers: { 'content-type': 'application/json' },
-    body: body ? JSON.stringify(body) : undefined,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
   });
 }
 
@@ -85,11 +69,15 @@ describe('GET /api/comparisons/[id]/match-review', () => {
     vi.mocked(prisma.comparison.findUnique).mockResolvedValue({
       userId: DB_USER_ID,
       status: 'AWAITING_MATCH_REVIEW',
+      pipelineVersion: 'n4',
     } as never);
-    vi.mocked(readZonesMatched).mockResolvedValue(mockZonesMatched as never);
+    vi.mocked(prisma.n3ZoneCorrespondence.findMany).mockResolvedValue(mockN3Correspondences as never);
+    vi.mocked(prisma.n3Zone.findMany)
+      .mockResolvedValueOnce([{ name: 'Kitchen' }, { name: 'Garage' }] as never)
+      .mockResolvedValueOnce([{ name: 'Kitchen' }] as never);
   });
 
-  it('returns 200 with pairs + unmatched zones', async () => {
+  it('returns 200 with n3 pairs and unmatched zones', async () => {
     const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review`);
     const res = await GET(req, makeParams(COMPARISON_ID));
     expect(res.status).toBe(200);
@@ -110,6 +98,7 @@ describe('GET /api/comparisons/[id]/match-review', () => {
     vi.mocked(prisma.comparison.findUnique).mockResolvedValue({
       userId: 'other-user-id',
       status: 'AWAITING_MATCH_REVIEW',
+      pipelineVersion: 'n4',
     } as never);
     const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review`);
     const res = await GET(req, makeParams(COMPARISON_ID));
@@ -120,6 +109,7 @@ describe('GET /api/comparisons/[id]/match-review', () => {
     vi.mocked(prisma.comparison.findUnique).mockResolvedValue({
       userId: DB_USER_ID,
       status: 'COMPLETED',
+      pipelineVersion: 'n4',
     } as never);
     const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review`);
     const res = await GET(req, makeParams(COMPARISON_ID));
@@ -133,11 +123,15 @@ describe('GET /api/comparisons/[id]/match-review', () => {
     expect(res.status).toBe(404);
   });
 
-  it('returns 500 when zones_matched state is missing', async () => {
-    vi.mocked(readZonesMatched).mockResolvedValue(null);
+  it('returns 409 for unknown pipelineVersion', async () => {
+    vi.mocked(prisma.comparison.findUnique).mockResolvedValue({
+      userId: DB_USER_ID,
+      status: 'AWAITING_MATCH_REVIEW',
+      pipelineVersion: null,
+    } as never);
     const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review`);
     const res = await GET(req, makeParams(COMPARISON_ID));
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(409);
   });
 });
 
@@ -150,18 +144,14 @@ describe('POST /api/comparisons/[id]/match-review/confirm', () => {
     vi.mocked(prisma.comparison.findUnique).mockResolvedValue({
       userId: DB_USER_ID,
       status: 'AWAITING_MATCH_REVIEW',
+      pipelineVersion: 'n4',
     } as never);
     vi.mocked(prisma.comparison.update).mockResolvedValue({} as never);
-    vi.mocked(readZonesMatched).mockResolvedValue(mockZonesMatched as never);
-    vi.mocked(writeN2Stage).mockResolvedValue(undefined);
     vi.mocked(inngest.send).mockResolvedValue(undefined as never);
   });
 
-  it('returns 200 ok=true on valid confirmation', async () => {
-    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {
-      e1Slots: ['Kitchen', 'Garage'],
-      e2Slots: ['Kitchen', null],
-    });
+  it('returns 200 ok=true for n4 pipeline', async () => {
+    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {});
     const res = await POST(req, makeParams(COMPARISON_ID));
     expect(res.status).toBe(200);
     const body = await res.json() as { ok: boolean; skipped: boolean };
@@ -169,36 +159,17 @@ describe('POST /api/comparisons/[id]/match-review/confirm', () => {
     expect(body.skipped).toBe(false);
   });
 
-  it('writes updated payload to state', async () => {
-    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {
-      e1Slots: ['Kitchen'],
-      e2Slots: ['Kitchen'],
-    });
-    await POST(req, makeParams(COMPARISON_ID));
-    expect(writeN2Stage).toHaveBeenCalledWith(
-      COMPARISON_ID,
-      'n2:zones_matched',
-      expect.objectContaining({ matched: expect.any(Array) }),
-    );
-  });
-
-  it('fires Inngest match-review.completed event', async () => {
-    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {
-      e1Slots: ['Kitchen'],
-      e2Slots: ['Kitchen'],
-    });
+  it('fires n3-correspondence-review.completed Inngest event', async () => {
+    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {});
     await POST(req, makeParams(COMPARISON_ID));
     expect(inngest.send).toHaveBeenCalledWith({
-      name: 'comparison/match-review.completed',
-      data: { comparisonId: COMPARISON_ID },
+      name: 'comparison/n3-correspondence-review.completed',
+      data: { comparisonId: COMPARISON_ID, action: 'confirmed' },
     });
   });
 
   it('sets comparison status to PROCESSING', async () => {
-    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {
-      e1Slots: ['Kitchen'],
-      e2Slots: ['Kitchen'],
-    });
+    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {});
     await POST(req, makeParams(COMPARISON_ID));
     expect(prisma.comparison.update).toHaveBeenCalledWith(
       expect.objectContaining({ data: expect.objectContaining({ status: 'PROCESSING' }) }),
@@ -209,41 +180,29 @@ describe('POST /api/comparisons/[id]/match-review/confirm', () => {
     vi.mocked(prisma.comparison.findUnique).mockResolvedValue({
       userId: DB_USER_ID,
       status: 'PROCESSING',
+      pipelineVersion: 'n4',
     } as never);
-    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {
-      e1Slots: ['Kitchen'],
-      e2Slots: ['Kitchen'],
-    });
+    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {});
     const res = await POST(req, makeParams(COMPARISON_ID));
     const body = await res.json() as { ok: boolean; skipped: boolean };
     expect(body.ok).toBe(true);
     expect(body.skipped).toBe(true);
   });
 
-  it('returns 400 when slot arrays have different lengths', async () => {
-    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {
-      e1Slots: ['Kitchen', 'Bathroom'],
-      e2Slots: ['Kitchen'],
-    });
+  it('returns 409 for unknown pipelineVersion', async () => {
+    vi.mocked(prisma.comparison.findUnique).mockResolvedValue({
+      userId: DB_USER_ID,
+      status: 'AWAITING_MATCH_REVIEW',
+      pipelineVersion: null,
+    } as never);
+    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {});
     const res = await POST(req, makeParams(COMPARISON_ID));
-    expect(res.status).toBe(400);
-  });
-
-  it('returns 400 when body is invalid JSON', async () => {
-    const req = new NextRequest(
-      `http://localhost:3000/api/comparisons/${COMPARISON_ID}/match-review/confirm`,
-      { method: 'POST', headers: { 'content-type': 'application/json' }, body: 'not-json' },
-    );
-    const res = await POST(req, makeParams(COMPARISON_ID));
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(409);
   });
 
   it('returns 401 when not authenticated', async () => {
     vi.mocked(auth).mockResolvedValue({ userId: null } as never);
-    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {
-      e1Slots: [],
-      e2Slots: [],
-    });
+    const req = makeRequest(`/api/comparisons/${COMPARISON_ID}/match-review/confirm`, {});
     const res = await POST(req, makeParams(COMPARISON_ID));
     expect(res.status).toBe(401);
   });

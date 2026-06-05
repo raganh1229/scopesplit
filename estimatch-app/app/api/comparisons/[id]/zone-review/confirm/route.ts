@@ -19,17 +19,6 @@ import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { inngest } from '@/lib/inngest/client';
-import { readZonesMatched } from '@/lib/n2/utils/n2-state';
-import { matchZones } from '@/lib/n2/passes/match-zones';
-
-// Re-entry path calls matchZones() inline (one Sonnet call, ~15-30 s).
-// Normal path just fires an Inngest event (< 1 s). 60 s covers both safely.
-export const maxDuration = 60;
-
-const reEntryLogger = {
-  info: (msg: string, data?: Record<string, unknown>) => console.log('[zone-review/confirm re-entry]', msg, data ?? ''),
-  warn: (msg: string, data?: Record<string, unknown>) => console.warn('[zone-review/confirm re-entry]', msg, data ?? ''),
-};
 
 export async function POST(
   _request: NextRequest,
@@ -67,39 +56,5 @@ export async function POST(
     return NextResponse.json({ ok: true, skipped: false });
   }
 
-  // ── Re-entry detection ────────────────────────────────────────────────────
-  // If zones_matched already exists the user went Back from the match review
-  // gate. The Inngest function is still blocked at step.waitForEvent(
-  // 'match-review-complete'). Re-run matchZones inline and advance status
-  // directly to AWAITING_MATCH_REVIEW without touching Inngest.
-  const existingMatch = await readZonesMatched(comparisonId);
-  if (existingMatch) {
-    try {
-      await matchZones(comparisonId, reEntryLogger);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message.slice(0, 300) : String(err);
-      return NextResponse.json({ error: `Zone re-matching failed: ${msg}` }, { status: 500 });
-    }
-
-    await prisma.$executeRaw`
-      UPDATE comparisons
-      SET status = 'AWAITING_MATCH_REVIEW'::comparison_status, updated_at = NOW()
-      WHERE id = ${comparisonId}
-    `;
-
-    return NextResponse.json({ ok: true, reEntry: true });
-  }
-
-  // ── Normal first-time path ────────────────────────────────────────────────
-  await prisma.comparison.update({
-    where: { id: comparisonId },
-    data: { status: 'PROCESSING' },
-  });
-
-  await inngest.send({
-    name: 'comparison/zone-review.completed',
-    data: { comparisonId },
-  });
-
-  return NextResponse.json({ ok: true, skipped: false });
+  return NextResponse.json({ error: 'Unsupported pipeline version' }, { status: 409 });
 }
