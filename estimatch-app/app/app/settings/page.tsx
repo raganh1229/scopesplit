@@ -363,6 +363,7 @@ function SettingsContent() {
       setShowTierSelector(false);
       setShowKeepSubscriptionPrompt(false);
       await loadBillingSummary({ force: true });
+      window.dispatchEvent(new CustomEvent('billing-summary-updated'));
       setLatestPlanChange(payload);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to change subscription plan.';
