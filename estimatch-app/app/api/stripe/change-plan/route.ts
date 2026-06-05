@@ -138,23 +138,18 @@ export async function POST(request: Request) {
     const targetPlanRank = getPlanRank(body.plan);
     const isUpgrade = targetPlanRank > currentPlanRank;
     const isDowngrade = targetPlanRank < currentPlanRank;
-    // During a trial all tier changes take effect immediately — no deferred downgrade.
-    const isTrialing = subscription.status === 'trialing';
-    const isEffectiveDowngrade = isDowngrade && !isTrialing;
 
     const prorationBehavior = isDowngrade ? 'none' : 'always_invoice';
 
-    // For non-trialing downgrades: write pendingTierDowngrade to Prisma BEFORE
-    // calling Stripe. stripe.subscriptions.update() immediately fires a
-    // customer.subscription.updated webhook which calls syncSubscription. That
-    // function reads pendingTierDowngrade to decide whether to preserve the higher
-    // tier. If the webhook arrives before the post-Stripe Prisma write (a common
-    // race), it sees pendingTierDowngrade=null and immediately overwrites
-    // subscriptionTier to the lower tier, making the downgrade arrow disappear.
-    // Pre-writing here guarantees the webhook always sees the correct pending state
-    // regardless of delivery timing.
-    // Trialing users are excluded: their tier changes always take effect immediately.
-    if (isEffectiveDowngrade) {
+    // For downgrades: write pendingTierDowngrade to Prisma BEFORE calling Stripe.
+    // stripe.subscriptions.update() immediately fires a customer.subscription.updated
+    // webhook which calls syncSubscription. That function reads pendingTierDowngrade
+    // to decide whether to preserve the higher tier. If the webhook arrives before
+    // the post-Stripe Prisma write (a common race), it sees pendingTierDowngrade=null
+    // and immediately overwrites subscriptionTier to the lower tier, making the
+    // downgrade arrow disappear. Pre-writing here guarantees the webhook always
+    // sees the correct pending state regardless of delivery timing.
+    if (isDowngrade) {
       const earlyPeriodEnd = fromUnixSeconds(
         readUnixSecondsCandidate(subscription, 'current_period_end', 'currentPeriodEnd')
       );
@@ -227,9 +222,9 @@ export async function POST(request: Request) {
     await prisma.user.update({
       where: { id: appUser.id },
       data: {
-        subscriptionTier: isEffectiveDowngrade ? appUser.subscriptionTier : toPrismaTier(body.plan),
-        pendingTierDowngrade: isEffectiveDowngrade ? toPrismaTier(body.plan) : null,
-        pendingTierEffectiveAt: isEffectiveDowngrade ? subscriptionEndsAt : null,
+        subscriptionTier: isDowngrade ? appUser.subscriptionTier : toPrismaTier(body.plan),
+        pendingTierDowngrade: isDowngrade ? toPrismaTier(body.plan) : null,
+        pendingTierEffectiveAt: isDowngrade ? subscriptionEndsAt : null,
         subscriptionStatus: newPrismaStatus,
         ...(subscriptionEndsAt
           ? {
@@ -267,11 +262,11 @@ export async function POST(request: Request) {
       {
         plan: body.plan,
         previousPlan: currentPlan,
-        changeType: isUpgrade ? 'upgrade' : isEffectiveDowngrade ? 'downgrade' : 'none',
+        changeType: isUpgrade ? 'upgrade' : isDowngrade ? 'downgrade' : 'none',
         cancelAtPeriodEnd: false,
         subscriptionEndsAt,
         comparisonsUsed: appUser.comparisonsUsedThisPeriod,
-        effectiveComparisonLimit: isEffectiveDowngrade ? PLAN_LIMITS[currentPlan] : PLAN_LIMITS[body.plan],
+        effectiveComparisonLimit: isDowngrade ? PLAN_LIMITS[currentPlan] : PLAN_LIMITS[body.plan],
         nextComparisonLimit: PLAN_LIMITS[body.plan],
         amountDueNowCents,
         nextChargeAmountCents: PLAN_MONTHLY_PRICES_CENTS[body.plan],
