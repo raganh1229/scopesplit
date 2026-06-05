@@ -140,8 +140,8 @@ export async function POST(
   }
   const userDescription = body.description.trim();
 
-  // ── N3 path: read/write n3_zones table directly ────────────────────────────
-  if (comparison.pipelineVersion === 'n3') {
+  // ── N3/N4 path: read/write n3_zones table directly ──────────────────────────
+  if (comparison.pipelineVersion === 'n3' || comparison.pipelineVersion === 'n4') {
     const n3Zones = await prisma.n3Zone.findMany({
       where: { comparisonId },
       select: { name: true, source: true, startPage: true, endPage: true, approxItems: true },

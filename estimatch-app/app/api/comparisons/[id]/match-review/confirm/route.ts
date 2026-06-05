@@ -1,10 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/comparisons/[id]/match-review/confirm
 //
-// Accepts the user's (possibly adjusted) zone-pair arrangement, rebuilds the
-// n2:zones_matched payload with user-confirmed pairings, flips status to
-// PROCESSING, and fires the comparison/match-review.completed Inngest event
-// to resume the pipeline into Step 4 (extract-and-match).
+// Accepts the user's (possibly adjusted) zone-pair arrangement, flips status
+// to PROCESSING, and fires the comparison/n3-correspondence-review.completed
+// Inngest event to resume the N3/N4 pipeline past the match-review gate.
 //
 // Request body:
 //   {

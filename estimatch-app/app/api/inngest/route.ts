@@ -6,7 +6,7 @@
 //   • Invoke a step in a registered function (`POST`)
 //   • Health-check the registration (`GET`)
 //
-// N3 is the sole active pipeline. N1 and N2 have been deprecated and
+// N3 and N4 are the active pipelines. N1 and N2 have been deprecated and
 // archived to `DELETED CHANGES/n1-deprecated/` and `n2-deprecated/`.
 //
 // `maxDuration` is set high so individual step lambdas have headroom on
