@@ -1,6 +1,8 @@
 // Vercel serverless runtime cap. Must be >= the max expected wall-clock time
-// for MAX_TOOL_ROUNDS (6) × one Anthropic call (~8s each) + forced fallback.
-export const maxDuration = 60;
+// for MAX_TOOL_ROUNDS (6) × one Anthropic call + PDF vision overhead per round.
+// Production vision calls (examine_pdf_pages) average 20-30s each; 180s gives
+// comfortable headroom for up to 6 tool-use rounds without timing out.
+export const maxDuration = 180;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/comparisons/[id]/zone-correction
