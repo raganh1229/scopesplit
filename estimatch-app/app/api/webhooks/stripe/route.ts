@@ -21,6 +21,12 @@ function tierRank(tier: PrismaSubscriptionTier): number {
   return 3;
 }
 
+function fromTierToPlan(tier: PrismaSubscriptionTier): PlanMetadata {
+  if (tier === PrismaSubscriptionTier.STARTER) return 'starter';
+  if (tier === PrismaSubscriptionTier.PROFESSIONAL) return 'professional';
+  return 'business';
+}
+
 function toPrismaStatus(status: string): PrismaSubscriptionStatus {
   if (status === 'trialing') return PrismaSubscriptionStatus.TRIALING;
   if (status === 'active') return PrismaSubscriptionStatus.ACTIVE;
@@ -141,8 +147,20 @@ async function syncSubscription(subscription: {
     now < pendingEffectiveAt &&
     tierRank(incomingTier) < tierRank(user.subscriptionTier);
 
+  // Guard against stale or out-of-order webhooks: if the incoming tier is lower
+  // than the current tier but no pending downgrade is recorded, this event was
+  // almost certainly delivered after a cancel-downgrade cleared the pending flag.
+  // A legitimate downgrade always pre-writes pendingTierDowngrade before touching
+  // Stripe, so the absence of that field means we should protect the current tier.
+  const shouldKeepCurrentTier =
+    hasAccess &&
+    user.subscriptionTier !== null &&
+    user.pendingTierDowngrade === null &&
+    !shouldHoldDowngradeTier &&
+    tierRank(incomingTier) < tierRank(user.subscriptionTier);
+
   const resolvedTier = hasAccess
-    ? shouldHoldDowngradeTier
+    ? shouldHoldDowngradeTier || shouldKeepCurrentTier
       ? user.subscriptionTier
       : incomingTier
     : null;
@@ -186,7 +204,13 @@ async function syncSubscription(subscription: {
     },
   });
 
-  await updateClerkPlanMetadata(user.clerkId, hasAccess ? planFromPrice : null);
+  // Use resolvedTier (not planFromPrice) so Clerk always reflects the tier the
+  // user actually has access to. When shouldHoldDowngradeTier or shouldKeepCurrentTier
+  // is true, planFromPrice is the *lower* Stripe price, not the held tier.
+  await updateClerkPlanMetadata(
+    user.clerkId,
+    hasAccess && resolvedTier ? fromTierToPlan(resolvedTier) : null
+  );
 }
 
 async function applyAddonPurchaseGrant(session: {
