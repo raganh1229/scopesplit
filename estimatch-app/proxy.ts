@@ -36,6 +36,7 @@ const isSubscribeRoute = createRouteMatcher(['/subscribe(.*)']);
 const isVerifyPhoneRoute = createRouteMatcher(['/verify-phone(.*)']);
 // Only redirect subscribed users away from promotional/marketing pages.
 // Legal & policy pages remain reachable from the Settings → Legal & Privacy tab.
+const isSignupRoute = createRouteMatcher(['/signup(.*)']);
 const isMarketingRoute = createRouteMatcher([
   '/',
   '/faq(.*)',
@@ -50,6 +51,14 @@ export default clerkMiddleware(async (auth, request) => {
   // Protect private routes (everything else is public by default - #24 fix)
   if (isProtectedRoute(request) && !isPublicApiRoute(request)) {
     await auth.protect();
+  }
+
+  // Authenticated users have no business on the sign-up page.
+  // Subscribed → go to app; phone-verified-but-no-plan → go to /subscribe
+  // (the existing /subscribe middleware handles the phone-verification gate).
+  if (userId && isSignupRoute(request)) {
+    const meta = (sessionClaims?.metadata ?? {}) as SessionMeta;
+    return NextResponse.redirect(new URL(meta.plan ? '/app/new-comparison' : '/subscribe', request.url));
   }
 
   if (userId && (isAppRoute(request) || isSubscribeRoute(request) || isVerifyPhoneRoute(request))) {
