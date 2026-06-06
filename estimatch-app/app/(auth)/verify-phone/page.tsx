@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, Suspense } from 'react';
+import { useEffect, useMemo, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useClerk } from '@clerk/nextjs';
 import TopNav from '@/components/marketing/TopNav';
@@ -34,17 +34,7 @@ export default function VerifyPhonePage() {
 function VerifyPhoneContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { session, signOut } = useClerk();
-  const verifiedRef = useRef(false);
-
-  useEffect(() => {
-    return () => {
-      if (!verifiedRef.current) {
-        void signOut({ redirectUrl: '/' });
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { session } = useClerk();
 
   const [countryCode, setCountryCode] = useState('+1');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -132,7 +122,6 @@ function VerifyPhoneContent() {
       }
 
       setSuccess('Phone verified. Redirecting...');
-      verifiedRef.current = true;
       // Reload the Clerk session so the updated publicMetadata
       // (phoneVerifiedForTrial: true) is written to the JWT cookie
       // before we navigate. Without this the middleware reads stale
