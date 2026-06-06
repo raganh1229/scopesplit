@@ -3,10 +3,13 @@
 import { useEffect, useState } from 'react';
 import styles from './TrialBanner.module.css';
 
+type PlanKey = 'starter' | 'professional' | 'business';
+
 type BillingSummary = {
   status: 'TRIALING' | 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'EXPIRED' | null;
   trialEndsAt: string | null;
-  plan: 'starter' | 'professional' | 'business' | null;
+  plan: PlanKey | null;
+  pendingDowngradePlan: PlanKey | null;
   cancelAtPeriodEnd: boolean;
 };
 
@@ -107,7 +110,10 @@ export default function TrialBanner() {
   if (!visible) return null;
   if (daysRemaining <= 0) return null;
 
-  const tierLabel = billingSummary?.plan ? `${PLAN_LABELS[billingSummary.plan]} tier` : 'your selected tier';
+  // When a downgrade is scheduled, the user will be enrolled in the pending
+  // (lower) tier at period end — reflect that here rather than the current tier.
+  const enrollmentPlan = billingSummary?.pendingDowngradePlan ?? billingSummary?.plan ?? null;
+  const tierLabel = enrollmentPlan ? `${PLAN_LABELS[enrollmentPlan]} tier` : 'your selected tier';
   const enrollmentDate = formatDate(billingSummary?.trialEndsAt ?? null);
   const isCancelled = billingSummary?.cancelAtPeriodEnd ?? false;
 
