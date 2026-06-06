@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
+import { SubscriptionTier } from '@/app/generated/prisma/client';
 import prisma from '@/lib/prisma';
-import { stripe } from '@/lib/stripe';
+import { stripe, PLAN_PRICE_IDS, assertConfiguredPrice, getSubscriptionPeriodEndUnix, type PlanKey } from '@/lib/stripe';
 
 const CANCELLABLE_STATUSES = new Set(['trialing', 'active', 'past_due', 'unpaid']);
+
+function tierToPlanKey(tier: SubscriptionTier): PlanKey {
+  if (tier === SubscriptionTier.STARTER) return 'starter';
+  if (tier === SubscriptionTier.PROFESSIONAL) return 'professional';
+  return 'business';
+}
 
 type CancelRequestBody = {
   feedback?: string;
@@ -76,6 +83,8 @@ export async function POST(request: Request) {
       id: true,
       stripeCustomerId: true,
       subscriptionTier: true,
+      pendingTierDowngrade: true,
+      pendingTierEffectiveAt: true,
     },
   });
 
@@ -105,42 +114,72 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No active subscription found to cancel.' }, { status: 404 });
     }
 
-    const updatedSubscription = subscription.cancel_at_period_end
-      ? subscription
-      : await stripe.subscriptions.update(subscription.id, {
+    // If a downgrade is currently pending, cancelling the subscription should also
+    // discard that scheduled downgrade and revert Stripe to the tier the user still
+    // holds. The downgrade was set to take effect at the period boundary — the same
+    // boundary at which the subscription now ends — so it would never apply anyway.
+    // Reverting the price keeps the final (cancelling) period consistent with the
+    // tier the user is keeping until expiry, and removes the confusing dual
+    // "cancelling" + "downgrade scheduled" UI state.
+    const hasPendingDowngrade = Boolean(
+      appUser.pendingTierDowngrade || appUser.pendingTierEffectiveAt
+    );
+    const subscriptionItem = subscription.items.data[0];
+    const currentPrice = subscriptionItem?.price?.id ?? null;
+
+    let revertPrice: string | null = null;
+    if (hasPendingDowngrade && appUser.subscriptionTier && subscriptionItem?.id) {
+      try {
+        const planKey = tierToPlanKey(appUser.subscriptionTier);
+        const targetPrice = assertConfiguredPrice(
+          PLAN_PRICE_IDS[planKey],
+          `STRIPE_PRICE_${planKey.toUpperCase()}_MONTHLY`
+        );
+        if (currentPrice !== targetPrice) {
+          revertPrice = targetPrice;
+        }
+      } catch (priceErr) {
+        console.error('[cancel] Could not resolve revert price for pending downgrade:', priceErr);
+      }
+    }
+
+    const needsStripeUpdate = !subscription.cancel_at_period_end || revertPrice !== null;
+    const updatedSubscription = needsStripeUpdate
+      ? await stripe.subscriptions.update(subscription.id, {
           cancel_at_period_end: true,
           cancellation_details: {
             feedback: 'other',
             ...(feedback ? { comment: feedback.slice(0, 1000) } : {}),
           },
-        });
+          ...(revertPrice && subscriptionItem?.id
+            ? {
+                proration_behavior: 'none' as const,
+                items: [{ id: subscriptionItem.id, price: revertPrice }],
+              }
+            : {}),
+        })
+      : subscription;
 
     let subscriptionEndsAt = fromUnixSeconds(
-      readUnixSecondsCandidate(
-        updatedSubscription,
-        'cancel_at',
-        'cancelAt',
-        'current_period_end',
-        'currentPeriodEnd'
-      )
+      readUnixSecondsCandidate(updatedSubscription, 'cancel_at', 'cancelAt') ??
+        getSubscriptionPeriodEndUnix(updatedSubscription)
     );
 
     if (!subscriptionEndsAt) {
       const refreshedSubscription = await stripe.subscriptions.retrieve(updatedSubscription.id);
       subscriptionEndsAt = fromUnixSeconds(
-        readUnixSecondsCandidate(
-          refreshedSubscription,
-          'cancel_at',
-          'cancelAt',
-          'current_period_end',
-          'currentPeriodEnd'
-        )
+        readUnixSecondsCandidate(refreshedSubscription, 'cancel_at', 'cancelAt') ??
+          getSubscriptionPeriodEndUnix(refreshedSubscription)
       );
     }
 
+    // Always clear pending-downgrade flags on cancel — a scheduled downgrade is moot
+    // once the subscription is set to end.
     await prisma.user.update({
       where: { id: appUser.id },
       data: {
+        pendingTierDowngrade: null,
+        pendingTierEffectiveAt: null,
         ...(subscriptionEndsAt
           ? {
               subscriptionEndsAt,
