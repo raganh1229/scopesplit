@@ -202,6 +202,16 @@ export async function POST(request: Request) {
           clerkId,
           checkoutKind: 'subscription',
           selectedPlan: body.plan,
+          // Trial abuse markers are written here so the Stripe webhook can
+          // stamp them onto the customer + set hasUsedTrial ONLY after the
+          // checkout is completed. Writing them before payment would block
+          // users who open the checkout but abandon before paying.
+          ...(shouldApplyTrial && trialMeta
+            ? {
+                trial_phone_number: trialMeta.phoneNumber,
+                ...(trialMeta.ipHash ? { trial_ip_hash: trialMeta.ipHash } : {}),
+              }
+            : {}),
         },
         subscription_data: {
           metadata: {
@@ -212,25 +222,6 @@ export async function POST(request: Request) {
           ...(shouldApplyTrial ? { trial_period_days: 7 } : {}),
         },
       });
-
-      if (shouldApplyTrial) {
-        await prisma.user.update({
-          where: { id: appUser.id },
-          data: { hasUsedTrial: true },
-        });
-
-        if (trialMeta && stripeCustomerId) {
-          const metadataUpdate: Record<string, string> = {
-            trial_phone_number: trialMeta.phoneNumber,
-          };
-          if (trialMeta.ipHash) {
-            metadataUpdate.trial_ip_hash = trialMeta.ipHash;
-          }
-          await stripe.customers.update(stripeCustomerId, { metadata: metadataUpdate }).catch((err) => {
-            console.error('[TRIAL-ABUSE] Failed to write trial metadata to Stripe customer:', err);
-          });
-        }
-      }
 
       return NextResponse.json({ url: session.url }, { status: 200 });
     }

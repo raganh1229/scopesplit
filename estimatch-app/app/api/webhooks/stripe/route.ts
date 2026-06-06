@@ -270,16 +270,48 @@ export async function POST(request: Request) {
       case 'checkout.session.completed': {
         const session = event.data.object;
 
-        if (session.customer && typeof session.customer === 'string') {
-          const clerkId =
-            (typeof session.client_reference_id === 'string' ? session.client_reference_id : null) ??
-            (typeof session.metadata?.clerkId === 'string' ? session.metadata.clerkId : null);
+        const clerkId =
+          (typeof session.client_reference_id === 'string' ? session.client_reference_id : null) ??
+          (typeof session.metadata?.clerkId === 'string' ? session.metadata.clerkId : null);
 
+        if (session.customer && typeof session.customer === 'string') {
           if (clerkId) {
             await prisma.user.updateMany({
               where: { clerkId },
               data: { stripeCustomerId: session.customer },
             });
+          }
+
+          // Stamp trial abuse markers onto the customer and mark hasUsedTrial
+          // only now that payment is confirmed. Doing this during checkout
+          // creation would block users who open the page but abandon it.
+          const trialPhoneNumber =
+            typeof session.metadata?.trial_phone_number === 'string'
+              ? session.metadata.trial_phone_number
+              : null;
+
+          if (trialPhoneNumber) {
+            const metadataUpdate: Record<string, string> = {
+              trial_phone_number: trialPhoneNumber,
+            };
+            const trialIpHash =
+              typeof session.metadata?.trial_ip_hash === 'string'
+                ? session.metadata.trial_ip_hash
+                : null;
+            if (trialIpHash) metadataUpdate.trial_ip_hash = trialIpHash;
+
+            await stripe.customers
+              .update(session.customer, { metadata: metadataUpdate })
+              .catch((err) => {
+                console.error('[TRIAL-ABUSE] Failed to write trial metadata to Stripe customer:', err);
+              });
+
+            if (clerkId) {
+              await prisma.user.updateMany({
+                where: { clerkId },
+                data: { hasUsedTrial: true },
+              });
+            }
           }
         }
 
