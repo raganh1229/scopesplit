@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useClerk } from '@clerk/nextjs';
 import TopNav from '@/components/marketing/TopNav';
 import styles from './page.module.css';
@@ -32,7 +32,6 @@ export default function VerifyPhonePage() {
 }
 
 function VerifyPhoneContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { session } = useClerk();
 
@@ -122,12 +121,16 @@ function VerifyPhoneContent() {
       }
 
       setSuccess('Phone verified. Redirecting...');
-      // Reload the Clerk session so the updated publicMetadata
-      // (phoneVerifiedForTrial: true) is written to the JWT cookie
-      // before we navigate. Without this the middleware reads stale
-      // session claims and redirects back to /verify-phone.
+      // Reload the Clerk session so __client_uat is updated server-side.
       await session?.reload();
-      router.replace(returnTo);
+      // Hard navigation instead of router.replace(): the browser makes a
+      // full HTTP request so Clerk's middleware detects the newer
+      // __client_uat, re-issues a fresh __session JWT that includes
+      // phoneVerifiedForTrial:true, and allows access to /subscribe.
+      // router.replace() (RSC fetch) can carry a still-valid but stale
+      // JWT within its TTL window, causing the middleware to redirect
+      // back to /verify-phone.
+      window.location.replace(returnTo);
     } catch (verifyError) {
       const message = verifyError instanceof Error ? verifyError.message : 'Unable to verify code.';
       setError(message);
