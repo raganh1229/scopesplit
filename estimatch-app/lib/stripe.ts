@@ -59,6 +59,36 @@ export function assertConfiguredPrice(priceId: string | undefined, keyName: stri
   return priceId;
 }
 
+// In Stripe API version 2025-03-31.basil the `current_period_end` (and
+// `current_period_start`) fields moved OFF the Subscription object and ONTO the
+// individual Subscription Item. Code that still reads `subscription.current_period_end`
+// gets `undefined`, which silently breaks every downstream calculation that relies
+// on the billing period (e.g. pendingTierEffectiveAt, periodResetDate). This helper
+// reads the item first and falls back to the subscription object for safety.
+export function getSubscriptionPeriodEndUnix(subscription: unknown): number | null {
+  const readPositiveNumber = (value: unknown): number | null => {
+    if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
+      return value;
+    }
+    if (typeof value === 'string') {
+      const parsed = Number(value);
+      if (Number.isFinite(parsed) && parsed > 0) return parsed;
+    }
+    return null;
+  };
+
+  if (!subscription || typeof subscription !== 'object') return null;
+  const sub = subscription as {
+    current_period_end?: unknown;
+    items?: { data?: Array<{ current_period_end?: unknown }> };
+  };
+
+  const itemEnd = readPositiveNumber(sub.items?.data?.[0]?.current_period_end);
+  if (itemEnd !== null) return itemEnd;
+
+  return readPositiveNumber(sub.current_period_end);
+}
+
 // Default paths for post-checkout redirects. These can be overridden via env
 // vars (STRIPE_CHECKOUT_SUCCESS_PATH / STRIPE_CHECKOUT_CANCEL_PATH) but the
 // origin is ALWAYS derived from the incoming request to guarantee the URL

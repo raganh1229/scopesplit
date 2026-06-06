@@ -5,7 +5,7 @@ import {
   SubscriptionTier as PrismaSubscriptionTier,
 } from '@/app/generated/prisma/client';
 import prisma from '@/lib/prisma';
-import { ADDON_COMPARISON_GRANTS, mapPriceIdToPlan, stripe } from '@/lib/stripe';
+import { ADDON_COMPARISON_GRANTS, mapPriceIdToPlan, stripe, getSubscriptionPeriodEndUnix } from '@/lib/stripe';
 
 type PlanMetadata = 'starter' | 'professional' | 'business';
 
@@ -361,11 +361,7 @@ export async function POST(request: Request) {
           id: subscription.id,
           customer: customerId,
           status: subscription.status,
-          currentPeriodEnd: readUnixSecondsCandidate(
-            subscription,
-            'current_period_end',
-            'currentPeriodEnd'
-          ),
+          currentPeriodEnd: getSubscriptionPeriodEndUnix(subscription),
           trialEnd: readUnixSecondsCandidate(subscription, 'trial_end', 'trialEnd'),
           priceId,
         });

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { SubscriptionStatus, SubscriptionTier } from '@/app/generated/prisma/client';
 import prisma from '@/lib/prisma';
-import { PLAN_PRICE_IDS, PLAN_MONTHLY_PRICES_CENTS, assertConfiguredPrice, mapPriceIdToPlan, stripe, type PlanKey } from '@/lib/stripe';
+import { PLAN_PRICE_IDS, PLAN_MONTHLY_PRICES_CENTS, assertConfiguredPrice, mapPriceIdToPlan, stripe, getSubscriptionPeriodEndUnix, type PlanKey } from '@/lib/stripe';
 
 const MANAGEABLE_STATUSES = new Set(['trialing', 'active', 'past_due', 'unpaid']);
 
@@ -150,9 +150,7 @@ export async function POST(request: Request) {
     // downgrade arrow disappear. Pre-writing here guarantees the webhook always
     // sees the correct pending state regardless of delivery timing.
     if (isDowngrade) {
-      const earlyPeriodEnd = fromUnixSeconds(
-        readUnixSecondsCandidate(subscription, 'current_period_end', 'currentPeriodEnd')
-      );
+      const earlyPeriodEnd = fromUnixSeconds(getSubscriptionPeriodEndUnix(subscription));
       await prisma.user.update({
         where: { id: appUser.id },
         data: {
@@ -181,37 +179,22 @@ export async function POST(request: Request) {
           });
 
     let subscriptionEndsAt = fromUnixSeconds(
-      readUnixSecondsCandidate(
-        updatedSubscription,
-        'current_period_end',
-        'currentPeriodEnd',
-        'cancel_at',
-        'cancelAt'
-      )
+      getSubscriptionPeriodEndUnix(updatedSubscription) ??
+        readUnixSecondsCandidate(updatedSubscription, 'cancel_at', 'cancelAt')
     );
 
     if (!subscriptionEndsAt) {
       const refreshedSubscription = await stripe.subscriptions.retrieve(updatedSubscription.id);
       subscriptionEndsAt = fromUnixSeconds(
-        readUnixSecondsCandidate(
-          refreshedSubscription,
-          'current_period_end',
-          'currentPeriodEnd',
-          'cancel_at',
-          'cancelAt'
-        )
+        getSubscriptionPeriodEndUnix(refreshedSubscription) ??
+          readUnixSecondsCandidate(refreshedSubscription, 'cancel_at', 'cancelAt')
       );
     }
 
     if (!subscriptionEndsAt) {
       subscriptionEndsAt = fromUnixSeconds(
-        readUnixSecondsCandidate(
-          subscription,
-          'current_period_end',
-          'currentPeriodEnd',
-          'cancel_at',
-          'cancelAt'
-        )
+        getSubscriptionPeriodEndUnix(subscription) ??
+          readUnixSecondsCandidate(subscription, 'cancel_at', 'cancelAt')
       );
     }
 

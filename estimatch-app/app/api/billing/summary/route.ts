@@ -7,6 +7,7 @@ import {
   PLAN_EXECUTIVE_SUMMARY_LIMITS,
   PLAN_LLM_EDIT_LIMITS,
   stripe,
+  getSubscriptionPeriodEndUnix,
 } from '@/lib/stripe';
 import {
   TRIAL_COMPARISON_LIMIT,
@@ -99,25 +100,15 @@ async function getStripeSubscriptionSummary(stripeCustomerId: string | null) {
   }
 
   let subscriptionEndsAt = fromUnixSeconds(
-    readUnixSecondsCandidate(
-      subscription,
-      'cancel_at',
-      'cancelAt',
-      'current_period_end',
-      'currentPeriodEnd'
-    )
+    readUnixSecondsCandidate(subscription, 'cancel_at', 'cancelAt') ??
+      getSubscriptionPeriodEndUnix(subscription)
   );
 
   if (!subscriptionEndsAt) {
     const refreshedSubscription = await stripe.subscriptions.retrieve(subscription.id);
     subscriptionEndsAt = fromUnixSeconds(
-      readUnixSecondsCandidate(
-        refreshedSubscription,
-        'cancel_at',
-        'cancelAt',
-        'current_period_end',
-        'currentPeriodEnd'
-      )
+      readUnixSecondsCandidate(refreshedSubscription, 'cancel_at', 'cancelAt') ??
+        getSubscriptionPeriodEndUnix(refreshedSubscription)
     );
   }
 
