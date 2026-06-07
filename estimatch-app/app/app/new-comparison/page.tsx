@@ -59,6 +59,7 @@ export default function NewComparisonPage() {
   const [progressPercent, setProgressPercent] = useState(0);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [usageLimitInfo, setUsageLimitInfo] = useState<{ message: string } | null>(null);
   const [qualifiesVisible, setQualifiesVisible] = useState(false);
   const [qualifiesFlash, setQualifiesFlash] = useState(0);
   const qualifiesRef = useRef<HTMLDivElement>(null);
@@ -127,6 +128,7 @@ export default function NewComparisonPage() {
     setProgressPercent(8);
     setElapsedSeconds(0);
     setErrorMessage(null);
+    setUsageLimitInfo(null);
 
     try {
       const formData = new FormData();
@@ -155,13 +157,16 @@ export default function NewComparisonPage() {
         if (payload.code === 'USAGE_LIMIT_REACHED') {
           if (payload.isTrial) {
             window.dispatchEvent(new CustomEvent('trial-limit-reached', { detail: { kind: 'comparison', limit: payload.limit ?? 4 } }));
-            throw new Error('You have reached your trial comparison limit.');
+            setErrorMessage('You have reached your trial comparison limit.');
+          } else {
+            const used = typeof payload.used === 'number' ? payload.used : 0;
+            const limit = typeof payload.limit === 'number' ? payload.limit : 0;
+            setUsageLimitInfo({
+              message: `You have used ${used}/${limit} comparisons for this period. You can create more on ${formatDate(payload.refreshDate)}.`,
+            });
           }
-          const used = typeof payload.used === 'number' ? payload.used : 0;
-          const limit = typeof payload.limit === 'number' ? payload.limit : 0;
-          throw new Error(
-            `You have used ${used}/${limit} comparisons for this period. You can create more on ${formatDate(payload.refreshDate)}.`
-          );
+          setProcessing(false);
+          return;
         }
 
         throw new Error(payload.error ?? 'Failed to upload files.');
@@ -378,6 +383,38 @@ export default function NewComparisonPage() {
               </div>
             </div>
 
+            {usageLimitInfo && (
+              <div className={styles.usageLimitBanner}>
+                <div className={styles.usageLimitHeader}>
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    style={{ color: 'rgba(255,255,255,0.92)', flexShrink: 0 }}
+                  >
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  <span className={styles.usageLimitTitle}>Usage Limit Reached</span>
+                </div>
+                <p className={styles.usageLimitMsg}>{usageLimitInfo.message}</p>
+                <div className={styles.usageLimitActions}>
+                  <button type="button" className={styles.usageLimitUpgradeBtn} onClick={() => router.push('/app/settings')}>
+                    Upgrade Plan
+                  </button>
+                  <button type="button" className={styles.usageLimitDismissBtn} onClick={() => setUsageLimitInfo(null)}>
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
             {errorMessage ? <p className={styles.errorText}>{errorMessage}</p> : null}
 
             <button className={styles.compareBtn} disabled={!(comparisonName.trim() && file1 && file2 && format1 && format2)} onClick={handleCompare}>

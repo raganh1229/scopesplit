@@ -3,12 +3,32 @@
   right: 20px;
   bottom: 20px;
   width: min(420px, calc(100vw - 40px));
-  background: var(--red-600);
+  background: #b91c1c;
   border-radius: 12px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
   padding: 14px 14px 12px;
   z-index: 1300;
   color: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  padding-right: 28px;
+}
+
+.icon {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
 }
 
 .message {
@@ -52,7 +72,7 @@
   cursor: pointer;
   padding: 7px 12px;
   background: #fff;
-  color: var(--red-600);
+  color: #b91c1c;
   border: none;
 }
 
