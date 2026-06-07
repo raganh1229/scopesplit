@@ -36,7 +36,7 @@ import type { N2DetectedZone } from '@/lib/n2/schemas/types';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 const CORRECTION_MODEL = 'claude-sonnet-4-6';
-const CORRECTION_MAX_TOKENS = 2000;
+const CORRECTION_MAX_TOKENS = 15000;
 const MAX_TOOL_ROUNDS = 6;
 
 function getApiKey(): string {
