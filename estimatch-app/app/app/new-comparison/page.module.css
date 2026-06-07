@@ -374,12 +374,11 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: #b91c1c;
+  background: var(--red-50);
+  border: 0.5px solid var(--red-200);
   border-radius: 10px;
   padding: 14px 16px;
   margin: 0 0 14px;
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .usageLimitHeader {
@@ -391,7 +390,7 @@
 .usageLimitTitle {
   font-size: 13px;
   font-weight: 700;
-  color: #fff;
+  color: var(--red-600);
   margin: 0;
 }
 
@@ -399,7 +398,7 @@
   margin: 0;
   font-size: 13px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
 }
 
 .usageLimitActions {
@@ -414,14 +413,14 @@
   font-weight: 700;
   cursor: pointer;
   padding: 7px 14px;
-  background: #fff;
-  color: #b91c1c;
-  border: none;
-  transition: filter 0.15s ease;
+  background: var(--red-50);
+  color: var(--red-600);
+  border: 0.5px solid var(--red-200);
+  transition: opacity 0.15s ease;
 }
 
 .usageLimitUpgradeBtn:hover {
-  filter: brightness(0.95);
+  opacity: 0.85;
 }
 
 .usageLimitDismissBtn {
@@ -430,14 +429,14 @@
   font-weight: 600;
   cursor: pointer;
   padding: 7px 12px;
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
-  border: none;
-  transition: background 0.15s ease;
+  background: transparent;
+  color: var(--red-400);
+  border: 0.5px solid var(--red-200);
+  transition: opacity 0.15s ease;
 }
 
 .usageLimitDismissBtn:hover {
-  background: rgba(255, 255, 255, 0.28);
+  opacity: 0.85;
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────── */
