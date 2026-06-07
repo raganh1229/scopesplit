@@ -206,6 +206,10 @@ export default function ZoneReview({
           Tip: the more specific you are — naming the exact zone and what&apos;s wrong — the more
           accurately the agent can fix it before matching begins.
         </p>
+        <p className={styles.inputHint}>
+          This correction is powered by AI — it may take up to 30 seconds to process and will
+          return a response once complete.
+        </p>
         <textarea
           id="zone-correction-input"
           ref={textareaRef}

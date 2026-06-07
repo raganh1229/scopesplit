@@ -364,6 +364,10 @@ export default function MatchReview({
           e.g. &ldquo;Master Bedroom and Master Bath should pair with Primary Suite&rdquo; or
           &ldquo;Exterior zone has no counterpart on the adjuster side&rdquo;
         </p>
+        <p className={styles.correctionHint}>
+          This correction is powered by AI — it may take up to 30 seconds to process and will
+          return a response once complete.
+        </p>
         <textarea
           id="match-correction-input"
           ref={corrTextareaRef}
