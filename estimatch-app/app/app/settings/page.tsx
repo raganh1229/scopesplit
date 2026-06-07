@@ -138,6 +138,9 @@ function SettingsContent() {
   const [emailOptInLoaded, setEmailOptInLoaded] = useState(false);
   const [emailOptInLoading, setEmailOptInLoading] = useState(false);
   const [emailOptInError, setEmailOptInError] = useState<string | null>(null);
+  const [showUpgradeConfirm, setShowUpgradeConfirm] = useState(false);
+  const [upgradeConfirmLoading, setUpgradeConfirmLoading] = useState(false);
+  const [upgradeConfirmError, setUpgradeConfirmError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const { user } = useUser();
   const { theme, setTheme } = useTheme();
@@ -165,6 +168,26 @@ function SettingsContent() {
       : googleLinked
         ? 'Logged in with Google'
         : 'Password unavailable';
+
+  async function handleUpgradeFromBanner() {
+    if (upgradeConfirmLoading) return;
+    setUpgradeConfirmLoading(true);
+    setUpgradeConfirmError(null);
+    try {
+      const res = await fetch('/api/stripe/convert-trial', { method: 'POST' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null) as { error?: string } | null;
+        setUpgradeConfirmError(data?.error ?? 'Something went wrong. Please try again.');
+        setUpgradeConfirmLoading(false);
+        return;
+      }
+      setShowUpgradeConfirm(false);
+      await loadBillingSummary({ force: true });
+    } catch {
+      setUpgradeConfirmError('Something went wrong. Please try again.');
+      setUpgradeConfirmLoading(false);
+    }
+  }
 
   async function loadBillingSummary(options?: { force?: boolean }) {
     const forceRefresh = options?.force ?? false;
@@ -712,7 +735,7 @@ function SettingsContent() {
                     <button
                       type="button"
                       className={styles.limitNoticeUpgradeBtn}
-                      onClick={openManageSubscription}
+                      onClick={() => setShowUpgradeConfirm(true)}
                       disabled={resumeLoading || cancelDowngradeLoading || planChangeLoading !== null}
                     >
                       Upgrade Plan
@@ -1128,6 +1151,59 @@ function SettingsContent() {
           )}
         </div>
       </div>
+
+      {showUpgradeConfirm && (() => {
+        const enrolledPlan = billingSummary?.pendingDowngradePlan ?? billingSummary?.plan ?? null;
+        const planPrices: Record<string, string> = {
+          starter: '$59/mo',
+          professional: '$179/mo',
+          business: '$349/mo',
+        };
+        return (
+          <div
+            className={styles.upgradeOverlay}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="upgrade-confirm-title"
+            onClick={(e) => { if (e.target === e.currentTarget) setShowUpgradeConfirm(false); }}
+          >
+            <div className={styles.upgradeModal}>
+              <h2 className={styles.upgradeModalTitle} id="upgrade-confirm-title">Confirm Upgrade</h2>
+              {enrolledPlan ? (
+                <p className={styles.upgradeModalBody}>
+                  Your card will be charged immediately. You will be enrolled in the{' '}
+                  <span className={styles.upgradeModalHighlight}>
+                    {PLAN_LABELS[enrolledPlan]} plan ({planPrices[enrolledPlan]})
+                  </span>.
+                </p>
+              ) : (
+                <p className={styles.upgradeModalBody}>
+                  Your card will be charged immediately based on your current plan.
+                </p>
+              )}
+              {upgradeConfirmError && <p className={styles.upgradeModalError}>{upgradeConfirmError}</p>}
+              <div className={styles.upgradeModalActions}>
+                <button
+                  type="button"
+                  className={styles.upgradeModalConfirmBtn}
+                  onClick={() => void handleUpgradeFromBanner()}
+                  disabled={upgradeConfirmLoading}
+                >
+                  {upgradeConfirmLoading ? 'Processing\u2026' : 'Yes, Upgrade'}
+                </button>
+                <button
+                  type="button"
+                  className={styles.upgradeModalCancelBtn}
+                  onClick={() => { setShowUpgradeConfirm(false); setUpgradeConfirmError(null); }}
+                  disabled={upgradeConfirmLoading}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </>
   );
 }
