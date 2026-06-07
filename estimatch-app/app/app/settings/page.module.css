@@ -73,10 +73,53 @@
 }
 .btnDanger:hover { opacity: 0.85; }
 .usageVal { font-size: 14px; font-weight: 600; }
-.limitNotice {
-  margin-top: 10px;
+.limitNoticeBanner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #b91c1c;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 12px;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.limitNoticeHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.limitNoticeTitle {
   font-size: 13px;
-  color: var(--error-text);
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.limitNoticeMsg {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.limitNoticeUpgradeBtn {
+  align-self: flex-start;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 7px 14px;
+  background: #fff;
+  color: #b91c1c;
+  border: none;
+  transition: filter 0.15s ease;
+}
+
+.limitNoticeUpgradeBtn:hover {
+  filter: brightness(0.95);
 }
 
 .addonBtnWrapper {

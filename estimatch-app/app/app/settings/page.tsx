@@ -686,9 +686,38 @@ function SettingsContent() {
                   </div>
                 )}
                 {billingSummary?.usageLocked && (
-                  <p className={styles.limitNotice}>
-                    You have reached your limit. New comparisons unlock on {formatDate(billingSummary.periodResetDate)}.
-                  </p>
+                  <div className={styles.limitNoticeBanner}>
+                    <div className={styles.limitNoticeHeader}>
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ color: 'rgba(255,255,255,0.92)', flexShrink: 0 }}
+                      >
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                      </svg>
+                      <span className={styles.limitNoticeTitle}>Usage Limit Reached</span>
+                    </div>
+                    <p className={styles.limitNoticeMsg}>
+                      You have reached your limit. New comparisons unlock on {formatDate(billingSummary.periodResetDate)}.
+                    </p>
+                    <button
+                      type="button"
+                      className={styles.limitNoticeUpgradeBtn}
+                      onClick={openManageSubscription}
+                      disabled={resumeLoading || cancelDowngradeLoading || planChangeLoading !== null}
+                    >
+                      Upgrade Plan
+                    </button>
+                  </div>
                 )}
                 {billingSummary?.cancelAtPeriodEnd && (
                   <div className={styles.row}>
