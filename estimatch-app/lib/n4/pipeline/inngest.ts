@@ -50,6 +50,7 @@ import { assignMatchesN3 } from '@/lib/n3/passes/assign-matches';
 import { groupMatchingN3 } from '@/lib/n3/passes/group-matching';
 import { llmAdjudicationN3 } from '@/lib/n3/passes/llm-adjudication';
 import { persistDecisionsN3 } from '@/lib/n3/passes/persist-decisions';
+import { autoFailComparison } from '@/lib/comparisons/auto-fail';
 
 type HandlerArgs = GetFunctionInput<typeof inngest>;
 
@@ -65,6 +66,26 @@ export const processComparisonV4 = inngest.createFunction(
       limit: 1,
     },
     triggers: [{ event: 'comparison/process-v4.requested' }],
+    onFailure: async ({ event }) => {
+      try {
+        // event.data.event is the original triggering event (inngest/function.failed shape).
+        // This handler fires as a separate Inngest invocation after all retries are
+        // exhausted — including when Vercel kills the Lambda via SIGKILL (timeout),
+        // which prevents the catch block from running.
+        //
+        // autoFailComparison is idempotent: if the catch block already marked the
+        // row FAILED, updateMany returns count=0 and the trial refund is skipped.
+        const originalData = (event.data as { event: { data: N4ProcessRequestedEvent['data'] } }).event?.data;
+        const comparisonId = originalData?.comparisonId;
+        if (!comparisonId) return;
+        await autoFailComparison(
+          comparisonId,
+          '[N4] Processing failed after all retries were exhausted.',
+        );
+      } catch (err) {
+        console.error('[n4] onFailure handler error (non-fatal):', err);
+      }
+    },
   },
   async ({ event, step, logger }: HandlerArgs) => {
     const { comparisonId, trigger, force } =

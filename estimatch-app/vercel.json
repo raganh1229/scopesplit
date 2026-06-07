@@ -3,6 +3,10 @@
     {
       "path": "/api/internal/cleanup-unverified-users",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/internal/sweep-stuck-comparisons",
+      "schedule": "*/10 * * * *"
     }
   ]
 }
