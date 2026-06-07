@@ -407,7 +407,7 @@ export default function NewComparisonPage() {
                 <p className={styles.usageLimitMsg}>{usageLimitInfo.message}</p>
                 <div className={styles.usageLimitActions}>
                   <button type="button" className={styles.usageLimitUpgradeBtn} onClick={() => router.push('/app/settings')}>
-                    Upgrade Plan
+                    Upgrade Now
                   </button>
                   <button type="button" className={styles.usageLimitDismissBtn} onClick={() => setUsageLimitInfo(null)}>
                     Dismiss

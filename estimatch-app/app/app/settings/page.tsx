@@ -738,7 +738,7 @@ function SettingsContent() {
                       onClick={() => setShowUpgradeConfirm(true)}
                       disabled={resumeLoading || cancelDowngradeLoading || planChangeLoading !== null}
                     >
-                      Upgrade Plan
+                      Upgrade Now
                     </button>
                   </div>
                 )}
