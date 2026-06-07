@@ -13,7 +13,7 @@ function createPrismaClient() {
   // Use an explicit Pool with SSL — Supabase's session-mode pooler requires
   // encrypted connections and will reject the pg default (no SSL) at the
   // protocol level, surfacing as ECONNREFUSED.
-  const pool = new Pool({ connectionString, ssl: { rejectUnauthorized: false } });
+  const pool = new Pool({ connectionString, ssl: { rejectUnauthorized: false }, max: 1 });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
