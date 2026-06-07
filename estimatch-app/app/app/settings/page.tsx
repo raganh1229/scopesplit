@@ -222,6 +222,7 @@ function SettingsContent() {
       }
 
       await loadBillingSummary({ force: true });
+      window.dispatchEvent(new CustomEvent('billing-summary-updated'));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to cancel scheduled downgrade.';
       setBillingError(message);
