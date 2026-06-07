@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { SubscriptionStatus } from '@/app/generated/prisma/client';
+import { SubscriptionStatus, SubscriptionTier } from '@/app/generated/prisma/client';
 import prisma from '@/lib/prisma';
-import { stripe } from '@/lib/stripe';
+import { stripe, PLAN_PRICE_IDS, assertConfiguredPrice, type PlanKey } from '@/lib/stripe';
+
+function tierToPlanKey(tier: SubscriptionTier): PlanKey | null {
+  if (tier === SubscriptionTier.STARTER) return 'starter';
+  if (tier === SubscriptionTier.PROFESSIONAL) return 'professional';
+  if (tier === SubscriptionTier.ENTERPRISE) return 'business';
+  return null;
+}
 
 export async function POST() {
   const { userId: clerkId } = await auth();
@@ -10,7 +17,13 @@ export async function POST() {
 
   const appUser = await prisma.user.findUnique({
     where: { clerkId },
-    select: { id: true, stripeCustomerId: true, subscriptionStatus: true },
+    select: {
+      id: true,
+      stripeCustomerId: true,
+      subscriptionStatus: true,
+      subscriptionTier: true,
+      pendingTierDowngrade: true,
+    },
   });
 
   if (!appUser) {
@@ -38,7 +51,39 @@ export async function POST() {
       return NextResponse.json({ error: 'No active trial subscription found.' }, { status: 404 });
     }
 
-    await stripe.subscriptions.update(subscription.id, { trial_end: 'now' });
+    const pendingDowngradeKey = appUser.pendingTierDowngrade
+      ? tierToPlanKey(appUser.pendingTierDowngrade)
+      : null;
+
+    if (pendingDowngradeKey) {
+      const subscriptionItem = subscription.items.data[0];
+      if (!subscriptionItem?.id) {
+        return NextResponse.json({ error: 'Subscription has no billable items.' }, { status: 400 });
+      }
+
+      const targetPriceId = assertConfiguredPrice(
+        PLAN_PRICE_IDS[pendingDowngradeKey],
+        `STRIPE_PRICE_${pendingDowngradeKey.toUpperCase()}_MONTHLY`
+      );
+
+      await stripe.subscriptions.update(subscription.id, {
+        trial_end: 'now',
+        proration_behavior: 'none',
+        items: [{ id: subscriptionItem.id, price: targetPriceId }],
+      });
+
+      await prisma.user.update({
+        where: { id: appUser.id },
+        data: {
+          subscriptionTier: appUser.pendingTierDowngrade,
+          subscriptionStatus: SubscriptionStatus.ACTIVE,
+          pendingTierDowngrade: null,
+          pendingTierEffectiveAt: null,
+        },
+      });
+    } else {
+      await stripe.subscriptions.update(subscription.id, { trial_end: 'now' });
+    }
 
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch (error) {
