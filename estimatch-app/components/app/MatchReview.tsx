@@ -362,8 +362,11 @@ export default function MatchReview({
         </label>
         <p className={styles.correctionHint}>
           e.g. &ldquo;Master Bedroom and Master Bath should pair with Primary Suite&rdquo; or
-          &ldquo;Exterior zone has no counterpart on the adjuster side&rdquo;.{' '}This correction
-          is powered by AI and may take up to 30 seconds to respond.
+          &ldquo;Exterior zone has no counterpart on the adjuster side&rdquo;
+        </p>
+        <p className={styles.correctionHint}>
+          This correction uses AI. It may take a moment to process and will provide you a response
+          to your inquiry.
         </p>
         <textarea
           id="match-correction-input"
