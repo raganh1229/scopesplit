@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/internal/sweep-stuck-comparisons",
-      "schedule": "*/10 * * * *"
+      "schedule": "0 5 * * *"
     }
   ]
 }
