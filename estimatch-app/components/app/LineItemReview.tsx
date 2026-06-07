@@ -249,11 +249,8 @@ export default function LineItemReview({
           </label>
           <p className={styles.inputHint}>
             Be specific for best results — e.g. &ldquo;Kitchen is missing about 4 items&rdquo; or
-            &ldquo;Zone 3 in the adjuster&apos;s estimate should have more items.&rdquo;
-          </p>
-          <p className={styles.inputHint}>
-            This analysis is powered by AI — it may take up to 30 seconds to process and will
-            return a response once complete.
+            &ldquo;Zone 3 in the adjuster&apos;s estimate should have more items.&rdquo;{' '}This
+            analysis is powered by AI and may take up to 30 seconds to respond.
           </p>
           <textarea
             id="lir-feedback"
