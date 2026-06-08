@@ -236,6 +236,11 @@ export async function POST(
 
     if (!n3Result.agentMessage) {
       await prisma.$transaction(async tx => {
+        // Correspondences reference zone IDs via the join table. Deleting zones
+        // orphans those join rows, leaving shell correspondence records that
+        // break the re-entry detection in zone-review/confirm. Clear them first
+        // so proposeCorrespondencesN3 re-runs fresh after the user confirms.
+        await tx.n3ZoneCorrespondence.deleteMany({ where: { comparisonId } });
         await tx.n3Zone.deleteMany({ where: { comparisonId, source: 'yours' } });
         await tx.n3Zone.deleteMany({ where: { comparisonId, source: 'adjuster' } });
         for (const z of n3Result!.e1Zones) {
