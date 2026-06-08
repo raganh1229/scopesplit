@@ -32,6 +32,7 @@ import {
   type ExaminePdfPagesInput,
 } from '@/lib/n2/utils/zone-correction-tool';
 import type { N2DetectedZone } from '@/lib/n2/schemas/types';
+import { proposeCorrespondencesN3 } from '@/lib/n3/passes/propose-correspondences';
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
@@ -236,11 +237,6 @@ export async function POST(
 
     if (!n3Result.agentMessage) {
       await prisma.$transaction(async tx => {
-        // Correspondences reference zone IDs via the join table. Deleting zones
-        // orphans those join rows, leaving shell correspondence records that
-        // break the re-entry detection in zone-review/confirm. Clear them first
-        // so proposeCorrespondencesN3 re-runs fresh after the user confirms.
-        await tx.n3ZoneCorrespondence.deleteMany({ where: { comparisonId } });
         await tx.n3Zone.deleteMany({ where: { comparisonId, source: 'yours' } });
         await tx.n3Zone.deleteMany({ where: { comparisonId, source: 'adjuster' } });
         for (const z of n3Result!.e1Zones) {
@@ -272,6 +268,12 @@ export async function POST(
           });
         }
       });
+
+      // Re-propose correspondences synchronously so the re-entry detection in
+      // zone-review/confirm always finds valid correspondences (> 0) and never
+      // re-fires the Inngest event. proposeCorrespondencesN3 is idempotent and
+      // handles its own deleteMany internally.
+      await proposeCorrespondencesN3(comparisonId, console);
     }
 
     return NextResponse.json({
