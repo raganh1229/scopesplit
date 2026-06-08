@@ -85,7 +85,7 @@ export default function ZoneReview({
   const [description, setDescription] = useState('');
   const [correcting, setCorrecting] = useState(false);
   const [confirming, setConfirming] = useState(false);
-  const [agentMessage, setAgentMessage] = useState<string | null>(null);
+  const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null);
   const [correctionError, setCorrectionError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -99,7 +99,7 @@ export default function ZoneReview({
     e.preventDefault();
     if (!description.trim() || correcting) return;
     setCorrecting(true);
-    setAgentMessage(null);
+    setConfirmationMessage(null);
     setCorrectionError(null);
 
     try {
@@ -119,15 +119,17 @@ export default function ZoneReview({
         e1Zones: ReviewZone[];
         e2Zones: ReviewZone[];
         agentMessage: string | null;
+        confirmationMessage: string | null;
       };
 
       if (data.agentMessage) {
-        setAgentMessage(data.agentMessage);
+        setConfirmationMessage(data.confirmationMessage ?? null);
         setTimeout(() => textareaRef.current?.focus(), 50);
       } else {
         setE1Zones(data.e1Zones);
         setE2Zones(data.e2Zones);
         setDescription('');
+        setConfirmationMessage(data.confirmationMessage ?? null);
       }
     } catch {
       setCorrectionError('Network error — please try again.');
@@ -190,8 +192,8 @@ export default function ZoneReview({
         </div>
       </div>
 
-      {agentMessage && (
-        <div className={styles.agentMessage}>{renderAgentMessage(agentMessage)}</div>
+      {confirmationMessage && (
+        <div className={styles.agentMessage}>{renderAgentMessage(confirmationMessage)}</div>
       )}
 
       {correctionError && (

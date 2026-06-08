@@ -18,7 +18,7 @@ export const maxDuration = 60;
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 const CORRECTION_MODEL = 'claude-sonnet-4-5';
-const CORRECTION_MAX_TOKENS = 2000;
+const CORRECTION_MAX_TOKENS = 15000;
 
 const SYSTEM_PROMPT = `You are a zone correspondence correction agent for an insurance estimate comparison tool. Your job is to correct errors in AI-proposed zone pairings between a contractor estimate (PDF A / e1) and an adjuster estimate (PDF B / e2).
 
@@ -35,7 +35,8 @@ Always return valid JSON matching this exact structure:
   "pairs": [{"e1Zones": ["zone name"], "e2Zones": ["zone name"]}, ...],
   "unmatchedE1": ["zone name", ...],
   "unmatchedE2": ["zone name", ...],
-  "agentMessage": null | "string with clarifying question"
+  "agentMessage": null | "string with clarifying question",
+  "confirmationMessage": "string — always a brief one-sentence summary of the action taken or question asked"
 }
 
 ## Universal rules
@@ -45,6 +46,7 @@ Always return valid JSON matching this exact structure:
 3. If agentMessage is non-null, return the input lists UNCHANGED.
 4. Return COMPLETE lists — not diffs or partial lists.
 5. If the user's request is ambiguous, ask a single clarifying question in agentMessage.
+6. Always populate confirmationMessage with a plain-English one-sentence summary of what you did or what you need (e.g. "Paired Master Bedroom with Primary Suite and moved Exterior to unmatched." or "Could you clarify which zones should be paired?"). Never leave it empty.
 
 ## Playbooks
 
@@ -75,6 +77,7 @@ type CorrectionResponse = {
   unmatchedE1: string[];
   unmatchedE2: string[];
   agentMessage: string | null;
+  confirmationMessage: string;
 };
 
 export async function POST(
@@ -198,6 +201,7 @@ Apply the matching playbook and return corrected JSON.`;
       unmatchedE1,
       unmatchedE2,
       agentMessage: result.agentMessage,
+      confirmationMessage: result.confirmationMessage ?? 'Correction applied.',
     });
   }
 
@@ -247,5 +251,6 @@ Apply the matching playbook and return corrected JSON.`;
     unmatchedE1: result.unmatchedE1,
     unmatchedE2: result.unmatchedE2,
     agentMessage: null,
+    confirmationMessage: result.confirmationMessage ?? 'Correction applied.',
   });
 }

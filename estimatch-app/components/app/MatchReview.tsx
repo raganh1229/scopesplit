@@ -62,6 +62,7 @@ export default function MatchReview({
   const [corrDescription, setCorrDescription] = useState('');
   const [correcting, setCorrecting] = useState(false);
   const [corrAgentMessage, setCorrAgentMessage] = useState<string | null>(null);
+  const [corrConfirmationMessage, setCorrConfirmationMessage] = useState<string | null>(null);
   const [corrError, setCorrError] = useState<string | null>(null);
   const corrTextareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -138,6 +139,7 @@ export default function MatchReview({
     if (!corrDescription.trim() || correcting) return;
     setCorrecting(true);
     setCorrAgentMessage(null);
+    setCorrConfirmationMessage(null);
     setCorrError(null);
     try {
       const res = await fetch(`/api/comparisons/${comparisonId}/match-review/correction`, {
@@ -155,9 +157,11 @@ export default function MatchReview({
         unmatchedE1: string[];
         unmatchedE2: string[];
         agentMessage: string | null;
+        confirmationMessage: string | null;
       };
       if (data.agentMessage) {
         setCorrAgentMessage(data.agentMessage);
+        setCorrConfirmationMessage(data.confirmationMessage ?? null);
         setTimeout(() => corrTextareaRef.current?.focus(), 50);
       } else {
         const newE1: (string | null)[] = [];
@@ -171,6 +175,7 @@ export default function MatchReview({
         setE1Slots(newE1);
         setE2Slots(newE2);
         setCorrDescription('');
+        setCorrConfirmationMessage(data.confirmationMessage ?? null);
       }
     } catch {
       setCorrError('Network error — please try again.');
@@ -350,8 +355,8 @@ export default function MatchReview({
 
       {confirmError && <div className={styles.errorMessage}>{confirmError}</div>}
 
-      {corrAgentMessage && (
-        <div className={styles.agentMessage}>{corrAgentMessage}</div>
+      {corrConfirmationMessage && (
+        <div className={styles.agentMessage}>{corrConfirmationMessage}</div>
       )}
 
       {corrError && <div className={styles.errorMessage}>{corrError}</div>}

@@ -32,6 +32,7 @@ export type ZoneCorrectionResponse = {
   matchHints: Array<{ pdfA: string; pdfB: string | string[]; reason: string }>;
   confirmedUniqueZones: Array<{ pdf: 'A' | 'B'; zone: string; reason: string }>;
   agentMessage: string | null;
+  confirmationMessage: string;
 };
 
 // ── System prompt ─────────────────────────────────────────────────────────────
@@ -53,7 +54,8 @@ Always return valid JSON matching this exact structure:
   "e2Zones": [...complete corrected list for PDF B...],
   "matchHints": [...],
   "confirmedUniqueZones": [...],
-  "agentMessage": null | "string with clarifying question"
+  "agentMessage": null | "string with clarifying question",
+  "confirmationMessage": "string — always a brief one-sentence summary of the action taken or question asked"
 }
 
 Zone objects use this shape: { "name": string, "startPage": number, "endPage": number, "approxItems": number }
@@ -69,6 +71,7 @@ If agentMessage is non-null, do NOT modify the zone lists — return them unchan
 3. Handle ONE correction per call. If multiple issues are described, fix the first one and note the others in agentMessage.
 4. Preserve zone list sort order by startPage ascending.
 5. If the description does not match any playbook, return agentMessage with a clarifying question. Do NOT modify zones.
+6. Always populate confirmationMessage with a plain-English one-sentence summary of what you did or what you need (e.g. "Added the missing Kitchen zone to your estimate starting on page 4." or "Could you clarify which page the zone appears on?"). Never leave it empty.
 
 ## Playbook 1 — Missed zone (false negative)
 

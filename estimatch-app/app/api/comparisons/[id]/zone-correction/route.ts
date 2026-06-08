@@ -275,6 +275,7 @@ export async function POST(
       matchHints: n3Result.matchHints ?? [],
       confirmedUniqueZones: n3Result.confirmedUniqueZones ?? [],
       agentMessage: n3Result.agentMessage ?? null,
+      confirmationMessage: n3Result.confirmationMessage ?? 'Correction applied.',
     });
   }
   // ── End N3 path ───────────────────────────────────────────────────────────────
@@ -406,5 +407,6 @@ export async function POST(
       correctionResult.confirmedUniqueZones ?? [],
     ),
     agentMessage: correctionResult.agentMessage ?? null,
+    confirmationMessage: correctionResult.confirmationMessage ?? 'Correction applied.',
   });
 }
