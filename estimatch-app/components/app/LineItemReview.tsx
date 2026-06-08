@@ -46,6 +46,7 @@ export default function LineItemReview({
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [analyzing,      setAnalyzing]      = useState(false);
   const [analysisError,  setAnalysisError]  = useState<string | null>(null);
+  const [openTooltip,    setOpenTooltip]    = useState<'analyze' | 'reextract' | null>(null);
 
   const maxRows = Math.max(initialYours.length, initialAdj.length);
 
@@ -135,7 +136,7 @@ export default function LineItemReview({
   }
 
   return (
-    <div className={styles.shell}>
+    <div className={styles.shell} onClick={() => setOpenTooltip(null)}>
       <div className={styles.header}>
         <h1 className={styles.title}>Step 3 of 4 — Line Item Extraction Review</h1>
         <p className={styles.subtitle}>
@@ -295,21 +296,53 @@ export default function LineItemReview({
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className={styles.analyzeBtn}
-              disabled={!feedbackText.trim() || analyzing || submitting}
-            >
-              {analyzing ? 'Analyzing…' : 'Analyze with AI'}
-            </button>
-            <button
-              type="button"
-              className={styles.submitBtn}
-              onClick={() => handleReextract()}
-              disabled={!feedbackText.trim() || submitting || analyzing}
-            >
-              {submitting ? 'Re-extracting…' : 'Re-extract'}
-            </button>
+            <div className={styles.btnWithTooltip}>
+              <button
+                type="submit"
+                className={styles.analyzeBtn}
+                disabled={!feedbackText.trim() || analyzing || submitting}
+              >
+                {analyzing ? 'Analyzing…' : 'Analyze with AI'}
+              </button>
+              <button
+                type="button"
+                className={styles.tooltipTrigger}
+                onClick={(e) => { e.stopPropagation(); setOpenTooltip(o => o === 'analyze' ? null : 'analyze'); }}
+                aria-label="What does Analyze with AI do?"
+              >
+                ?
+                <span
+                  className={`${styles.tooltipBox}${openTooltip === 'analyze' ? ` ${styles.tooltipBoxOpen}` : ''}`}
+                  role="tooltip"
+                >
+                  Reads your description and diagnoses which zones may have extraction errors, explaining what looks wrong and why. It does not modify any data — it gives you a recommendation to review before taking action.
+                </span>
+              </button>
+            </div>
+            <div className={styles.btnWithTooltip}>
+              <button
+                type="button"
+                className={styles.submitBtn}
+                onClick={() => handleReextract()}
+                disabled={!feedbackText.trim() || submitting || analyzing}
+              >
+                {submitting ? 'Re-extracting…' : 'Re-extract'}
+              </button>
+              <button
+                type="button"
+                className={styles.tooltipTrigger}
+                onClick={(e) => { e.stopPropagation(); setOpenTooltip(o => o === 'reextract' ? null : 'reextract'); }}
+                aria-label="What does Re-extract do?"
+              >
+                ?
+                <span
+                  className={`${styles.tooltipBox}${openTooltip === 'reextract' ? ` ${styles.tooltipBoxOpen}` : ''}`}
+                  role="tooltip"
+                >
+                  Deletes the current line item counts for the selected zones and re-runs extraction from your PDFs. Use this when counts are clearly wrong, or after Analyze recommends it.
+                </span>
+              </button>
+            </div>
           </div>
         </form>
       )}

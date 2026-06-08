@@ -371,6 +371,95 @@
   cursor: not-allowed;
 }
 
+/* ── Button tooltips ─────────────────────────────────────────── */
+
+.btnWithTooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltipTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.10);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-stack);
+  cursor: help;
+  border: none;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.tooltipTrigger:hover,
+.tooltipTrigger:focus-visible {
+  background: rgba(0, 0, 0, 0.20);
+  outline: none;
+}
+
+.tooltipBox {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.55;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0s 0.15s;
+  z-index: 100;
+  text-align: left;
+  white-space: normal;
+}
+
+.tooltipTrigger:hover .tooltipBox {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity 0.15s, transform 0.15s, visibility 0s 0s;
+}
+
+.tooltipBoxOpen {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+  transition: none !important;
+}
+
+[data-theme='dark'] .tooltipTrigger {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme='dark'] .tooltipTrigger:hover,
+[data-theme='dark'] .tooltipTrigger:focus-visible {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+[data-theme='dark'] .tooltipBox {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.40);
+}
+
 /* ── AI analysis box ─────────────────────────────────────────── */
 
 .aiAnalysis {
@@ -545,6 +634,16 @@
 
   .hint {
     text-align: center;
+  }
+
+  .tooltipTrigger {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+
+  .tooltipBox {
+    width: 200px;
   }
 
   .confirmBtn {
