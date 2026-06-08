@@ -1,12 +1,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/comparisons/[id]/match-review/correction
 //
-// N3-only. Runs Claude Sonnet against the user's freeform description of a
-// zone correspondence error. Applies corrected pairings to n3_zone_correspondences.
+// Runs Claude Sonnet against the user's freeform description of a zone
+// correspondence error. Applies corrected pairings to n3_zone_correspondences.
+//
+// Supports N3 (Xactimate PDF) and N4 (Symbility, CSV) pipelines — both store
+// zone data in the shared n3_zones / n3_zone_correspondences tables.
 //
 // Auth: Clerk + DB ownership check.
 // Status guard: comparison must be AWAITING_MATCH_REVIEW.
-// Pipeline guard: n3 only — N2 match corrections are handled by the drag-UI.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { auth } from '@clerk/nextjs/server';

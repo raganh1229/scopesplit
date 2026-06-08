@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/comparisons/[id]/line-item-review/analyze
 //
-// N3 pipeline only. Calls Claude Sonnet to analyze per-zone extraction counts
+// Calls Claude Sonnet to analyze per-zone extraction counts
 // against the user's description of what looks wrong. Returns an analysis and
 // recommendation WITHOUT triggering any pipeline action.
 //
