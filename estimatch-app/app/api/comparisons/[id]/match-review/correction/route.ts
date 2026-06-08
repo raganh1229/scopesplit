@@ -101,9 +101,6 @@ export async function POST(
   if (comparison.status !== 'AWAITING_MATCH_REVIEW') {
     return NextResponse.json({ error: 'Comparison is not awaiting match review' }, { status: 409 });
   }
-  if (comparison.pipelineVersion !== 'n3') {
-    return NextResponse.json({ error: 'Only available for N3 comparisons' }, { status: 409 });
-  }
 
   let body: { description?: unknown };
   try {
