@@ -2197,155 +2197,163 @@ export default function ComparisonDetailPage() {
         </div>
 
         {/* ── Toolbar ── */}
-        <div className={styles.toolbar}>
-          <div className={styles.pillGroup}>
-            {(['match', 'match_unverified', 'modified', 'missing', 'added'] as StatusFilter[]).map(f => (
-              <button
-                key={f}
-                className={`${styles.pill} ${styles[`pill_${f}`]} ${activeFilters.has(f) ? styles.pillActive : ''}`}
-                onClick={() => toggleFilter(f)}
-              >
-                <span className={styles.pillDot} />
-                {statusLabel[f]}
-                <span className={styles.pillCount}>{stats.counts[f]}</span>
-              </button>
-            ))}
-          </div>
-          <button className={styles.discrepLink} onClick={handleDiscrepancies}>
-            {activeFilters.size === 5 ? 'Discrepancies only' : 'Show all'}
-          </button>
+        <div className={styles.toolbarShell}>
 
-          <input
-            className={styles.searchInput}
-            type="text"
-            placeholder="Search descriptions..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-
-          <button
-            className={`${styles.filtersToggleBtn} ${filtersOpen ? styles.filtersToggleBtnActive : ''}`}
-            onClick={() => { setFiltersOpen(prev => !prev); setColumnsOpen(false); }}
-          >
-            Filters {filterCount > 0 && <span className={styles.filtersBadge}>{filterCount}</span>}
-          </button>
-
-          <button
-            className={`${styles.filtersToggleBtn} ${columnsOpen ? styles.filtersToggleBtnActive : ''}`}
-            onClick={() => { setColumnsOpen(prev => !prev); setFiltersOpen(false); }}
-          >
-            Columns {visibleCosts.length > 0 && <span className={styles.filtersBadge}>{visibleCosts.length}</span>}
-          </button>
-
-          <div className={styles.toolbarSpacer} />
-          <div className={styles.notesTools}>
-            {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
-              <button className={styles.undoRedoResetBtn} title="Discard all changes" disabled={savingDraft} onClick={handleResetAllChanges}>Reset all</button>
-            )}
-            {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
-              <button
-                className={styles.saveDraftBtn}
-                onClick={() => {
-                  const errs = collectDraftErrors();
-                  if (errs.length > 0) { setSaveDraftErrors(errs); }
-                  else { setShowSaveConfirm(true); }
-                }}
-                disabled={savingDraft}
-              >
-                {(() => {
-                  const total = draftEdits.size + draftZoneNames.size + draftAdjusterZoneNames.size + draftInserts.size;
-                  return savingDraft ? 'Saving...' : `Save ${total} change${total !== 1 ? 's' : ''} as new version`;
-                })()}
-              </button>
-            )}
-            {versions.length > 0 && (
-              <div className={styles.versionHistoryWrap} ref={versionHistoryRef}>
+          {/* Row 1: Status Filters */}
+          <div className={styles.toolbarRow1}>
+            <div className={styles.pillGroup}>
+              {(['match', 'match_unverified', 'modified', 'missing', 'added'] as StatusFilter[]).map(f => (
                 <button
-                  className={styles.versionHistoryBtn}
-                  onClick={() => setVersionHistoryOpen(prev => !prev)}
-                  disabled={versionLoading}
+                  key={f}
+                  className={`${styles.pill} ${styles[`pill_${f}`]} ${activeFilters.has(f) ? styles.pillActive : ''}`}
+                  onClick={() => toggleFilter(f)}
                 >
-                  {versionLoading ? 'Loading...' : `v${versions.find(v => v.id === activeVersionId)?.versionNumber ?? '—'}`}
-                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 1l4 4 4-4" /></svg>
+                  <span className={styles.pillDot} />
+                  {statusLabel[f]}
+                  <span className={styles.pillCount}>{stats.counts[f]}</span>
                 </button>
-                {versionHistoryOpen && (
-                  <div className={styles.versionHistoryDropdown}>
-                    <div className={styles.versionHistoryTitle}>Edit History</div>
-                    {versions.map(v => (
-                      <div
-                        key={v.id}
-                        className={`${styles.versionHistoryItem} ${v.id === activeVersionId ? styles.versionHistoryItemActive : ''}`}
-                      >
-                        <button
-                          className={styles.versionHistoryItemBtn}
-                          onClick={() => activateVersion(v.id)}
-                          disabled={versionLoading}
-                        >
-                          <span className={styles.versionHistoryItemLabel}>
-                            <strong>v{v.versionNumber}</strong> — {v.label}
-                          </span>
-                          {v.editPrompt && (
-                            <span className={styles.versionHistoryItemPrompt}>{v.editPrompt}</span>
-                          )}
-                          <span className={styles.versionHistoryItemDate}>
-                            {new Date(v.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                          </span>
-                        </button>
-                        {versions.length > 1 && v.versionNumber !== 1 && (
-                          <button
-                            className={styles.versionDeleteBtn}
-                            onClick={(e) => { e.stopPropagation(); setVersionDeleteConfirm(v.id); }}
-                            disabled={versionLoading}
-                            aria-label={`Delete version ${v.versionNumber}`}
-                            title="Delete this version"
-                          >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-            <button className={styles.editEntriesBtn} onClick={() => setLlmEditOpen(true)}>
-              Edit Entries
+              ))}
+            </div>
+            <button className={`${styles.discrepLink} ${styles.tbHideMobile}`} onClick={handleDiscrepancies}>
+              {activeFilters.size === 5 ? 'Discrepancies only' : 'Show all'}
             </button>
-            <button className={styles.summaryBtn} onClick={handleGenerateSummary} disabled={summaryLoading}>
-              <svg className={styles.summaryBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-                <polyline points="10 9 9 9 8 9" />
-              </svg>
-              {summaryLoading ? 'Generating...' : 'Executive Summary'}
-            </button>
-            <button className={npStyles.triggerBtn} onClick={() => setNotesOpen(true)}>
-              <svg className={npStyles.triggerBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Notes
-              {noteCount > 0 && <span className={npStyles.triggerBadge}>{noteCount}</span>}
-            </button>
-            <span className={styles.notesHintWrap}>
+            <div className={styles.toolbarRow1Right}>
+              <input
+                className={styles.searchInput}
+                type="text"
+                placeholder="Search descriptions..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
               <button
-                type="button"
-                className={styles.notesHintBtn}
-                aria-label="How to reference a row in notes"
-                aria-describedby="notes-row-reference-tip"
+                className={`${styles.filtersToggleBtn} ${filtersOpen ? styles.filtersToggleBtnActive : ''}`}
+                onClick={() => { setFiltersOpen(prev => !prev); setColumnsOpen(false); }}
               >
-                ?
+                Filters {filterCount > 0 && <span className={styles.filtersBadge}>{filterCount}</span>}
               </button>
-              <span id="notes-row-reference-tip" role="tooltip" className={styles.notesHintTooltip}>
-                Right click on a row to reference it in a note.
-              </span>
-            </span>
+              <button
+                className={`${styles.filtersToggleBtn} ${columnsOpen ? styles.filtersToggleBtnActive : ''}`}
+                onClick={() => { setColumnsOpen(prev => !prev); setFiltersOpen(false); }}
+              >
+                Columns {visibleCosts.length > 0 && <span className={styles.filtersBadge}>{visibleCosts.length}</span>}
+              </button>
+            </div>
           </div>
-          <button className={styles.downloadBtn} onClick={handleDownloadPdf}>
-            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-            Download PDF
-          </button>
+
+          {/* Row 2: Draft Controls (left) + Permanent Actions (right) */}
+          <div className={styles.toolbarRow2}>
+            <div className={styles.toolbarDraftGroup}>
+              {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
+                <button className={styles.undoRedoResetBtn} title="Discard all changes" disabled={savingDraft} onClick={handleResetAllChanges}>Reset all</button>
+              )}
+              {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
+                <button
+                  className={styles.saveDraftBtn}
+                  onClick={() => {
+                    const errs = collectDraftErrors();
+                    if (errs.length > 0) { setSaveDraftErrors(errs); }
+                    else { setShowSaveConfirm(true); }
+                  }}
+                  disabled={savingDraft}
+                >
+                  {(() => {
+                    const total = draftEdits.size + draftZoneNames.size + draftAdjusterZoneNames.size + draftInserts.size;
+                    return savingDraft ? 'Saving...' : `Save ${total} change${total !== 1 ? 's' : ''} as new version`;
+                  })()}
+                </button>
+              )}
+            </div>
+            <div className={styles.toolbarActionsGroup}>
+              {versions.length > 0 && (
+                <div className={styles.versionHistoryWrap} ref={versionHistoryRef}>
+                  <button
+                    className={styles.versionHistoryBtn}
+                    onClick={() => setVersionHistoryOpen(prev => !prev)}
+                    disabled={versionLoading}
+                  >
+                    {versionLoading ? 'Loading...' : `v${versions.find(v => v.id === activeVersionId)?.versionNumber ?? '—'}`}
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 1l4 4 4-4" /></svg>
+                  </button>
+                  {versionHistoryOpen && (
+                    <div className={styles.versionHistoryDropdown}>
+                      <div className={styles.versionHistoryTitle}>Edit History</div>
+                      {versions.map(v => (
+                        <div
+                          key={v.id}
+                          className={`${styles.versionHistoryItem} ${v.id === activeVersionId ? styles.versionHistoryItemActive : ''}`}
+                        >
+                          <button
+                            className={styles.versionHistoryItemBtn}
+                            onClick={() => activateVersion(v.id)}
+                            disabled={versionLoading}
+                          >
+                            <span className={styles.versionHistoryItemLabel}>
+                              <strong>v{v.versionNumber}</strong> — {v.label}
+                            </span>
+                            {v.editPrompt && (
+                              <span className={styles.versionHistoryItemPrompt}>{v.editPrompt}</span>
+                            )}
+                            <span className={styles.versionHistoryItemDate}>
+                              {new Date(v.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                            </span>
+                          </button>
+                          {versions.length > 1 && v.versionNumber !== 1 && (
+                            <button
+                              className={styles.versionDeleteBtn}
+                              onClick={(e) => { e.stopPropagation(); setVersionDeleteConfirm(v.id); }}
+                              disabled={versionLoading}
+                              aria-label={`Delete version ${v.versionNumber}`}
+                              title="Delete this version"
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              <button className={styles.editEntriesBtn} onClick={() => setLlmEditOpen(true)}>
+                Edit Entries
+              </button>
+              <button className={styles.summaryBtn} onClick={handleGenerateSummary} disabled={summaryLoading}>
+                <svg className={styles.summaryBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+                <span className={styles.btnLabel}>{summaryLoading ? 'Generating...' : 'Executive Summary'}</span>
+              </button>
+              <button className={npStyles.triggerBtn} onClick={() => setNotesOpen(true)}>
+                <svg className={npStyles.triggerBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span className={styles.btnLabel}>Notes</span>
+                {noteCount > 0 && <span className={npStyles.triggerBadge}>{noteCount}</span>}
+              </button>
+              <span className={styles.notesHintWrap}>
+                <button
+                  type="button"
+                  className={styles.notesHintBtn}
+                  aria-label="How to reference a row in notes"
+                  aria-describedby="notes-row-reference-tip"
+                >
+                  ?
+                </button>
+                <span id="notes-row-reference-tip" role="tooltip" className={styles.notesHintTooltip}>
+                  Right click on a row to reference it in a note.
+                </span>
+              </span>
+              <button className={styles.downloadBtn} onClick={handleDownloadPdf}>
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                <span className={styles.btnLabel}>Download PDF</span>
+              </button>
+            </div>
+          </div>
+
         </div>
 
         {/* ── Filters Panel ── */}

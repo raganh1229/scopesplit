@@ -265,12 +265,50 @@
 /* ============================================
    TOOLBAR
    ============================================ */
-.toolbar {
-  display: flex; align-items: center; flex-wrap: wrap;
-  padding: 8px 12px; background: var(--bg-primary);
-  border: 0.5px solid var(--border-default); border-radius: 8px;
-  margin-bottom: 10px; gap: 8px 12px;
+.toolbarShell {
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
 }
+.toolbarRow1 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 8px 12px;
+  border-bottom: 0.5px solid var(--border-light);
+}
+.toolbarRow1Right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.toolbarRow2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  min-height: 42px;
+}
+.toolbarDraftGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.toolbarActionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.btnLabel { display: inline; }
+.tbHideMobile { display: inline-flex; }
 .pillGroup {
   display: flex; border: 0.5px solid var(--border-default);
   border-radius: 6px; overflow: hidden; flex-shrink: 0;
@@ -359,7 +397,7 @@
   font-size: 10px; font-weight: 600; padding: 0 4px;
 }
 
-.toolbarSpacer { flex: 1; }
+.toolbarSpacer { flex: 1; } /* legacy — kept for any remaining references */
 .notesTools {
   display: inline-flex;
   align-items: center;
@@ -2117,6 +2155,15 @@
 }
 
 /* ============================================
+   RESPONSIVE — tablet 769–1023px
+   ============================================ */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .btnLabel { display: none; }
+  .toolbarActionsGroup { gap: 4px; }
+  .editEntriesBtn { padding: 6px 8px; font-size: 12px; }
+}
+
+/* ============================================
    MOBILE-ONLY ELEMENTS — hidden on desktop
    ============================================ */
 .mDash, .mToolbar, .cardList { display: none; }
@@ -2126,7 +2173,11 @@
    ============================================ */
 @media (max-width: 768px) {
   /* Hide desktop elements */
-  .dashboard, .toolbar, .tableWrap, .filtersPanel, .columnsPanel, .tableScrollOverlayShell { display: none !important; }
+  .dashboard, .tableWrap, .filtersPanel, .columnsPanel, .tableScrollOverlayShell { display: none !important; }
+  .toolbarShell { border-radius: 0; border-left: none; border-right: none; margin-bottom: 6px; }
+  .toolbarRow2 { display: none; }
+  .tbHideMobile { display: none !important; }
+  .toolbarRow1Right { display: none; }
 
   .content { padding: 0; overflow: visible; }
 
@@ -2462,7 +2513,7 @@
   .printHeader { display: flex !important; }
 
   /* -- Hide all interactive / chrome elements -- */
-  .toolbar,
+  .toolbarShell,
   .filtersPanel,
   .columnsPanel,
   .pageActions,
