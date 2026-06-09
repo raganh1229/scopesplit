@@ -209,8 +209,8 @@ export default function ZoneReview({
           accurately the agent can fix it before matching begins.
         </p>
         <p className={styles.inputHint}>
-          This correction uses AI. It may take a moment to process and will provide you a response
-          to your inquiry.
+          This correction uses AI and can take up to 10 minutes to complete depending on the
+          complexity of your request. You will receive a response once it finishes.
         </p>
         <textarea
           id="zone-correction-input"
