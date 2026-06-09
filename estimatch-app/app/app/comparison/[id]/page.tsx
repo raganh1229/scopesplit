@@ -2239,13 +2239,25 @@ export default function ComparisonDetailPage() {
                 className={`${styles.filtersToggleBtn} ${filtersOpen ? styles.filtersToggleBtnActive : ''}`}
                 onClick={() => { setFiltersOpen(prev => !prev); setColumnsOpen(false); }}
               >
-                Filters {filterCount > 0 && <span className={styles.filtersBadge}>{filterCount}</span>}
+                Filters {filterCount > 0 && (
+                  <span
+                    className={styles.filtersClearBadge}
+                    onClick={(e) => { e.stopPropagation(); setZoneFilter(''); setCategoryFilter(''); setMinDiff(0); }}
+                    title="Clear filters"
+                  >{filterCount}&thinsp;&times;</span>
+                )}
               </button>
               <button
                 className={`${styles.filtersToggleBtn} ${columnsOpen ? styles.filtersToggleBtnActive : ''}`}
                 onClick={() => { setColumnsOpen(prev => !prev); setFiltersOpen(false); }}
               >
-                Columns {visibleCosts.length > 0 && <span className={styles.filtersBadge}>{visibleCosts.length}</span>}
+                Columns {visibleCosts.length > 0 && (
+                  <span
+                    className={styles.filtersClearBadge}
+                    onClick={(e) => { e.stopPropagation(); setVisibleCosts([]); }}
+                    title="Clear columns"
+                  >{visibleCosts.length}&thinsp;&times;</span>
+                )}
               </button>
             </div>
           </div>

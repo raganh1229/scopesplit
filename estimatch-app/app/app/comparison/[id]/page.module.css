@@ -395,6 +395,14 @@
   background: var(--btn-primary-bg); color: var(--btn-primary-text);
   font-size: 10px; font-weight: 600; padding: 0 4px;
 }
+.filtersClearBadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 16px; height: 16px; border-radius: 8px;
+  background: var(--btn-primary-bg); color: var(--btn-primary-text);
+  font-size: 10px; font-weight: 600; padding: 0 5px;
+  cursor: pointer; transition: opacity 0.12s ease;
+}
+.filtersClearBadge:hover { opacity: 0.75; }
 
 .toolbarSpacer { flex: 1; } /* legacy — kept for any remaining references */
 .notesTools {
