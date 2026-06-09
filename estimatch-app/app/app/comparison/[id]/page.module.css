@@ -1871,6 +1871,43 @@
 .rowNoteMenuItemDanger { color: var(--text-danger, #dc2626); }
 .rowNoteMenuItemDanger:hover { background: rgba(220, 38, 38, 0.06) !important; }
 
+.rowNoteMenuItemWithSub {
+  position: relative;
+}
+
+.rowNoteMenuItemWithSub > span.rowNoteMenuItem {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rowNoteMenuItemWithSub:hover > span.rowNoteMenuItem {
+  background: var(--bg-surface);
+}
+
+.moveToSubmenu {
+  position: absolute;
+  top: -6px;
+  left: calc(100% + 4px);
+  z-index: 990;
+  min-width: 180px;
+  max-width: 240px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-default);
+  background: var(--bg-primary);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+}
+
+.moveToSubmenuLeft {
+  left: auto;
+  right: calc(100% + 4px);
+}
+
 .zoneNameInput {
   font-family: var(--font-stack);
   font-size: 13px;

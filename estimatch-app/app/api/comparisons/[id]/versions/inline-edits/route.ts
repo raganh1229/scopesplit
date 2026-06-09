@@ -98,8 +98,17 @@ export async function POST(request: Request, context: RouteContext) {
           typeof (r as ZoneAdjusterRename).newAdjusterName === 'string'
       )
     : [];
+  type ZoneMove = { itemId: string; targetZoneId: string };
+  const zoneMoves: ZoneMove[] = Array.isArray(body?.zoneMoves)
+    ? (body.zoneMoves as unknown[]).filter(
+        (r): r is ZoneMove =>
+          typeof r === 'object' && r !== null &&
+          typeof (r as ZoneMove).itemId === 'string' &&
+          typeof (r as ZoneMove).targetZoneId === 'string'
+      )
+    : [];
   const hasDeletions = Array.isArray(body?.deletions) && body.deletions.length > 0;
-  if (!body || (inlineEdits.length === 0 && inlineInserts.length === 0 && zoneRenames.length === 0 && zoneAdjusterRenames.length === 0 && !hasDeletions)) {
+  if (!body || (inlineEdits.length === 0 && inlineInserts.length === 0 && zoneRenames.length === 0 && zoneAdjusterRenames.length === 0 && zoneMoves.length === 0 && !hasDeletions)) {
     return NextResponse.json({ error: 'A non-empty "edits", "inserts", "zoneRenames", "zoneAdjusterRenames", or "deletions" array is required.' }, { status: 400 });
   }
 
@@ -304,6 +313,50 @@ export async function POST(request: Request, context: RouteContext) {
     }
   }
 
+  // Apply zone moves: update zone fields for moved rows and reorder them to end of target zone
+  if (zoneMoves.length > 0) {
+    function toZoneSlug(s: string): string { return s.toLowerCase().replace(/[^a-z0-9_-]+/g, '-'); }
+    const zoneMoveMap = new Map<string, string>(zoneMoves.map(m => [m.itemId, m.targetZoneId]));
+    // Build slug → zone info map (matches frontend zone.id derivation via toZoneId)
+    const zoneInfoBySlug = new Map<string, { zoneYours: string | null; zoneAdjuster: string | null; zoneCanonical: string }>();
+    for (const r of newRows) {
+      if (r.zoneCanonical) {
+        const slug = toZoneSlug(r.zoneCanonical);
+        if (!zoneInfoBySlug.has(slug)) {
+          zoneInfoBySlug.set(slug, { zoneYours: r.zoneYours, zoneAdjuster: r.zoneAdjuster, zoneCanonical: r.zoneCanonical });
+        }
+      }
+    }
+    const movedItemIds = new Set(zoneMoveMap.keys());
+    const movedRows: SourceRow[] = [];
+    for (let i = newRows.length - 1; i >= 0; i--) {
+      const r = newRows[i];
+      const matchId = movedItemIds.has(r.itemId) ? r.itemId : (r.originalLineItemId && movedItemIds.has(r.originalLineItemId) ? r.originalLineItemId : null);
+      if (matchId) {
+        const targetZoneId = zoneMoveMap.get(matchId)!;
+        const targetZoneInfo = zoneInfoBySlug.get(targetZoneId);
+        if (targetZoneInfo) {
+          const updated = { ...r, zoneCanonical: targetZoneInfo.zoneCanonical, zoneYours: targetZoneInfo.zoneYours, zoneAdjuster: targetZoneInfo.zoneAdjuster };
+          newRows.splice(i, 1);
+          movedRows.unshift(updated);
+        }
+      }
+    }
+    // Group moved rows by target zone canonical and append them to the end of each target zone block
+    for (const moved of movedRows) {
+      // Find the last row with this zoneCanonical
+      let insertIdx = -1;
+      for (let i = newRows.length - 1; i >= 0; i--) {
+        if (newRows[i].zoneCanonical === moved.zoneCanonical) { insertIdx = i + 1; break; }
+      }
+      if (insertIdx >= 0) {
+        newRows.splice(insertIdx, 0, moved);
+      } else {
+        newRows.push(moved);
+      }
+    }
+  }
+
   newRows.forEach((r, i) => { r.sortOrder = i; });
 
   if (inlineEdits.length > 0 && appliedEditCount === 0 && inlineInserts.length === 0 && deletionSet.size === 0 && zoneRenames.length === 0 && zoneAdjusterRenames.length === 0) {
@@ -320,7 +373,7 @@ export async function POST(request: Request, context: RouteContext) {
   });
   const nextVersionNumber = (maxVersion._max.versionNumber ?? 0) + 1;
 
-  const editCount = inlineEdits.length + inlineInserts.length + deletionSet.size + zoneRenames.length + zoneAdjusterRenames.length;
+  const editCount = inlineEdits.length + inlineInserts.length + deletionSet.size + zoneRenames.length + zoneAdjusterRenames.length + zoneMoves.length;
 
   const version = await prisma.$transaction(async (tx) => {
     await tx.comparisonVersion.updateMany({

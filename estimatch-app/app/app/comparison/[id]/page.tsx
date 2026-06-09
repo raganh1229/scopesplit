@@ -245,7 +245,10 @@ export default function ComparisonDetailPage() {
   const draftAdjusterZoneNamesRef = useRef<Map<string, string>>(new Map());
   const [draftInserts, setDraftInserts] = useState<Map<string, DraftInsert>>(new Map());
   const draftInsertsRef = useRef<Map<string, DraftInsert>>(new Map());
-  type DraftSnapshot = { edits: Map<string, EditValues>; zoneNames: Map<string, string>; adjusterZoneNames: Map<string, string>; inserts: Map<string, DraftInsert>; };
+  const [draftMoves, setDraftMoves] = useState<Map<string, string>>(new Map()); // rowId → targetZoneId
+  const draftMovesRef = useRef<Map<string, string>>(new Map());
+  const [moveToZoneSubmenu, setMoveToZoneSubmenu] = useState<{ side: 'right' | 'left' } | null>(null);
+  type DraftSnapshot = { edits: Map<string, EditValues>; zoneNames: Map<string, string>; adjusterZoneNames: Map<string, string>; inserts: Map<string, DraftInsert>; moves: Map<string, string>; };
   const undoStackRef = useRef<DraftSnapshot[]>([]);
   const [undoStack, setUndoStack] = useState<DraftSnapshot[]>([]);
   const redoStackRef = useRef<DraftSnapshot[]>([]);
@@ -268,7 +271,7 @@ export default function ComparisonDetailPage() {
   const syncingTableScrollRef = useRef(false);
 
   const zonesWithInserts = useMemo((): Zone[] => {
-    if (draftInserts.size === 0) return zones;
+    if (draftInserts.size === 0 && draftMoves.size === 0) return zones;
     const lineItemInsBefore = new Map<string, DraftInsert[]>();
     const newZoneInsBefore = new Map<string, DraftInsert[]>();
     const childLineItemsForZone = new Map<string, DraftInsert[]>();
@@ -318,8 +321,31 @@ export default function ComparisonDetailPage() {
       }
       result.push({ ...zone, items: newItems });
     }
+    // Apply draft moves: re-route rows from their current zone to a target zone
+    if (draftMoves.size > 0) {
+      // Collect moved rows keyed by targetZoneId
+      const movedRowsByTarget = new Map<string, Row[]>();
+      for (const z of result) {
+        const kept: Row[] = [];
+        for (const item of z.items) {
+          const targetZoneId = item.id ? draftMoves.get(item.id) : undefined;
+          if (targetZoneId && targetZoneId !== z.id) {
+            const list = movedRowsByTarget.get(targetZoneId) ?? [];
+            movedRowsByTarget.set(targetZoneId, [...list, item]);
+          } else {
+            kept.push(item);
+          }
+        }
+        z.items = kept;
+      }
+      // Append moved rows to target zones
+      for (const z of result) {
+        const moved = movedRowsByTarget.get(z.id);
+        if (moved) z.items = [...z.items, ...moved];
+      }
+    }
     return result;
-  }, [zones, draftInserts, draftEdits]);
+  }, [zones, draftInserts, draftEdits, draftMoves]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -338,12 +364,14 @@ export default function ComparisonDetailPage() {
     function handleOutsideClick(e: MouseEvent) {
       if (rowNoteMenuRef.current && !rowNoteMenuRef.current.contains(e.target as Node)) {
         setRowNoteMenu(null);
+        setMoveToZoneSubmenu(null);
       }
     }
 
     function handleEscape(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         setRowNoteMenu(null);
+        setMoveToZoneSubmenu(null);
       }
     }
 
@@ -600,6 +628,7 @@ export default function ComparisonDetailPage() {
       zoneNames: new Map(draftZoneNamesRef.current),
       adjusterZoneNames: new Map(draftAdjusterZoneNamesRef.current),
       inserts: new Map(draftInsertsRef.current),
+      moves: new Map(draftMovesRef.current),
     };
     undoStackRef.current = [...undoStackRef.current, snap];
     setUndoStack([...undoStackRef.current]);
@@ -616,6 +645,8 @@ export default function ComparisonDetailPage() {
     setDraftAdjusterZoneNames(snap.adjusterZoneNames);
     draftInsertsRef.current = snap.inserts;
     setDraftInserts(snap.inserts);
+    draftMovesRef.current = snap.moves;
+    setDraftMoves(snap.moves);
   }, []);
 
   const handleUndo = useCallback(() => {
@@ -627,6 +658,7 @@ export default function ComparisonDetailPage() {
       zoneNames: new Map(draftZoneNamesRef.current),
       adjusterZoneNames: new Map(draftAdjusterZoneNamesRef.current),
       inserts: new Map(draftInsertsRef.current),
+      moves: new Map(draftMovesRef.current),
     };
     redoStackRef.current = [...redoStackRef.current, current];
     setRedoStack([...redoStackRef.current]);
@@ -644,6 +676,7 @@ export default function ComparisonDetailPage() {
       zoneNames: new Map(draftZoneNamesRef.current),
       adjusterZoneNames: new Map(draftAdjusterZoneNamesRef.current),
       inserts: new Map(draftInsertsRef.current),
+      moves: new Map(draftMovesRef.current),
     };
     undoStackRef.current = [...undoStackRef.current, current];
     setUndoStack([...undoStackRef.current]);
@@ -654,7 +687,7 @@ export default function ComparisonDetailPage() {
 
   const handleResetAllChanges = useCallback(() => {
     pushSnapshot();
-    const empty = { edits: new Map<string, EditValues>(), zoneNames: new Map<string, string>(), adjusterZoneNames: new Map<string, string>(), inserts: new Map<string, DraftInsert>() };
+    const empty = { edits: new Map<string, EditValues>(), zoneNames: new Map<string, string>(), adjusterZoneNames: new Map<string, string>(), inserts: new Map<string, DraftInsert>(), moves: new Map<string, string>() };
     applySnapshot(empty);
   }, [pushSnapshot, applySnapshot]);
 
@@ -709,6 +742,18 @@ export default function ComparisonDetailPage() {
     openNoteForLineItem(rowNoteMenu.target);
     setRowNoteMenu(null);
   }, [rowNoteMenu, openNoteForLineItem]);
+
+  const handleMoveToZone = useCallback((targetZoneId: string) => {
+    if (!rowNoteMenu?.row.id) return;
+    const rowId = rowNoteMenu.row.id;
+    pushSnapshot();
+    const next = new Map(draftMovesRef.current);
+    next.set(rowId, targetZoneId);
+    draftMovesRef.current = next;
+    setDraftMoves(next);
+    setMoveToZoneSubmenu(null);
+    setRowNoteMenu(null);
+  }, [rowNoteMenu, pushSnapshot]);
 
   const versionHistoryRef = useRef<HTMLDivElement>(null);
 
@@ -1560,7 +1605,8 @@ export default function ComparisonDetailPage() {
     const currentInserts = draftInsertsRef.current;
     const currentZoneRenames = draftZoneNamesRef.current;
     const currentAdjusterZoneRenames = draftAdjusterZoneNamesRef.current;
-    if (!comparisonId || (currentDrafts.size === 0 && currentZoneRenames.size === 0 && currentAdjusterZoneRenames.size === 0) || savingDraft) return false;
+    const currentMoves = draftMovesRef.current;
+    if (!comparisonId || (currentDrafts.size === 0 && currentZoneRenames.size === 0 && currentAdjusterZoneRenames.size === 0 && currentMoves.size === 0) || savingDraft) return false;
     setSavingDraft(true);
     try {
       await fetch(`/api/comparisons/${comparisonId}/versions`, { method: 'POST' });
@@ -1636,10 +1682,11 @@ export default function ComparisonDetailPage() {
           return { canonical: zone.canonicalName, newAdjusterName };
         })
         .filter((x): x is NonNullable<typeof x> => x !== null);
+      const zoneMoves = Array.from(currentMoves.entries()).map(([itemId, targetZoneId]) => ({ itemId, targetZoneId }));
       const res = await fetch(`/api/comparisons/${comparisonId}/versions/inline-edits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ edits, inserts, deletions, zoneRenames, zoneAdjusterRenames }),
+        body: JSON.stringify({ edits, inserts, deletions, zoneRenames, zoneAdjusterRenames, zoneMoves }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
@@ -1662,6 +1709,9 @@ export default function ComparisonDetailPage() {
       const emptyAdjZoneNames = new Map<string, string>();
       draftAdjusterZoneNamesRef.current = emptyAdjZoneNames;
       setDraftAdjusterZoneNames(emptyAdjZoneNames);
+      const emptyMoves = new Map<string, string>();
+      draftMovesRef.current = emptyMoves;
+      setDraftMoves(emptyMoves);
       undoStackRef.current = [];
       setUndoStack([]);
       redoStackRef.current = [];
@@ -1683,13 +1733,13 @@ export default function ComparisonDetailPage() {
   }, [collectDraftErrors, executeSaveDraft]);
 
   const navigateGuarded = useCallback((cb: () => void) => {
-    if (draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0) {
+    if (draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftMoves.size > 0) {
       unsavedGuardCallbackRef.current = cb;
       setUnsavedGuardOpen(true);
     } else {
       cb();
     }
-  }, [draftEdits.size, draftZoneNames.size, draftAdjusterZoneNames.size]);
+  }, [draftEdits.size, draftZoneNames.size, draftAdjusterZoneNames.size, draftMoves.size]);
 
   const toggleCostColumn = useCallback((key: string) => {
     setVisibleCosts(prev =>
@@ -2239,10 +2289,10 @@ export default function ComparisonDetailPage() {
           {/* Row 2: Draft Controls (left) + Permanent Actions (right) */}
           <div className={styles.toolbarRow2}>
             <div className={styles.toolbarDraftGroup}>
-              {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
+              {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0 || draftMoves.size > 0) && (
                 <button className={styles.undoRedoResetBtn} title="Discard all changes" disabled={savingDraft} onClick={handleResetAllChanges}>Reset all</button>
               )}
-              {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
+              {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0 || draftMoves.size > 0) && (
                 <button
                   className={styles.saveDraftBtn}
                   onClick={() => {
@@ -2253,7 +2303,7 @@ export default function ComparisonDetailPage() {
                   disabled={savingDraft}
                 >
                   {(() => {
-                    const total = draftEdits.size + draftZoneNames.size + draftAdjusterZoneNames.size + draftInserts.size;
+                    const total = draftEdits.size + draftZoneNames.size + draftAdjusterZoneNames.size + draftInserts.size + draftMoves.size;
                     return savingDraft ? 'Saving...' : `Save ${total} change${total !== 1 ? 's' : ''} as new version`;
                   })()}
                 </button>
@@ -3409,6 +3459,39 @@ export default function ComparisonDetailPage() {
           )}
           {/* Both: Make a note */}
           <button className={styles.rowNoteMenuItem} onClick={handleMakeRowNote}>Make a note</button>
+          {/* Line item only: Move to zone */}
+          {!rowNoteMenu.isZoneRow && rowNoteMenu.row.id && !rowNoteMenu.row.id.startsWith('__new__') && !draftEdits.get(rowNoteMenu.row.id)?.deleted && (() => {
+            const currentZoneId = zonesWithInserts.find(z => z.items.some(r => r.id === rowNoteMenu.row.id))?.id;
+            const availableZones = zonesWithInserts.filter(z => z.id !== currentZoneId);
+            if (availableZones.length === 0) return null;
+            return (
+              <div
+                className={styles.rowNoteMenuItemWithSub}
+                onMouseEnter={(e) => {
+                  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                  const spaceRight = window.innerWidth - rect.right;
+                  const side = spaceRight >= 200 ? 'right' : 'left';
+                  setMoveToZoneSubmenu({ side });
+                }}
+                onMouseLeave={() => setMoveToZoneSubmenu(null)}
+              >
+                <span className={styles.rowNoteMenuItem}>Move to ▶</span>
+                {moveToZoneSubmenu && (
+                  <div className={`${styles.moveToSubmenu} ${moveToZoneSubmenu.side === 'left' ? styles.moveToSubmenuLeft : ''}`}>
+                    {availableZones.map(z => (
+                      <button
+                        key={z.id}
+                        className={styles.rowNoteMenuItem}
+                        onMouseDown={(e) => { e.preventDefault(); handleMoveToZone(z.id); }}
+                      >
+                        {z.yourName ?? z.canonicalName}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           {/* Line item only: Delete row */}
           {!rowNoteMenu.isZoneRow && rowNoteMenu.row.id && !rowNoteMenu.row.id.startsWith('__new__') && !draftEdits.get(rowNoteMenu.row.id)?.deleted && (
             <button className={`${styles.rowNoteMenuItem} ${styles.rowNoteMenuItemDanger}`} onClick={handleDeleteRow}>Delete row</button>
