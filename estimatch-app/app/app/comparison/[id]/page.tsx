@@ -147,6 +147,7 @@ type DraftInsert = {
   zoneYours: string | null;
   zoneAdjuster: string | null;
   isNewZone: boolean;
+  parentZoneTempId?: string;
 };
 
 function numericKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -263,10 +264,14 @@ export default function ComparisonDetailPage() {
     if (draftInserts.size === 0) return zones;
     const lineItemInsBefore = new Map<string, DraftInsert[]>();
     const newZoneInsBefore = new Map<string, DraftInsert[]>();
+    const childLineItemsForZone = new Map<string, DraftInsert[]>();
     for (const ins of draftInserts.values()) {
       if (ins.isNewZone) {
         const list = newZoneInsBefore.get(ins.insertBeforeItemId) ?? [];
         newZoneInsBefore.set(ins.insertBeforeItemId, [ins, ...list]);
+      } else if (ins.parentZoneTempId) {
+        const list = childLineItemsForZone.get(ins.parentZoneTempId) ?? [];
+        childLineItemsForZone.set(ins.parentZoneTempId, [...list, ins]);
       } else {
         const list = lineItemInsBefore.get(ins.insertBeforeItemId) ?? [];
         lineItemInsBefore.set(ins.insertBeforeItemId, [...list, ins]);
@@ -294,7 +299,8 @@ export default function ComparisonDetailPage() {
     const result: Zone[] = [];
     for (const zone of zones) {
       for (const ins of (newZoneBeforeZone.get(zone.id) ?? [])) {
-        result.push({ id: `__newzone__${ins.tempId}`, canonicalName: ins.zoneCanonical, yourName: ins.zoneYours, adjusterName: ins.zoneAdjuster, confidence: null, items: [buildVirtual(ins)] });
+        const childItems = (childLineItemsForZone.get(ins.tempId) ?? []).map(buildVirtual);
+        result.push({ id: `__newzone__${ins.tempId}`, canonicalName: ins.zoneCanonical, yourName: ins.zoneYours, adjusterName: ins.zoneAdjuster, confidence: null, items: [buildVirtual(ins), ...childItems] });
       }
       const newItems: Row[] = [];
       for (const item of zone.items) {
@@ -1323,23 +1329,55 @@ export default function ComparisonDetailPage() {
   const handleAddLineItemAbove = useCallback(() => {
     if (!rowNoteMenu) return;
     let insertBeforeItemId: string;
-    let zone: Zone | undefined;
+    let parentZoneTempId: string | undefined;
+    let zoneCanonical: string;
+    let zoneYours: string | null;
+    let zoneAdjuster: string | null;
     if (rowNoteMenu.isZoneRow && rowNoteMenu.zoneId) {
-      if (rowNoteMenu.zoneId.startsWith('__newzone__')) return;
-      zone = zones.find(z => z.id === rowNoteMenu.zoneId);
-      if (!zone) return;
-      const firstReal = zone.items.find(i => i.id && !i.id.startsWith('__new__'));
-      if (!firstReal?.id) return;
-      insertBeforeItemId = firstReal.id;
+      if (rowNoteMenu.zoneId.startsWith('__newzone__')) {
+        const parentTempId = rowNoteMenu.zoneId.slice('__newzone__'.length);
+        const parentIns = draftInsertsRef.current.get(parentTempId);
+        if (!parentIns) return;
+        insertBeforeItemId = parentIns.insertBeforeItemId;
+        parentZoneTempId = parentTempId;
+        zoneCanonical = parentIns.zoneCanonical;
+        zoneYours = parentIns.zoneYours;
+        zoneAdjuster = parentIns.zoneAdjuster;
+      } else {
+        const zone = zones.find(z => z.id === rowNoteMenu.zoneId);
+        if (!zone) return;
+        const firstReal = zone.items.find(i => i.id && !i.id.startsWith('__new__'));
+        if (!firstReal?.id) return;
+        insertBeforeItemId = firstReal.id;
+        zoneCanonical = zone.canonicalName;
+        zoneYours = zone.yourName;
+        zoneAdjuster = zone.adjusterName;
+      }
     } else {
-      if (!rowNoteMenu.row.id || rowNoteMenu.row.id.startsWith('__new__')) return;
-      const zoneId = rowNoteMenu.rowKey.slice(0, rowNoteMenu.rowKey.lastIndexOf('-'));
-      zone = zones.find(z => z.id === zoneId);
-      if (!zone) return;
-      insertBeforeItemId = rowNoteMenu.row.id;
+      if (!rowNoteMenu.row.id) return;
+      if (rowNoteMenu.row.id.startsWith('__new__')) {
+        const zoneId = rowNoteMenu.rowKey.slice(0, rowNoteMenu.rowKey.lastIndexOf('-'));
+        if (!zoneId.startsWith('__newzone__')) return;
+        const parentTempId = zoneId.slice('__newzone__'.length);
+        const parentIns = draftInsertsRef.current.get(parentTempId);
+        if (!parentIns) return;
+        insertBeforeItemId = parentIns.insertBeforeItemId;
+        parentZoneTempId = parentTempId;
+        zoneCanonical = parentIns.zoneCanonical;
+        zoneYours = parentIns.zoneYours;
+        zoneAdjuster = parentIns.zoneAdjuster;
+      } else {
+        const zoneId = rowNoteMenu.rowKey.slice(0, rowNoteMenu.rowKey.lastIndexOf('-'));
+        const zone = zones.find(z => z.id === zoneId);
+        if (!zone) return;
+        insertBeforeItemId = rowNoteMenu.row.id;
+        zoneCanonical = zone.canonicalName;
+        zoneYours = zone.yourName;
+        zoneAdjuster = zone.adjusterName;
+      }
     }
     const tempId = `__new__${Math.random().toString(36).slice(2)}`;
-    const ins: DraftInsert = { tempId, insertBeforeItemId, zoneCanonical: zone.canonicalName, zoneYours: zone.yourName, zoneAdjuster: zone.adjusterName, isNewZone: false };
+    const ins: DraftInsert = { tempId, insertBeforeItemId, zoneCanonical, zoneYours, zoneAdjuster, isNewZone: false, parentZoneTempId };
     const nextIns = new Map(draftInsertsRef.current);
     nextIns.set(tempId, ins);
     draftInsertsRef.current = nextIns;
@@ -2575,7 +2613,7 @@ export default function ComparisonDetailPage() {
                             data-status={row.status}
                             className={`${styles.dataRow} ${isSelected || isEditing ? styles.rowSelected : ''} ${isDrafted ? styles.rowDrafted : ''} ${isEditing ? styles.rowEditing : ''} ${rowNoteMenu?.rowKey === rowKey ? styles.rowMenuOpen : ''} ${isDeleted ? styles.rowDeleted : ''}`}
                             onClick={() => { if (!isEditing) handleRowClick(rowKey); }}
-                            onDoubleClick={() => { if (!isEditing && row.id && !row.id.startsWith('__new__')) handleStartEditRow(rowKey, row); }}
+                            onDoubleClick={() => { if (!isEditing && row.id) handleStartEditRow(rowKey, row); }}
                             onKeyDown={handleRowKeyDown}
                             onContextMenu={row.id ? (e) => openRowNoteMenu(e, rowKey, {
                               id: row.id!,
@@ -3237,8 +3275,12 @@ export default function ComparisonDetailPage() {
               Edit row
             </button>
           )}
-          {/* Zone row: add to zone */}
-          {rowNoteMenu.isZoneRow && rowNoteMenu.zoneId && !rowNoteMenu.zoneId.startsWith('__newzone__') && (
+          {/* Zone row: add to zone (real and virtual zones) */}
+          {rowNoteMenu.isZoneRow && rowNoteMenu.zoneId && (
+            <button className={styles.rowNoteMenuItem} onClick={handleAddLineItemAbove}>Add line item to zone</button>
+          )}
+          {/* Blank item inside virtual zone: add more items */}
+          {!rowNoteMenu.isZoneRow && rowNoteMenu.row.id?.startsWith('__new__') && rowNoteMenu.rowKey.includes('__newzone__') && (
             <button className={styles.rowNoteMenuItem} onClick={handleAddLineItemAbove}>Add line item to zone</button>
           )}
           {/* Line item row: add above */}
