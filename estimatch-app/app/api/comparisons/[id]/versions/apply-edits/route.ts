@@ -507,6 +507,18 @@ Safety:
     return NextResponse.json({ error: 'AI returned an unexpected format.' }, { status: 422 });
   }
 
+  // If Claude produced no edits (e.g. nonsensical prompt, declined request), surface its
+  // explanation to the user and abort — do NOT create an empty no-op version.
+  if (editPayload.edits.length === 0) {
+    console.warn(
+      `[comparison:${comparisonId}] LLM returned 0 edits. prompt="${prompt.slice(0, 120)}" summary="${editPayload.summary ?? ''}"`
+    );
+    return NextResponse.json(
+      { error: editPayload.summary ?? 'No changes were identified. Please describe a specific line-item edit.' },
+      { status: 422 }
+    );
+  }
+
   // Apply edits to sourceRows to produce newRows
   const newRows = sourceRows.map((r) => ({ ...r })); // shallow clone each
   const addedRows: SourceRow[] = [];
