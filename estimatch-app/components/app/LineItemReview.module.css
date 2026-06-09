@@ -139,6 +139,15 @@
   margin-top: 5px;
 }
 
+.reassuranceNote {
+  max-width: 1040px;
+  margin: 8px auto 16px;
+  width: 100%;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
 /* ── Flag / feedback area ────────────────────────────────────── */
 
 .flagRow {

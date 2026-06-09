@@ -121,6 +121,12 @@ export default function LineItemReview({
         </div>
       </div>
 
+      <p className={styles.reassuranceNote}>
+        Not every count needs to be perfect at this stage. Once the comparison is processed,
+        you&apos;ll have a full spreadsheet view where zones and line items can be added,
+        removed, and rearranged freely before you share or export anything.
+      </p>
+
       {error && <div className={styles.errorMessage}>{error}</div>}
 
       {/* ── Bottom bar ───────────────────────────────────────────── */}
