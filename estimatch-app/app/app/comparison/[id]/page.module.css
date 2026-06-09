@@ -1465,20 +1465,21 @@
 .undoRedoBtn:hover:not(:disabled) { background: var(--bg-hover); color: var(--text-primary); }
 .undoRedoBtn:disabled { opacity: 0.3; cursor: default; }
 .undoRedoResetBtn {
-  height: 28px;
-  padding: 0 10px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text-tertiary);
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.1s, color 0.1s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
   white-space: nowrap;
+  font-family: var(--font-stack);
 }
-.undoRedoResetBtn:hover:not(:disabled) { background: var(--danger-bg, rgba(220,38,38,0.08)); color: var(--danger-color, #dc2626); }
-.undoRedoResetBtn:disabled { opacity: 0.3; cursor: default; }
+.undoRedoResetBtn:hover:not(:disabled) { background: var(--danger-bg, rgba(220,38,38,0.08)); color: var(--danger-color, #dc2626); border-color: var(--danger-color, #dc2626); }
+.undoRedoResetBtn:disabled { opacity: 0.4; cursor: default; }
 .zoneHeaderDraft:hover td { background: var(--amber-100, #fef3c7) !important; }
 
 .zoneChevron {

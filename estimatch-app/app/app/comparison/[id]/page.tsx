@@ -1250,17 +1250,7 @@ export default function ComparisonDetailPage() {
     return () => clearInterval(ticker);
   }, [isAwaitingNextPass, isAwaitingExtractPhase, isAwaitingLineItemPhase]);
 
-  const availableCosts = useMemo(() => {
-    if (zones.length === 0) {
-      return costColumns;
-    }
-
-    return costColumns.filter(col =>
-      zones.some(z => z.items.some(item =>
-        (item.your && item.your[col.key] !== 0) || (item.adjuster && item.adjuster[col.key] !== 0)
-      ))
-    );
-  }, [zones]);
+  const availableCosts = useMemo(() => costColumns, []);
 
   const categoryOptions = useMemo(() => {
     const dynamicCategories = new Set<string>();
