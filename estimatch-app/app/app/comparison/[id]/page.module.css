@@ -1876,11 +1876,20 @@
 }
 
 .rowNoteMenuItemWithSub > span.rowNoteMenuItem {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.subMenuChevron {
+  font-size: 14px;
+  color: var(--text-tertiary, #aaa);
+  margin-left: 6px;
+  line-height: 1;
 }
 
 .rowNoteMenuItemWithSub:hover > span.rowNoteMenuItem {

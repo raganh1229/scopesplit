@@ -3475,7 +3475,7 @@ export default function ComparisonDetailPage() {
                 }}
                 onMouseLeave={() => setMoveToZoneSubmenu(null)}
               >
-                <span className={styles.rowNoteMenuItem}>Move to ▶</span>
+                <span className={styles.rowNoteMenuItem}>Move to <span className={styles.subMenuChevron}>{'\u203a'}</span></span>
                 {moveToZoneSubmenu && (
                   <div className={`${styles.moveToSubmenu} ${moveToZoneSubmenu.side === 'left' ? styles.moveToSubmenuLeft : ''}`}>
                     {availableZones.map(z => (
