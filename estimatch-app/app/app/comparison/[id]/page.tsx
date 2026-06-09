@@ -174,7 +174,6 @@ export default function ComparisonDetailPage() {
   );
   const [search, setSearch] = useState('');
   const [zoneFilter, setZoneFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
   const [minDiff, setMinDiff] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [columnsOpen, setColumnsOpen] = useState(false);
@@ -819,13 +818,12 @@ export default function ComparisonDetailPage() {
       if (!desc.includes(search.toLowerCase())) return false;
     }
     if (zoneFilter && zoneId !== zoneFilter) return false;
-    if (categoryFilter && row.category !== categoryFilter) return false;
     if (minDiff > 0) {
       const diff = Math.abs((row.your?.total ?? 0) - (row.adjuster?.total ?? 0));
       if (diff < minDiff) return false;
     }
     return true;
-  }, [activeFilters, search, zoneFilter, categoryFilter, minDiff]);
+  }, [activeFilters, search, zoneFilter, minDiff]);
 
   const handleLlmEditSubmit = useCallback(async () => {
     if (!comparisonId || !llmEditPrompt.trim() || llmEditLoading) return;
@@ -1261,30 +1259,6 @@ export default function ComparisonDetailPage() {
   }, [isAwaitingNextPass, isAwaitingExtractPhase, isAwaitingLineItemPhase]);
 
   const availableCosts = useMemo(() => costColumns, []);
-
-  const categoryOptions = useMemo(() => {
-    const dynamicCategories = new Set<string>();
-
-    zones.forEach(zone => {
-      zone.items.forEach(item => {
-        if (item.category) {
-          dynamicCategories.add(item.category);
-        }
-      });
-    });
-
-    const formatted = Array.from(dynamicCategories)
-      .sort((a, b) => a.localeCompare(b))
-      .map(value => ({
-        value,
-        label: value
-          .split('-')
-          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-          .join(' '),
-      }));
-
-    return [{ value: '', label: 'All Categories' }, ...formatted];
-  }, [zones]);
 
   const toggleCardDetail = useCallback((key: string) => {
     setExpandedCards(prev => {
@@ -1723,7 +1697,7 @@ export default function ComparisonDetailPage() {
     );
   }, []);
 
-  const filterCount = (zoneFilter ? 1 : 0) + (categoryFilter ? 1 : 0) + (minDiff > 0 ? 1 : 0);
+  const filterCount = (zoneFilter ? 1 : 0) + (minDiff > 0 ? 1 : 0);
 
   /* Compute counts and totals */
   const stats = useMemo(() => {
@@ -2242,7 +2216,7 @@ export default function ComparisonDetailPage() {
                 Filters {filterCount > 0 && (
                   <span
                     className={styles.filtersClearBadge}
-                    onClick={(e) => { e.stopPropagation(); setZoneFilter(''); setCategoryFilter(''); setMinDiff(0); }}
+                    onClick={(e) => { e.stopPropagation(); setZoneFilter(''); setMinDiff(0); }}
                     title="Clear filters"
                   >{filterCount}&thinsp;&times;</span>
                 )}
@@ -2389,12 +2363,6 @@ export default function ComparisonDetailPage() {
               <select className={styles.filterSelect} value={zoneFilter} onChange={e => setZoneFilter(e.target.value)}>
                 <option value="">All Zones</option>
                 {zones.map(z => <option key={z.id} value={z.id}>{z.canonicalName}</option>)}
-              </select>
-            </div>
-            <div className={styles.filterGroup}>
-              <label className={styles.filterLabel}>Category</label>
-              <select className={styles.filterSelect} value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
-                {categoryOptions.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
             </div>
             <div className={styles.filterGroup}>

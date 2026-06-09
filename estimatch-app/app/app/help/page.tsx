@@ -16,15 +16,15 @@ const faqSections: FaqSection[] = [
     items: [
       { q: 'What is ScopeSplit?', a: 'ScopeSplit is an estimate comparison tool built specifically for roofing and restoration contractors. It takes two Xactimate estimate PDFs — yours and the insurance adjuster’s — and automatically compares them line by line, highlighting matches, modifications, missing items, and items the adjuster added. This helps you build stronger disputes faster.' },
       { q: 'Who is this tool for?', a: 'ScopeSplit is built for roofing and restoration contractors, estimators, and public adjusters who regularly compare their Xactimate estimates against insurance adjuster estimates. If you spend hours highlighting and cross-referencing PDFs, this tool is for you.' },
-      { q: 'Is ScopeSplit supported on tablet and phone?', a: 'Yes. ScopeSplit is supported on desktop, tablet, and mobile devices, so you can review comparisons and reports from the office or in the field.' },
+      { q: 'Is ScopeSplit supported on tablet and phone?', a: 'Yes. ScopeSplit is supported on desktop, tablet, and mobile devices, so you can review comparisons and reports from the office or in the field. Note that editing comparisons — modifying line items, adding notes, and making changes — requires a tablet or desktop. Mobile is supported for viewing and reviewing only.' },
       { q: 'Can I edit ScopeSplit comparisons and export them as PDFs?', a: 'Yes. Once a comparison is generated, you can make changes to line items, add notes, and export the finalized comparison as a PDF.' },
       { q: 'How long does a comparison take?', a: 'Most comparisons complete in under 3 minutes. The time depends on the size of the estimates, but even large multi-zone estimates typically finish in under 5 minutes.' },
     ],
   },
   {
-    title: 'SOftware Compatability',
+    title: 'Software Compatibility',
     items: [
-      { q: 'What file formats do you support?', a: 'We support Xactimate estimate PDFs — the standard PDF export from Xactimate. This is the format most insurance companies and contractors use to share estimates. Simply export your estimate as a PDF from Xactimate and upload it.' },
+      { q: 'What file formats do you support?', a: 'We support Xactimate PDFs, Symbility PDFs, and Xactimate XLS/CSV exports. You can also run cross-format comparisons — for example, comparing an Xactimate estimate against a Symbility estimate. Simply export your estimate in any supported format and upload it.' },
       { q: 'What estimate software does SplitScope support?', a: 'ScopeSplit supports both Xactimate and Symbility formats. You can compare Xactimate-to-Xactimate, Symbility-to-Symbility, and cross-compare Xactimate against Symbility to review differences line by line.' },
       { q: 'What if the two estimates use different zone names?', a: 'Our AI engine fuzzy-matches items even when zone names and descriptions differ slightly between the two estimates. For example, it will correctly match "Master Bedroom" with "MBR" or "Owner’s Suite" and pair similar line items across zones.' },
     ],
@@ -42,7 +42,7 @@ const faqSections: FaqSection[] = [
     title: 'Data & Security',
     items: [
       { q: 'Is my data secure?', a: 'Yes. All data is encrypted in transit (TLS/SSL) and at rest. Your uploaded PDFs are stored securely and are only accessible by your account. We use Supabase for data storage and Clerk for authentication — both industry-standard, SOC 2 compliant services.' },
-      { q: 'Can I delete my data?', a: 'Yes. You can delete individual comparisons at any time from the Comparisons page. If you’d like to delete your entire account and all associated data, you can do so from the Settings page. Account deletion is permanent and cannot be undone.' },
+      { q: 'Can I delete my data?', a: 'Yes. You can delete individual comparisons at any time from the Comparisons page. To delete your entire account and all associated data, please submit a Contact Us request — our team will process it promptly. Account deletion is permanent and cannot be undone. You can cancel your subscription at any time from the Settings page.' },
       { q: 'Do you use my estimates for training AI models?', a: 'No. Your estimate data is never used for AI model training. We use the Anthropic Claude API to process comparisons, and per Anthropic’s API terms, data sent through the API is not used for model training. Your estimates remain private.' },
     ],
   },
