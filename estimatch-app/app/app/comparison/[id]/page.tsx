@@ -197,6 +197,7 @@ export default function ComparisonDetailPage() {
   const [llmEditPrompt, setLlmEditPrompt] = useState('');
   const [llmEditLoading, setLlmEditLoading] = useState(false);
   const [llmEditError, setLlmEditError] = useState<string | null>(null);
+  const [llmEditSuccess, setLlmEditSuccess] = useState<string | null>(null);
   const [versions, setVersions] = useState<Array<{ id: string; versionNumber: number; label: string; editPrompt: string | null; isActive: boolean; createdAt: string }>>([]);
   const [activeVersionId, setActiveVersionId] = useState<string | null>(null);
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
@@ -823,6 +824,7 @@ export default function ComparisonDetailPage() {
 
     setLlmEditLoading(true);
     setLlmEditError(null);
+    setLlmEditSuccess(null);
 
     try {
       // Ensure version 1 snapshot exists before applying edits
@@ -876,7 +878,7 @@ export default function ComparisonDetailPage() {
       }
 
       setLlmEditPrompt('');
-      setLlmEditOpen(false);
+      setLlmEditSuccess(data.editsSummary ?? `Applied ${data.editsApplied ?? 0} change(s) as a new version.`);
     } catch (err) {
       setLlmEditError(err instanceof Error ? err.message : 'Something went wrong.');
     } finally {
@@ -3251,58 +3253,83 @@ export default function ComparisonDetailPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="llm-edit-title"
-          onClick={() => setLlmEditOpen(false)}
+          onClick={() => { if (!llmEditLoading) { setLlmEditOpen(false); setLlmEditSuccess(null); } }}
         >
           <div className={styles.llmEditPanel} onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               className={styles.llmEditCloseBtn}
               aria-label="Close LLM Edit"
-              onClick={() => setLlmEditOpen(false)}
+              onClick={() => { setLlmEditOpen(false); setLlmEditSuccess(null); }}
             >
               ×
             </button>
 
-            <h2 id="llm-edit-title" className={styles.llmEditTitle}>LLM Edit</h2>
+            {llmEditSuccess ? (
+              <>
+                <h2 id="llm-edit-title" className={styles.llmEditTitle}>Changes Applied</h2>
+                <p className={styles.llmEditSuccessMsg}>{llmEditSuccess}</p>
+                <div className={styles.llmEditSuccessActions}>
+                  <button
+                    type="button"
+                    className={styles.llmEditSubmitBtn}
+                    onClick={() => { setLlmEditSuccess(null); }}
+                  >
+                    Make Another Edit
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.llmEditSecondaryBtn}
+                    onClick={() => { setLlmEditOpen(false); setLlmEditSuccess(null); }}
+                  >
+                    Done
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 id="llm-edit-title" className={styles.llmEditTitle}>LLM Edit</h2>
 
-            <p className={styles.llmEditInstructions}>
-              LLMs accurately process the changes you need from direct human language. Simply type in
-              human terms, with as much detail as you think is necessary for the changes you want made,
-              then hit Enter and the LLM will make and highlight the changes. This feature is typically
-              used for bulk changes, but can be used for fine-tuning as well.
-            </p>
+                <p className={styles.llmEditInstructions}>
+                  LLMs accurately process the changes you need from direct human language. Simply type in
+                  human terms, with as much detail as you think is necessary for the changes you want made,
+                  then hit Enter and the LLM will make and highlight the changes. This feature is typically
+                  used for bulk changes, but can be used for fine-tuning as well.
+                </p>
 
-            <div className={styles.llmEditExamples}>
-              <p><strong>Ex 1:</strong> Create a new zone called &quot;Unmatched.&quot; Move all line items that have missing entries on either my estimate, or the adjuster&apos;s, to this new zone.</p>
-              <p><strong>Ex 2:</strong> On line item 32, remove the entry on MY estimate only. Keep the adjuster&apos;s.</p>
-            </div>
+                <div className={styles.llmEditExamples}>
+                  <p><strong>Ex 1:</strong> Create a new zone called &quot;Unmatched.&quot; Move all line items that have missing entries on either my estimate, or the adjuster&apos;s, to this new zone.</p>
+                  <p><strong>Ex 2:</strong> On line item 32, remove the entry on MY estimate only. Keep the adjuster&apos;s.</p>
+                </div>
 
-            <textarea
-              className={styles.llmEditTextarea}
-              placeholder="Describe the edits you want the LLM to make..."
-              value={llmEditPrompt}
-              onChange={(e) => setLlmEditPrompt(e.target.value)}
-              disabled={llmEditLoading}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                  e.preventDefault();
-                  handleLlmEditSubmit();
-                }
-              }}
-            />
+                <textarea
+                  className={styles.llmEditTextarea}
+                  placeholder="Describe the edits you want the LLM to make..."
+                  value={llmEditPrompt}
+                  onChange={(e) => setLlmEditPrompt(e.target.value)}
+                  disabled={llmEditLoading}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                      e.preventDefault();
+                      handleLlmEditSubmit();
+                    }
+                  }}
+                />
 
-            {llmEditError && (
-              <p className={styles.llmEditErrorMsg}>{llmEditError}</p>
+                {llmEditError && (
+                  <p className={styles.llmEditErrorMsg}>{llmEditError}</p>
+                )}
+
+                <button
+                  type="button"
+                  className={styles.llmEditSubmitBtn}
+                  onClick={handleLlmEditSubmit}
+                  disabled={llmEditLoading || !llmEditPrompt.trim()}
+                >
+                  {llmEditLoading ? 'Applying edits...' : 'Apply Edits'}
+                </button>
+              </>
             )}
-
-            <button
-              type="button"
-              className={styles.llmEditSubmitBtn}
-              onClick={handleLlmEditSubmit}
-              disabled={llmEditLoading || !llmEditPrompt.trim()}
-            >
-              {llmEditLoading ? 'Applying edits...' : 'Apply Edits'}
-            </button>
           </div>
         </div>
       )}

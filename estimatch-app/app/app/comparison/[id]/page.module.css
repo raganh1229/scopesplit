@@ -590,6 +590,50 @@
   cursor: not-allowed;
 }
 
+.llmEditSuccessMsg {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--diff-negative, #16a34a) 8%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--diff-negative, #16a34a) 30%, transparent);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.llmEditSuccessActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.llmEditSuccessActions .llmEditSubmitBtn {
+  flex: 1;
+  margin-top: 0;
+}
+
+.llmEditSecondaryBtn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border-radius: 10px;
+  border: 0.5px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-stack);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.llmEditSecondaryBtn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
 /* ── Executive Summary ── */
 
 .summaryBtn {
