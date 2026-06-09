@@ -1438,7 +1438,7 @@
 
 .zoneHeaderRow td { cursor: pointer; user-select: none; }
 .zoneHeaderRow:hover td { background: var(--bg-hover-zone) !important; }
-.zoneHeaderDraft td { box-shadow: inset 3px 0 0 var(--amber-400, #fbbf24) !important; background: var(--amber-50, #fffbeb) !important; }
+.zoneHeaderDraft td { box-shadow: inset 3px 0 0 var(--amber-400, #fbbf24), inset 0 3px 0 var(--amber-400, #fbbf24) !important; background: var(--amber-50, #fffbeb) !important; }
 .zoneHeaderDraft:hover td { background: var(--amber-100, #fef3c7) !important; }
 
 .zoneChevron {
