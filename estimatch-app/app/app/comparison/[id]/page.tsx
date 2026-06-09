@@ -220,13 +220,15 @@ export default function ComparisonDetailPage() {
   const [awaitingPercent, setAwaitingPercent] = useState(0);
   const [awaitingElapsed, setAwaitingElapsed] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
-  const [rowNoteMenu, setRowNoteMenu] = useState<{ x: number; y: number; rowKey: string; target: NoteLineItemContext; row: Row; isZoneRow?: boolean; zoneId?: string } | null>(null);
+  const [rowNoteMenu, setRowNoteMenu] = useState<{ x: number; y: number; rowKey: string; target: NoteLineItemContext; row: Row; isZoneRow?: boolean; zoneId?: string; zoneEditSide?: 'yours' | 'adjuster' } | null>(null);
   const [editingRowKey, setEditingRowKey] = useState<string | null>(null);
   const [editingValues, setEditingValues] = useState<EditValues>(blankEditValues());
   const [draftEdits, setDraftEdits] = useState<Map<string, EditValues>>(new Map());
   const [draftZoneNames, setDraftZoneNames] = useState<Map<string, string>>(new Map());
   const [editingZoneId, setEditingZoneId] = useState<string | null>(null);
   const [editingZoneName, setEditingZoneName] = useState('');
+  const [editingZoneSide, setEditingZoneSide] = useState<'yours' | 'adjuster'>('yours');
+  const [draftAdjusterZoneNames, setDraftAdjusterZoneNames] = useState<Map<string, string>>(new Map());
   const [savingDraft, setSavingDraft] = useState(false);
   const [unsavedGuardOpen, setUnsavedGuardOpen] = useState(false);
   const [saveDraftErrors, setSaveDraftErrors] = useState<string[] | null>(null);
@@ -237,6 +239,7 @@ export default function ComparisonDetailPage() {
   const unsavedGuardCallbackRef = useRef<(() => void) | null>(null);
   const draftEditsRef = useRef<Map<string, EditValues>>(new Map());
   const draftZoneNamesRef = useRef<Map<string, string>>(new Map());
+  const draftAdjusterZoneNamesRef = useRef<Map<string, string>>(new Map());
   const [draftInserts, setDraftInserts] = useState<Map<string, DraftInsert>>(new Map());
   const draftInsertsRef = useRef<Map<string, DraftInsert>>(new Map());
   
@@ -524,7 +527,7 @@ export default function ComparisonDetailPage() {
     setRowNoteMenu({ x, y, rowKey, target, row });
   }, []);
 
-  const openZoneRowMenu = useCallback((e: ReactMouseEvent, zone: Zone) => {
+  const openZoneRowMenu = useCallback((e: ReactMouseEvent, zone: Zone, side: 'yours' | 'adjuster' = 'yours') => {
     e.preventDefault();
     e.stopPropagation();
     const menuWidth = 220;
@@ -538,14 +541,19 @@ export default function ComparisonDetailPage() {
       row: { id: zone.id, status: 'match', category: '', your: null, adjuster: null },
       isZoneRow: true,
       zoneId: zone.id,
+      zoneEditSide: side,
     });
-  }, []);
+  }, [])
 
   const handleStartEditZone = useCallback(() => {
     if (!rowNoteMenu?.isZoneRow || !rowNoteMenu.zoneId) return;
     const zone = zonesRef.current.find(z => z.id === rowNoteMenu.zoneId);
     if (!zone) return;
-    const currentName = draftZoneNamesRef.current.get(rowNoteMenu.zoneId) ?? zone.canonicalName;
+    const side = rowNoteMenu.zoneEditSide ?? 'yours';
+    setEditingZoneSide(side);
+    const currentName = side === 'adjuster'
+      ? (draftAdjusterZoneNamesRef.current.get(rowNoteMenu.zoneId) ?? zone.adjusterName ?? zone.canonicalName)
+      : (draftZoneNamesRef.current.get(rowNoteMenu.zoneId) ?? zone.canonicalName);
     setEditingZoneId(rowNoteMenu.zoneId);
     setEditingZoneName(currentName);
     setRowNoteMenu(null);
@@ -553,18 +561,32 @@ export default function ComparisonDetailPage() {
 
   const handleCommitZoneEdit = useCallback((zoneId: string, originalCanonical: string) => {
     const trimmed = editingZoneName.trim();
+    const side = editingZoneSide;
     setEditingZoneId(null);
     setEditingZoneName('');
-    if (!trimmed || trimmed === originalCanonical) return;
-    const next = new Map(draftZoneNamesRef.current);
-    next.set(zoneId, trimmed);
-    draftZoneNamesRef.current = next;
-    setDraftZoneNames(next);
-  }, [editingZoneName]);
+    setEditingZoneSide('yours');
+    if (!trimmed) return;
+    if (side === 'adjuster') {
+      const zone = zonesRef.current.find(z => z.id === zoneId);
+      const originalAdj = zone?.adjusterName ?? originalCanonical;
+      if (trimmed === originalAdj) return;
+      const next = new Map(draftAdjusterZoneNamesRef.current);
+      next.set(zoneId, trimmed);
+      draftAdjusterZoneNamesRef.current = next;
+      setDraftAdjusterZoneNames(next);
+    } else {
+      if (trimmed === originalCanonical) return;
+      const next = new Map(draftZoneNamesRef.current);
+      next.set(zoneId, trimmed);
+      draftZoneNamesRef.current = next;
+      setDraftZoneNames(next);
+    }
+  }, [editingZoneName, editingZoneSide]);
 
   const handleCancelZoneEdit = useCallback(() => {
     setEditingZoneId(null);
     setEditingZoneName('');
+    setEditingZoneSide('yours');
   }, []);
 
   const handleMakeRowNote = useCallback(() => {
@@ -1387,7 +1409,8 @@ export default function ComparisonDetailPage() {
     const currentDrafts = draftEditsRef.current;
     const currentInserts = draftInsertsRef.current;
     const currentZoneRenames = draftZoneNamesRef.current;
-    if (!comparisonId || (currentDrafts.size === 0 && currentZoneRenames.size === 0) || savingDraft) return false;
+    const currentAdjusterZoneRenames = draftAdjusterZoneNamesRef.current;
+    if (!comparisonId || (currentDrafts.size === 0 && currentZoneRenames.size === 0 && currentAdjusterZoneRenames.size === 0) || savingDraft) return false;
     setSavingDraft(true);
     try {
       await fetch(`/api/comparisons/${comparisonId}/versions`, { method: 'POST' });
@@ -1456,10 +1479,17 @@ export default function ComparisonDetailPage() {
           return { oldCanonical: zone.canonicalName, newCanonical };
         })
         .filter((x): x is NonNullable<typeof x> => x !== null);
+      const zoneAdjusterRenames = Array.from(currentAdjusterZoneRenames.entries())
+        .map(([zoneId, newAdjusterName]) => {
+          const zone = zonesRef.current.find(z => z.id === zoneId);
+          if (!zone) return null;
+          return { canonical: zone.canonicalName, newAdjusterName };
+        })
+        .filter((x): x is NonNullable<typeof x> => x !== null);
       const res = await fetch(`/api/comparisons/${comparisonId}/versions/inline-edits`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ edits, inserts, deletions, zoneRenames }),
+        body: JSON.stringify({ edits, inserts, deletions, zoneRenames, zoneAdjusterRenames }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
@@ -1479,6 +1509,9 @@ export default function ComparisonDetailPage() {
       const emptyZoneNames = new Map<string, string>();
       draftZoneNamesRef.current = emptyZoneNames;
       setDraftZoneNames(emptyZoneNames);
+      const emptyAdjZoneNames = new Map<string, string>();
+      draftAdjusterZoneNamesRef.current = emptyAdjZoneNames;
+      setDraftAdjusterZoneNames(emptyAdjZoneNames);
       return true;
     } catch (err) {
       console.error('[inline-edit] Failed to save draft as version:', err);
@@ -1496,13 +1529,13 @@ export default function ComparisonDetailPage() {
   }, [collectDraftErrors, executeSaveDraft]);
 
   const navigateGuarded = useCallback((cb: () => void) => {
-    if (draftEdits.size > 0 || draftZoneNames.size > 0) {
+    if (draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0) {
       unsavedGuardCallbackRef.current = cb;
       setUnsavedGuardOpen(true);
     } else {
       cb();
     }
-  }, [draftEdits.size, draftZoneNames.size]);
+  }, [draftEdits.size, draftZoneNames.size, draftAdjusterZoneNames.size]);
 
   const toggleCostColumn = useCallback((key: string) => {
     setVisibleCosts(prev =>
@@ -2357,10 +2390,10 @@ export default function ComparisonDetailPage() {
                     const isFirstZone = _zoneIdx === 0;
                     _zoneIdx++;
                     return [
-                      <tr key={`zh-${zone.id}`} className={`${styles.zoneHeaderRow}${!isFirstZone ? ` ${styles.zoneNewPage}` : ''}`} onClick={() => toggleZone(zone.id)} onContextMenu={(e) => openZoneRowMenu(e, zone)} style={{ cursor: 'pointer' }}>
-                        <td colSpan={yourCols} className={styles.centerBorder} style={{ padding: '10px 16px', fontWeight: 600, fontSize: 13, background: 'var(--bg-surface)', borderBottom: '0.5px solid var(--border-light)' }}>
+                      <tr key={`zh-${zone.id}`} className={`${styles.zoneHeaderRow}${!isFirstZone ? ` ${styles.zoneNewPage}` : ''}`} onClick={() => toggleZone(zone.id)} style={{ cursor: 'pointer' }}>
+                        <td colSpan={yourCols} className={styles.centerBorder} style={{ padding: '10px 16px', fontWeight: 600, fontSize: 13, background: 'var(--bg-surface)', borderBottom: '0.5px solid var(--border-light)' }} onContextMenu={(e) => openZoneRowMenu(e, zone, 'yours')}>
                           <svg className={`${styles.zoneChevron} ${collapsedZones.has(zone.id) ? styles.zoneChevronCollapsed : ''}`} width="14" height="14" viewBox="0 0 14 14"><path d="M4 5.5L7 8.5L10 5.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                          {editingZoneId === zone.id ? (
+                          {editingZoneId === zone.id && editingZoneSide === 'yours' ? (
                             <input
                               className={styles.zoneNameInput}
                               autoFocus
@@ -2391,10 +2424,26 @@ export default function ComparisonDetailPage() {
                         {adjusterCollapsed ? (
                           <td className={styles.sideRailDataCell} style={{ background: 'var(--bg-surface)', borderBottom: '0.5px solid var(--border-light)' }} />
                         ) : (
-                          <td colSpan={adjusterCols} style={{ padding: '10px 16px', fontWeight: 600, fontSize: 13, background: 'var(--bg-surface)', borderBottom: '0.5px solid var(--border-light)' }}>
-                            {zone.adjusterName ?? zone.canonicalName}
-                            {zone.adjusterName && zone.adjusterName !== zone.canonicalName && (
-                              <span className={styles.zoneAltName}>{zone.adjusterName}</span>
+                          <td colSpan={adjusterCols} style={{ padding: '10px 16px', fontWeight: 600, fontSize: 13, background: 'var(--bg-surface)', borderBottom: '0.5px solid var(--border-light)' }} onContextMenu={(e) => openZoneRowMenu(e, zone, 'adjuster')}>
+                            {editingZoneId === zone.id && editingZoneSide === 'adjuster' ? (
+                              <input
+                                className={styles.zoneNameInput}
+                                autoFocus
+                                value={editingZoneName}
+                                onChange={(e) => setEditingZoneName(e.target.value)}
+                                onClick={(e) => e.stopPropagation()}
+                                onMouseDown={(e) => e.stopPropagation()}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') { e.preventDefault(); handleCommitZoneEdit(zone.id, zone.canonicalName); }
+                                  if (e.key === 'Escape') { e.preventDefault(); handleCancelZoneEdit(); }
+                                }}
+                                onBlur={() => handleCommitZoneEdit(zone.id, zone.canonicalName)}
+                              />
+                            ) : (
+                              <>
+                                {draftAdjusterZoneNames.get(zone.id) ?? zone.adjusterName ?? zone.canonicalName}
+                                {draftAdjusterZoneNames.has(zone.id) && <span className={styles.draftIndicator} title="Adjuster zone name edited"> ✎</span>}
+                              </>
                             )}
                           </td>
                         )}
@@ -3142,8 +3191,12 @@ export default function ComparisonDetailPage() {
               Edit row
             </button>
           )}
-          {/* Both: Add line item above */}
-          {rowNoteMenu.row.id && !rowNoteMenu.row.id.startsWith('__new__') && (
+          {/* Zone row: add to zone */}
+          {rowNoteMenu.isZoneRow && rowNoteMenu.row.id && !rowNoteMenu.row.id.startsWith('__new__') && (
+            <button className={styles.rowNoteMenuItem} onClick={handleAddLineItemAbove}>Add line item to zone</button>
+          )}
+          {/* Line item row: add above */}
+          {!rowNoteMenu.isZoneRow && rowNoteMenu.row.id && !rowNoteMenu.row.id.startsWith('__new__') && (
             <button className={styles.rowNoteMenuItem} onClick={handleAddLineItemAbove}>Add line item above</button>
           )}
           {/* Both: Add zone above */}

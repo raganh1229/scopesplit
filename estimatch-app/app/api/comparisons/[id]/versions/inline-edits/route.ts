@@ -89,9 +89,18 @@ export async function POST(request: Request, context: RouteContext) {
           typeof (r as ZoneRename).newCanonical === 'string'
       )
     : [];
+  type ZoneAdjusterRename = { canonical: string; newAdjusterName: string };
+  const zoneAdjusterRenames: ZoneAdjusterRename[] = Array.isArray(body?.zoneAdjusterRenames)
+    ? (body.zoneAdjusterRenames as unknown[]).filter(
+        (r): r is ZoneAdjusterRename =>
+          typeof r === 'object' && r !== null &&
+          typeof (r as ZoneAdjusterRename).canonical === 'string' &&
+          typeof (r as ZoneAdjusterRename).newAdjusterName === 'string'
+      )
+    : [];
   const hasDeletions = Array.isArray(body?.deletions) && body.deletions.length > 0;
-  if (!body || (inlineEdits.length === 0 && inlineInserts.length === 0 && zoneRenames.length === 0 && !hasDeletions)) {
-    return NextResponse.json({ error: 'A non-empty "edits", "inserts", "zoneRenames", or "deletions" array is required.' }, { status: 400 });
+  if (!body || (inlineEdits.length === 0 && inlineInserts.length === 0 && zoneRenames.length === 0 && zoneAdjusterRenames.length === 0 && !hasDeletions)) {
+    return NextResponse.json({ error: 'A non-empty "edits", "inserts", "zoneRenames", "zoneAdjusterRenames", or "deletions" array is required.' }, { status: 400 });
   }
 
   const comparison = await prisma.comparison.findFirst({
@@ -285,9 +294,19 @@ export async function POST(request: Request, context: RouteContext) {
     }
   }
 
+  // Apply adjuster zone renames: update zoneAdjuster for all rows belonging to a zone
+  if (zoneAdjusterRenames.length > 0) {
+    const adjRenameMap = new Map<string, string>(zoneAdjusterRenames.map(r => [r.canonical, r.newAdjusterName]));
+    for (const r of newRows) {
+      if (r.zoneCanonical && adjRenameMap.has(r.zoneCanonical)) {
+        r.zoneAdjuster = adjRenameMap.get(r.zoneCanonical)!;
+      }
+    }
+  }
+
   newRows.forEach((r, i) => { r.sortOrder = i; });
 
-  if (inlineEdits.length > 0 && appliedEditCount === 0 && inlineInserts.length === 0 && deletionSet.size === 0 && zoneRenames.length === 0) {
+  if (inlineEdits.length > 0 && appliedEditCount === 0 && inlineInserts.length === 0 && deletionSet.size === 0 && zoneRenames.length === 0 && zoneAdjusterRenames.length === 0) {
     return NextResponse.json(
       { error: 'No edits matched any current line item. Reload the page and try again.' },
       { status: 409 }
@@ -301,7 +320,7 @@ export async function POST(request: Request, context: RouteContext) {
   });
   const nextVersionNumber = (maxVersion._max.versionNumber ?? 0) + 1;
 
-  const editCount = inlineEdits.length + inlineInserts.length + deletionSet.size + zoneRenames.length;
+  const editCount = inlineEdits.length + inlineInserts.length + deletionSet.size + zoneRenames.length + zoneAdjusterRenames.length;
 
   const version = await prisma.$transaction(async (tx) => {
     await tx.comparisonVersion.updateMany({
