@@ -2249,18 +2249,8 @@ export default function ComparisonDetailPage() {
 
           <div className={styles.toolbarSpacer} />
           <div className={styles.notesTools}>
-            {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0 || undoStack.length > 0) && (
-              <div className={styles.undoRedoGroup}>
-                <button className={styles.undoRedoBtn} title="Undo" disabled={undoStack.length === 0 || savingDraft} onClick={handleUndo}>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5H8.5C10.433 5 12 6.567 12 8.5C12 10.433 10.433 12 8.5 12H4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4.5 2.5L2 5L4.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </button>
-                <button className={styles.undoRedoBtn} title="Redo" disabled={redoStack.length === 0 || savingDraft} onClick={handleRedo}>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 5H5.5C3.567 5 2 6.567 2 8.5C2 10.433 3.567 12 5.5 12H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M9.5 2.5L12 5L9.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                </button>
-                {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
-                  <button className={styles.undoRedoResetBtn} title="Discard all changes" disabled={savingDraft} onClick={handleResetAllChanges}>Reset all</button>
-                )}
-              </div>
+            {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
+              <button className={styles.undoRedoResetBtn} title="Discard all changes" disabled={savingDraft} onClick={handleResetAllChanges}>Reset all</button>
             )}
             {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
               <button
