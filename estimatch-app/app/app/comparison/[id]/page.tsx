@@ -733,7 +733,7 @@ export default function ComparisonDetailPage() {
   /* Filter logic — must be defined before handleLlmEditSubmit which depends on it */
   const isRowVisible = useCallback((row: Row, zoneId: string): boolean => {
     if (row.id?.startsWith('__new__')) return true;
-    if (draftEditsRef.current.get(row.id ?? '')?.deleted) return true;
+    if (draftEditsRef.current.get(row.id ?? '')?.deleted) return false;
     if (!activeFilters.has(row.status)) return false;
     if (search) {
       const desc = ((row.your?.description ?? '') + ' ' + (row.adjuster?.description ?? '')).toLowerCase();
@@ -1439,6 +1439,23 @@ export default function ComparisonDetailPage() {
     const zoneId = rowNoteMenu.isZoneRow && rowNoteMenu.zoneId
       ? rowNoteMenu.zoneId
       : rowNoteMenu.rowKey.slice(0, rowNoteMenu.rowKey.lastIndexOf('-'));
+    if (zoneId.startsWith('__newzone__')) {
+      const parentTempId = zoneId.slice('__newzone__'.length);
+      const nextIns = new Map(draftInsertsRef.current);
+      const nextEdits = new Map(draftEditsRef.current);
+      for (const [tid, ins] of nextIns.entries()) {
+        if (tid === parentTempId || ins.parentZoneTempId === parentTempId) {
+          nextIns.delete(tid);
+          nextEdits.delete(tid);
+        }
+      }
+      draftInsertsRef.current = nextIns;
+      setDraftInserts(nextIns);
+      draftEditsRef.current = nextEdits;
+      setDraftEdits(nextEdits);
+      setRowNoteMenu(null);
+      return;
+    }
     const zone = zones.find(z => z.id === zoneId);
     if (!zone) return;
     const rowIds = zone.items.filter(i => i.id && !i.id.startsWith('__new__')).map(i => i.id!);
