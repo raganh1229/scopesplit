@@ -1115,6 +1115,27 @@
   margin-top: 2px;
 }
 
+.versionErrorMsg {
+  margin: 4px 14px 6px;
+  padding: 7px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--error-text, #dc2626);
+  background: color-mix(in srgb, var(--error-text, #dc2626) 8%, transparent);
+  border-radius: 6px;
+}
+
+.versionDeleteErrMsg {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--error-text, #dc2626);
+  background: color-mix(in srgb, var(--error-text, #dc2626) 8%, transparent);
+  border-radius: 6px;
+}
+
 /* ── Version Delete Confirmation Dialog ── */
 
 .versionDeleteOverlay {

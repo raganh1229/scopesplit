@@ -202,7 +202,9 @@ export default function ComparisonDetailPage() {
   const [activeVersionId, setActiveVersionId] = useState<string | null>(null);
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
   const [versionLoading, setVersionLoading] = useState(false);
+  const [versionError, setVersionError] = useState<string | null>(null);
   const [versionDeleteConfirm, setVersionDeleteConfirm] = useState<string | null>(null);
+  const [versionDeleteError, setVersionDeleteError] = useState<string | null>(null);
   const [noteTarget, setNoteTarget] = useState<NoteLineItemContext | null>(null);
   const [noteCount, setNoteCount] = useState(0);
   const [notesByLineItem, setNotesByLineItem] = useState<Map<string, number>>(new Map());
@@ -759,13 +761,17 @@ export default function ComparisonDetailPage() {
   const activateVersion = useCallback(async (versionId: string) => {
     if (!comparisonId) return;
     setVersionLoading(true);
+    setVersionError(null);
     try {
       const res = await fetch(`/api/comparisons/${comparisonId}/versions/${versionId}/activate`, { method: 'POST' });
-      if (!res.ok) throw new Error('Failed to activate version.');
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error ?? 'Failed to activate version.');
+      }
       await loadVersionZones(versionId);
       await fetchVersions();
-    } catch {
-      // silent
+    } catch (err) {
+      setVersionError(err instanceof Error ? err.message : 'Failed to switch version.');
     } finally {
       setVersionLoading(false);
       setVersionHistoryOpen(false);
@@ -775,6 +781,7 @@ export default function ComparisonDetailPage() {
   const deleteVersion = useCallback(async (versionId: string) => {
     if (!comparisonId) return;
     setVersionLoading(true);
+    setVersionDeleteError(null);
     try {
       const res = await fetch(`/api/comparisons/${comparisonId}/versions/${versionId}/delete`, { method: 'DELETE' });
       if (!res.ok) {
@@ -782,6 +789,7 @@ export default function ComparisonDetailPage() {
         throw new Error(data?.error ?? 'Failed to delete version.');
       }
       setVersionDeleteConfirm(null);
+      setVersionDeleteError(null);
       // Refresh versions list and load the new active version
       const versRes = await fetch(`/api/comparisons/${comparisonId}/versions`);
       if (versRes.ok) {
@@ -794,8 +802,8 @@ export default function ComparisonDetailPage() {
           }
         }
       }
-    } catch {
-      // silent
+    } catch (err) {
+      setVersionDeleteError(err instanceof Error ? err.message : 'Failed to delete version.');
     } finally {
       setVersionLoading(false);
     }
@@ -2286,7 +2294,7 @@ export default function ComparisonDetailPage() {
                         >
                           <button
                             className={styles.versionHistoryItemBtn}
-                            onClick={() => activateVersion(v.id)}
+                            onClick={() => navigateGuarded(() => { void activateVersion(v.id); })}
                             disabled={versionLoading}
                           >
                             <span className={styles.versionHistoryItemLabel}>
@@ -2313,6 +2321,9 @@ export default function ComparisonDetailPage() {
                         </div>
                       ))}
                     </div>
+                  )}
+                  {versionError && (
+                    <p className={styles.versionErrorMsg}>{versionError}</p>
                   )}
                 </div>
               )}
@@ -3574,16 +3585,19 @@ export default function ComparisonDetailPage() {
       )}
 
       {versionDeleteConfirm && (
-        <div className={styles.versionDeleteOverlay} onClick={() => setVersionDeleteConfirm(null)}>
+        <div className={styles.versionDeleteOverlay} onClick={() => { setVersionDeleteConfirm(null); setVersionDeleteError(null); }}>
           <div className={styles.versionDeleteDialog} onClick={(e) => e.stopPropagation()}>
             <p className={styles.versionDeleteDialogTitle}>Delete version?</p>
             <p className={styles.versionDeleteDialogBody}>
               This will permanently remove <strong>v{versions.find(v => v.id === versionDeleteConfirm)?.versionNumber}</strong> ({versions.find(v => v.id === versionDeleteConfirm)?.label}). This cannot be undone.
             </p>
             <div className={styles.versionDeleteDialogActions}>
+              {versionDeleteError && (
+                <p className={styles.versionDeleteErrMsg}>{versionDeleteError}</p>
+              )}
               <button
                 className={styles.versionDeleteCancelBtn}
-                onClick={() => setVersionDeleteConfirm(null)}
+                onClick={() => { setVersionDeleteConfirm(null); setVersionDeleteError(null); }}
                 disabled={versionLoading}
               >
                 Cancel
