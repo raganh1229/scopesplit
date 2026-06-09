@@ -243,6 +243,11 @@ export default function ComparisonDetailPage() {
   const draftAdjusterZoneNamesRef = useRef<Map<string, string>>(new Map());
   const [draftInserts, setDraftInserts] = useState<Map<string, DraftInsert>>(new Map());
   const draftInsertsRef = useRef<Map<string, DraftInsert>>(new Map());
+  type DraftSnapshot = { edits: Map<string, EditValues>; zoneNames: Map<string, string>; adjusterZoneNames: Map<string, string>; inserts: Map<string, DraftInsert>; };
+  const undoStackRef = useRef<DraftSnapshot[]>([]);
+  const [undoStack, setUndoStack] = useState<DraftSnapshot[]>([]);
+  const redoStackRef = useRef<DraftSnapshot[]>([]);
+  const [redoStack, setRedoStack] = useState<DraftSnapshot[]>([]);
   
   const zonesRef = useRef<Zone[]>([]);
   const editingRowIdRef = useRef<string | null>(null);
@@ -587,6 +592,70 @@ export default function ComparisonDetailPage() {
     setRowNoteMenu(null);
   }, [editingZoneId]);
 
+  const pushSnapshot = useCallback(() => {
+    const snap: DraftSnapshot = {
+      edits: new Map(draftEditsRef.current),
+      zoneNames: new Map(draftZoneNamesRef.current),
+      adjusterZoneNames: new Map(draftAdjusterZoneNamesRef.current),
+      inserts: new Map(draftInsertsRef.current),
+    };
+    undoStackRef.current = [...undoStackRef.current, snap];
+    setUndoStack([...undoStackRef.current]);
+    redoStackRef.current = [];
+    setRedoStack([]);
+  }, []);
+
+  const applySnapshot = useCallback((snap: DraftSnapshot) => {
+    draftEditsRef.current = snap.edits;
+    setDraftEdits(snap.edits);
+    draftZoneNamesRef.current = snap.zoneNames;
+    setDraftZoneNames(snap.zoneNames);
+    draftAdjusterZoneNamesRef.current = snap.adjusterZoneNames;
+    setDraftAdjusterZoneNames(snap.adjusterZoneNames);
+    draftInsertsRef.current = snap.inserts;
+    setDraftInserts(snap.inserts);
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    const stack = undoStackRef.current;
+    if (stack.length === 0) return;
+    const prev = stack[stack.length - 1];
+    const current: DraftSnapshot = {
+      edits: new Map(draftEditsRef.current),
+      zoneNames: new Map(draftZoneNamesRef.current),
+      adjusterZoneNames: new Map(draftAdjusterZoneNamesRef.current),
+      inserts: new Map(draftInsertsRef.current),
+    };
+    redoStackRef.current = [...redoStackRef.current, current];
+    setRedoStack([...redoStackRef.current]);
+    undoStackRef.current = stack.slice(0, -1);
+    setUndoStack([...undoStackRef.current]);
+    applySnapshot(prev);
+  }, [applySnapshot]);
+
+  const handleRedo = useCallback(() => {
+    const stack = redoStackRef.current;
+    if (stack.length === 0) return;
+    const next = stack[stack.length - 1];
+    const current: DraftSnapshot = {
+      edits: new Map(draftEditsRef.current),
+      zoneNames: new Map(draftZoneNamesRef.current),
+      adjusterZoneNames: new Map(draftAdjusterZoneNamesRef.current),
+      inserts: new Map(draftInsertsRef.current),
+    };
+    undoStackRef.current = [...undoStackRef.current, current];
+    setUndoStack([...undoStackRef.current]);
+    redoStackRef.current = stack.slice(0, -1);
+    setRedoStack([...redoStackRef.current]);
+    applySnapshot(next);
+  }, [applySnapshot]);
+
+  const handleResetAllChanges = useCallback(() => {
+    pushSnapshot();
+    const empty = { edits: new Map<string, EditValues>(), zoneNames: new Map<string, string>(), adjusterZoneNames: new Map<string, string>(), inserts: new Map<string, DraftInsert>() };
+    applySnapshot(empty);
+  }, [pushSnapshot, applySnapshot]);
+
   const handleCommitZoneEdit = useCallback((zoneId: string, originalCanonical: string) => {
     const trimmed = editingZoneName.trim();
     const side = editingZoneSide;
@@ -594,6 +663,7 @@ export default function ComparisonDetailPage() {
     setEditingZoneName('');
     setEditingZoneSide('yours');
     if (!trimmed) return;
+    pushSnapshot();
     if (zoneId.startsWith('__newzone__')) {
       const tempId = zoneId.slice('__newzone__'.length);
       const nextIns = new Map(draftInsertsRef.current);
@@ -1288,6 +1358,7 @@ export default function ComparisonDetailPage() {
       ? (Object.keys(values) as (keyof EditValues)[]).some(k => values[k] !== original[k])
       : true;
     if (hasChanged) {
+      pushSnapshot();
       const next = new Map(draftEditsRef.current);
       next.set(rowId, { ...values });
       draftEditsRef.current = next;
@@ -1306,6 +1377,7 @@ export default function ComparisonDetailPage() {
 
   const handleDiscardRowEdit = useCallback(() => {
     if (!rowNoteMenu?.row.id) return;
+    pushSnapshot();
     const rowId = rowNoteMenu.row.id;
     const next = new Map(draftEditsRef.current);
     next.delete(rowId);
@@ -1328,6 +1400,7 @@ export default function ComparisonDetailPage() {
 
   const handleAddLineItemAbove = useCallback(() => {
     if (!rowNoteMenu) return;
+    pushSnapshot();
     let insertBeforeItemId: string;
     let parentZoneTempId: string | undefined;
     let zoneCanonical: string;
@@ -1391,6 +1464,7 @@ export default function ComparisonDetailPage() {
 
   const handleAddZoneAbove = useCallback(() => {
     if (!rowNoteMenu) return;
+    pushSnapshot();
     let firstRealItemId: string | undefined;
     if (rowNoteMenu.isZoneRow && rowNoteMenu.zoneId) {
       if (rowNoteMenu.zoneId.startsWith('__newzone__')) {
@@ -1440,6 +1514,7 @@ export default function ComparisonDetailPage() {
       ? rowNoteMenu.zoneId
       : rowNoteMenu.rowKey.slice(0, rowNoteMenu.rowKey.lastIndexOf('-'));
     if (zoneId.startsWith('__newzone__')) {
+      pushSnapshot();
       const parentTempId = zoneId.slice('__newzone__'.length);
       const nextIns = new Map(draftInsertsRef.current);
       const nextEdits = new Map(draftEditsRef.current);
@@ -1465,6 +1540,7 @@ export default function ComparisonDetailPage() {
 
   const handleDeleteZoneConfirm = useCallback(() => {
     if (!deleteZoneConfirm) return;
+    pushSnapshot();
     const next = new Map(draftEditsRef.current);
     for (const rowId of deleteZoneConfirm.rowIds) {
       next.set(rowId, { ...blankEditValues(), deleted: true });
@@ -1612,6 +1688,10 @@ export default function ComparisonDetailPage() {
       const emptyAdjZoneNames = new Map<string, string>();
       draftAdjusterZoneNamesRef.current = emptyAdjZoneNames;
       setDraftAdjusterZoneNames(emptyAdjZoneNames);
+      undoStackRef.current = [];
+      setUndoStack([]);
+      redoStackRef.current = [];
+      setRedoStack([]);
       return true;
     } catch (err) {
       console.error('[inline-edit] Failed to save draft as version:', err);
@@ -2169,7 +2249,20 @@ export default function ComparisonDetailPage() {
 
           <div className={styles.toolbarSpacer} />
           <div className={styles.notesTools}>
-            {(draftEdits.size > 0 || draftZoneNames.size > 0) && (
+            {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0 || undoStack.length > 0) && (
+              <div className={styles.undoRedoGroup}>
+                <button className={styles.undoRedoBtn} title="Undo" disabled={undoStack.length === 0 || savingDraft} onClick={handleUndo}>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5H8.5C10.433 5 12 6.567 12 8.5C12 10.433 10.433 12 8.5 12H4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4.5 2.5L2 5L4.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </button>
+                <button className={styles.undoRedoBtn} title="Redo" disabled={redoStack.length === 0 || savingDraft} onClick={handleRedo}>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 5H5.5C3.567 5 2 6.567 2 8.5C2 10.433 3.567 12 5.5 12H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M9.5 2.5L12 5L9.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </button>
+                {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
+                  <button className={styles.undoRedoResetBtn} title="Discard all changes" disabled={savingDraft} onClick={handleResetAllChanges}>Reset all</button>
+                )}
+              </div>
+            )}
+            {(draftEdits.size > 0 || draftZoneNames.size > 0 || draftAdjusterZoneNames.size > 0 || draftInserts.size > 0) && (
               <button
                 className={styles.saveDraftBtn}
                 onClick={() => {
@@ -2180,7 +2273,7 @@ export default function ComparisonDetailPage() {
                 disabled={savingDraft}
               >
                 {(() => {
-                  const total = draftEdits.size + draftZoneNames.size;
+                  const total = draftEdits.size + draftZoneNames.size + draftAdjusterZoneNames.size + draftInserts.size;
                   return savingDraft ? 'Saving...' : `Save ${total} change${total !== 1 ? 's' : ''} as new version`;
                 })()}
               </button>
