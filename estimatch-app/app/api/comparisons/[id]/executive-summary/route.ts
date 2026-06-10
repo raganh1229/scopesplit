@@ -526,5 +526,17 @@ ${sanitizedInstructions}` : ''}`;
     );
   }
 
-  return NextResponse.json({ markdown }, { status: 200 });
+  const saved = await prisma.executiveSummary.create({
+    data: {
+      comparisonId,
+      userId: appUser.id,
+      markdown,
+      instructions: sanitizedInstructions ?? undefined,
+    },
+  }).catch((e) => {
+    console.error('[exec-summary] Failed to persist summary:', e);
+    return null;
+  });
+
+  return NextResponse.json({ markdown, summaryId: saved?.id ?? null }, { status: 200 });
 }

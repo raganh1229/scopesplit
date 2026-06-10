@@ -110,8 +110,23 @@ model Comparison {
   n3ZoneCorrespondences       N3ZoneCorrespondence[]
   n3ZoneManagement            N3ZoneManagement[]
   n3Zones                     N3Zone[]
+  executiveSummaries          ExecutiveSummary[]
 
   @@map("comparisons")
+}
+
+model ExecutiveSummary {
+  id           String     @id @default(uuid())
+  comparisonId String     @map("comparison_id")
+  userId       String     @map("user_id")
+  markdown     String
+  instructions String?
+  createdAt    DateTime   @default(now()) @map("created_at")
+  comparison   Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)], map: "idx_exec_summaries_user_created")
+  @@index([comparisonId, createdAt(sort: Desc)], map: "idx_exec_summaries_comparison_created")
+  @@map("executive_summaries")
 }
 
 model ComparisonProcessingState {
