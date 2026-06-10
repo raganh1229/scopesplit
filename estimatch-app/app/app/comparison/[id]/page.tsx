@@ -2691,7 +2691,8 @@ export default function ComparisonDetailPage() {
                         const isSelected = selectedRow === rowKey;
                         const isEditing = editingRowKey === rowKey && !!row.id;
                         const draft = row.id ? draftEdits.get(row.id) : undefined;
-                        const isDrafted = !!draft && !isEditing;
+                        const isMoved = !!row.id && draftMoves.has(row.id);
+                        const isDrafted = (!!draft && !isEditing) || isMoved;
                         const isDeleted = !!draft?.deleted;
                         const bg = isDeleted
                           ? 'var(--red-50)'
