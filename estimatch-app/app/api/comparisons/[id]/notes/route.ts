@@ -109,7 +109,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ error: 'Note limit reached for this comparison (500 max).' }, { status: 422 });
     }
 
-    const lineItemId = body.lineItemId ?? null;
+    let lineItemId = body.lineItemId ?? null;
 
     if (lineItemId) {
       const lineItem = await prisma.lineItem.findFirst({
@@ -117,7 +117,17 @@ export async function POST(request: Request, context: RouteContext) {
         select: { id: true },
       });
       if (!lineItem) {
-        return NextResponse.json({ error: 'Line item not found in this comparison.' }, { status: 400 });
+        // The ID may be a ComparisonVersionLineItem.id (when a version is active).
+        // Resolve it to the original canonical lineItem.id.
+        const versionLineItem = await prisma.comparisonVersionLineItem.findFirst({
+          where: { id: lineItemId, version: { comparisonId: id } },
+          select: { originalLineItemId: true },
+        });
+        if (versionLineItem?.originalLineItemId) {
+          lineItemId = versionLineItem.originalLineItemId;
+        } else {
+          return NextResponse.json({ error: 'Line item not found in this comparison.' }, { status: 400 });
+        }
       }
     }
 
