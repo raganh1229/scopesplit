@@ -1018,6 +1018,67 @@
   background: var(--bg-surface);
 }
 
+/* ── Summary: regenerate with instructions section ── */
+.summaryRegenSection {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 0.5px solid var(--border-default);
+}
+.summaryRegenLabel {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.summaryRegenTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-default);
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.1s ease;
+  outline: none;
+}
+.summaryRegenTextarea:focus {
+  border-color: var(--btn-primary-bg);
+}
+.summaryRegenTextarea::placeholder {
+  color: var(--text-tertiary);
+}
+.summaryRegenBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 7px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.summaryRegenBtn:hover:not(:disabled) {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+.summaryRegenBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* Mobile summary button */
 .mSummaryBtn {
   display: flex;

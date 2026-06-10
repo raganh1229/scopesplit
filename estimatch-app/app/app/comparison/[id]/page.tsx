@@ -216,8 +216,10 @@ export default function ComparisonDetailPage() {
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryError, setSummaryError] = useState<string | null>(null);
   const [summaryConfirmOpen, setSummaryConfirmOpen] = useState(false);
+  const [summaryConfirmIsRegen, setSummaryConfirmIsRegen] = useState(false);
   const [summaryUsage, setSummaryUsage] = useState<{ used: number; limit: number } | null>(null);
   const [summaryUsageLoading, setSummaryUsageLoading] = useState(false);
+  const [summaryInstructions, setSummaryInstructions] = useState('');
   const [n2ReviewZones, setN2ReviewZones] = useState<{ e1: ReviewZone[]; e2: ReviewZone[] } | null>(null);
   const [n2MatchData, setN2MatchData] = useState<{ pairs: MatchPair[]; unmatchedE1: string[]; unmatchedE2: string[] } | null>(null);
   const [n3LineItemData, setN3LineItemData] = useState<{ yours: LineItemZoneRow[]; adjuster: LineItemZoneRow[]; yoursTotal: number; adjusterTotal: number } | null>(null);
@@ -951,8 +953,9 @@ export default function ComparisonDetailPage() {
     }
   }, [comparisonId, llmEditPrompt, llmEditLoading, loadVersionZones, fetchVersions, zones, isRowVisible]);
 
-  const handleSummaryConfirmOpen = useCallback(async () => {
+  const handleSummaryConfirmOpen = useCallback(async (isRegen = false) => {
     if (summaryLoading || !comparisonId) return;
+    setSummaryConfirmIsRegen(isRegen);
     setSummaryConfirmOpen(true);
     setSummaryUsageLoading(true);
     setSummaryUsage(null);
@@ -972,9 +975,12 @@ export default function ComparisonDetailPage() {
     setSummaryError(null);
     setSummaryOpen(true);
     try {
+      const body: { instructions?: string } = {};
+      if (summaryInstructions.trim()) body.instructions = summaryInstructions.trim();
       const res = await fetch(`/api/comparisons/${comparisonId}/executive-summary`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
@@ -1004,7 +1010,7 @@ export default function ComparisonDetailPage() {
     } finally {
       setSummaryLoading(false);
     }
-  }, [comparisonId, summaryLoading]);
+  }, [comparisonId, summaryLoading, summaryInstructions]);
 
   const handleSummaryConfirm = useCallback(() => {
     setSummaryConfirmOpen(false);
@@ -2434,7 +2440,7 @@ export default function ComparisonDetailPage() {
               <button className={styles.editEntriesBtn} onClick={() => setLlmEditOpen(true)}>
                 LLM Edit
               </button>
-              <button className={styles.summaryBtn} onClick={handleSummaryConfirmOpen} disabled={summaryLoading}>
+              <button className={styles.summaryBtn} onClick={() => void handleSummaryConfirmOpen(false)} disabled={summaryLoading}>
                 <svg className={styles.summaryBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
@@ -3335,7 +3341,7 @@ export default function ComparisonDetailPage() {
             <svg viewBox="0 0 24 24"><path d="M20 6h-4v14h4v-4h-4v-6h4zm-6 0h-4v6h4v-6zm-8 8h4v-6h-4v6zm-8 0h4v-4h-4v4zm-2-2v6h4v-6h-4z" /></svg>
             LLM Edit
           </button>
-          <button className={styles.mSummaryBtn} onClick={handleSummaryConfirmOpen} disabled={summaryLoading}>
+          <button className={styles.mSummaryBtn} onClick={() => void handleSummaryConfirmOpen(false)} disabled={summaryLoading}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
             {summaryLoading ? 'Generating...' : 'Executive Summary'}
           </button>
@@ -3447,10 +3453,13 @@ export default function ComparisonDetailPage() {
       {summaryConfirmOpen && (
         <div className={styles.summaryConfirmOverlay} onClick={() => setSummaryConfirmOpen(false)}>
           <div className={styles.summaryConfirmDialog} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="summary-confirm-title">
-            <h3 id="summary-confirm-title" className={styles.summaryConfirmTitle}>Generate Executive Summary</h3>
+            <h3 id="summary-confirm-title" className={styles.summaryConfirmTitle}>
+              {summaryConfirmIsRegen ? 'Regenerate Executive Summary?' : 'Generate Executive Summary'}
+            </h3>
             <p className={styles.summaryConfirmDesc}>
-              An AI-powered analysis of your comparison — covering financial gaps, key discrepancies,
-              zone-by-zone breakdowns, and prioritized next steps. The report can be printed or exported.
+              {summaryConfirmIsRegen
+                ? <>A new report will be generated using your comparison data{summaryInstructions.trim() ? ' and the additional context you provided' : ''}. <strong>This will count as an additional executive summary credit.</strong></>
+                : 'An AI-powered analysis of your comparison — covering financial gaps, key discrepancies, zone-by-zone breakdowns, and prioritized next steps. The report can be printed or exported.'}
             </p>
             {summaryUsageLoading ? (
               <div className={styles.summaryConfirmUsageRow}>
@@ -3479,7 +3488,7 @@ export default function ComparisonDetailPage() {
                 onClick={handleSummaryConfirm}
                 disabled={!!(summaryUsage && summaryUsage.used >= summaryUsage.limit && summaryUsage.limit > 0)}
               >
-                Generate Report
+                {summaryConfirmIsRegen ? 'Regenerate Report' : 'Generate Report'}
               </button>
             </div>
           </div>
@@ -3504,7 +3513,7 @@ export default function ComparisonDetailPage() {
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>
                       Print
                     </button>
-                    <button type="button" className={styles.summaryActionBtn} onClick={handleGenerateSummary} disabled={summaryLoading}>
+                    <button type="button" className={styles.summaryActionBtn} onClick={() => void handleSummaryConfirmOpen(true)} disabled={summaryLoading}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" /></svg>
                       Regenerate
                     </button>
@@ -3530,10 +3539,31 @@ export default function ComparisonDetailPage() {
                 </div>
               )}
               {summaryMarkdown && !summaryLoading && (
-                <div
-                  className={styles.summaryContent}
-                  dangerouslySetInnerHTML={{ __html: markdownToHtml(summaryMarkdown) }}
-                />
+                <>
+                  <div
+                    className={styles.summaryContent}
+                    dangerouslySetInnerHTML={{ __html: markdownToHtml(summaryMarkdown) }}
+                  />
+                  <div className={styles.summaryRegenSection}>
+                    <p className={styles.summaryRegenLabel}>Regenerate with additional context</p>
+                    <textarea
+                      className={styles.summaryRegenTextarea}
+                      placeholder="Add focus areas, dispute strategy, or any specific context you want included in the report…"
+                      value={summaryInstructions}
+                      onChange={(e) => setSummaryInstructions(e.target.value)}
+                      rows={3}
+                    />
+                    <button
+                      type="button"
+                      className={styles.summaryRegenBtn}
+                      onClick={() => void handleSummaryConfirmOpen(true)}
+                      disabled={summaryLoading}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" /></svg>
+                      Regenerate Report
+                    </button>
+                  </div>
+                </>
               )}
             </div>
           </div>

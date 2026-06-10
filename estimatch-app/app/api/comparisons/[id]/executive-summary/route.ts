@@ -11,7 +11,7 @@ import {
 // Vercel serverless runtime cap. Must be >= the Anthropic fetch timeout below
 // (SUMMARY_TIMEOUT_MS = 115s) so our own timeout fires before the platform
 // kills the function.
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const SUMMARY_MODEL = process.env.SUMMARY_MODEL ?? 'claude-sonnet-4-6';
@@ -77,7 +77,7 @@ function sanitizeNote(s: string | null): string | null {
     .slice(0, 4000);
 }
 
-export async function POST(_request: Request, context: RouteContext) {
+export async function POST(request: Request, context: RouteContext) {
   const { userId: clerkId } = await auth();
   if (!clerkId) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
 
@@ -89,6 +89,11 @@ export async function POST(_request: Request, context: RouteContext) {
   }
 
   const { id: comparisonId } = await context.params;
+
+  const { instructions }: { instructions?: string } = await request.json().catch(() => ({}));
+  const sanitizedInstructions = instructions?.trim()
+    ? instructions.trim().replace(/<[^>]*>/g, '').replace(/\{\{.*?\}\}/g, '').slice(0, 2000)
+    : null;
 
   // ── Usage gate ──
   const isTrialing = appUser.subscriptionStatus === 'TRIALING';
@@ -429,7 +434,11 @@ FORMATTING RULES:
 ${JSON.stringify(dataPayload, null, 2)}
 </comparison_data>
 
-Generate the executive summary report for this estimate comparison.`;
+Generate the executive summary report for this estimate comparison.${sanitizedInstructions ? `
+
+---
+Additional context and instructions from the user (incorporate these into the report):
+${sanitizedInstructions}` : ''}`;
 
   // ── Call Claude ──
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -438,9 +447,8 @@ Generate the executive summary report for this estimate comparison.`;
   }
 
   // Hard timeout on the Anthropic call so we never hang until the platform
-  // kills the function. 55s chosen to stay just under a 60s Vercel maxDuration
-  // while allowing room for the larger 16k-token summary output.
-  const SUMMARY_TIMEOUT_MS = 115_000;
+  // kills the function. Chosen to stay just under the 300s Vercel maxDuration.
+  const SUMMARY_TIMEOUT_MS = 295_000;
   const abortController = new AbortController();
   const timeoutHandle = setTimeout(() => abortController.abort(), SUMMARY_TIMEOUT_MS);
 
@@ -455,7 +463,7 @@ Generate the executive summary report for this estimate comparison.`;
       },
       body: JSON.stringify({
         model: SUMMARY_MODEL,
-        max_tokens: 8192,
+        max_tokens: 4096,
         temperature: 0.2,
         system: systemPrompt,
         messages: [{ role: 'user', content: userMessage }],
