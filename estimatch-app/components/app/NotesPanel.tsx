@@ -40,6 +40,8 @@ type NotesPanelProps = {
   onLineItemNoteNavigate?: (lineItemId: string) => void;
   /** Live row-position map for accurate line item numbers in note cards */
   rowNumberMap?: Map<string, number>;
+  /** IDs of items present in the currently active zones — used to detect version-deleted items */
+  activeItemIds?: Set<string>;
 };
 
 function formatTimestamp(iso: string): string {
@@ -71,6 +73,7 @@ export default function NotesPanel({
   onNotesData,
   onLineItemNoteNavigate,
   rowNumberMap,
+  activeItemIds,
 }: NotesPanelProps) {
   const [hasMounted, setHasMounted] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -309,7 +312,21 @@ export default function NotesPanel({
                 onClick={(e) => handleLineItemNoteCardClick(e, note)}
               >
                 {/* Line-item context */}
-                {(note.lineItem ?? note.versionLineItem) ? (
+                {(note.lineItem ?? note.versionLineItem) ? (() => {
+                  const refId = note.lineItemId ?? note.versionLineItemId;
+                  const isRemoved = !!refId && !!activeItemIds && !activeItemIds.has(refId);
+                  if (isRemoved) {
+                    return (
+                      <div className={styles.lineItemContextRemoved}>
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className={styles.lineItemContextIcon}>
+                          <path d="M4 8h8" strokeLinecap="round" />
+                          <circle cx="8" cy="8" r="6" />
+                        </svg>
+                        <span>Removed in this version</span>
+                      </div>
+                    );
+                  }
+                  return (
                   <div className={styles.lineItemContext}>
                     <svg className={styles.lineItemContextIcon} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M4 6h8M4 10h5" strokeLinecap="round" />
@@ -332,7 +349,8 @@ export default function NotesPanel({
                       </div>
                     </div>
                   </div>
-                ) : (
+                  );
+                })() : (
                   <div className={styles.generalBadge}>
                     <svg className={styles.generalBadgeIcon} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M3 3h10v10H3z" strokeLinecap="round" strokeLinejoin="round" />

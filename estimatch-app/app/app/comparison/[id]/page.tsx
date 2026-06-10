@@ -1837,6 +1837,18 @@ export default function ComparisonDetailPage() {
     requestAnimationFrame(scrollToRow);
   }, [zones, isRowVisible]);
 
+  /* All item IDs present in the current zones (no filter) — used to detect version-deleted items in notes */
+  const activeItemIds = useMemo((): Set<string> => {
+    const set = new Set<string>();
+    for (const zone of zones) {
+      for (const row of zone.items) {
+        if (row.id) set.add(row.id);
+        if (row.originalLineItemId) set.add(row.originalLineItemId);
+      }
+    }
+    return set;
+  }, [zones]);
+
   /* Live row-number map — keyed on row.id AND row.originalLineItemId for cross-version lookup */
   const rowNumberMap = useMemo((): Map<string, number> => {
     const map = new Map<string, number>();
@@ -3567,6 +3579,7 @@ export default function ComparisonDetailPage() {
           onNotesData={handleNotesData}
           onLineItemNoteNavigate={handleLineItemNoteNavigate}
           rowNumberMap={rowNumberMap}
+          activeItemIds={activeItemIds}
         />
       )}
 

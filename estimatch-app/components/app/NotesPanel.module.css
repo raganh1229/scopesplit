@@ -178,6 +178,25 @@
   letter-spacing: 0.3px;
 }
 
+/* Removed-in-version chip */
+.lineItemContextRemoved {
+  display: inline-flex; align-items: center; gap: 5px;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  margin: -2px -4px 8px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--red-400, #f87171) 8%, transparent);
+  border-bottom: 0.5px solid color-mix(in srgb, var(--red-400, #f87171) 20%, var(--border-light));
+  font-size: 11px; font-weight: 500;
+  color: color-mix(in srgb, var(--red-400, #f87171) 80%, var(--text-secondary));
+  font-style: italic;
+}
+.lineItemContextRemoved svg {
+  flex-shrink: 0;
+  width: 13px; height: 13px;
+  color: inherit;
+}
+
 /* General badge */
 .generalBadge {
   display: inline-flex; align-items: center; gap: 4px;
