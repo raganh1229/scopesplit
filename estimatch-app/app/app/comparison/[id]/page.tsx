@@ -225,6 +225,7 @@ export default function ComparisonDetailPage() {
   const [viewportWidth, setViewportWidth] = useState(0);
   const [rowNoteMenu, setRowNoteMenu] = useState<{ x: number; y: number; rowKey: string; target: NoteLineItemContext; row: Row; isZoneRow?: boolean; zoneId?: string; zoneEditSide?: 'yours' | 'adjuster' } | null>(null);
   const [editingRowKey, setEditingRowKey] = useState<string | null>(null);
+  const [flashedRowKey, setFlashedRowKey] = useState<string | null>(null);
   const [editingValues, setEditingValues] = useState<EditValues>(blankEditValues());
   const [draftEdits, setDraftEdits] = useState<Map<string, EditValues>>(new Map());
   const [draftZoneNames, setDraftZoneNames] = useState<Map<string, string>>(new Map());
@@ -1814,6 +1815,9 @@ export default function ComparisonDetailPage() {
     setSelectedRow(targetRowKey);
     setRowNoteMenu(null);
 
+    setFlashedRowKey(targetRowKey);
+    setTimeout(() => setFlashedRowKey(null), 1200);
+
     let attempts = 0;
     const maxAttempts = 6;
     const scrollToRow = () => {
@@ -2753,7 +2757,7 @@ export default function ComparisonDetailPage() {
                             style={{ background: bg }}
                             data-row-key={rowKey}
                             data-status={row.status}
-                            className={`${styles.dataRow} ${isSelected || isEditing ? styles.rowSelected : ''} ${isDrafted ? styles.rowDrafted : ''} ${isEditing ? styles.rowEditing : ''} ${rowNoteMenu?.rowKey === rowKey ? styles.rowMenuOpen : ''} ${isDeleted ? styles.rowDeleted : ''}`}
+                            className={`${styles.dataRow} ${isSelected || isEditing ? styles.rowSelected : ''} ${isDrafted ? styles.rowDrafted : ''} ${isEditing ? styles.rowEditing : ''} ${rowNoteMenu?.rowKey === rowKey ? styles.rowMenuOpen : ''} ${isDeleted ? styles.rowDeleted : ''} ${flashedRowKey === rowKey ? styles.rowFlash : ''}`}
                             onClick={() => { if (!isEditing) handleRowClick(rowKey); }}
                             onDoubleClick={() => { if (!isEditing && row.id) handleStartEditRow(rowKey, row); }}
                             onKeyDown={handleRowKeyDown}
