@@ -663,19 +663,19 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
   animation: summarySlideIn 180ms ease;
 }
-.summaryConfirmIcon {
-  width: 44px; height: 44px;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--btn-primary-bg) 12%, transparent);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 16px;
+.summaryConfirmHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
-.summaryConfirmIcon svg {
-  width: 22px; height: 22px;
+.summaryConfirmHeaderIcon {
+  flex-shrink: 0;
+  width: 18px; height: 18px;
   stroke: var(--btn-primary-bg);
 }
 .summaryConfirmTitle {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 17px;
   font-weight: 700;
   color: var(--text-primary);
