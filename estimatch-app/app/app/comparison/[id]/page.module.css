@@ -663,19 +663,8 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
   animation: summarySlideIn 180ms ease;
 }
-.summaryConfirmHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.summaryConfirmHeaderIcon {
-  flex-shrink: 0;
-  width: 18px; height: 18px;
-  stroke: var(--btn-primary-bg);
-}
 .summaryConfirmTitle {
-  margin: 0;
+  margin: 0 0 10px;
   font-size: 17px;
   font-weight: 700;
   color: var(--text-primary);
