@@ -1795,7 +1795,7 @@ export default function ComparisonDetailPage() {
     let targetZoneId: string | null = null;
     let targetRowKey: string | null = null;
 
-    for (const zone of zones) {
+    for (const zone of zonesWithInserts) {
       const visibleItems = zone.items.filter(row => isRowVisible(row, zone.id));
       const rowIndex = visibleItems.findIndex(row =>
         row.id === lineItemId || row.originalLineItemId === lineItemId
@@ -1835,7 +1835,7 @@ export default function ComparisonDetailPage() {
       }
     };
     requestAnimationFrame(scrollToRow);
-  }, [zones, isRowVisible]);
+  }, [zonesWithInserts, isRowVisible]);
 
   /* All item IDs present in the current zones (no filter) — used to detect version-deleted items in notes */
   const activeItemIds = useMemo((): Set<string> => {
