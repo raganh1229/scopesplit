@@ -2368,7 +2368,7 @@ export default function ComparisonDetailPage() {
                 </div>
               )}
               <button className={styles.editEntriesBtn} onClick={() => setLlmEditOpen(true)}>
-                Edit Entries
+                LLM Edit
               </button>
               <button className={styles.summaryBtn} onClick={handleGenerateSummary} disabled={summaryLoading}>
                 <svg className={styles.summaryBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -3269,7 +3269,7 @@ export default function ComparisonDetailPage() {
           </button>
           <button className={styles.mEditEntriesBtn} onClick={() => setLlmEditOpen(true)}>
             <svg viewBox="0 0 24 24"><path d="M20 6h-4v14h4v-4h-4v-6h4zm-6 0h-4v6h4v-6zm-8 8h4v-6h-4v6zm-8 0h4v-4h-4v4zm-2-2v6h4v-6h-4z" /></svg>
-            Edit Entries
+            LLM Edit
           </button>
           <button className={styles.mSummaryBtn} onClick={handleGenerateSummary} disabled={summaryLoading}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
