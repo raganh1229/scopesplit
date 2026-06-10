@@ -38,6 +38,8 @@ type NotesPanelProps = {
   onNotesData?: (notes: Note[]) => void;
   /** Jump from a line-item note card to the matching comparison row */
   onLineItemNoteNavigate?: (lineItemId: string) => void;
+  /** Live row-position map for accurate line item numbers in note cards */
+  rowNumberMap?: Map<string, number>;
 };
 
 function formatTimestamp(iso: string): string {
@@ -68,6 +70,7 @@ export default function NotesPanel({
   onNotesByLineItem,
   onNotesData,
   onLineItemNoteNavigate,
+  rowNumberMap,
 }: NotesPanelProps) {
   const [hasMounted, setHasMounted] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -316,9 +319,15 @@ export default function NotesPanel({
                         <div className={styles.lineItemContextZone}>{(note.lineItem ?? note.versionLineItem)!.zoneCanonical}</div>
                       )}
                       <div className={styles.lineItemContextText}>
-                        {(note.lineItem ?? note.versionLineItem)!.sortOrder != null && (
-                          <span className={styles.lineItemNum}>#{(note.lineItem ?? note.versionLineItem)!.sortOrder}</span>
-                        )}
+                        {(() => {
+                          const liveNum =
+                            (note.lineItemId ? rowNumberMap?.get(note.lineItemId) : undefined) ??
+                            (note.versionLineItemId ? rowNumberMap?.get(note.versionLineItemId) : undefined);
+                          const displayNum = liveNum ?? (note.lineItem ?? note.versionLineItem)!.sortOrder;
+                          return displayNum != null
+                            ? <span className={styles.lineItemNum}>#{displayNum}</span>
+                            : null;
+                        })()}
                         {lineItemDesc((note.lineItem ?? note.versionLineItem)!)}
                       </div>
                     </div>

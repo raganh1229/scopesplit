@@ -111,6 +111,7 @@ export async function GET(_request: Request, context: RouteContext) {
     confidence: number | null;
     items: Array<{
       id: string;
+      originalLineItemId: string | null;
       status: UiRowStatus;
       category: string;
       your: {
@@ -166,6 +167,7 @@ export async function GET(_request: Request, context: RouteContext) {
 
     zone.items.push({
       id: item.id,
+      originalLineItemId: item.originalLineItemId,
       status: mapMatchStatus(item.matchStatus),
       category: item.category ?? 'uncategorized',
       your: hasYourSideData(item)

@@ -30,6 +30,7 @@ interface LineItem {
 }
 interface Row {
   id?: string;
+  originalLineItemId?: string | null;
   status: 'match' | 'match_unverified' | 'modified' | 'missing' | 'added';
   category: string;
   your: LineItem | null;
@@ -1796,7 +1797,9 @@ export default function ComparisonDetailPage() {
 
     for (const zone of zones) {
       const visibleItems = zone.items.filter(row => isRowVisible(row, zone.id));
-      const rowIndex = visibleItems.findIndex(row => row.id === lineItemId);
+      const rowIndex = visibleItems.findIndex(row =>
+        row.id === lineItemId || row.originalLineItemId === lineItemId
+      );
       if (rowIndex !== -1) {
         targetZoneId = zone.id;
         targetRowKey = `${zone.id}-${rowIndex}`;
@@ -1833,6 +1836,23 @@ export default function ComparisonDetailPage() {
     };
     requestAnimationFrame(scrollToRow);
   }, [zones, isRowVisible]);
+
+  /* Live row-number map — keyed on row.id AND row.originalLineItemId for cross-version lookup */
+  const rowNumberMap = useMemo((): Map<string, number> => {
+    const map = new Map<string, number>();
+    let n = 0;
+    for (const zone of zonesWithInserts) {
+      for (const row of zone.items) {
+        if (!isRowVisible(row, zone.id)) continue;
+        n++;
+        if (row.id) map.set(row.id, n);
+        if (row.originalLineItemId && row.originalLineItemId !== row.id) {
+          map.set(row.originalLineItemId, n);
+        }
+      }
+    }
+    return map;
+  }, [zonesWithInserts, isRowVisible]);
 
   /* Zone-level gaps */
   const zoneGaps = useMemo(() => {
@@ -3546,6 +3566,7 @@ export default function ComparisonDetailPage() {
           onNotesByLineItem={handleNotesByLineItem}
           onNotesData={handleNotesData}
           onLineItemNoteNavigate={handleLineItemNoteNavigate}
+          rowNumberMap={rowNumberMap}
         />
       )}
 
