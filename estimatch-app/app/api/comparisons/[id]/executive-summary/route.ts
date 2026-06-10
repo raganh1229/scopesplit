@@ -9,9 +9,9 @@ import {
 } from '@/lib/usage';
 
 // Vercel serverless runtime cap. Must be >= the Anthropic fetch timeout below
-// (SUMMARY_TIMEOUT_MS = 55s) so our own timeout fires before the platform
+// (SUMMARY_TIMEOUT_MS = 115s) so our own timeout fires before the platform
 // kills the function.
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const SUMMARY_MODEL = process.env.SUMMARY_MODEL ?? 'claude-sonnet-4-6';
@@ -290,7 +290,7 @@ export async function POST(_request: Request, context: RouteContext) {
     'MISSING_FROM_ADJUSTER',
     'ADDED_BY_ADJUSTER',
   ]);
-  const MAX_DISCREPANCIES_FOR_PROMPT = 300;
+  const MAX_DISCREPANCIES_FOR_PROMPT = 100;
 
   const discrepancyItems = lineItems
     .filter((li) => DISCREPANCY_STATUSES.has(li.matchStatus))
@@ -440,7 +440,7 @@ Generate the executive summary report for this estimate comparison.`;
   // Hard timeout on the Anthropic call so we never hang until the platform
   // kills the function. 55s chosen to stay just under a 60s Vercel maxDuration
   // while allowing room for the larger 16k-token summary output.
-  const SUMMARY_TIMEOUT_MS = 55_000;
+  const SUMMARY_TIMEOUT_MS = 115_000;
   const abortController = new AbortController();
   const timeoutHandle = setTimeout(() => abortController.abort(), SUMMARY_TIMEOUT_MS);
 
