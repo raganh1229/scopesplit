@@ -215,6 +215,9 @@ export default function ComparisonDetailPage() {
   const [summaryMarkdown, setSummaryMarkdown] = useState<string | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryError, setSummaryError] = useState<string | null>(null);
+  const [summaryConfirmOpen, setSummaryConfirmOpen] = useState(false);
+  const [summaryUsage, setSummaryUsage] = useState<{ used: number; limit: number } | null>(null);
+  const [summaryUsageLoading, setSummaryUsageLoading] = useState(false);
   const [n2ReviewZones, setN2ReviewZones] = useState<{ e1: ReviewZone[]; e2: ReviewZone[] } | null>(null);
   const [n2MatchData, setN2MatchData] = useState<{ pairs: MatchPair[]; unmatchedE1: string[]; unmatchedE2: string[] } | null>(null);
   const [n3LineItemData, setN3LineItemData] = useState<{ yours: LineItemZoneRow[]; adjuster: LineItemZoneRow[]; yoursTotal: number; adjusterTotal: number } | null>(null);
@@ -409,6 +412,15 @@ export default function ComparisonDetailPage() {
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [summaryOpen]);
+
+  useEffect(() => {
+    if (!summaryConfirmOpen) return;
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === 'Escape') setSummaryConfirmOpen(false);
+    }
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [summaryConfirmOpen]);
 
   // Deselect row when clicking outside any data row
   useEffect(() => {
@@ -939,6 +951,21 @@ export default function ComparisonDetailPage() {
     }
   }, [comparisonId, llmEditPrompt, llmEditLoading, loadVersionZones, fetchVersions, zones, isRowVisible]);
 
+  const handleSummaryConfirmOpen = useCallback(async () => {
+    if (summaryLoading || !comparisonId) return;
+    setSummaryConfirmOpen(true);
+    setSummaryUsageLoading(true);
+    setSummaryUsage(null);
+    try {
+      const res = await fetch(`/api/comparisons/${comparisonId}/executive-summary`);
+      if (res.ok) setSummaryUsage(await res.json());
+    } catch {
+      // silently fail — dialog still works, just won't show usage count
+    } finally {
+      setSummaryUsageLoading(false);
+    }
+  }, [comparisonId, summaryLoading]);
+
   const handleGenerateSummary = useCallback(async () => {
     if (!comparisonId || summaryLoading) return;
     setSummaryLoading(true);
@@ -978,6 +1005,11 @@ export default function ComparisonDetailPage() {
       setSummaryLoading(false);
     }
   }, [comparisonId, summaryLoading]);
+
+  const handleSummaryConfirm = useCallback(() => {
+    setSummaryConfirmOpen(false);
+    void handleGenerateSummary();
+  }, [handleGenerateSummary]);
 
   const handlePrintSummary = useCallback(() => {
     if (!summaryMarkdown) return;
@@ -2402,7 +2434,7 @@ export default function ComparisonDetailPage() {
               <button className={styles.editEntriesBtn} onClick={() => setLlmEditOpen(true)}>
                 LLM Edit
               </button>
-              <button className={styles.summaryBtn} onClick={handleGenerateSummary} disabled={summaryLoading}>
+              <button className={styles.summaryBtn} onClick={handleSummaryConfirmOpen} disabled={summaryLoading}>
                 <svg className={styles.summaryBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
@@ -3303,7 +3335,7 @@ export default function ComparisonDetailPage() {
             <svg viewBox="0 0 24 24"><path d="M20 6h-4v14h4v-4h-4v-6h4zm-6 0h-4v6h4v-6zm-8 8h4v-6h-4v6zm-8 0h4v-4h-4v4zm-2-2v6h4v-6h-4z" /></svg>
             LLM Edit
           </button>
-          <button className={styles.mSummaryBtn} onClick={handleGenerateSummary} disabled={summaryLoading}>
+          <button className={styles.mSummaryBtn} onClick={handleSummaryConfirmOpen} disabled={summaryLoading}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
             {summaryLoading ? 'Generating...' : 'Executive Summary'}
           </button>
@@ -3408,6 +3440,57 @@ export default function ComparisonDetailPage() {
                 </button>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {summaryConfirmOpen && (
+        <div className={styles.summaryConfirmOverlay} onClick={() => setSummaryConfirmOpen(false)}>
+          <div className={styles.summaryConfirmDialog} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="summary-confirm-title">
+            <div className={styles.summaryConfirmIcon}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+            </div>
+            <h3 id="summary-confirm-title" className={styles.summaryConfirmTitle}>Generate Executive Summary</h3>
+            <p className={styles.summaryConfirmDesc}>
+              An AI-powered analysis of your comparison — covering financial gaps, key discrepancies,
+              zone-by-zone breakdowns, and prioritized next steps. The report can be printed or exported.
+            </p>
+            {summaryUsageLoading ? (
+              <div className={styles.summaryConfirmUsageRow}>
+                <span className={styles.summaryConfirmUsageLabel}>Checking usage…</span>
+              </div>
+            ) : summaryUsage ? (
+              <div className={styles.summaryConfirmUsageRow}>
+                <div className={styles.summaryConfirmUsageBar}>
+                  <div
+                    className={styles.summaryConfirmUsageFill}
+                    style={{ width: `${Math.min(100, summaryUsage.limit > 0 ? (summaryUsage.used / summaryUsage.limit) * 100 : 0)}%` }}
+                  />
+                </div>
+                <span className={styles.summaryConfirmUsageLabel}>
+                  {summaryUsage.used} of {summaryUsage.limit} executive {summaryUsage.limit === 1 ? 'summary' : 'summaries'} used this billing period
+                </span>
+              </div>
+            ) : null}
+            <div className={styles.summaryConfirmActions}>
+              <button type="button" className={styles.summaryConfirmCancelBtn} onClick={() => setSummaryConfirmOpen(false)}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={styles.summaryConfirmGenerateBtn}
+                onClick={handleSummaryConfirm}
+                disabled={!!(summaryUsage && summaryUsage.used >= summaryUsage.limit && summaryUsage.limit > 0)}
+              >
+                Generate Report
+              </button>
+            </div>
           </div>
         </div>
       )}

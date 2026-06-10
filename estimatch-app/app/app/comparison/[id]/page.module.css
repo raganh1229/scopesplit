@@ -641,6 +641,114 @@
   color: var(--text-primary);
 }
 
+/* ── Executive Summary Confirmation Dialog ── */
+
+.summaryConfirmOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+  background: color-mix(in srgb, var(--bg-primary) 30%, transparent);
+}
+.summaryConfirmDialog {
+  width: min(460px, 100%);
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-default);
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+  animation: summarySlideIn 180ms ease;
+}
+.summaryConfirmIcon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--btn-primary-bg) 12%, transparent);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.summaryConfirmIcon svg {
+  width: 22px; height: 22px;
+  stroke: var(--btn-primary-bg);
+}
+.summaryConfirmTitle {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.summaryConfirmDesc {
+  margin: 0 0 18px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+.summaryConfirmUsageRow {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 20px;
+}
+.summaryConfirmUsageBar {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--border-light);
+  overflow: hidden;
+}
+.summaryConfirmUsageFill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--btn-primary-bg);
+  transition: width 0.3s ease;
+}
+.summaryConfirmUsageLabel {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+.summaryConfirmActions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.summaryConfirmCancelBtn {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.summaryConfirmCancelBtn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+.summaryConfirmGenerateBtn {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  cursor: pointer;
+  transition: opacity 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.summaryConfirmGenerateBtn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+.summaryConfirmGenerateBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ── Executive Summary ── */
 
 .summaryBtn {
@@ -2655,6 +2763,7 @@
   .tableWrap { display: none !important; }
   .llmEditShell { display: none !important; }
   .summaryShell { display: none !important; }
+  .summaryConfirmOverlay { display: none !important; }
   .versionHistoryDropdown { display: none !important; }
   .versionDeleteOverlay { display: none !important; }
 

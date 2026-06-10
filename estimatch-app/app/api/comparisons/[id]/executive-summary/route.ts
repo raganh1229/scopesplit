@@ -18,6 +18,40 @@ const SUMMARY_MODEL = process.env.SUMMARY_MODEL ?? 'claude-sonnet-4-6';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
+/** GET — return current exec-summary usage for the confirmation dialog (no credit consumed) */
+export async function GET(_request: Request, _context: RouteContext) {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+
+  const appUser = await prisma.user.findUnique({ where: { clerkId } });
+  if (!appUser) return NextResponse.json({ error: 'User not synced.' }, { status: 409 });
+
+  if (!appUser.subscriptionTier) {
+    return NextResponse.json({ used: 0, limit: 0, remaining: 0 });
+  }
+
+  const isTrialing = appUser.subscriptionStatus === 'TRIALING';
+  const rolled = await rolloverPeriodIfNeeded(appUser);
+
+  let limit = 0;
+  try {
+    ({ limit } = assertWithinLimit(
+      'executiveSummary',
+      appUser.subscriptionTier,
+      rolled.executiveSummariesUsedThisPeriod,
+      rolled.periodResetDate,
+      isTrialing
+    ));
+  } catch (e) {
+    if (e instanceof UsageLimitError) {
+      limit = e.limit;
+    } else throw e;
+  }
+
+  const used = rolled.executiveSummariesUsedThisPeriod;
+  return NextResponse.json({ used, limit, remaining: Math.max(0, limit - used) });
+}
+
 function toNum(v: number | bigint | { toString(): string } | null): number | null {
   if (v === null) return null;
   return Number(v);
@@ -421,7 +455,7 @@ Generate the executive summary report for this estimate comparison.`;
       },
       body: JSON.stringify({
         model: SUMMARY_MODEL,
-        max_tokens: 16384,
+        max_tokens: 8192,
         temperature: 0.2,
         system: systemPrompt,
         messages: [{ role: 'user', content: userMessage }],
