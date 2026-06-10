@@ -15,10 +15,12 @@ export type NoteLineItemContext = {
 export type Note = {
   id: string;
   lineItemId: string | null;
+  versionLineItemId: string | null;
   content: string;
   createdAt: string;
   updatedAt: string;
   lineItem: (NoteLineItemContext & { sortOrder?: number | null }) | null;
+  versionLineItem: (NoteLineItemContext & { sortOrder?: number | null }) | null;
 };
 
 type NotesPanelProps = {
@@ -91,6 +93,9 @@ export default function NotesPanel({
       if (n.lineItemId) {
         map.set(n.lineItemId, (map.get(n.lineItemId) ?? 0) + 1);
       }
+      if (n.versionLineItemId) {
+        map.set(n.versionLineItemId, (map.get(n.versionLineItemId) ?? 0) + 1);
+      }
     }
     onNotesByLineItem?.(map);
   }, [notes, onNotesLoaded, onNotesData, onNotesByLineItem]);
@@ -142,6 +147,10 @@ export default function NotesPanel({
   const handleSend = useCallback(async () => {
     if (!comparisonId) {
       setErrorMessage('Missing comparison id. Please refresh this page.');
+      return;
+    }
+    if (targetLineItem?.id.startsWith('__new__')) {
+      setErrorMessage('Save as a new version before adding a note to this item.');
       return;
     }
     const content = composerText.trim();
@@ -242,10 +251,11 @@ export default function NotesPanel({
     li.descriptionYours || li.descriptionAdjuster || 'Line item';
 
   const handleLineItemNoteCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>, note: Note) => {
-    if (!note.lineItemId || !onLineItemNoteNavigate) return;
+    const navigateId = note.versionLineItemId ?? note.lineItemId;
+    if (!navigateId || !onLineItemNoteNavigate) return;
     const target = e.target as HTMLElement;
     if (target.closest('button, textarea, input, a')) return;
-    onLineItemNoteNavigate(note.lineItemId);
+    onLineItemNoteNavigate(navigateId);
   }, [onLineItemNoteNavigate]);
 
   if (!hasMounted) {
@@ -292,24 +302,24 @@ export default function NotesPanel({
             notes.map(note => (
               <div
                 key={note.id}
-                className={`${styles.noteCard} ${note.lineItemId ? styles.noteCardLineItem : styles.noteCardGeneral} ${note.lineItemId ? styles.noteCardLineItemInteractive : ''}`}
+                className={`${styles.noteCard} ${(note.lineItemId ?? note.versionLineItemId) ? styles.noteCardLineItem : styles.noteCardGeneral} ${(note.lineItemId ?? note.versionLineItemId) ? styles.noteCardLineItemInteractive : ''}`}
                 onClick={(e) => handleLineItemNoteCardClick(e, note)}
               >
                 {/* Line-item context */}
-                {note.lineItem ? (
+                {(note.lineItem ?? note.versionLineItem) ? (
                   <div className={styles.lineItemContext}>
                     <svg className={styles.lineItemContextIcon} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M4 6h8M4 10h5" strokeLinecap="round" />
                     </svg>
                     <div>
-                      {note.lineItem.zoneCanonical && (
-                        <div className={styles.lineItemContextZone}>{note.lineItem.zoneCanonical}</div>
+                      {(note.lineItem ?? note.versionLineItem)!.zoneCanonical && (
+                        <div className={styles.lineItemContextZone}>{(note.lineItem ?? note.versionLineItem)!.zoneCanonical}</div>
                       )}
                       <div className={styles.lineItemContextText}>
-                        {note.lineItem.sortOrder != null && (
-                          <span className={styles.lineItemNum}>#{note.lineItem.sortOrder}</span>
+                        {(note.lineItem ?? note.versionLineItem)!.sortOrder != null && (
+                          <span className={styles.lineItemNum}>#{(note.lineItem ?? note.versionLineItem)!.sortOrder}</span>
                         )}
-                        {lineItemDesc(note.lineItem)}
+                        {lineItemDesc((note.lineItem ?? note.versionLineItem)!)}
                       </div>
                     </div>
                   </div>

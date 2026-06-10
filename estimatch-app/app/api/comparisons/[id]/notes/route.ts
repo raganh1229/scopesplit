@@ -35,10 +35,20 @@ export async function GET(_request: Request, context: RouteContext) {
       select: {
         id: true,
         lineItemId: true,
+        versionLineItemId: true,
         content: true,
         createdAt: true,
         updatedAt: true,
         lineItem: {
+          select: {
+            id: true,
+            sortOrder: true,
+            descriptionYours: true,
+            descriptionAdjuster: true,
+            zoneCanonical: true,
+          },
+        },
+        versionLineItem: {
           select: {
             id: true,
             sortOrder: true,
@@ -89,7 +99,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ error: 'Comparison not found.' }, { status: 404 });
     }
 
-    let body: { content?: string; lineItemId?: string | null };
+    let body: { content?: string; lineItemId?: string | null; versionLineItemId?: string | null };
     try {
       body = await request.json();
     } catch {
@@ -110,21 +120,32 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     let lineItemId = body.lineItemId ?? null;
+    let versionLineItemId: string | null = null;
 
     if (lineItemId) {
+      if (lineItemId.startsWith('__new__')) {
+        return NextResponse.json(
+          { error: 'Save as a new version before adding a note to this item.' },
+          { status: 400 }
+        );
+      }
       const lineItem = await prisma.lineItem.findFirst({
         where: { id: lineItemId, comparisonId: id },
         select: { id: true },
       });
       if (!lineItem) {
         // The ID may be a ComparisonVersionLineItem.id (when a version is active).
-        // Resolve it to the original canonical lineItem.id.
-        const versionLineItem = await prisma.comparisonVersionLineItem.findFirst({
+        const vli = await prisma.comparisonVersionLineItem.findFirst({
           where: { id: lineItemId, version: { comparisonId: id } },
-          select: { originalLineItemId: true },
+          select: { id: true, originalLineItemId: true },
         });
-        if (versionLineItem?.originalLineItemId) {
-          lineItemId = versionLineItem.originalLineItemId;
+        if (vli?.originalLineItemId) {
+          // Modified existing item — resolve to canonical lineItem
+          lineItemId = vli.originalLineItemId;
+        } else if (vli) {
+          // Inserted item with no canonical parent — store as versionLineItemId
+          versionLineItemId = vli.id;
+          lineItemId = null;
         } else {
           return NextResponse.json({ error: 'Line item not found in this comparison.' }, { status: 400 });
         }
@@ -135,16 +156,27 @@ export async function POST(request: Request, context: RouteContext) {
       data: {
         comparisonId: id,
         lineItemId,
+        versionLineItemId,
         userId: appUser.id,
         content,
       },
       select: {
         id: true,
         lineItemId: true,
+        versionLineItemId: true,
         content: true,
         createdAt: true,
         updatedAt: true,
         lineItem: {
+          select: {
+            id: true,
+            sortOrder: true,
+            descriptionYours: true,
+            descriptionAdjuster: true,
+            zoneCanonical: true,
+          },
+        },
+        versionLineItem: {
           select: {
             id: true,
             sortOrder: true,

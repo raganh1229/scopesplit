@@ -210,22 +210,25 @@ model ComparisonVersionLineItem {
   unitAdjuster        String?           @map("unit_adjuster")
   unitYours           String?           @map("unit_yours")
   version             ComparisonVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  notes               ComparisonNote[]
 
   @@index([versionId, sortOrder], map: "idx_version_line_items_sort")
   @@map("comparison_version_line_items")
 }
 
 model ComparisonNote {
-  id           String     @id @default(uuid())
-  comparisonId String     @map("comparison_id")
-  lineItemId   String?    @map("line_item_id")
-  userId       String     @map("user_id")
-  content      String
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  comparison   Comparison @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
-  lineItem     LineItem?  @relation(fields: [lineItemId], references: [id], onDelete: Cascade)
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String                     @id @default(uuid())
+  comparisonId      String                     @map("comparison_id")
+  lineItemId        String?                    @map("line_item_id")
+  versionLineItemId String?                    @map("version_line_item_id")
+  userId            String                     @map("user_id")
+  content           String
+  createdAt         DateTime                   @default(now()) @map("created_at")
+  updatedAt         DateTime                   @updatedAt @map("updated_at")
+  comparison        Comparison                 @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  lineItem          LineItem?                  @relation(fields: [lineItemId], references: [id], onDelete: Cascade)
+  versionLineItem   ComparisonVersionLineItem? @relation(fields: [versionLineItemId], references: [id], onDelete: SetNull)
+  user              User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([comparisonId, createdAt], map: "idx_comparison_notes_comparison_created")
   @@map("comparison_notes")

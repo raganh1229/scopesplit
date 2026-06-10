@@ -59,10 +59,20 @@ export async function PATCH(request: Request, context: RouteContext) {
     select: {
       id: true,
       lineItemId: true,
+      versionLineItemId: true,
       content: true,
       createdAt: true,
       updatedAt: true,
       lineItem: {
+        select: {
+          id: true,
+          sortOrder: true,
+          descriptionYours: true,
+          descriptionAdjuster: true,
+          zoneCanonical: true,
+        },
+      },
+      versionLineItem: {
         select: {
           id: true,
           sortOrder: true,
