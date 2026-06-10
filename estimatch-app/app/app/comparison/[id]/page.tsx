@@ -3462,8 +3462,10 @@ export default function ComparisonDetailPage() {
           {rowNoteMenu.row.id && !rowNoteMenu.row.id.startsWith('__new__') && (
             <button className={styles.rowNoteMenuItem} onClick={handleAddZoneAbove}>Add zone above</button>
           )}
-          {/* Both: Make a note */}
-          <button className={styles.rowNoteMenuItem} onClick={handleMakeRowNote}>Make a note</button>
+          {/* Line item only: Make a note */}
+          {!rowNoteMenu.isZoneRow && (
+            <button className={styles.rowNoteMenuItem} onClick={handleMakeRowNote}>Make a note</button>
+          )}
           {/* Line item only: Move to zone */}
           {!rowNoteMenu.isZoneRow && rowNoteMenu.row.id && !rowNoteMenu.row.id.startsWith('__new__') && !draftEdits.get(rowNoteMenu.row.id)?.deleted && (() => {
             const currentZoneId = zonesWithInserts.find(z => z.items.some(r => r.id === rowNoteMenu.row.id))?.id;
