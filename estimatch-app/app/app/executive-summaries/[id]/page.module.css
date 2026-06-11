@@ -315,6 +315,7 @@
 
 /* ── Print styles ── */
 @media print {
+  @page { margin: 1.5cm 1.2cm; }
   .toolbar { display: none; }
   .page { background: #fff; }
   .reportShell {

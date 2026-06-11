@@ -21,59 +21,92 @@ type SummaryDetail = {
 };
 
 function markdownToHtml(md: string): string {
-  let html = md
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  function esc(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function inline(s: string): string {
+    return esc(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>');
+  }
+  function parseRow(row: string): string[] {
+    return row.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+  }
 
-  // Tables
-  html = html.replace(/(\|.+\|\n)((?:\|[-: ]+\|\n))((?:\|.+\|\n)*)/g, (_, header, sep, body) => {
-    const parseRow = (row: string) =>
-      row.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
-    const headers = parseRow(header);
-    const rows = body ? body.trim().split('\n').map(parseRow) : [];
-    const th = headers.map(h => `<th>${h}</th>`).join('');
-    const tb = rows.map((r: string[]) => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
-    return `<table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`;
-  });
+  const lines = md.split(/\r?\n/);
+  const out: string[] = [];
+  let i = 0;
 
-  // Headings
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  while (i < lines.length) {
+    const raw = lines[i].trim();
 
-  // Horizontal rules
-  html = html.replace(/^---+$/gm, '<hr>');
+    if (!raw) { i++; continue; }
 
-  // Bold
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Headings
+    if (raw.startsWith('### ')) { out.push(`<h3>${inline(raw.slice(4))}</h3>`); i++; continue; }
+    if (raw.startsWith('## '))  { out.push(`<h2>${inline(raw.slice(3))}</h2>`); i++; continue; }
+    if (raw.startsWith('# '))   { out.push(`<h1>${inline(raw.slice(2))}</h1>`); i++; continue; }
 
-  // Italic
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    // Horizontal rule
+    if (/^---+$/.test(raw)) { out.push('<hr>'); i++; continue; }
 
-  // Code
-  html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+    // Table — header row starts with |, next line is separator (|---|)
+    if (raw.startsWith('|') && /^\|[\s\-:|]+\|/.test((lines[i + 1] ?? '').trim())) {
+      const headers = parseRow(raw);
+      i += 2; // skip header + separator
+      const bodyRows: string[][] = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        bodyRows.push(parseRow(lines[i]));
+        i++;
+      }
+      const th = headers.map(h => `<th>${inline(h)}</th>`).join('');
+      const tb = bodyRows.map(r =>
+        `<tr>${r.map(c => `<td>${inline(c)}</td>`).join('')}</tr>`
+      ).join('');
+      out.push(`<table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`);
+      continue;
+    }
 
-  // Unordered lists
-  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>');
-  html = html.replace(/<\/ul>\s*<ul>/g, '');
+    // Unordered list
+    if (raw.startsWith('- ') || raw.startsWith('* ')) {
+      const items: string[] = [];
+      while (i < lines.length) {
+        const r = lines[i].trim();
+        if (r.startsWith('- ') || r.startsWith('* ')) { items.push(`<li>${inline(r.slice(2))}</li>`); i++; }
+        else if (!r) { i++; break; }
+        else break;
+      }
+      out.push(`<ul>${items.join('')}</ul>`);
+      continue;
+    }
 
-  // Ordered lists
-  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    // Ordered list
+    if (/^\d+\. /.test(raw)) {
+      const items: string[] = [];
+      while (i < lines.length) {
+        const r = lines[i].trim();
+        if (/^\d+\. /.test(r)) { items.push(`<li>${inline(r.replace(/^\d+\. /, ''))}</li>`); i++; }
+        else if (!r) { i++; break; }
+        else break;
+      }
+      out.push(`<ol>${items.join('')}</ol>`);
+      continue;
+    }
 
-  // Paragraphs (double newlines)
-  html = html
-    .split(/\n{2,}/)
-    .map(block => {
-      block = block.trim();
-      if (!block) return '';
-      if (/^<(h[1-6]|ul|ol|table|hr|li)/.test(block)) return block;
-      return `<p>${block.replace(/\n/g, '<br>')}</p>`;
-    })
-    .join('\n');
+    // Paragraph — collect consecutive plain lines
+    const para: string[] = [];
+    while (i < lines.length) {
+      const r = lines[i].trim();
+      if (!r) { i++; break; }
+      if (/^#{1,3} /.test(r) || r.startsWith('|') || r.startsWith('- ') || r.startsWith('* ') || /^\d+\. /.test(r) || /^---+$/.test(r)) break;
+      para.push(inline(r));
+      i++;
+    }
+    if (para.length) out.push(`<p>${para.join('<br>')}</p>`);
+  }
 
-  return html;
+  return out.join('\n');
 }
 
 function formatDate(value: string): string {
