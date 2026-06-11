@@ -2284,8 +2284,7 @@
 }
 
 .printDataRow {
-  page-break-inside: avoid;
-  break-inside: avoid;
+  break-inside: auto;
 }
 
 .printStatusMatch { background: #dcfce7; }
