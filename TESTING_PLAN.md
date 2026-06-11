@@ -316,9 +316,9 @@
 - [ ] Loading state shows during AI call
 - [ ] Result creates a new version
 - [ ] Usage counter increments in Settings after each call
-- [ ] Starter: blocked after 5 uses (usage limit error shown)
-- [ ] Professional: blocked after 30 uses
-- [ ] Business: blocked after 100 uses
+- [ ] Starter: blocked after 5 uses (usage limit error shown) — `PLAN_LLM_EDIT_LIMITS.STARTER = 5`
+- [ ] Professional: blocked after 30 uses — `PLAN_LLM_EDIT_LIMITS.PROFESSIONAL = 30`
+- [ ] Business: blocked after 100 uses — `PLAN_LLM_EDIT_LIMITS.ENTERPRISE = 100`
 - [ ] Timeout at 45s shows appropriate error message
 
 ### 6.6 Executive Summary
@@ -329,9 +329,9 @@
 - [ ] Print button opens print dialog in new window
 - [ ] Regenerate triggers a fresh call
 - [ ] Usage counter increments in Settings after each call
-- [ ] Starter: blocked after 3 uses
-- [ ] Professional: blocked after 15 uses
-- [ ] Business: blocked after 50 uses
+- [ ] Starter: blocked after 3 uses — `PLAN_EXECUTIVE_SUMMARY_LIMITS.STARTER = 3`
+- [ ] Professional: blocked after 15 uses — `PLAN_EXECUTIVE_SUMMARY_LIMITS.PROFESSIONAL = 15`
+- [ ] Business: blocked after 50 uses — `PLAN_EXECUTIVE_SUMMARY_LIMITS.ENTERPRISE = 50`
 - [ ] Timeout at 55s shows appropriate error message
 
 ### 6.7 Zone Review (AWAITING_ZONE_REVIEW)
@@ -562,16 +562,15 @@ Run `npx vitest run` from `estimatch-app/` and verify all tests pass:
 - [ ] All 16 pricing tests pass (`__tests__/billing/plan-pricing.test.ts`)
   - Starter = 5900 cents, Professional = 17900, Business = 34900
   - Comparison limits: STARTER=10, PROFESSIONAL=35, ENTERPRISE=100
-  - LLM edit limits: STARTER=5, PROFESSIONAL=30, ENTERPRISE=100
+  - LLM edit limits: STARTER=5, PROFESSIONAL=30, ENTERPRISE=100 (from `lib/plan-constants.ts`)
   - Executive summary limits: STARTER=3, PROFESSIONAL=15, ENTERPRISE=50
   - Volume discount ordering is correct
 - [ ] All 21 zone-merge tests pass (`__tests__/n2/zone-merge.test.ts`)
 - [ ] All 14 chunk-pdf tests pass (`__tests__/n2/chunk-pdf.test.ts`)
-- [ ] All 16 match-zones-parse tests pass (`__tests__/n2/match-zones-parse.test.ts`)
 - [ ] All 128 normalization tests pass (`__tests__/n3/normalization.test.ts`)
-- [ ] All 14 api-match-review tests pass (`__tests__/n2/api-match-review.test.ts`)
+- [ ] All 14 api-match-review tests pass (`__tests__/n2/api-match-review.test.ts`) — *note: rewrote to test N3/N4 paths (Jun 5, 2026)*
 - [ ] All 27 ai-response tests pass (`__tests__/n2/ai-response.test.ts`)
-- [ ] **Total: 236 tests, 0 failures**
+- [ ] **Total: 220 tests, 0 failures** *(match-zones-parse.test.ts deleted Jun 5, 2026 — 16 tests removed)*
 
 ---
 

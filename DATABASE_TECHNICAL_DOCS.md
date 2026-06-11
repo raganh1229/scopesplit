@@ -14,7 +14,7 @@
 - **Prisma is the standard DB access layer** from app code. Import `prisma` from `lib/prisma.ts`. Raw SQL is used in tightly scoped places where generated client types may lag schema pushes (currently phone-verification upsert path).
 - **Supabase client (`lib/supabase.ts`) is only for file storage** (PDF uploads). Not for database queries.
 - **Clerk webhook is the auth→DB bridge.** `/api/webhooks/clerk` listens for `user.created`, `user.updated`, and `user.deleted` and keeps the `users` table in sync.
-- **Schema changes — dev**: `npx prisma db push` (apply to Supabase) then `npx prisma generate` (regenerate TypeScript client). Both need the `powershell -ExecutionPolicy Bypass` prefix on this machine.
+- **Schema changes — dev**: `npx prisma db push` (apply to Supabase) then `npx prisma generate` (regenerate TypeScript client).
 - **Schema changes — prod / shared workflow**: as of N1 Phase 2A there is now a `prisma/migrations/` directory. The build script runs `prisma migrate deploy && next build`, so any committed migration is automatically applied on deploy. To author a new migration without poolers, use `prisma migrate diff --from-schema-datamodel … --to-schema-datamodel … --script > migrations/<name>/migration.sql` then commit. **Never use `migrate dev`** — it hangs on Supabase poolers. The first committed migration (`0_baseline`) was generated from a schema snapshot via `migrate diff`.
 - **The `.env` file in the project root is a trap** — Prisma auto-generated it with a localhost URL. Our real config loads from `.env.local`. Don't edit `.env`.
 - **All credentials live in two places**: `.env.local` (in the app, gitignored) and `Spec Documentation/credentials.md` (outside the repo, for reference).
@@ -32,13 +32,13 @@
 
 ### Connection Details
 
-Supabase provides three connection methods. **Only the pooler connections work from this Windows dev machine** because the direct connection hostname (`db.pkoyyojellmangswrczj.supabase.co`) does not resolve via IPv4 DNS.
+Supabase provides three connection methods. The pooler connections are recommended for both dev and prod. The direct connection requires an IPv6-capable network and is not used in standard setup.
 
 | Connection Type | Hostname | Port | Use Case |
 |----------------|----------|------|----------|
 | **Session Pooler** (IPv4) | `aws-1-us-east-1.pooler.supabase.com` | `5432` | Prisma migrations, `db push`, `prisma studio` — supports DDL |
 | **Transaction Pooler** (IPv4) | `aws-1-us-east-1.pooler.supabase.com` | `6543` | Runtime app queries (high concurrency) — does NOT support DDL |
-| Direct (IPv6 only) | `db.pkoyyojellmangswrczj.supabase.co` | `5432` | Not usable from this dev machine |
+| Direct (IPv6 only) | `db.pkoyyojellmangswrczj.supabase.co` | `5432` | Requires IPv6-capable network |
 
 **CRITICAL**: The transaction pooler (port 6543) does NOT support:
 - `CREATE TABLE`, `ALTER TABLE`, `DROP TABLE`

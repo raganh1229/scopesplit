@@ -9,8 +9,9 @@
 > - `PRODUCTION_CUTOVER_CHECKLIST.md` — All required key/secret/URL changes for localhost → production deployment
 > - `Spec Documentation/mvp-product-spec.md` — Full MVP product specification
 > - `Spec Documentation/credentials.md` — API keys and passwords (NEVER commit to git)
-> - `API_CALL_FLOW.md` — Detailed technical flow for the Claude API comparison pipeline
 > - `OUTSTANDING_WORK.md` — Live tracker of P0/P1/P2 follow-ups from the latest full-app code review
+> - `N1_INNGEST_CONVERSION.md` — **DELETED** (archived to `DELETED CHANGES/`; Inngest conversion complete)
+> - `API_CALL_FLOW.md` — **DELETED** (archived; superseded by N3/N4 pipeline docs)
 
 ---
 
@@ -19,11 +20,12 @@
 **ScopeSplit** is a SaaS web application that allows users to upload two Xactimate PDF estimates and receive a detailed, line-by-line comparison. It targets insurance adjusters and contractors who need to reconcile competing estimates quickly.
 
 ### Business Model
-- Tiered subscription plans: Starter ($49.99/mo, 10 comparisons), Professional ($99/mo, 50 comparisons), Business ($249/mo, 200 comparisons)
-- Add-on comparison packs: Starter 5 for $34.99, Professional 10 for $39.99, Business 10 for $34.99 (one-time purchases, no expiration)
-- 7-day free trial (3 comparisons, no card required)
+- Tiered subscription plans: Starter ($59/mo, 10 comparisons, 5 LLM edits, 3 exec summaries), Professional ($179/mo, 35 comparisons, 30 LLM edits, 15 exec summaries), Business ($349/mo, 100 comparisons, 100 LLM edits, 50 exec summaries)
+- Add-on comparison packs: Starter 5-pack, Professional 10-pack, Business 10-pack (one-time purchases, no expiration)
+- 7-day free trial (4 comparisons, 2 LLM edits, 2 exec summaries — no card required)
 - No free tier — hard block at cap with upgrade prompt
 - Payment gate enforced before app access
+- **Source of truth for plan constants**: `lib/plan-constants.ts`
 
 ---
 

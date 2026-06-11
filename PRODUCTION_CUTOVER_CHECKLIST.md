@@ -89,7 +89,7 @@ The single `RESEND_API_KEY` powers both transactional email routes:
 
 ### Inngest (Comparison Processing Worker — N1 Conversion)
 
-Production comparison processing runs as a multi-step Inngest function (see `N1_INNGEST_CONVERSION.md` for the full architecture). The webhook endpoint is `/api/inngest` (made public in `proxy.ts`).
+Production comparison processing runs as a multi-step Inngest function (`lib/inngest/functions/process-comparison.ts`). The webhook endpoint is `/api/inngest` (made public in `proxy.ts`). *(Note: `N1_INNGEST_CONVERSION.md` was archived and deleted Jun 5, 2026 — Inngest integration is complete.)*
 
 | Variable | Dev Value Pattern | Prod Value Pattern | Required |
 |----------|-------------------|--------------------|----------|
@@ -100,7 +100,7 @@ Production comparison processing runs as a multi-step Inngest function (see `N1_
 Notes:
 - The SDK auto-selects dev vs cloud mode based on these variables. **In production, `INNGEST_DEV` must be removed entirely** — if it's set, the SDK will try to reach a non-existent local dev server.
 - The Inngest Cloud webhook URL `https://<your-domain>/api/inngest` must be registered in the Inngest Cloud dashboard → Apps → Sync.
-- See `N1_INNGEST_CONVERSION.md` §3 Phase 5 for full env-var rationale and the dev-mode failure modes encountered during scaffolding.
+- Full env-var rationale is in `OUTSTANDING_WORK.md` §4.6 and §4.7. *(N1_INNGEST_CONVERSION.md archived Jun 5, 2026.)*
 
 ### Twilio Verify + Trial Abuse Controls
 
@@ -117,14 +117,7 @@ Notes:
 | `UNVERIFIED_ACCOUNT_MAX_AGE_HOURS` | `24` | `24` | ✅ |
 | `UNVERIFIED_ACCOUNT_CLEANUP_BATCH_SIZE` | `100` | `100` (or tuned) | Optional |
 
-**Important temporary testing override (must be reverted before production):**
-
-- `POST /api/stripe/checkout` currently enforces only Clerk phone verification for trial eligibility.
-- Stripe metadata-based trial reuse checks (`trial_phone_number`, `trial_ip_hash`) and metadata writes are temporarily disabled to allow repeated local testing.
-- Before production, re-enable Stripe trial-abuse enforcement in `app/api/stripe/checkout/route.ts`:
-  - restore phone reuse check against Stripe customer metadata
-  - restore IP hash reuse check (`TRIAL_IP_HASH_SALT`)
-  - restore metadata writes for `trial_phone_number` and `trial_ip_hash`
+> ✅ **Trial-abuse enforcement re-enabled** — Phone + IP metadata checks and writes were restored in `app/api/stripe/checkout/route.ts` before launch (resolved OUTSTANDING_WORK.md #39, May 25, 2026).
 
 ---
 

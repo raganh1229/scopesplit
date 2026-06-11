@@ -48,6 +48,156 @@ const faqSections: FaqSection[] = [
   },
 ];
 
+/* ── Patch notes data ── */
+type PatchBadge = 'new' | 'fix' | 'improved';
+interface PatchSection { badge: PatchBadge; label: string; items: string[] }
+interface PatchEntry { version: string; date: string; title: string; subtitle: string; sections: PatchSection[] }
+
+const BADGE_LABEL: Record<PatchBadge, string> = { new: 'New', fix: 'Fix', improved: 'Improved' };
+
+const patchEntries: PatchEntry[] = [
+  {
+    version: 'v1.0.0',
+    date: 'June 3, 2026',
+    title: 'Initial Public Launch',
+    subtitle: 'ScopeSplit is now live. This is the complete feature set included in our first public release — everything built from the ground up for v1.0.',
+    sections: [
+      {
+        badge: 'new',
+        label: 'Comparison Engine',
+        items: [
+          'AI-powered line-by-line comparison of contractor vs. adjuster estimates using the N3/N4 multi-format pipeline',
+          'Supports Xactimate PDF, Symbility PDF, and Xactimate XLS/XLSX/CSV exports',
+          'Cross-format comparisons — compare a Xactimate estimate against a Symbility estimate in a single run',
+          'AI zone detection identifies all rooms and sections in both estimates, matching zones even when names differ (e.g. "Master Bedroom" vs. "MBR")',
+          'Five match statuses: Match, Match (Unverified), Modified, Missing, and Adjuster Added',
+          'Dollar gap calculation at zone level and across the full comparison',
+          '98.5%+ match accuracy on standard Xactimate estimates',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Comparison Detail View',
+        items: [
+          'Side-by-side breakdown table showing your estimate vs. adjuster values for every line item',
+          'Cost columns: Remove, Replace, Tax, O&P, and Total — per line item',
+          'Color-coded status pills for instant visual scanning of matches, modifications, and disputes',
+          'Expandable zone sections with per-zone dollar totals and item counts',
+          'Filter by match status — isolate disputes, missing items, or price modifications with one click',
+          'Column visibility toggle to show or hide specific cost breakdowns',
+          'Match summary bar with counts and dollar totals for each status category',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Version History & Editing',
+        items: [
+          'Inline editing of any line item — update descriptions, quantities, or dollar values directly in the table',
+          'AI Bulk Edit — describe a change in plain language (e.g. "add 15% overhead to all missing items") and the AI applies it across your estimate',
+          'Every save automatically creates a new version snapshot so nothing is ever lost',
+          'Full version history — browse all previous versions, activate any snapshot, or delete old versions',
+          'Live diff preview showing exactly which line items will change before committing',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Executive Summary',
+        items: [
+          'AI-generated executive summary report for any completed comparison',
+          'Highlights total dollar discrepancies, dispute categories, and key findings at a glance',
+          'Export as a professional PDF for client delivery or dispute documentation',
+          'Regenerate at any time after editing to reflect the latest version of the comparison',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Notes',
+        items: [
+          'Attach notes to any individual line item — ideal for dispute context, photo references, or follow-up flags',
+          'General comparison-level notes for overall observations',
+          'Full create, edit, and delete support on desktop and tablet',
+          'View-only notes on mobile — read all notes without risk of accidental edits',
+          'Note count badges on line items so nothing gets missed',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'PDF Export',
+        items: [
+          'Export the full comparison as a printable PDF via browser print',
+          'Includes comparison header, financial summary charts, zone-by-zone line item table, and notes',
+          'Print-optimized layout — sidebar, navigation, and mobile UI hidden automatically in print',
+          'Table content flows freely across pages without forced breaks for clean multi-page exports',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Authentication',
+        items: [
+          'Email/password signup and login with secure credential handling',
+          'Google SSO — sign in or sign up with one click',
+          'Email verification with a 6-digit code (auto-advance between fields, paste support, resend with cooldown timer)',
+          'Forgot password and reset password flows',
+          'Phone number verification for trial accounts to prevent free trial abuse',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Subscriptions & Billing',
+        items: [
+          '7-day free trial with 4 comparisons included — no credit card required',
+          'Starter: $59/month — 10 comparisons, 5 AI edits, 3 executive summaries',
+          'Professional: $179/month — 35 comparisons, 30 AI edits, 15 executive summaries',
+          'Business: $349/month — 100 comparisons, 100 AI edits, 50 executive summaries',
+          'One-time comparison add-on packs available for each plan tier when you need more',
+          'Upgrade or downgrade at any time — upgrades are prorated immediately, downgrades apply at the next billing cycle',
+          'Cancel and resume your subscription from within the app — no redirects to external billing portals',
+          'Real-time usage counters in Settings to track remaining comparisons and AI credits',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Mobile Experience',
+        items: [
+          'Fully responsive design — desktop, tablet, and mobile all supported',
+          'Mobile comparison view uses a card layout instead of table for comfortable scrolling on small screens',
+          'Mobile filter pills stacked vertically for tap-friendly status filtering',
+          'Dedicated "View Notes" button at the top of the mobile comparison for reading notes',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Dark Mode',
+        items: [
+          'Light mode and Dark mode toggle in Settings → Appearance',
+          'Theme preference saved per device and persists across sessions',
+          'Full dark palette: deep gray surfaces with high-contrast text and borders',
+          'All five status colors have dedicated dark mode variants for consistent readability',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Settings & Account',
+        items: [
+          'Plan & Billing — view current plan, manage subscription, track usage counts, purchase add-on packs',
+          'Appearance — toggle Light or Dark mode',
+          'Notifications — opt in or out of product update emails',
+          'Account deletion available on request via the Contact Us form',
+        ],
+      },
+      {
+        badge: 'new',
+        label: 'Help & Support',
+        items: [
+          'FAQ covering product overview, software compatibility, billing, and data security',
+          'Contact Us form with optional screenshot attachments (up to 3 images, delivered to our support team)',
+          'Patch Notes — a running public log of everything added, fixed, and improved',
+        ],
+      },
+    ],
+  },
+];
+
 const MAX_IMAGES = 3;
 const MAX_IMAGE_SIZE_MB = 5;
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -55,6 +205,7 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp
 const tabs = [
   { id: 'faq', label: 'FAQ', icon: <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg> },
   { id: 'bug', label: 'Contact Us', icon: <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg> },
+  { id: 'patches', label: 'Patch Notes', icon: <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="9" y1="13" x2="15" y2="13" /><line x1="9" y1="17" x2="12" y2="17" /></svg> },
 ];
 
 // Next.js requires `useSearchParams()` to be inside a Suspense boundary so
@@ -75,6 +226,7 @@ function HelpContent() {
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab === 'bug') setActiveTab('bug');
+    else if (tab === 'patches') setActiveTab('patches');
   }, [searchParams]);
   const [openFaq, setOpenFaq] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -153,7 +305,7 @@ function HelpContent() {
 
   return (
     <>
-      <MobileAppBar title="Contact Us" />
+      <MobileAppBar title={activeTab === 'patches' ? 'Patch Notes' : activeTab === 'bug' ? 'Contact Us' : 'FAQ'} />
       <TrialBanner />
 
       <div className={styles.helpHeader}>
@@ -272,6 +424,42 @@ function HelpContent() {
               <button className={styles.backLink} onClick={() => { setSubmitted(false); setSubmitError(null); }}>
                 &larr; Send another message
               </button>
+            </div>
+          )}
+
+          {/* ── Patch Notes Tab ── */}
+          {activeTab === 'patches' && (
+            <div className={styles.patchList}>
+              {patchEntries.map((entry) => (
+                <div key={entry.version} className={styles.patchEntry}>
+                  <div className={styles.patchMeta}>
+                    <span className={styles.patchVersionPill}>{entry.version}</span>
+                    <span className={styles.patchDate}>{entry.date}</span>
+                  </div>
+                  <h2 className={styles.patchEntryTitle}>{entry.title}</h2>
+                  <p className={styles.patchSubtitle}>{entry.subtitle}</p>
+                  <div className={styles.patchSections}>
+                    {entry.sections.map((section) => (
+                      <div key={section.label} className={styles.patchSection}>
+                        <div className={styles.patchSectionHead}>
+                          <span className={`${styles.patchBadge} ${section.badge === 'new' ? styles.patchBadgeNew : section.badge === 'fix' ? styles.patchBadgeFix : styles.patchBadgeImproved}`}>
+                            {BADGE_LABEL[section.badge]}
+                          </span>
+                          <span className={styles.patchSectionLabel}>{section.label}</span>
+                        </div>
+                        <div className={styles.patchItems}>
+                          {section.items.map((item, i) => (
+                            <div key={i} className={styles.patchItem}>
+                              <span className={styles.patchItemDot} />
+                              <span>{item}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -1,29 +1,28 @@
-# SplitScope
+# ScopeSplit
 
-Insurance scope-of-loss comparison platform. Upload a contractor estimate and an adjuster estimate as PDFs, get a side-by-side line-item match analysis powered by Claude.
+Insurance scope-of-loss comparison SaaS. Upload a contractor estimate and an adjuster estimate (Xactimate PDF, Symbility PDF, or Excel/CSV), get a side-by-side line-item match analysis powered by Claude. **Live at https://scopesplit.com**
 
 ---
 
 ## Repository Layout
 
 ```
-Primary Repository/
-├── estimatch-app/           # Next.js 15 app (App Router)
+scopesplit/
+├── estimatch-app/           # Next.js 16.2.3 app (App Router, Turbopack)
 │   ├── app/                 # Routes, API handlers, pages
-│   ├── lib/                 # Domain logic (n2/, n3/, comparison-processing.ts, …)
+│   ├── lib/                 # Domain logic (n3/, n4/, comparison-processing.ts, …)
 │   ├── prisma/              # Schema + migrations
 │   └── __tests__/           # Vitest unit tests
 ├── n1-baselines/            # Frozen accuracy baselines for regression testing
-├── N3.md                    # N3 pipeline specification (binding)
-├── N3_BUILD_LEDGER.md       # N3 implementation ledger (ground truth of what is built)
+├── N3.md                    # N3 pipeline specification (reference)
+├── N3_BUILD_LEDGER.md       # N3 implementation ledger
+├── N4-multi-format-pipeline.md  # N4 pipeline spec (COMPLETE)
+├── N5.md                    # N5 feedback-aware re-extraction (planned)
 ├── PROJECT_CONTEXT.md       # Living project state document
 ├── DATABASE_TECHNICAL_DOCS.md
 ├── PRODUCTION_CUTOVER_CHECKLIST.md
-├── API_CALL_FLOW.md
 ├── OUTSTANDING_WORK.md
-├── N1_INNGEST_CONVERSION.md
-├── N2_SPEED_CAPACITY_ACCURACY.md
-└── N2_ALGORITHM_DASHBOARD.html
+└── TESTING_PLAN.md
 ```
 
 The Next.js app lives in `estimatch-app/`. All `npm` commands run from inside that folder.
@@ -65,7 +64,6 @@ Create `estimatch-app/.env.local` with:
 | `VOYAGE_API_KEY` | Voyage AI embeddings (Phase 11) |
 | `STRIPE_SECRET_KEY` | Stripe billing |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature verification |
-| `STRIPE_PORTAL_RETURN_URL` | Stripe customer portal redirect |
 | `RESEND_API_KEY` | Bug report email delivery |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_VERIFY_SERVICE_SID` | Phone verification |
 | `ENABLE_REAL_COMPARISON_PROCESSING` | `true` to use real AI pipeline |
@@ -76,13 +74,14 @@ Create `estimatch-app/.env.local` with:
 
 ## Pipelines
 
-The app has run through three generations of comparison engines:
+The app has run through four generations of comparison engines:
 
-- **N1** — Direct Claude pass on full PDF text (legacy, paused)
-- **N2** — Zone-aware multi-pass with deterministic prematch (paused via `N2_PAUSED_FOR_N3 = true`)
-- **N3** — Global-candidate retrieval + scored assignment ([N3.md](./N3.md), [N3_BUILD_LEDGER.md](./N3_BUILD_LEDGER.md))
+- **N1** — Direct Claude pass on full PDF text (retired — archived to `DELETED CHANGES/`)
+- **N2** — Zone-aware multi-pass with deterministic prematch (retired — archived to `DELETED CHANGES/`; utility code in `lib/n2/` still imported by N3/N4)
+- **N3** — Global-candidate retrieval + scored assignment ([N3.md](./N3.md), [N3_BUILD_LEDGER.md](./N3_BUILD_LEDGER.md)) — active, Xactimate-only
+- **N4** — Multi-format pipeline extending N3 with Symbility, CSV, and cross-format support ([N4-multi-format-pipeline.md](./estimatch-app/N4-multi-format-pipeline.md)) — **active production pipeline** (complete Jun 3, 2026)
 
-N3 is the active development target. Status is tracked in `N3_BUILD_LEDGER.md`.
+N3 and N4 run in production. `N3_ENABLED=true` in env routes through N4 (which wraps N3). Status tracked in `N3_BUILD_LEDGER.md` and `N4-multi-format-pipeline.md`.
 
 ---
 

@@ -1,8 +1,8 @@
 # N4 — Multi-Format Estimate Pipeline
 
-**Status:** Planning
+**Status:** ✅ COMPLETE — Jun 3, 2026 (active production pipeline)
 **Predecessor:** N3 (Xactimate-only, 98.5% match accuracy)
-**Successor placeholder:** N5 (CSV ingest — slot already provisioned)
+**Successor:** N5 (Feedback-Aware Line Item Re-extraction — see `N5.md`; planned, not yet implemented)
 
 ---
 

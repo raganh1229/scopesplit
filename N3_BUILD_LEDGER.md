@@ -1,7 +1,7 @@
 # N3 Build Ledger
 
-**Status:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅ · Phase 3 ✅ · Phase 4 ✅ · Phase 6 ✅ · Phase 8 ✅ · Phase 9 ✅ · Phase 11 ✅ · Phase 12 ✅ · Phase 13 ✅ · Phase 14 ✅ · Phase 15 ✅ · Phase 16 ✅ · Phase 17 ✅ · Phase 18 ✅ · HNSW index ✅ · UI gates (5, 7, 8.5, 10) + UI connection + calibration pending  
-**Last updated:** May 24, 2026  
+**Status:** ✅ ALL PHASES COMPLETE — Phase 0–18 ✅ · HNSW index ✅ · UI gates (5, 7, 8.5) ✅ · UI connection ✅ · N4 extends N3 for multi-format support (see `N4-multi-format-pipeline.md`)  
+**Last updated:** Jun 3, 2026 (N4 complete, app live at scopesplit.com)  
 **Spec reference:** `N3.md` (spec only — do not confuse with this ledger)
 
 ---
