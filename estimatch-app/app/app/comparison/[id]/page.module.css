@@ -2798,6 +2798,8 @@
    print rules win over mobile @media cascade
    ============================================ */
 @media print {
+  @page { margin: 1.5cm 1.2cm; }
+
   .tableScrollOverlayShell { display: none !important; }
 
   /* -- Page padding reset -- */
@@ -2807,6 +2809,7 @@
   .printHeader { display: flex !important; }
 
   /* -- Hide all interactive / chrome elements -- */
+  .header,
   .toolbarShell,
   .filtersPanel,
   .columnsPanel,

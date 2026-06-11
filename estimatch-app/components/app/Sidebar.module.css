@@ -159,3 +159,7 @@
 @media (max-width: 768px) {
   .sidebar { display: none; }
 }
+
+@media print {
+  .sidebar { display: none !important; }
+}

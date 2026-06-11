@@ -2148,7 +2148,9 @@ export default function ComparisonDetailPage() {
       <TrialBanner />
       <div className={styles.content}>
         <div className={styles.printHeader}>
-          <div className={styles.printHeaderTitle}>ScopeSplit — Estimate Comparison</div>
+          <div className={styles.printHeaderTitle}>
+            ScopeSplit — {comparison?.name ?? 'Estimate Comparison'}
+          </div>
           <div className={styles.printHeaderMeta}>
             <span><strong>Your estimate:</strong> {comparison?.yourEstimateFilename ?? '—'}</span>
             <span><strong>Adjuster&apos;s estimate:</strong> {comparison?.adjusterEstimateFilename ?? '—'}</span>
@@ -2949,15 +2951,6 @@ export default function ComparisonDetailPage() {
               <table className={`${styles.printZoneTable} ${visibleCosts.length > 2 ? styles.printZoneDense : ''}`}>
                 <thead>
                   <tr>
-                    <th colSpan={3 + visibleCosts.length} className={styles.printHeadGroup}>
-                      Your Estimate <span className={styles.printHeadFile}>{comparison?.yourEstimateFilename ?? '—'}</span>
-                    </th>
-                    <th colSpan={3 + visibleCosts.length} className={styles.printHeadGroup}>
-                      Adjuster&apos;s Estimate <span className={styles.printHeadFile}>{comparison?.adjusterEstimateFilename ?? '—'}</span>
-                    </th>
-                    <th className={styles.printHeadGroup}>Diff</th>
-                  </tr>
-                  <tr>
                     <th className={styles.printCol}>Description</th>
                     <th className={styles.printColRight}>Qty</th>
                     {visibleCosts.map(key => {
@@ -2972,10 +2965,19 @@ export default function ComparisonDetailPage() {
                       return <th key={`ah-${key}`} className={styles.printColRight}>{col?.label ?? key}</th>;
                     })}
                     <th className={styles.printColRight}>Total</th>
-                    <th className={styles.printColRight}>$</th>
+                    <th className={styles.printColRight}>Diff</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td colSpan={3 + visibleCosts.length} className={styles.printHeadGroup}>
+                      Your Estimate <span className={styles.printHeadFile}>{comparison?.yourEstimateFilename ?? '—'}</span>
+                    </td>
+                    <td colSpan={3 + visibleCosts.length} className={styles.printHeadGroup}>
+                      Adjuster&apos;s Estimate <span className={styles.printHeadFile}>{comparison?.adjusterEstimateFilename ?? '—'}</span>
+                    </td>
+                    <td className={styles.printHeadGroup} />
+                  </tr>
                   {items.map((row, rowIndex) => {
                     const y = row.your;
                     const a = row.adjuster;
@@ -2993,14 +2995,14 @@ export default function ComparisonDetailPage() {
                         <td className={styles.printCellNum}>{y?.qty ?? ''}</td>
                         {visibleCosts.map(key => {
                           const val = y ? (y[key as keyof LineItem] as number) : null;
-                          return <td key={`yc-${key}`} className={styles.printCellNum}>{val != null && val !== 0 ? fmt(val) : ''}</td>;
+                          return <td key={`yc-${key}`} className={styles.printCellNum}>{val !== null ? fmt(val) : ''}</td>;
                         })}
                         <td className={`${styles.printCellNum} ${styles.printCellBold}`}>{y ? (y.totalDisplay ?? fmt(y.total)) : ''}</td>
                         <td className={styles.printCell}>{a?.description ?? '—'}</td>
                         <td className={styles.printCellNum}>{a?.qty ?? ''}</td>
                         {visibleCosts.map(key => {
                           const val = a ? (a[key as keyof LineItem] as number) : null;
-                          return <td key={`ac-${key}`} className={styles.printCellNum}>{val != null && val !== 0 ? fmt(val) : ''}</td>;
+                          return <td key={`ac-${key}`} className={styles.printCellNum}>{val !== null ? fmt(val) : ''}</td>;
                         })}
                         <td className={`${styles.printCellNum} ${styles.printCellBold}`}>{a ? (a.totalDisplay ?? fmt(a.total)) : ''}</td>
                         <td className={`${styles.printCellNum} ${styles.printCellBold} ${diff > 0 ? styles.diffPos : diff < 0 ? styles.diffNeg : ''}`}>
