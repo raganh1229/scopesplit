@@ -506,6 +506,11 @@ ${sanitizedInstructions}` : ''}`;
     return NextResponse.json({ error: 'AI returned an empty response.' }, { status: 422 });
   }
 
+  const REFUSAL_PHRASE = 'Unable to generate summary from the provided data.';
+  if (markdown.trim() === REFUSAL_PHRASE) {
+    return NextResponse.json({ error: 'AI could not generate a report from your request. Try adjusting your instructions.' }, { status: 422 });
+  }
+
   // ── Atomic increment after the paid call succeeded ──
   // See apply-edits route for the rationale on race-safety + no-refund policy.
   const incremented = await tryIncrementUsage(appUser.id, 'executiveSummary', usageEffectiveLimit);

@@ -984,6 +984,11 @@ export default function ComparisonDetailPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
+        // Show refusal errors as a red banner without clearing existing content
+        if (res.status === 422 && data?.error?.includes('could not generate a report')) {
+          setSummaryError(data.error);
+          return;
+        }
         if (data?.code === 'USAGE_LIMIT_REACHED') {
           if (data?.isTrial) {
             window.dispatchEvent(new CustomEvent('trial-limit-reached', { detail: { kind: 'executiveSummary', limit: data?.limit ?? 2 } }));
