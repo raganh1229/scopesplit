@@ -1025,12 +1025,18 @@
   border-top: 0.5px solid var(--border-default);
 }
 .summaryRegenLabel {
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+.summaryRegenNote {
+  margin: 0 0 10px;
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
 }
 .summaryRegenTextarea {
   width: 100%;

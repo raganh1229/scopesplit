@@ -3513,10 +3513,6 @@ export default function ComparisonDetailPage() {
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>
                       Print
                     </button>
-                    <button type="button" className={styles.summaryActionBtn} onClick={() => void handleSummaryConfirmOpen(true)} disabled={summaryLoading}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" /></svg>
-                      Regenerate
-                    </button>
                   </>
                 )}
                 <button type="button" className={styles.summaryCloseBtn} aria-label="Close" onClick={() => setSummaryOpen(false)}>
@@ -3546,6 +3542,7 @@ export default function ComparisonDetailPage() {
                   />
                   <div className={styles.summaryRegenSection}>
                     <p className={styles.summaryRegenLabel}>Regenerate with additional context</p>
+                    <p className={styles.summaryRegenNote}>Each regeneration uses one executive summary credit from your monthly allowance.</p>
                     <textarea
                       className={styles.summaryRegenTextarea}
                       placeholder="Add focus areas, dispute strategy, or any specific context you want included in the report…"
