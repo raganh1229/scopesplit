@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { markdownToHtml } from '@/lib/markdown-to-html';
 import styles from './page.module.css';
 
 type SummaryDetail = {
@@ -20,94 +21,6 @@ type SummaryDetail = {
   };
 };
 
-function markdownToHtml(md: string): string {
-  function esc(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-  function inline(s: string): string {
-    return esc(s)
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`(.+?)`/g, '<code>$1</code>');
-  }
-  function parseRow(row: string): string[] {
-    return row.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
-  }
-
-  const lines = md.split(/\r?\n/);
-  const out: string[] = [];
-  let i = 0;
-
-  while (i < lines.length) {
-    const raw = lines[i].trim();
-
-    if (!raw) { i++; continue; }
-
-    // Headings
-    if (raw.startsWith('### ')) { out.push(`<h3>${inline(raw.slice(4))}</h3>`); i++; continue; }
-    if (raw.startsWith('## '))  { out.push(`<h2>${inline(raw.slice(3))}</h2>`); i++; continue; }
-    if (raw.startsWith('# '))   { out.push(`<h1>${inline(raw.slice(2))}</h1>`); i++; continue; }
-
-    // Horizontal rule
-    if (/^---+$/.test(raw)) { out.push('<hr>'); i++; continue; }
-
-    // Table — header row starts with |, next line is separator (|---|)
-    if (raw.startsWith('|') && /^\|[\s\-:|]+\|/.test((lines[i + 1] ?? '').trim())) {
-      const headers = parseRow(raw);
-      i += 2; // skip header + separator
-      const bodyRows: string[][] = [];
-      while (i < lines.length && lines[i].trim().startsWith('|')) {
-        bodyRows.push(parseRow(lines[i]));
-        i++;
-      }
-      const th = headers.map(h => `<th>${inline(h)}</th>`).join('');
-      const tb = bodyRows.map(r =>
-        `<tr>${r.map(c => `<td>${inline(c)}</td>`).join('')}</tr>`
-      ).join('');
-      out.push(`<table><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`);
-      continue;
-    }
-
-    // Unordered list
-    if (raw.startsWith('- ') || raw.startsWith('* ')) {
-      const items: string[] = [];
-      while (i < lines.length) {
-        const r = lines[i].trim();
-        if (r.startsWith('- ') || r.startsWith('* ')) { items.push(`<li>${inline(r.slice(2))}</li>`); i++; }
-        else if (!r) { i++; break; }
-        else break;
-      }
-      out.push(`<ul>${items.join('')}</ul>`);
-      continue;
-    }
-
-    // Ordered list
-    if (/^\d+\. /.test(raw)) {
-      const items: string[] = [];
-      while (i < lines.length) {
-        const r = lines[i].trim();
-        if (/^\d+\. /.test(r)) { items.push(`<li>${inline(r.replace(/^\d+\. /, ''))}</li>`); i++; }
-        else if (!r) { i++; break; }
-        else break;
-      }
-      out.push(`<ol>${items.join('')}</ol>`);
-      continue;
-    }
-
-    // Paragraph — collect consecutive plain lines
-    const para: string[] = [];
-    while (i < lines.length) {
-      const r = lines[i].trim();
-      if (!r) { i++; break; }
-      if (/^#{1,3} /.test(r) || r.startsWith('|') || r.startsWith('- ') || r.startsWith('* ') || /^\d+\. /.test(r) || /^---+$/.test(r)) break;
-      para.push(inline(r));
-      i++;
-    }
-    if (para.length) out.push(`<p>${para.join('<br>')}</p>`);
-  }
-
-  return out.join('\n');
-}
 
 function formatDate(value: string): string {
   return new Date(value).toLocaleDateString('en-US', {

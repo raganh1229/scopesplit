@@ -349,6 +349,27 @@
     background: #fffbeb; border-left-color: #fbbf24;
   }
   .reportFooter { color: #9ca3af; }
+
+  /* Each h2 section starts on a fresh page, except the first */
+  .reportContent :global(h2) {
+    break-before: page;
+    page-break-before: always;
+  }
+  .reportContent :global(h2:first-child) {
+    break-before: avoid;
+    page-break-before: avoid;
+  }
+  /* Keep headings glued to their following content */
+  .reportContent :global(h2),
+  .reportContent :global(h3) {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  /* Avoid splitting table rows across pages */
+  .reportContent :global(tr) {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }
 
 /* ── Mobile / tablet ── */
