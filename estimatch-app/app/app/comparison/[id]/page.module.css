@@ -2459,7 +2459,7 @@
 /* ============================================
    MOBILE-ONLY ELEMENTS — hidden on desktop
    ============================================ */
-.mDash, .mToolbar, .cardList { display: none; }
+.mDash, .mToolbar, .mNotesBtn, .cardList { display: none; }
 
 /* ============================================
    RESPONSIVE — < 768px
@@ -2471,6 +2471,7 @@
   .toolbarRow2 { display: none; }
   .tbHideMobile { display: none !important; }
   .toolbarRow1Right { display: none; }
+  .pillGroup { display: none !important; }
 
   .content { padding: 0; overflow: visible; }
 
@@ -2568,6 +2569,28 @@
   .mPill_missing .mPillDot { background: var(--status-missing); }
   .mPill_added .mPillDot { background: var(--status-added); }
   .mPillCount { font-size: 10px; color: var(--text-tertiary); font-weight: 600; }
+
+  /* ── Mobile View Notes Button ── */
+  .mNotesBtn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; width: 100%; padding: 13px 16px;
+    background: var(--bg-primary);
+    border: none;
+    border-bottom: 0.5px solid var(--border-light);
+    font-family: var(--font-stack); font-size: 15px; font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .mNotesBtn svg {
+    width: 18px; height: 18px; stroke: currentColor; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+  .mNotesBtnBadge {
+    font-size: 11px; font-weight: 700;
+    background: var(--btn-primary-bg); color: var(--btn-primary-text);
+    padding: 2px 7px; border-radius: 10px;
+  }
 
   /* ── Card List ── */
   .cardList {

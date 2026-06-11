@@ -3122,6 +3122,13 @@ export default function ComparisonDetailPage() {
           ))}
         </div>
 
+        {/* ── Mobile View Notes Button ── */}
+        <button className={styles.mNotesBtn} onClick={() => setNotesOpen(true)}>
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          View Notes
+          {noteCount > 0 && <span className={styles.mNotesBtnBadge}>{noteCount}</span>}
+        </button>
+
         {/* ── Mobile Card List (shown < 768px) ── */}
         <div className={styles.cardList}>
           {zonesWithInserts.flatMap(zone =>
@@ -3336,10 +3343,6 @@ export default function ComparisonDetailPage() {
             })
           )}
 
-          <button className={npStyles.cardNoteBtn} style={{ width: '100%', justifyContent: 'center', padding: '12px' }} onClick={() => setNotesOpen(true)}>
-            <svg className={npStyles.cardNoteBtnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            Notes {noteCount > 0 && <span className={npStyles.cardNoteBtnBadge}>{noteCount}</span>}
-          </button>
           <button className={styles.mDownloadBtn} onClick={handleDownloadPdf}>
             <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
             Download PDF

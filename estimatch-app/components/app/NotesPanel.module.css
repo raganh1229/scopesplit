@@ -478,6 +478,13 @@
 }
 
 /* ============================================
+   MOBILE: card note buttons — hidden (notes viewed via top-level button)
+   ============================================ */
+@media (max-width: 768px) {
+  .cardNoteBtn { display: none !important; }
+}
+
+/* ============================================
    PRINT: hide notes
    ============================================ */
 @media print {
