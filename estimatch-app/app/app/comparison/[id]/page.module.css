@@ -2832,10 +2832,12 @@
 
   .printReport {
     display: block !important;
+    break-before: page;
+    page-break-before: always;
   }
 
   .printZoneSection {
-    margin-top: 8px;
+    margin-top: 16px;
   }
 
   /* -- Dashboard: force show (overrides mobile hide), avoid splitting -- */

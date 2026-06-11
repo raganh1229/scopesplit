@@ -2935,7 +2935,7 @@ export default function ComparisonDetailPage() {
           {printZones.map(({ zone, items }, zoneIndex) => (
             <section
               key={`print-zone-${zone.id}`}
-              className={`${styles.printZoneSection} ${zoneIndex > 0 ? styles.printZoneBreak : ''}`}
+              className={styles.printZoneSection}
             >
               <div className={styles.printZoneTitleRow}>
                 <div className={styles.printZoneTitleLeft}>
